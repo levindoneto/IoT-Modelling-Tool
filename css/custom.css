@@ -1,0 +1,11 @@
+.panel-heading {
+    color: white;
+    font-size: 30px;
+    background-color: red;
+
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+
+}

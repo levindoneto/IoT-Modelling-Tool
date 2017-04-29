@@ -10,6 +10,7 @@
       <meta name="description" content="Tool developed to model a environment with digital twins using IoT">
       <meta name="author" content="Levindo Gabriel Taschetto Neto">
       <link rel="stylesheet" href="css/design_utils.css" type="text/css">
+      <link rel="stylesheet" href="css/drag-and-drop.css" type="text/css">
       <title>IoT MT</title>
       <!-- Bootstrap Core CSS -->
       <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -21,82 +22,51 @@
       <link href="css/grayscale.css" rel="stylesheet">
    <body  id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
       <!--Scripts -->
-         <script src="/plugins/vendor/jquery/jquery.min.js"></script>
-         <script src="js/bootstrap.min.js"></script>
-         <script src="plugins/bootstrap-slider/bootstrap-slider.js"></script>
-
-      <!--Common-->
-      <!-- Pre-loader -->
-      <style type="text/css">
-         #preload
-         {
-            /* Centralizing  the Pre-Loader*/
-            margin-top: 200px;
-            margin-bottom: 250px;
-            background: #1c1c1c /*Dark gray */
-            display: block ;
-         }
-         #posload
-         {
-            display: none;
-         }
-      </style>
-      <script type="text/javascript">
-         function muda_p_carregado()
-         {
-           document.getElementById("posload").style.display = "block";
-           document.getElementById("preload").style.display = "none";
-         }
-      </script>
+      <script src="/plugins/vendor/jquery/jquery.min.js"></script>
+      <script src="js/bootstrap.min.js"></script>
+      <script src="js/drag-and-drop/drag-and-drop-implemention.js"></script>
+      <script src="plugins/bootstrap-slider/bootstrap-slider.js"></script>
       </head>
-      <body onload="muda_p_carregado()">
-         <div id="preload" class="cssload-loader">
-            <!-- Pre-loader fica aqui -->
-            <div class="cssload-inner cssload-one"></div>
-            <div class="cssload-inner cssload-two"></div>
-            <div class="cssload-inner cssload-three"></div>
+      <!--*************************************************************************-->
+      <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
+         <img src="img\environment\devices\raspberry.png" draggable="true" ondragstart="drag(event)" id="drag1" width=auto height="40">
+      </div>
+      <div id="div2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+      <!--*************************************************************************-->
+      <!--Footer -->
+      <footer>
+         <div class="container text-center">
+            </br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
+            <h2>Contact us</h2>
+            <p>Feel free to send a e-mail for us</p>
+            <a href="#">institut@ipvs.uni-stuttgart.de</a>
+            <p>Copyright &copy; IPVS 2017</p>
          </div>
-         <!-- Contact Section -->
-         <section id="contact" class="container content-section text-center">
-            <div class="row">
-               <div class="col-lg-8 col-lg-offset-2">
-                  <h2>Contact us</h2>
-                  <p>Feel free to send a e-mail for us</p>
-                  <p><a href="#">institut@ipvs.uni-stuttgart.de</a>
-                  </p>
-               </div>
-            </div>
-         </section>
-         <!-- Footer -->
-         <footer>
-            <div class="container text-center">
-               <p>Copyright &copy; IPVS 2017</p>
-            </div>
-         </footer>
-         <!--Header Files-->
-         <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
-         <link rel="stylesheet" type='text/css' href="css/normalize.css">
-         <link rel="stylesheet" type='text/css' href="css/style.css">
-         <script src="https://www.gstatic.com/firebasejs/3.9.0/firebase.js"></script>
-         <script>
-            // Initialize Firebase (Database)
-            var config = {
-              apiKey: "AIzaSyDiFz4H5G6RkPhZMC5PJecNUeCAFUa0Rzs",
-              authDomain: "iot-mt.firebaseapp.com",
-              databaseURL: "https://iot-mt.firebaseio.com",
-              projectId: "iot-mt",
-              storageBucket: "iot-mt.appspot.com",
-              messagingSenderId: "838147143079"
-            };
-            firebase.initializeApp(config);
-         </script>
-         <!-- Bootstrap Core JavaScript -->
-         <script src="plugins/vendor/bootstrap/js/bootstrap.min.js"></script>
-         <!-- Plugin JavaScript -->
-         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
-         <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
-         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
-         <!-- Theme JavaScript -->
-         <script src="js/grayscale.min.js"></script>
+      </footer>
+      <!--Header Files-->
+      <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
+      <link rel="stylesheet" type='text/css' href="css/normalize.css">
+      <link rel="stylesheet" type='text/css' href="css/style.css">
+      <script src="https://www.gstatic.com/firebasejs/3.9.0/firebase.js"></script>
+      <script>
+         // Initialize Firebase (Database)
+         var config = {
+           apiKey: "AIzaSyDiFz4H5G6RkPhZMC5PJecNUeCAFUa0Rzs",
+           authDomain: "iot-mt.firebaseapp.com",
+           databaseURL: "https://iot-mt.firebaseio.com",
+           projectId: "iot-mt",
+           storageBucket: "iot-mt.appspot.com",
+           messagingSenderId: "838147143079"
+         };
+         firebase.initializeApp(config);
+      </script>
+      <!-- Bootstrap Core JavaScript -->
+      <script src="plugins/vendor/bootstrap/js/bootstrap.min.js"></script>
+      <!-- Plugin JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+      <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
+      <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
+      <!-- Theme JavaScript -->
+      <script src="js/grayscale.min.js"></script>
    </body>
 </html>
