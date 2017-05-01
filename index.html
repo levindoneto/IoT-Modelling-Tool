@@ -26,8 +26,15 @@
       <script src="js/bootstrap.min.js"></script>
       <script src="js/drag-and-drop/drag-and-drop-implemention.js"></script>
       <script src="plugins/bootstrap-slider/bootstrap-slider.js"></script>
+      <!-- Angular JS - Scripts -->
+      <script type="application/javascript" src="../bower_components/angular/angular.min.js"></script>
       </head>
       <!--*************************************************************************-->
+      <div ng-app="">
+         <p>Input something in the input box:</p>
+         <p>Name : <input type="text" ng-model="name" placeholder="Enter name here"></p>
+         <h1>Hello {{name}}</h1>
+      </div>
       <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
          <img src="img\environment\devices\raspberry.png" draggable="true" ondragstart="drag(event)" id="drag1" width=auto height="40">
       </div>
@@ -48,6 +55,13 @@
       <link rel="stylesheet" type='text/css' href="css/normalize.css">
       <link rel="stylesheet" type='text/css' href="css/style.css">
       <script src="https://www.gstatic.com/firebasejs/3.9.0/firebase.js"></script>
+      <div class="trashcan box box-grey box-padding">
+         <!-- If you use [] as referenced list, the dropped elements will be lost -->
+         <h3>Trashcan</h3>
+         <ul dnd-list="[]">
+            <li><img src="img/trash.png"></li>
+         </ul>
+      </div>
       <script>
          // Initialize Firebase (Database)
          var config = {

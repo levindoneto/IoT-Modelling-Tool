@@ -46,12 +46,104 @@ II) When an item is drag and dropped into the trash icon it'll be removed from t
 
 * HTML v5
 * CSS v3
-* [Bootstrap v3.3.7] (http://getbootstrap.com/)
+* [Bootstrap v3.3.7](http://getbootstrap.com/)
 
 ### Back-End
 
-* [Angular JS] (https://angularjs.org/)
+* [Angular JS](https://angularjs.org/)
 
 ### Database
 
-* [Firebase] (https://firebase.google.com) on Google's cloud
+* [Firebase](https://firebase.google.com) on Google's cloud
+
+## Setup IoT Modeling Tool
+
+### On windows
+
+#### Install NodeJS
+
+* [Download the installer](https://nodejs.org/en/download/)
+* Install NodeJS
+* Restart the machine
+
+##### Simple commands to test NodeJS
+
+###### Test Node
+```javascript
+$ node -v
+```
+
+###### Test NPM
+```javascript
+$ npm -v
+```
+
+###### Run a file (file.js)
+```javascript
+$ node file.js
+```
+
+##### Install Bower
+```javascript
+$ npm install -g bower
+```
+
+###### Init Bower inside the project folder
+```javascript
+$ bower init
+```
+
+###### The configurations in a JSON format should be like this
+```json
+{
+  name: 'IoT-MT',
+  authors: [
+    'Levindo Neto <levindogtn@gmail.com>'
+  ],
+  description: 'Modeling Tool',
+  main: 'index.html',
+  keywords: [
+    'iot'
+  ],
+  license: 'MIT',
+  homepage: '',
+  ignore: [
+    '**/.*',
+    'node_modules',
+    'bower_components',
+    'test',
+    'tests'
+  ]
+}
+```
+
+###### Bind Bower and Angular JS
+```javascript
+bower install --save angular
+```
+
+##### Server for tests
+
+For tests can be used the [http-server](https://www.npmjs.com/package/http-server)
+The installation can be done with NPM
+```javascript
+$ npm install -g http-server
+```
+
+###### To access the application can be used link
+```javascript
+http://localhost:8080/
+```
+directly in any web browser.
+
+##### Setup the directory for express
+```javascript
+$ npm install -g express-generator
+$ express Implementierung
+$ npm install -d
+```
+
+Also it should be added on [package.json](package.json) in "scripts":
+```json
+"start": "http-server ./Implementierung -a localhost -p 8080"
+```
