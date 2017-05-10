@@ -23,11 +23,11 @@ The packages diagram can be viewed in the image bellow.
 
 The system currently can be seen in the picture bellow (not yet).
 
-![Mock-Up Environment](img\readme\database-format.jpg)
+![Mock-Up Environment](img/readme/system.jpg)
 
 Also the format of the database is as following:
 
-![Database Format](img\readme\database-format.jpg)
+![Database Format](img/readme/database-format.jpg)
 
 ## How it will work (Initial idea)
 
