@@ -1,0 +1,83 @@
+<style >
+    /*Background*/
+    body {
+        background: #19232e;
+    }
+</style>
+<div class="container">
+    <a class="navbar-brand page-scroll" href="../../../../index.html">
+        <i> <img src="img/IoT-MT-title.png"  height="30px" width="30px"> </i> <span style="font-size: 22pt; color:white;" > IoT - Modeling Tool</span>
+    </a>
+
+</div>
+<div class="container margin-top-80">
+    <div class="col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2" data-ng-show="vm.signIn">
+        <div class="panel panel-info">
+            <div class="panel-heading text-center">
+                Access your Digital Environment
+            </div>
+            <div class="panel-body">
+                <form name="vm.loginForm" class="form-horizontal" data-ng-submit="vm.login(vm.getUser);">
+                    <div class="col-xs-12 input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="login-username" type="text" class="form-control" name="username" value="admin" placeholder="E-mail" data-ng-model="vm.getUser.Email" required>
+                    </div>
+                    <div class="col-xs-12 input-group margin-top-20">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        <input id="login-password" type="password" class="form-control" name="password" placeholder="Password" data-ng-model="vm.getUser.Password" required>
+                    </div>
+
+
+
+                        <button onclick="window.location.href='dashboard.html' type="submit" class="btn btn-block btn-primary">
+                            Login <span class="glyphicon glyphicon-play"></span>
+                        </button>
+                        <button type="button" class="btn btn-block btn-primary" data-ng-click="vm.signIn=false;">
+                            Register <span class="glyphicon glyphicon-hand-up"></span>
+                        </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2" data-ng-show="!vm.signIn">
+        <div class="panel panel-info">
+            <div class="panel-heading text-center">
+                Register
+            </div>
+            <div class="panel-body">
+                <form name="vm.registrationForm" data-ng-submit="vm.register();">
+                    <div class="form-group">
+                        <label for="email" class="col-md-12 control-label">Email</label>
+                        <div class="col-md-12">
+                            <input type="email" class="form-control" name="email" placeholder="E-mail" required data-ng-model="vm.setUser.Email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname" class="col-md-12 control-label margin-top-10">User</label>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" name="lastname" placeholder="User" required data-ng-model="vm.setUser.Username">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-md-12 control-label margin-top-10">Password</label>
+                        <div class="col-md-12">
+                            <input type="password" class="form-control" name="password" placeholder="Password" required data-ng-model="vm.setUser.Password">
+                        </div>
+                    </div>
+                    <div class="col-xs-12 margin-top-20">
+                        <div class="col-xs-6 padding-left-none">
+                            <button type="submit" class="btn btn-block btn-primary">
+                                Registrar <span class="glyphicon glyphicon-play"></span>
+                            </button>
+                        </div>
+                        <div class="col-xs-6 padding-right-none">
+                            <button type="button" class="btn btn-block btn-primary" data-ng-click="vm.signIn=true;">
+                                Cancel <span class="glyphicon glyphicon-move"></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

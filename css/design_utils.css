@@ -1,0 +1,24 @@
+
+.lvl-over {
+		/* applied to a drop target when a draggable object is over it */
+		border: 2px dashed black !important;
+	}
+
+	.lvl-target {
+		/*
+		applied to all drop targets when a drag operation begins
+		removed when the drag operation ends
+		used to indicate drop targets on a page
+		*/
+		background-color: #ddd;
+		opacity: .5;
+	}
+
+	[draggable] {
+		/* not applied by the directive, but useful to indicate a draggable element */
+		-moz-user-select: none;
+		-khtml-user-select: none;
+		-webkit-user-select: none;
+		user-select: none;
+		cursor: move;
+		border:1px solid black;

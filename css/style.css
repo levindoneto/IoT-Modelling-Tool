@@ -1,4 +1,6 @@
-﻿
+body{
+	background-color: #2d3e50;
+}
 /*===padding styles=====*/
 .padding-none{
     padding:0px!important;

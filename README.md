@@ -21,9 +21,13 @@ The packages diagram can be viewed in the image bellow.
 
 ![packages](resources/packages.jpg)
 
-The environment mock-up can be seen in the picture bellow (not yet).
+The system currently can be seen in the picture bellow (not yet).
 
-![Mock-Up Environment](resources/mock-up-environment.jpg)
+![Mock-Up Environment](img\readme\database-format.jpg)
+
+Also the format of the database is as following:
+
+![Database Format](img\readme\database-format.jpg)
 
 ## How it will work (Initial idea)
 
@@ -141,7 +145,10 @@ directly in any web browser.
 $ npm install -g express-generator
 $ express Implementierung
 $ npm install -d
+$ npm start
 ```
+
+Another way to start the application in the browser is with the Zervit.
 
 Also it should be added on [package.json](package.json) in "scripts":
 ```json

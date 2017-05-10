@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IoT - Modeling Tool</title>
+    <link rel="shortcut icon" href="img\IoT-MT-favicon.png" type="img/x-icon"> <!-- favicon -->
+    <meta name="description" content="Angular Bootstrap Dashboard"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <link href="plugins/angular-material/angular-material.min.css" rel="stylesheet" />
+    <!--CSS-->
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="css/nga.all.min.css" rel="stylesheet" />
+    <link href="css/themes.css" rel="stylesheet" />
+    <link href="css/dashboard.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <link href="plugins/bootstrap-slider/slider.css" rel="stylesheet" />
+    <link href="css/flexslider.css" rel="stylesheet" />
+    <link href="plugins/owl-carousel/owl.theme.css" rel="stylesheet" />
+    <link href="plugins/owl-carousel/owl.transitions.css" rel="stylesheet" />
+    <link href="plugins/owl-carousel/owl.carousel.css" rel="stylesheet" />
+    <link href="css/loginUtils.css" rel="stylesheet" />
+    <link href="css/utils.css" rel="stylesheet" />
+</head>
+<body ng-app="app" class="hold-transition sidebar-mini {{theme}} {{layout}}">
+    <!--Scripts-->
+    <script src="plugins/vendor/jquery/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="plugins/bootstrap-slider/bootstrap-slider.js"></script>
+
+
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-animate.min.js"></script>
+    <script src="js/angular-ui-router-min.js"></script>
+    <script src="js/angular-resource.js"></script>
+    <script src="plugins/knob/jquery.knob.js"></script>
+    <script src="plugins/Chart.min.js"></script>
+    <script src="plugins/owl-carousel/owl.carousel.min.js"></script>
+
+    <!-- Angular Material Library -->
+    <script src="js/angular-material.min.js"></script>
+    <script src="js/angular-aria.min.js"></script>
+    <script src="js/angular-messages.min.js"></script>
+
+    <script src="js/angular-flash.js"></script>
+    <script src="js/angular-sanitize.js"></script>
+    <script src="js/ui-bootstrap-tpls-0.13.0.min.js"></script>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>
+
+    <!-- AngularFire -->
+    <script src="https://cdn.firebase.com/libs/angularfire/2.1.0/angularfire.min.js"></script>
+
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyDiFz4H5G6RkPhZMC5PJecNUeCAFUa0Rzs",
+        authDomain: "iot-mt.firebaseapp.com",
+        databaseURL: "https://iot-mt.firebaseio.com",
+        projectId: "iot-mt",
+        storageBucket: "iot-mt.appspot.com",
+        messagingSenderId: "838147143079"
+      };
+      firebase.initializeApp(config);
+    </script>
+
+    <!--Common-->
+
+    <script src="app/common/config.js"></script>
+
+    <!--main app-->
+    <script src="app/app.js"></script>
+    <script src="app/common/appCtrl.js"></script>
+    <script src="app/services/apiService.js"></script>
+
+    <!--Login Module-->
+    <script src="app/modules/login/loginMgmt.js"></script>
+    <script src="app/modules/login/loginService.js"></script>
+    <script src="app/modules/login/loginCtrl.js"></script>
+
+    <!--Dashboard Module-->
+    <script src="app/modules/dashboard/dashboardApplication.js"></script>
+    <script src="app/modules/dashboard/dashboardService.js"></script>
+
+    <script src="node_modules/ng-file-upload/dist/ng-file-upload-shim.js"></script> <!-- for no html5 browsers support -->
+    <script src="node_modules/ng-file-upload/dist/ng-file-upload.js"></script>
+
+    <!-- Controllers -->
+
+    <script src="app/modules/dashboard/controllers/myaccount.js"></script>
+    <script src="app/modules/dashboard/controllers/mymodels.js"></script>
+    <script src="app/modules/dashboard/controllers/addmodel.js"></script>
+    <script src="app/modules/dashboard/controllers/wishlist.js"></script>
+    <script src="app/modules/dashboard/controllers/admin.js"></script>
+    <script src="app/modules/dashboard/controllers/search.js"></script>
+    <script src="app/modules/dashboard/controllers/digitalenvironment.js"></script>
+
+    <div flash-message="5000"></div>
+
+<ui-view></ui-view>
+
+</body>
+</html>

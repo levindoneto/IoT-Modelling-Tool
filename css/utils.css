@@ -1,0 +1,877 @@
+.DigitalEnvironment {
+    height: 400px;
+    width: 100%;
+
+}
+
+.gol {
+    text-align: center;
+    font-size: 25pt;
+    text-decoration: bold;
+    position: absolute;
+    color: white;
+}
+/*Pre Loader*/
+
+.cssload-loader {
+    position: relative;
+    left: calc(50% - 188px);
+    width: 376px;
+    height: 376px;
+    border-radius: 50%;
+    -o-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    perspective: 4700px;
+}
+
+.cssload-inner {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    border-radius: 50%;
+    -o-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+}
+
+.cssload-inner.cssload-one {
+    left: 0%;
+    top: 0%;
+    animation: cssload-rotate-one 1.15s linear infinite;
+    -o-animation: cssload-rotate-one 1.15s linear infinite;
+    -ms-animation: cssload-rotate-one 1.15s linear infinite;
+    -webkit-animation: cssload-rotate-one 1.15s linear infinite;
+    -moz-animation: cssload-rotate-one 1.15s linear infinite;
+    border-bottom: 30px solid rgb(255,255,255); /*Color 1*/
+}
+
+.cssload-inner.cssload-two {
+    right: 0%;
+    top: 0%;
+    animation: cssload-rotate-two 1.15s linear infinite;
+    -o-animation: cssload-rotate-two 1.15s linear infinite;
+    -ms-animation: cssload-rotate-two 1.15s linear infinite;
+    -webkit-animation: cssload-rotate-two 1.15s linear infinite;
+    -moz-animation: cssload-rotate-two 1.15s linear infinite;
+    border-right: 30px solid rgb(0,0,0); /*Color 2*/
+}
+
+.cssload-inner.cssload-three {
+    right: 0%;
+    bottom: 0%;
+    animation: cssload-rotate-three 1.15s linear infinite;
+    -o-animation: cssload-rotate-three 1.15s linear infinite;
+    -ms-animation: cssload-rotate-three 1.15s linear infinite;
+    -webkit-animation: cssload-rotate-three 1.15s linear infinite;
+    -moz-animation: cssload-rotate-three 1.15s linear infinite;
+    border-top: 18px solid rgb(133,129,133);
+}
+
+@keyframes cssload-rotate-one {
+    0% {
+        transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
+    }
+    100% {
+        transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg);
+    }
+}
+
+@-o-keyframes cssload-rotate-one {
+    0% {
+        -o-transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
+    }
+    100% {
+        -o-transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg);
+    }
+}
+
+@-ms-keyframes cssload-rotate-one {
+    0% {
+        -ms-transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
+    }
+    100% {
+        -ms-transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg);
+    }
+}
+
+@-webkit-keyframes cssload-rotate-one {
+    0% {
+        -webkit-transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
+    }
+    100% {
+        -webkit-transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg);
+    }
+}
+
+@-moz-keyframes cssload-rotate-one {
+    0% {
+        -moz-transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
+    }
+    100% {
+        -moz-transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg);
+    }
+}
+
+@keyframes cssload-rotate-two {
+    0% {
+        transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
+    }
+    100% {
+        transform: rotateX(50deg) rotateY(10deg) rotateZ(360deg);
+    }
+}
+
+@-o-keyframes cssload-rotate-two {
+    0% {
+        -o-transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
+    }
+    100% {
+        -o-transform: rotateX(50deg) rotateY(10deg) rotateZ(360deg);
+    }
+}
+
+@-ms-keyframes cssload-rotate-two {
+    0% {
+        -ms-transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
+    }
+    100% {
+        -ms-transform: rotateX(50deg) rotateY(10deg) rotateZ(360deg);
+    }
+}
+
+@-webkit-keyframes cssload-rotate-two {
+    0% {
+        -webkit-transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
+    }
+    100% {
+        -webkit-transform: rotateX(50deg) rotateY(10deg) rotateZ(360deg);
+    }
+}
+
+@-moz-keyframes cssload-rotate-two {
+    0% {
+        -moz-transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
+    }
+    100% {
+        -moz-transform: rotateX(50deg) rotateY(10deg) rotateZ(360deg);
+    }
+}
+
+@keyframes cssload-rotate-three {
+    0% {
+        transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
+    }
+    100% {
+        transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
+    }
+}
+
+@-o-keyframes cssload-rotate-three {
+    0% {
+        -o-transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
+    }
+    100% {
+        -o-transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
+    }
+}
+
+@-ms-keyframes cssload-rotate-three {
+    0% {
+        -ms-transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
+    }
+    100% {
+        -ms-transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
+    }
+}
+
+@-webkit-keyframes cssload-rotate-three {
+    0% {
+        -webkit-transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
+    }
+    100% {
+        -webkit-transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
+    }
+}
+
+@-moz-keyframes cssload-rotate-three {
+    0% {
+        -moz-transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
+    }
+    100% {
+        -moz-transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
+    }
+}
+/* End of pre loader */
+
+/* Button of login/register in the modelpp*/
+.button {
+  display: inline-block;
+  border-radius: 70px;
+  background-color: black;
+  border: 5px;
+  color: white;
+  text-align: center;
+  font-size: 30px;
+  padding: auto;
+  margin: auto;
+  width: 60%;
+  height: 30%;
+  transition: all 0.5s;
+  cursor: pointer;
+  webkit-justify-content: center;
+
+}
+
+.button span {
+  cursor: pointer;
+  border-radius: 50px;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+
+}
+
+.aboutpage {
+    background-color: rgba(31, 43, 58, 0.4);
+    padding: 20px;
+    border-radius: 4px;
+}
+
+/* My Account */
+.Titlemyaccount {
+    background-color: rgba(31, 43, 58, 0.4);
+    padding: 14px;
+    border-radius: 4px;
+    font-size: 18px;
+    color: black;
+}
+
+.titleMYACC {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.InfoAccount {
+    font-size: 18px;
+    color: #1f2b3a;
+}
+
+.EditInfoField {
+    color: black;
+    font-size: 14px;
+    font-weight: normal;
+
+}
+
+.DataEdit {
+    background-color: #1f2b3a;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 20px;
+    font-size: 20px;
+    color: white;
+    display: block;
+    margin: auto;
+    align: center;
+}
+
+.DataEdit:hover{
+    background-color: #557fac;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 20px;
+    font-size: 22px;
+    color: white;
+    display: block;
+    margin: auto;
+    align: center;
+    transition: all 0.5s;
+}
+
+.RmvButtonAddmodel {
+    background-color: #1f2b3a;
+    padding: 5px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 15px;
+    color: white;
+    display: block;
+    margin: auto;
+    align: center;
+}
+
+.RmvButtonAddmodel:hover {
+    background-color: #3c536b;
+    padding: 5px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 15px;
+    color: white;
+    display: block;
+    margin: auto;
+    align: center;
+}
+
+.Ratings {
+    font-size: 18px;
+}
+
+.MyEvaluationsRatingUser, .MyEvaluationsRatingUser, .MyInfo {
+    color: #1f2b3a;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.MyEvaluationsMessage, .MyInfoP {
+    color: black;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+/* Add model */
+input[type="file"] {
+  display: none;
+}
+
+.custom-file-upload {
+    border: 1px;
+    background-color: #1f2b3a;
+    font-size: 15px;
+    color: white;
+    padding: 5px;
+    border-radius: 8px;
+    margin-top: 10px;
+    margin: auto
+}
+
+.custom-file-upload:hover {
+    border: 1px;
+    background-color: #3c536b;
+    font-size: 15px;
+    color: white;
+    padding: 5px;
+    border-radius: 8px;
+    margin-top: 10px;
+    margin: auto;
+    transition: all 0.5s;
+    cursor: pointer;
+}
+
+.BoxInput {
+    color: black;
+    font-size: 14px;
+}
+
+/* Search */
+.SearchFilter {
+    font-size: 18px;
+    color: black;
+}
+
+.titleSearch {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.BtnCloseSearch {
+    border: 1px;
+    background-color: #1f2b3a;
+    color: white;
+    border-radius: 8px;
+    margin: auto
+    margin: 2px 2px 2px 2px;
+}
+
+.BtnCloseSearch:hover {
+    border: 1px;
+    background-color: #3c536b;
+    font-size: 15px;
+    color: white;
+    border-radius: 8px;
+    margin: auto;
+    transition: all 0.5s;
+    cursor: pointer;
+}
+
+.DetailsmodelSearch {
+    border: 1px;
+    background-color: #1f2b3a;
+    color: white;
+    font-size: 20px;
+    border-radius: 8px;
+    margin: auto;
+    padding: 5px;
+}
+
+.DetailsmodelSearch:hover {
+    border: 1px;
+    background-color: #3c536b;
+    font-size: 20px;
+    color: white;
+    border-radius: 8px;
+    margin: auto;
+    transition: all 0.5s;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.DetailsUserSearch {
+    border: 1px;
+    background-color: #3c536b;
+    font-size: 20px;
+    color: white;
+    border-radius: 8px;
+    margin: auto;
+    transition: all 0.5s;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.DetailsUserSearch:hover {
+    border: 1px;
+    background-color: #1f2b3a;
+    color: white;
+    font-size: 20px;
+    border-radius: 8px;
+    margin: auto
+    cursor: pointer;
+    padding: 5px;
+}
+
+.MakeTradeSearch {
+    border: 1px;
+    background-color: #1f2b3a;
+    color: white;
+    font-size: 20px;
+    border-radius: 8px;
+    margin: auto;
+    padding: 5px;
+}
+
+.MakeTradeSearch:hover {
+    border: 1px;
+    background-color: #3c536b;
+    font-size: 20px;
+    color: white;
+    border-radius: 8px;
+    margin: auto;
+    transition: all 0.5s;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.ImgSearch {
+    border: 1px;
+    border-radius: 8px;
+    box-shadow: 3px 3px 1px grey;
+}
+
+/*My models*/
+.BtnMymodels {
+    border: 1px;
+    background-color: #879bb1;
+    padding: 15px 32px;
+    margin-left: 1px;
+    border-radius: 8px;
+}
+
+.BtnMymodels:hover {
+    border: 1px;
+    background-color: #3c536b;
+    transition: all 0.5s;
+    margin-left: 1px;
+    padding: 15px 32px;
+    border-radius: 8px;
+}
+
+.BtnCloseMymodels {
+    border: 1px;
+    background-color: #1f2b3a;
+    color: white;
+    border-radius: 8px;
+    margin: auto
+}
+
+.BtnCloseMymodels:hover {
+    border: 1px;
+    background-color: #3c536b;
+    font-size: 15px;
+    color: white;
+    border-radius: 8px;
+    margin: auto;
+    transition: all 0.5s;
+    cursor: pointer;
+}
+
+.ImgMymodels {
+    border: 1px;
+    border-radius: 8px;
+    box-shadow: 3px 3px 1px grey;
+}
+
+/* Trades */
+.BtnBookTrade {
+    border: 1px;
+    background-color: #1f2b3a;
+    color: white;
+    font-size: 20px;
+    border-radius: 8px;
+    margin: auto;
+    padding: 5px;
+}
+
+.BtnBookTrade:hover {
+    border: 1px;
+    background-color: #3c536b;
+    font-size: 20px;
+    color: white;
+    border-radius: 8px;
+    margin: auto;
+    transition: all 0.5s;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.BtnUserTrade {
+    border: 1px;
+    background-color: #3c536b;
+    font-size: 20px;
+    color: white;
+    border-radius: 8px;
+    margin: auto;
+    transition: all 0.5s;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.BtnUserTrade:hover {
+    border: 1px;
+    background-color: #1f2b3a;
+    color: white;
+    font-size: 20px;
+    border-radius: 8px;
+    margin: auto
+    cursor: pointer;
+    padding: 5px;
+}
+
+.AcceptTrade {
+    background-color: #222d32;
+    font-size: 20px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.AcceptTrade:hover {
+    background-color: #3c536b;
+    font-size: 20px;
+    border-radius: 8px;
+    transition: all 0.5s;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.DemonstrateInterestTrade {
+    background-color: #222d32;
+    font-size: 20px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    padding: 3px;
+}
+
+.DemonstrateInterestTrade:hover {
+    background-color: #3c536b;
+    font-size: 20px;
+    border-radius: 8px;
+    transition: all 0.5s;
+    color: white;
+    cursor: pointer;
+    padding: 3px;
+}
+
+.SeemodelsTrade {
+    background-color: #222d32;
+    font-size: 20px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.SeemodelsTrade:hover {
+    background-color: #3c536b;
+    font-size: 20px;
+    border-radius: 8px;
+    transition: all 0.5s;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.SendCodeTrade {
+    background-color: #222d32;
+    font-size: 20px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+
+.SendCodeTrade:hover {
+    background-color: #3c536b;
+    font-size: 20px;
+    border-radius: 8px;
+    transition: all 0.5s;
+    color: white;
+    cursor: pointer;
+}
+
+.Send {
+    background-color: #222d32;
+    font-size: 20px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+
+.Send:hover {
+    background-color: #3c536b;
+    font-size: 20px;
+    border-radius: 8px;
+    transition: all 0.5s;
+    color: white;
+    cursor: pointer;
+}
+
+.Report {
+    background-color: #5f5151;
+    font-size: 20px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+
+.Report:hover {
+    background-color: #3c536b;
+    font-size: 20px;
+    border-radius: 8px;
+    transition: all 0.5s;
+    color: white;
+    cursor: pointer;
+}
+
+.ReportBadTrade {
+    background-color: #5f5151;
+    font-size: 20px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+
+.ReportBadTrade:hover {
+    background-color: #3c536b;
+    font-size: 20px;
+    border-radius: 8px;
+    transition: all 0.5s;
+    color: white;
+    cursor: pointer;
+}
+
+.DeclineTrade {
+    background-color: #5f5151;
+    font-size: 20px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+
+.DeclineTrade:hover {
+    background-color: #3c536b;
+    font-size: 20px;
+    border-radius: 8px;
+    transition: all 0.5s;
+    color: white;
+    cursor: pointer;
+}
+
+.Evaluate {
+    background-color: #222d32;
+    font-size: 20px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+
+.Evaluate:hover {
+    background-color: #3c536b;
+    font-size: 20px;
+    border-radius: 8px;
+    transition: all 0.5s;
+    color: white;
+    cursor: pointer;
+}
+
+.ConfirmedReceiving {
+    background-color: #222d32;
+    font-size: 20px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+
+.ConfirmedReceiving:hover {
+    background-color: #3c536b;
+    font-size: 20px;
+    border-radius: 8px;
+    transition: all 0.5s;
+    color: white;
+    cursor: pointer;
+}
+
+.ChatTrade {
+    background-color: #222d32;
+    font-size: 20px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+
+.ChatTrade:hover {
+    background-color: #3c536b;
+    font-size: 20px;
+    border-radius: 8px;
+    transition: all 0.5s;
+    color: white;
+    cursor: pointer;
+}
+
+.ShowAddress {
+    background-color: #222d32;
+    font-size: 20px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+
+.ShowAddress:hover {
+    background-color: #3c536b;
+    font-size: 20px;
+    border-radius: 8px;
+    transition: all 0.5s;
+    color: white;
+    cursor: pointer;
+}
+
+/* Withlist */
+.RemoveDesire, .BanUser, .DisLogApp {
+    background-color: #5f5151;
+    font-size: 15px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.RemoveDesire:hover, .BanUser:hover, .DisLogApp:hover {
+    background-color: #3c536b;
+    font-size: 16px;
+    border-radius: 8px;
+    transition: all 0.5s;
+    color: white;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.ADDWordKey, .DisBanUser, .MyAccountApp {
+    background-color: #1f2b3a;
+    font-size: 15px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.ADDWordKey:hover, .DisBanUser:hover, .MyAccountApp:hover, {
+    background-color: #3c536b;
+    font-size: 16px;
+    border-radius: 8px;
+    transition: all 0.5s;
+    color: white;
+    cursor: pointer;
+    padding: 4px;
+}
+
+h6.TitleWithlist {
+    font-size: 16px;
+    color: black;
+}
+
+.KeyWordWithlist {
+    color: black;
+    font-size: 14px;
+}
+
+p.Withlist {
+    color: #262f28;
+    font-size: 14px/
+}
+
+/* Admin */
+.InfoReport {
+    font-size: 16px;
+    color: black;
+    margin-left: 15px;
+}
+
+.InfoReportData, h5.AdmTitle {
+    font-size: 16px;
+    color: black;
+    font-weight: bold;
+}
+
+.InfoAboutReport {
+    font-size: 16px;
+    color: #606762;
+}
+
+/* General Style */
+h, button {
+    margin: 2px 2px 2px 2px;
+
+}
+
+button {
+    box-shadow: 1px 1px 1px grey;
+    transition: all 0.5s;
+}
+
+button:hover {
+    box-shadow: 1px 1px 1px black;
+    transition: all 0.5s;
+}
+
+h5.H5Trades, h5.ReportedTrades, .Adm {
+    font-size: 16px;
+    color: black;
+}
+
+.nameApp {
+    font-size: 30px;
+    color: white;
+}
+
+.MenuUP {
+    font-size: 18px;
+    color: black;
+}

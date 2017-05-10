@@ -1,0 +1,130 @@
+<script src="js/sweetalert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+
+<div ng-app="" ng-init="miniActive='0'">
+<div class="wrapper">
+  <header class="main-header">
+      <a class="navbar-brand page-scroll hidden-xs hidden-sm"  style="border-color: transparent" href="../../../../index.html">
+          <i> <img src="img/IoT-MT-title.png"  height="30" width="30"> </i> <span style="color: white; ; ">IoT - Modeling Tool</span>
+      </a>
+
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top" role="navigation">
+      <!-- Sidebar toggle button-->
+      <a class="sidebar-toggle" data-toggle="offcanvas" role="button" miniActive='1' data-ng-click="vm.sideBar(1);">
+        <span class="sr-only">Allow the navigation</span>
+      </a>
+      <!-- Navbar Right Menu -->
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <li class="dropdown notifications-menu hidden-xs hidden-sm">
+            <a ng-hide="true" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-align-justify"></i> Layouts
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <ul class="menu">
+                  <li data-ng-repeat="screen in vm.layouts" data-ng-click="vm.setLayout(screen.layout);">
+                    <a>
+                      <i class="fa fa-indent"></i> {{screen.Username}}
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li class="dropdown notifications-menu">
+            <a class="dropdown-toggle" data-toggle="dropdown" ng-click="readNotification()">
+              <div ng-if="user.haveNotification">
+                <i class="fa fa-bell"></i>
+              </div>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <ul class="menu">
+                </ul>
+              </li>
+            </ul>
+          </li>
+
+          <!-- User Account: style can be found in dropdown.less -->
+          <li class="dropdown user user-menu hidden-xs hidden-sm" >
+            <a class="dropdown-toggle" data-toggle="dropdown">
+              <!--<img src="{{user.profilePhoto}}" class="user-image" alt="User Image" />-->
+              <span class="class="MenuUP" hidden-xs">{{user.Username}}</span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- User image -->
+              <li class="user-header">
+                <!--<img src="{{user.profilePhoto}}" class="img-circle" alt="User Image">-->
+
+                <h3 class="nameApp ">{{user.Username}}</h3>
+
+              </li>
+              <!-- Menu Footer-->
+              <li class="user-footer">
+                <div class="pull-left">
+                  <a ui-sref="app.myaccount" class="MyAccountApp">My Account</a>
+                </div>
+                <div class="pull-right">
+                  <span ng-show="vm.currentUser != undefined">
+                    <a href="#"  class="DisLogApp" ng-click="vm.auth.$signOut()">Logoff</a>
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </li>
+
+
+          <span ng-show="vm.currentUser != undefined"  class="hidden-md	hidden-lg">
+            <a href="#"  class="DisLogApp" ng-click="vm.auth.$signOut()">Logoff</a>
+          </span>
+
+
+
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+
+    <!-- sidebar -->
+    <section class="sidebar">
+      <br><br>
+
+      <div class="user-panel">
+        <div class="pull-left image">
+          <!--<img src="{{user.profilePhoto}}" class="img-circle" alt="User Image"> -->
+        </div>
+        <div class="" align="center">
+            <a ng-if="ui-sref-active!='active'">
+                <p style="white-space: normal;">::: {{user.Username}} :::</p>
+            </a>
+
+
+        </div>
+      </div>
+
+      <ul class="sidebar-menu">
+        <li class="treeview" ui-sref-active="active" ng-click="vm.sideBar();" data-ng-repeat="menu in vm.menuItems">
+
+          <a ng-if="menu.state != 'admin'" ui-sref="app.{{menu.state}}">
+            <i class="fa fa-{{menu.icon}}"></i> <span>{{menu.title}}</span>
+          </a>
+          <a ng-if="menu.state == 'admin' && user.isAdmin" ui-sref="app.{{menu.state}}">
+            <i class="fa fa-{{menu.icon}}"></i> <span>{{menu.title}}</span>
+          </a>
+        </li>
+
+      </ul>
+    </section>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <br>
+    <ui-view></ui-view>
+  </div>
+</div>
