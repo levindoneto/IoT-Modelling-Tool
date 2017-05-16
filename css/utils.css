@@ -4,13 +4,6 @@
 
 }
 
-.gol {
-    text-align: center;
-    font-size: 25pt;
-    text-decoration: bold;
-    position: absolute;
-    color: white;
-}
 /*Pre Loader*/
 
 .cssload-loader {
@@ -271,6 +264,19 @@
 
 }
 
+.AddProperty{
+    background-color: #1f2b3a;
+    padding: 4px;
+    border-radius: 8px;
+    margin-top: 10px;
+    margin-left: 2px;
+    font-size: 18px;
+    color: white;
+    display: inline;
+    margin: auto;
+    align: left;
+}
+
 .DataEdit {
     background-color: #1f2b3a;
     padding: 10px;
@@ -282,6 +288,20 @@
     margin: auto;
     align: center;
 }
+
+.AddProperty:hover{
+    background-color: #557fac;
+    padding: 4px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 18px;
+    color: white;
+    display: inline;
+    margin: auto;
+    align: left;
+    transition: all 0.5s;
+}
+
 
 .DataEdit:hover{
     background-color: #557fac;
@@ -296,7 +316,7 @@
     transition: all 0.5s;
 }
 
-.RmvButtonAddmodel {
+.RmvButtonaddbelonging {
     background-color: #1f2b3a;
     padding: 5px;
     border-radius: 8px;
@@ -308,7 +328,7 @@
     align: center;
 }
 
-.RmvButtonAddmodel:hover {
+.RmvButtonaddbelonging:hover {
     background-color: #3c536b;
     padding: 5px;
     border-radius: 8px;
@@ -475,7 +495,7 @@ input[type="file"] {
 }
 
 /*My models*/
-.BtnMymodels {
+.Btnmybelongings {
     border: 1px;
     background-color: #879bb1;
     padding: 15px 32px;
@@ -483,7 +503,7 @@ input[type="file"] {
     border-radius: 8px;
 }
 
-.BtnMymodels:hover {
+.Btnmybelongings:hover {
     border: 1px;
     background-color: #3c536b;
     transition: all 0.5s;
@@ -492,7 +512,7 @@ input[type="file"] {
     border-radius: 8px;
 }
 
-.BtnCloseMymodels {
+.BtnClosemybelongings {
     border: 1px;
     background-color: #1f2b3a;
     color: white;
@@ -500,7 +520,7 @@ input[type="file"] {
     margin: auto
 }
 
-.BtnCloseMymodels:hover {
+.BtnClosemybelongings:hover {
     border: 1px;
     background-color: #3c536b;
     font-size: 15px;
@@ -511,7 +531,7 @@ input[type="file"] {
     cursor: pointer;
 }
 
-.ImgMymodels {
+.Imgmybelongings {
     border: 1px;
     border-radius: 8px;
     box-shadow: 3px 3px 1px grey;

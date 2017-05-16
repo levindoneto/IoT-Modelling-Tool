@@ -40,12 +40,12 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
 
     $scope.trade = function(model, id) {
         var createTrade = ({'state': 'received', 'sender': $rootScope.userDB.uid, 'receiver': model.userUid, 'modelSenderIsInterested': {'id': model.$id, 'model': model}, 'modelReceiverIsInterested' : null})
-        var ref = firebase.database().ref('trades/');
+        var ref = firebase.database().ref('belongings/');
         notification.send("Você recebeu proposta de troca. Verificar no menu 'Trocas'", model.userUid);
-        var tradesList = $firebaseArray(ref);
-        tradesList.$loaded().then(function(){
+        var belongingsList = $firebaseArray(ref);
+        belongingsList.$loaded().then(function(){
             // add an item
-            tradesList.$add(createTrade).then(function(ref) {
+            belongingsList.$add(createTrade).then(function(ref) {
                 swal({
                     title: "Interesse enviado ao usuário!",
                     timer: 1700,

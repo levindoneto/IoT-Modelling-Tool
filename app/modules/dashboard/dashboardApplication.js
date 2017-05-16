@@ -47,20 +47,20 @@ dashboard.config(["$stateProvider", function ($stateProvider) {
   });
 
 
-  $stateProvider.state('app.mymodels', {
-    url: '/mymodels',
-    templateUrl: 'app/modules/dashboard/views/mymodels.html',
-    controller: 'mymodelsController',
+  $stateProvider.state('app.mybelongings', {
+    url: '/mybelongings',
+    templateUrl: 'app/modules/dashboard/views/mybelongings.html',
+    controller: 'mybelongingsController',
     controllerAs: 'vm',
     data: {
       pageTitle: 'Meus models'
     }
   });
 
-  $stateProvider.state('app.addmodel', {
-    url: '/addmodel',
-    templateUrl: 'app/modules/dashboard/views/addmodel.html',
-    controller: 'addmodelController',
+  $stateProvider.state('app.addbelonging', {
+    url: '/addbelonging',
+    templateUrl: 'app/modules/dashboard/views/addbelonging.html',
+    controller: 'addbelongingController',
     controllerAs: 'vm',
     data: {
       pageTitle: 'Adicionar model'
@@ -97,10 +97,10 @@ dashboard.config(["$stateProvider", function ($stateProvider) {
     }
   });
 
-  $stateProvider.state('app.trades', {
-    url: '/trades',
+  $stateProvider.state('app.digitalenvironment', {
+    url: '/digitalenvironment',
     templateUrl: 'app/modules/dashboard/views/digitalenvironment.html',
-    controller: 'tradesController',
+    controller: 'digitalenvironmentController',
     controllerAs: 'vm',
     data: {
       pageTitle: 'Trocas'

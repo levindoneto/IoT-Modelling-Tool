@@ -56,7 +56,7 @@
                 <h3 align="center">
                     ID: {{modalmodel.id}} </br>
                     Icon:<br>
-                    <img class="Imgmymodels" src="{{imagemodel}}" height="300px" width="auto" /><br>
+                    <img class="Imgmybelongings" src="{{imagemodel}}" height="300px" width="auto" /><br>
                     <span class="MyInfo"> Type:        </span> <span class="MyInfoP"> {{modalmodel.type}}       </span></br>
                     <span class="MyInfo"> Number of Pins:          </span> <span class="MyInfoP"> {{modalmodel.NumberOfPins}} </span></br>
                     <span class="MyInfo"> Location: </span> <span class="MyInfoP"> {{modalmodel.location}}     </span></br>
@@ -77,37 +77,37 @@
                 <li ng-if="filter == 'name'" ng-repeat="model in models  | filter:{ name: searchItem ,  userUid: '!' + userDB.uid}:false  | orderBy:'name':(reverseOrder == 'true')" > <!-- models is a list  provided by the controller-->
                     <h3>
 
-                        {{model.name}} - {{model.year}} <button  data-toggle="modal" data-target="#popUp" type="button" ng-click="modal(model)"  class=" fa fa-info-circle DetailsmodelSearch"><button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"></button><button ng-click="trade(model, id)"type="button" class="fa fa-exchange MakeTradeSearch"></button>
+                        {{model.name}} - {{model.year}} <button  data-toggle="modal" data-target="#popUp" type="button" ng-click="modal(model)"  class=" fa fa-info-circle DetailsmodelSearch"><button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"></button><button ng-click="trade(model, id)"type="button" class="fa fa-exchange Makebelongingsearch"></button>
                     </h3>
                 </li>
                 <li ng-if="filter == 'ednumb'" ng-repeat="(id, model) in models | filter:{ ednumb: searchItem ,  userUid: '!' + userDB.uid}:false | orderBy:'ednumb':(reverseOrder == 'true')" > <!-- models is a list  provided by the controller-->
                     <h3>
 
-                        {{model.name}} - {{model.year}} <button  data-toggle="modal" data-target="#popUp"  type="button" ng-click="modal(model)"  class="fa fa-info-circle DetailsmodelSearch"></button><button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"><button ng-click="trade(model, id)"type="button" class="fa fa-exchange MakeTradeSearch"></button>
+                        {{model.name}} - {{model.year}} <button  data-toggle="modal" data-target="#popUp"  type="button" ng-click="modal(model)"  class="fa fa-info-circle DetailsmodelSearch"></button><button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"><button ng-click="trade(model, id)"type="button" class="fa fa-exchange Makebelongingsearch"></button>
                     </h3>
                 </li>
                 <li ng-if="filter == 'collection'" ng-repeat="(id, model) in models | filter:{ collection: searchItem ,  userUid: '!' + userDB.uid}:false  | orderBy:'collection':(reverseOrder == 'true')" > <!-- models is a list  provided by the controller-->
                     <h3>
 
-                        {{model.name}} - {{model.year}} <button  data-toggle="modal" data-target="#popUp" type="button" ng-click="modal(model)" class="fa fa-info-circle DetailsmodelSearch"></button><button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"><button ng-click="trade(model, id)"type="button" class="fa fa-exchange MakeTradeSearch"></button>
+                        {{model.name}} - {{model.year}} <button  data-toggle="modal" data-target="#popUp" type="button" ng-click="modal(model)" class="fa fa-info-circle DetailsmodelSearch"></button><button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"><button ng-click="trade(model, id)"type="button" class="fa fa-exchange Makebelongingsearch"></button>
                     </h3>
                 </li>
                 <li ng-if="filter == 'publisher'" ng-repeat="(id, model) in models | filter:{ publisher: searchItem ,  userUid: '!' + userDB.uid}:false  | orderBy:'publisher':(reverseOrder == 'true')" > <!-- models is a list  provided by the controller-->
                     <h3>
 
-                        {{model.name}} - {{model.year}} <button  data-toggle="modal" data-target="#popUp" type="button" ng-click="modal(model)" class="fa fa-info-circle DetailsmodelSearch"></button><button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"><button ng-click="trade(model, id)"type="button" class="fa fa-exchange MakeTradeSearch"></button>
+                        {{model.name}} - {{model.year}} <button  data-toggle="modal" data-target="#popUp" type="button" ng-click="modal(model)" class="fa fa-info-circle DetailsmodelSearch"></button><button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"><button ng-click="trade(model, id)"type="button" class="fa fa-exchange Makebelongingsearch"></button>
                     </h3>
                 </li>
                 <li ng-if="filter == 'state'" ng-repeat="(id, model) in models | filter:{ state: searchItem ,  userUid: '!' + userDB.uid}:false | orderBy:'state':(reverseOrder == 'true')" > <!-- models is a list  provided by the controller-->
                     <h3>
 
-                        {{model.name}} - {{model.year}} <button  data-toggle="modal" data-target="#popUp" type="button" ng-click="modal(model)" class="fa fa-info-circle DetailsmodelSearch"></button><button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"><button ng-click="trade(model, id)"type="button" class="fa fa-exchange MakeTradeSearch"></button>
+                        {{model.name}} - {{model.year}} <button  data-toggle="modal" data-target="#popUp" type="button" ng-click="modal(model)" class="fa fa-info-circle DetailsmodelSearch"></button><button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"><button ng-click="trade(model, id)"type="button" class="fa fa-exchange Makebelongingsearch"></button>
                     </h3>
                 </li>
                 <li ng-if="filter == 'year'" ng-repeat="(id, model) in models | filter:{ year: searchItem ,  userUid: '!' + userDB.uid}:false | orderBy:'year':(reverseOrder == 'true')" > <!-- models is a list  provided by the controller-->
                     <h3>
 
-                        {{model.name}} - {{model.year}} <button  data-toggle="modal" data-target="#popUp" type="button" ng-click="modal(model)" class="fa fa-info-circle DetailsmodelSearch"></button><button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"><button ng-click="trade(model, id)"type="button" class="fa fa-exchange MakeTradeSearch"></button>
+                        {{model.name}} - {{model.year}} <button  data-toggle="modal" data-target="#popUp" type="button" ng-click="modal(model)" class="fa fa-info-circle DetailsmodelSearch"></button><button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"><button ng-click="trade(model, id)"type="button" class="fa fa-exchange Makebelongingsearch"></button>
                     </h3>
                 </li>
             </ul>

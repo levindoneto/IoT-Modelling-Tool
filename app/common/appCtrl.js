@@ -174,20 +174,20 @@ $scope.readNotification = function(){
         {
             title: "Digital Environment",
             icon: "exchange",
-            state: "trades"
+            state: "digitalenvironment"
         },
         {
-            title: "My Models",
+            title: "My belongings",
             icon: "book",
-            state: "mymodels"
+            state: "mybelongings"
         },
         {
-            title: "Add Model",  // Can be devices, actuators or sensors
+            title: "Add belonging",  // Can be devices, actuators or sensors
             icon: "plus-circle",
-            state: "addmodel"
+            state: "addbelonging"
         },
         {
-            title: "Search other Models",
+            title: "Search",
             icon: "search",
             state: "search"
         },
