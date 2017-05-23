@@ -15,7 +15,7 @@ function ($rootScope, $scope, $state, $location, loginService, Flash, apiService
             console.log("Signed in as:", firebaseUser.uid);
 
         }).catch(function(error) {
-            Flash.create('danger', 'Fail in the autentication->' + error, 'large-text');
+            Flash.create('Danger', 'Fail in the autentication->' + error, 'large-text');
 
         });
 

@@ -10,7 +10,6 @@ import * as utils from '../utils/utils';
 import Avatar from 'material-ui/Avatar';
 
 
-
 const boxSource = {
   beginDrag(props) {
     const { id, left, top, type, isPaletteItem } = props;
@@ -50,6 +49,21 @@ class Device extends Component {
     DeviceStore.removeListener("change", this.getSelectedDevice);
   }
 
+    /**
+     * OVERWRITE screenshot of DragPreview from HTML5 here
+     */
+  componentDidMount() {
+      const { connectDragPreview } = this.props;
+
+      let parentClasses = utils.getParentClasses(this.props.type);
+      if (parentClasses.includes("ssn:SensingDevice")) {
+          const img = new Image();
+          img.src = "images/sensor.png";
+          img.onload = () => connectDragPreview(img);
+      }
+  }
+
+
   handleRequestClose = () => {
     this.setState({
       open: false,
@@ -64,22 +78,22 @@ class Device extends Component {
       DropActions.selectDevice("");
 
     DropActions.deleteDevice(this.props.id);
-  }
+  };
 
   getSelectedDevice = () => {
     this.setState({
       selectedDevice: DeviceStore.getSelectedDevice()
     });
-  }
+  };
 
   selectDeviceOptions = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     this.setState({
       open: true,
       anchorEl: e.currentTarget,
     });
-  }
+  };
 
 
   handleOpenSetProperty = () => {
@@ -98,7 +112,7 @@ class Device extends Component {
       this.deleteDevice();
       document.body.removeEventListener('keyup', this.handleKeysDevice);
     }
-  }
+  };
 
   handleClick = (e) => {
     e.stopPropagation();
@@ -107,12 +121,12 @@ class Device extends Component {
       DropActions.selectDevice("");
     else
       DropActions.selectDevice(this.props.id);
-  }
+  };
 
   handleChange = (event, index, selectValues) => {
     // this.state.attributeInputs[name] = "";
     this.setState({selectValues});
-  }
+  };
 
   menuItems(selectValues) {
 
@@ -151,7 +165,7 @@ class Device extends Component {
           sensingDeviceAvatar = (<Avatar src="images/sensor.png"/>);
           isSensingDevice = true;
       } else if(parentClasses.includes("ssn:Device") && !parentClasses.includes("iot-lite:ActuatingDevice")) {
-          //deviceAvatar = ;
+          //deviceAvatar = ();
           isDevice = true;
       } else if(parentClasses.includes("iot-lite:ActuatingDevice")) {
           //actuatingDeviceAvatar = ();
@@ -210,7 +224,7 @@ class Device extends Component {
         <div>
           <ListItem key={key} primaryText={id}
                     leftAvatar={sensingDeviceAvatar}
-                    style={{'border': '4px dotted gray', 'backgroundColor': '#ffe082'}}>
+                    style={{'border': '1px dotted gray', 'backgroundColor': '#ffe082'}}>
           </ListItem >
         </div>
       );
@@ -219,7 +233,7 @@ class Device extends Component {
             <div>
               <ListItem key={key} primaryText={id}
                         leftAvatar={deviceAvatar}
-                        style={{'border': '4px dotted gray', 'backgroundColor': '#aed581'}}>
+                        style={{'border': '1px dotted gray', 'backgroundColor': '#aed581'}}>
               </ListItem >
             </div>
         );
@@ -228,7 +242,7 @@ class Device extends Component {
             <div>
               <ListItem key={key} primaryText={id}
                         leftAvatar={actuatingDeviceAvatar}
-                        style={{'border': '4px dotted gray', 'backgroundColor': '#4fc3f7'}}>
+                        style={{'border': '1px dotted gray', 'backgroundColor': '#4fc3f7'}}>
               </ListItem >
             </div>
         );
@@ -246,6 +260,7 @@ class Device extends Component {
 
 
 export default DragSource(ItemTypes.BOX, boxSource, (connect, monitor) => ({
-  connectDragSource: connect.dragSource(),
-  isDragging: monitor.isDragging()
-}))(Device);
+      connectDragSource: connect.dragSource(),
+      isDragging: monitor.isDragging(),
+      connectDragPreview: connect.dragPreview()})
+)(Device);

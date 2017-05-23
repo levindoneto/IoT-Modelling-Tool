@@ -169,7 +169,7 @@ export default class MyList extends React.Component {
                 <List style={styles}>
                   <Subheader>Model Details</Subheader>
 
-                  <ListItem key={1} primaryText={"Select A Device"} />
+                  <ListItem key={1} primaryText={"Select a device"} />
                 </List>
               </div>
             </MuiThemeProvider>

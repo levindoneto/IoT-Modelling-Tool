@@ -134,9 +134,18 @@ The installation can be done with NPM
 $ npm install -g http-server
 ```
 
+or can be used Python Server (It's compatible with [font awesome](https://fontawesome.io))
+```javascript
+$ python -m http.server [<portNo>]  // Windows
+```
+
+```javascript
+$ python -m SimpleHTTPServer  // Linux
+```
+
 ###### To access the application can be used link
 ```javascript
-http://localhost:8080/
+http://localhost:[<portNo>]/
 ```
 directly in any web browser.
 

@@ -23,7 +23,12 @@ module.exports = {
     path: __dirname + "/../resources/static/",
     filename: "client.min.js"
   },
+  watch: true,
   plugins: debug ? [] : [
+    new webpack.optimize.UglifyJsPlugin({
+      minimize: true,
+      compress: false
+    }),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),

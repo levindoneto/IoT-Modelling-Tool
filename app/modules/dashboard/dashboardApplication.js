@@ -53,7 +53,7 @@ dashboard.config(["$stateProvider", function ($stateProvider) {
     controller: 'mybelongingsController',
     controllerAs: 'vm',
     data: {
-      pageTitle: 'Meus models'
+      pageTitle: 'My belongings'
     }
   });
 
@@ -67,46 +67,25 @@ dashboard.config(["$stateProvider", function ($stateProvider) {
     }
   });
 
-  $stateProvider.state('app.wishlist', {
-    url: '/wishlist',
-    templateUrl: 'app/modules/dashboard/views/wishlist.html',
-    controller: 'wishlistController',
-    controllerAs: 'vm',
-    data: {
-      pageTitle: 'Lista de Desejos'
-    }
-  });
-
-  $stateProvider.state('app.admin', {
-    url: '/admin',
-    templateUrl: 'app/modules/dashboard/views/admin.html',
-    controller: 'adminController',
-    controllerAs: 'vm',
-    data: {
-      pageTitle: 'Administrator'
-    }
-  });
-
   $stateProvider.state('app.search', {
     url: '/search',
     templateUrl: 'app/modules/dashboard/views/search.html',
     controller: 'searchController',
     controllerAs: 'vm',
     data: {
-      pageTitle: 'Search Model'
+      pageTitle: 'Search'
     }
   });
 
   $stateProvider.state('app.digitalenvironment', {
     url: '/digitalenvironment',
-    templateUrl: 'app/modules/dashboard/views/digitalenvironment.html',
+    templateUrl: 'app/modules/dashboard/digital_environment/src/main/resources/templates/index.html',
     controller: 'digitalenvironmentController',
     controllerAs: 'vm',
     data: {
-      pageTitle: 'Trocas'
+      pageTitle: 'Digital Environment'
     }
   });
-
 
 
 }]);

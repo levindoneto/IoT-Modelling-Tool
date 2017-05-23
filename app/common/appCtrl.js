@@ -78,73 +78,7 @@ $scope.readNotification = function(){
             color: "skin-black",
             title: "Cinza escuro",
             icon:""
-        },
-        {
-            theme: "black",
-            color: "skin-black-light",
-            title: "Branco",
-            icon:"-o"
-        },
-        {
-            theme: "blue",
-            color: "skin-blue",
-            title: "Azul com cinza",
-            icon:""
-        },
-        {
-            theme: "blue",
-            color: "skin-blue-light",
-            title: "Branco com azul",
-            icon:"-o"
-        },
-        {
-            theme: "green",
-            color: "skin-green",
-            title: "Cinza com verde",
-            icon:""
-        },
-        {
-            theme: "green",
-            color: "skin-green-light",
-            title: "Branco com verde",
-            icon:"-o"
-        },
-        {
-            theme: "yellow",
-            color: "skin-yellow",
-            title: "Amarelo com cinza",
-            icon:""
-        },
-        {
-            theme: "yellow",
-            color: "skin-yellow-light",
-            title: "Branco com amarelo",
-            icon:"-o"
-        },
-        {
-            theme: "red",
-            color: "skin-red",
-            title: "Vermelho com cinza",
-            icon: ""
-        },
-        {
-            theme: "red",
-            color: "skin-red-light",
-            title: "Branco com vermelho",
-            icon: "-o"
-        },
-        {
-            theme: "purple",
-            color: "skin-purple",
-            title: "Cinza com roxo",
-            icon: ""
-        },
-        {
-            theme: "purple",
-            color: "skin-purple-light",
-            title: "Roxo com branco",
-            icon: "-o"
-        },
+        }
     ];
 
     //available layouts
