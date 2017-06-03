@@ -162,7 +162,7 @@ class Device extends Component {
 
       let parentClasses = utils.getParentClasses(this.props.type);
       if (parentClasses.includes("ssn:SensingDevice")) {
-          sensingDeviceAvatar = (<Avatar src="images/sensor.png"/>);
+          sensingDeviceAvatar = (<Avatar src="app/modules/dashboard/digital_environment/src/main/resources/static/images/sensor.png"/>);
           isSensingDevice = true;
       } else if(parentClasses.includes("ssn:Device") && !parentClasses.includes("iot-lite:ActuatingDevice")) {
           //deviceAvatar = ();

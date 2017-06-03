@@ -529,7 +529,7 @@ const definitions = {
           }
         },
         {
-          "@id": "ipvs:DS18B20",          // Define a RaspberryPi as SubClass of Device
+          "@id": "ipvs:DS18B20TESTTEST",          // Define a RaspberryPi as SubClass of Device
           "@type": "owl:Class",
           "rdfs:comment": "Temperature Sensor with 3 pins. GND - 1, DQ - 2, VDD -3. Datasheet: https://datasheets.maximintegrated.com/en/ds/DS18B20.pdf",
           "rdfs:subClassOf": [
@@ -538,7 +538,7 @@ const definitions = {
             }
             ,
             {
-              "@id": "ipvs:DS18B20-hasPin"
+              "@id": "ipvs:DS18B20TEST-hasPin"
             }
           ]
         },
@@ -579,7 +579,7 @@ const definitions = {
           }
         },
         {
-          "@id" : "ipvs:DS18B20-hasPin",
+          "@id" : "ipvs:DS18B20TEST-hasPin",
           "@type": "owl:Restriction",
           "owl:onProperty": {
             "@id":"ipvs:hasPin"

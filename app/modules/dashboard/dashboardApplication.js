@@ -1,5 +1,5 @@
 
-var dashboard = angular.module('dashboard', ['ui.router', 'ngAnimate','ngMaterial','firebase']);
+var dashboard = angular.module('dashboard', ['ui.router', 'ngAnimate','ngMaterial','firebase', 'react']);
 
 dashboard.factory('notification', function($firebaseArray, $firebaseObject) {
 
@@ -53,7 +53,7 @@ dashboard.config(["$stateProvider", function ($stateProvider) {
     controller: 'mybelongingsController',
     controllerAs: 'vm',
     data: {
-      pageTitle: 'My belongings'
+      pageTitle: 'My Belongings'
     }
   });
 
@@ -63,7 +63,7 @@ dashboard.config(["$stateProvider", function ($stateProvider) {
     controller: 'addbelongingController',
     controllerAs: 'vm',
     data: {
-      pageTitle: 'Adicionar model'
+      pageTitle: 'Add Belonging'
     }
   });
 

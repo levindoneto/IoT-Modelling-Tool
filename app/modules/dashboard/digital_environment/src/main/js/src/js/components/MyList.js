@@ -12,12 +12,21 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import MenuItem from 'material-ui/MenuItem';
 import * as utils from '../utils/utils';
-
+import * as firebase from 'firebase' // Database to be accessed for this part of the application
 
 const layout = {
   width: 200
 };
 
+var config = {
+    apiKey: "AIzaSyDiFz4H5G6RkPhZMC5PJecNUeCAFUa0Rzs",
+    authDomain: "iot-mt.firebaseapp.com",
+    databaseURL: "https://iot-mt.firebaseio.com",
+    projectId: "iot-mt",
+    storageBucket: "iot-mt.appspot.com",
+    messagingSenderId: "838147143079"
+  };
+  firebase.initializeApp(config);  // Init of the Firebase for this .js and for the other  which call this one
 
 export default class MyList extends React.Component {
 
@@ -25,6 +34,7 @@ export default class MyList extends React.Component {
       super(props);
       this.handleStateChange = this.handleStateChange.bind(this);
       this.state = {
+        testString: "HELLO WORLD",
         devices: DeviceStore.getAllDevices(),
         left: 0,
         openSetProperty: false,
@@ -163,7 +173,8 @@ export default class MyList extends React.Component {
 
       if (selectedDevice == null) {
         return (
-          <div>
+          <div ng-app='app' ng-controller="MyController">
+            <h1 class="ng-binding ng-scope"> MY FRIEND {this.state.testString}</h1>
             <MuiThemeProvider>
               <div>
                 <List style={styles}>
