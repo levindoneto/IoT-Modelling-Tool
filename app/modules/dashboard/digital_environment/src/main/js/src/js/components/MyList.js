@@ -13,7 +13,7 @@ import FlatButton from 'material-ui/FlatButton';
 import MenuItem from 'material-ui/MenuItem';
 import * as utils from '../utils/utils';
 import fire from '../database/fire' // Database to be accessed for this part of the application
-//import reactfire from 'reactfire' // Binding between the database and reactjs
+import reactfire from 'reactfire' // Binding between the database and reactjs
 
 const layout = {
     width: 200
@@ -49,6 +49,17 @@ export default class MyList extends React.Component {
         /* Create reference to messages in Firebase Database */
         let messagesRef = fire.database().ref('messages').orderByKey().limitToLast(100);
         let numbersRef = fire.database().ref('numbers');    // Reference of the number text (reading test from the database)
+
+        console.log("READING THE DB:::::::");
+
+        numbersRef.on('child_added', snapshot => {
+            /* Update React state when message is added at Firebase Database */
+            let number = { text: snapshot.val(), id: snapshot.key };
+            this.setState({
+                numbers: [number].concat(this.state.numbers)
+            });
+        })
+        console.log(":::::::FINISHING THE READING OF THE DB");
 
         messagesRef.on('child_added', snapshot => {
             /* Update React state when message is added at Firebase Database */
@@ -217,6 +228,10 @@ export default class MyList extends React.Component {
                     }
                 </ul>
                 <p> ....HERE </p>
+                <p> .. THE NUMBER BELLOW </p> // Just rendering the readed number
+                { /* Render the list of messages */
+                    this.state.numbers.map( number => <li key={number.id}>{number.text}</li> )
+                }
                 <p> .. THE NUMBER ABOVE </p>
                 </form>
                 <MuiThemeProvider>
