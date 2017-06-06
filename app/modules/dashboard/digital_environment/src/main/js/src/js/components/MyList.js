@@ -31,6 +31,8 @@ export default class MyList extends React.Component {
             messages: [], // to create some test messages in the database
             //users: [], // To access the users in the appspot
             numbers: [], // JUST AN ACCESS TEST -> migrate to reactfire...
+            models: [], // Devices, sensors and actuators stored in the firebase
+            infos: [], // NumberOfPins, id, imageFile, type, userUid, etc for each key
             devices: DeviceStore.getAllDevices(),
             left: 0,
             openSetProperty: false,
@@ -48,10 +50,26 @@ export default class MyList extends React.Component {
     componentWillMount() {
         /* Create reference to messages in Firebase Database */
         let messagesRef = fire.database().ref('messages').orderByKey().limitToLast(100);
-        let numbersRef = fire.database().ref('numbers');    // Reference of the number text (reading test from the database)
+        let numbersRef = fire.database().ref('numbers'); // Reference of the number text (reading test from the database)
+        let modelsRef = fire.database().ref('models');  //Reference to the objects (each one contains informations about a devices, a sensor or an actuator)
+        var query = firebase.database().ref("models").orderByKey();
+        query.once("value")
+        .then(function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {  // Loop into database's information
+                // key will be "-K..." the 1st time, "-K..." in the 2nd time and so on
+                var key = childSnapshot.key;
+                console.log("EACH KEY:::::");
+                console.log(key);
+                console.log(":::::EACH KEY");
+                // childData will be the actual contents of the child (information about each device, sensor or actuator)
+                var childData = childSnapshot.val();
+                console.log("CHILD DATA::::::");
+                console.log(childData.id);
+                console.log("::::::CHILD DATA");
+            });
+        });
 
-        console.log("READING THE DB:::::::");
-
+        console.log("READING NUMBERS FROM THE DB:::::::");
         numbersRef.on('child_added', snapshot => {
             /* Update React state when message is added at Firebase Database */
             let number = { text: snapshot.val(), id: snapshot.key };
@@ -59,8 +77,19 @@ export default class MyList extends React.Component {
                 numbers: [number].concat(this.state.numbers)
             });
         })
-        console.log(":::::::FINISHING THE READING OF THE DB");
+        console.log(":::::::FINISHING THE READING OF NUMBERS FROM THE DB");
 
+        console.log("READING OBJECTS FROM MODELS.......");
+        modelsRef.on('child_added', snapshot => {
+            /* Update React state when message is added at Firebase Database */
+            let model = { text: snapshot.val(), id: snapshot.key };
+            this.setState({
+                models: [model].concat(this.state.models)
+            });
+        })
+        console.log("FINISHING THE READING OF OBJECTS FROM MODELS.......");
+
+        console.log("READING MESSAGES FROM THE DATABASE.......");
         messagesRef.on('child_added', snapshot => {
             /* Update React state when message is added at Firebase Database */
             let message = { text: snapshot.val(), id: snapshot.key };
@@ -68,7 +97,7 @@ export default class MyList extends React.Component {
                 messages: [message].concat(this.state.messages)
             });
         })
-
+        console.log("FINISHING THE READING OF MESSAGES FROM THE DATABASE.......");
 
         DeviceStore.on("change", this.handleStateChange);
     }
@@ -108,7 +137,10 @@ export default class MyList extends React.Component {
 
 
     menuItems(selectValues) {
-
+        var ExampleComponent = React.createClass({
+            mixins: [dsfsdfdsf],
+            // ...
+        });
         if (!this.props.isPaletteItem) {
             // var names = DeviceStore.getPossiblePropertiesOfDevice(this.props.type);
 
@@ -218,21 +250,28 @@ export default class MyList extends React.Component {
         else {
             return (
                 <div>
-                    <form onSubmit={this.addMessage.bind(this)}>
-                    <p> HERE.... </p>
-                    <input type="text" ref={ el => this.inputEl = el }/>
-                    <input type="submit"/>
-                    <ul>
-                    { /* Render the list of messages */
-                        this.state.messages.map( message => <li key={message.id}>{message.text}</li> )
-                    }
+                <form onSubmit={this.addMessage.bind(this)}>
+                <p> HERE.... </p>
+                <input type="text" ref={ el => this.inputEl = el }/>
+                <input type="submit"/>
+                <ul>
+                { /* Render the list of messages */
+                    this.state.messages.map( message => <li key={message.id}>{message.text}</li> )
+                }
                 </ul>
                 <p> ....HERE </p>
-                <p> .. THE NUMBER BELLOW </p> // Just rendering the readed number
-                { /* Render the list of messages */
+                <p> .. THE NUMBER BELLOW </p> // Just rendering the read number
+                { /* Render the list of numbers */
                     this.state.numbers.map( number => <li key={number.id}>{number.text}</li> )
                 }
                 <p> .. THE NUMBER ABOVE </p>
+
+                <h4> THE MODELS BELLOW</h4>
+                { /* Render the list of models */
+                    this.state.models.map( model => <li key={model.id}> {model.id}</li>) // This works as a ng-repeat in angularJS
+                }
+
+                <h4> THE MODELS ABOVE</h4>
                 </form>
                 <MuiThemeProvider>
                 <div>
@@ -325,4 +364,6 @@ export default class MyList extends React.Component {
         }
 
     }
+
+
 }
