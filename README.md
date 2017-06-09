@@ -51,6 +51,7 @@ II) When an item is drag and dropped into the trash icon it'll be removed from t
 * HTML v5
 * CSS v3
 * [Bootstrap v3.3.7](http://getbootstrap.com/)
+* [React JS v15.5.4](https://facebook.github.io/react/)
 
 ### Back-End
 
@@ -59,6 +60,11 @@ II) When an item is drag and dropped into the trash icon it'll be removed from t
 ### Database
 
 * [Firebase](https://firebase.google.com) on Google's cloud
+
+### Utilized frameworks
+
+* [AngularFire v2.3.0](https://github.com/firebase/angularfire)
+* [ReactFire v1.0.0](https://github.com/firebase/reactfire)
 
 ## Setup IoT Modeling Tool
 
@@ -125,6 +131,22 @@ $ bower init
 ```javascript
 bower install --save angular
 ```
+
+##### Install the frameworks
+
+TODO
+
+###### AngularFire
+
+TODO
+
+##### ReactFire
+
+TODO
+
+##### Set-up the database
+
+TODO
 
 ##### Server for tests
 
