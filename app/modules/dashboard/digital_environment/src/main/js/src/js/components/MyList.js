@@ -106,9 +106,9 @@ export default class MyList extends React.Component {
             //console.log(key);
             // childData will be the actual contents of the child (information about each device, sensor or actuator)
             var childData = childSnapshot.val();
-            vectorr = childData;
+            vectorr.push(childSnapshot.val()); // Append the vector of information into the vector of devices
             //this.state.one_id_to_render = childData;
-            console.log({vectorr});
+            console.log({vectorr}); // it's working
             //console.log("THIS STATE TO RENDER", this.state.one_id_to_render);
 
         });
@@ -223,15 +223,17 @@ menuItems(selectValues) {
 
 render() {
 
-    const infos = this.state.infos.map(deviceModel =>
+    const modelosvectors = vectorr[1];
+
+    const infos = vectorr.map(deviceModel =>
         <div>
-        <h1>{deviceModel.key_info}</h1>
+        <h1>{deviceModel.id}</h1>
 
         </div>
     );
 
     return (
-        <div> this: {vectorr.id}</div>
+        <div> this:>>>>> {infos}</div>
     );
     let selectedDevice;
 
