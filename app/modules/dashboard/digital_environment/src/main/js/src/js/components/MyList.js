@@ -227,7 +227,7 @@ render() {
 
     const infos = vectorr.map(deviceModel =>
         <div>
-        <h1>{deviceModel.id}</h1>
+        <h1>{deviceModel.type}</h1>
 
         </div>
     );

@@ -9,12 +9,16 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Subheader from 'material-ui/Subheader';
 import { definitions } from '../constants/definitions';
 import * as utils from '../utils/utils';
+import fire from '../database/fire' // Database to be accessed for this part of the application
+import reactfire from 'reactfire' // Binding between the database and reactjs
 
 
 const paletteItemsStyles = {
   left: 5,
   top: 40
 };
+
+var list_infos_devices = []; // List with information about devices, sensors and actuators in the database
 
 const styles = {
   // width: 150,
@@ -32,7 +36,6 @@ const boxTarget = {
   }
 };
 
-
 class PaletteContainer extends Component {
   static propTypes = {
     hideSourceOnDrag: PropTypes.bool.isRequired,
@@ -41,6 +44,20 @@ class PaletteContainer extends Component {
 
   constructor(props) {
     super(props);
+  }
+
+  componentWillMount() {
+      // Reading the data from the database (key: "models")
+      var query = firebase.database().ref("models").orderByKey(); // query is the variable of reference from the database
+      query.once("value")
+      .then(function(snapshot) {
+          snapshot.forEach(function(childSnapshot) {  // Loop into database's information
+          var key = childSnapshot.key;
+          list_infos_devices.push(childSnapshot.val()); // Append the vector of information into the vector of devices
+          console.log("FROM PALETTE");
+          console.log({list_infos_devices});
+      });
+  })
   }
 
   render() {
@@ -83,7 +100,7 @@ class PaletteContainer extends Component {
                   );
                 }
               })}
-            <Subheader>Sensors</Subheader>
+            <Subheader>Sensorssd</Subheader>
               {definitionsDevices.map(
                   iterDevice => {
                     if ( iterDevice["@id"].startsWith("ipvs:") && iterDevice["rdfs:subClassOf"] && utils.getParentClasses(iterDevice["@id"]).includes("ssn:SensingDevice") ) {
