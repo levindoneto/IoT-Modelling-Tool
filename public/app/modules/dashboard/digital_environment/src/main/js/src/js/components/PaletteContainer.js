@@ -52,30 +52,44 @@ class PaletteContainer extends Component {
     componentWillMount() {
         // Reading the data from the database (key: "models")
         var query = firebase.database().ref("models").orderByKey(); // query is the variable of reference from the database
+        var index = 0; // Using in the binding among the information
         query.once("value")
         .then(function(snapshot) {
             snapshot.forEach(function(childSnapshot) {  // Loop into database's information
             var key = childSnapshot.key;
+            var aux = []; // Using to store a list with len=2 with the information and the index of the device, sensor or actuator
             list_infos_devices.push(childSnapshot.val().type); // Append the vector of information into the vector of devices
 
             switch (childSnapshot.val().type) {
                 case "device":
-                    list_devices.push(childSnapshot.val().id); // Adding device in the list of devices
+                    aux = []; // Erasing the auxiliar list
+                    aux.push(childSnapshot.val().id);
+                    aux.push(index);
+                    list_devices.push(aux); // Adding device in the list of devices
                     break;
                 case "sensor":
-                    list_sensors.push(childSnapshot.val().id);  // Adding sensor in the list of sensors
+                    aux = []; // Erasing the auxiliar list
+                    aux.push(childSnapshot.val().id);
+                    aux.push(index);
+                    list_sensors.push(aux);  // Adding sensor in the list of sensors
                     break;
                 case "actuator":
-                    list_actuators.push(childSnapshot.val().id)  // Adding actuators in the list of actuators
+                    aux = []; // Erasing the auxiliar list
+                    aux.push(childSnapshot.val().id);
+                    aux.push(index);
+                    list_actuators.push(aux)  // Adding actuators in the list of actuators
                     break;
                 default:
-                    list_devices.push(childSnapshot.val().id); // The default type device
+                    aux.push(childSnapshot.val().id);
+                    aux.push(index);
+                    list_devices.push(aux); // The default type device
             }
-
-
+            index++;
         });
     })
+    console.log("BUGGED DEVICES...");
     console.log({list_devices});
+    console.log(".....BUGGED DEVICES");
     console.log({list_sensors});
     console.log({list_actuators});
 }
