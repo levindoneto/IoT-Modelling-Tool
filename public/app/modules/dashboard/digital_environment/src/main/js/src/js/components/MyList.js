@@ -223,17 +223,18 @@ menuItems(selectValues) {
 
 render() {
 
-    const modelosvectors = vectorr[1];
+
 
     const infos = vectorr.map(deviceModel =>
         <div>
-        <h1>{deviceModel.type}</h1>
-
+            <h1>{deviceModel.type}</h1>
         </div>
     );
 
     return (
-        <div> this:>>>>> {infos}</div>
+        <div>
+            this:>>>>> {infos}
+        </div>
     );
     let selectedDevice;
 

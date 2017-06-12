@@ -79,27 +79,27 @@ II) When an item is drag and dropped into the trash icon it'll be removed from t
 ##### Simple commands to test NodeJS
 
 ###### Test Node
-```javascript
+```terminal
 $ node -v
 ```
 
 ###### Test NPM
-```javascript
+```terminal
 $ npm -v
 ```
 
 ###### Run a file (file.js)
-```javascript
+```terminal
 $ node file.js
 ```
 
 ##### Install Bower
-```javascript
+```terminal
 $ npm install -g bower
 ```
 
 ###### Init Bower inside the project folder
-```javascript
+```terminal
 $ bower init
 ```
 
@@ -128,7 +128,7 @@ $ bower init
 ```
 
 ###### Bind Bower and Angular JS
-```javascript
+```terminal
 bower install --save angular
 ```
 
@@ -152,27 +152,27 @@ TODO
 
 For tests can be used the [http-server](https://www.npmjs.com/package/http-server)
 The installation can be done with NPM
-```javascript
+```terminal
 $ npm install -g http-server
 ```
 
 or can be used Python Server (It's compatible with [font awesome](https://fontawesome.io))
-```javascript
+```terminal
 $ python -m http.server [<portNo>]  // Windows
 ```
 
-```javascript
+```terminal
 $ python -m SimpleHTTPServer  // Linux
 ```
 
 ###### To access the application can be used link
-```javascript
+```terminal
 http://localhost:[<portNo>]/
 ```
 directly in any web browser.
 
 ##### Setup the directory for express
-```javascript
+```terminal
 $ npm install -g express-generator
 $ express Implementierung
 $ npm install -d
