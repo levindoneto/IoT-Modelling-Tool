@@ -3,31 +3,31 @@ __Author:__ Levindo Gabriel Taschetto Neto (IPVS)
 
 ## Repository Structure
 
-* [App](app) (contains the files assigned to organize the high-level architecture of the project)
+* [App](public/app) (contains the files assigned to organize the high-level architecture of the project)
 
-* [CSS Files](css) (contains the style files for the front-end, e.g., bootstrap files)
+* [CSS Files](public/css) (contains the style files for the front-end, e.g., bootstrap files)
 
-* [Images](img) (contains the images used in the project, e.g., devices, sensors and actuators icons)
+* [Images](public/img) (contains the images used in the project, e.g., devices, sensors and actuators icons)
 
-* [Javascript Files](js) (contains files responsible for the back-end of the project, e.g., AngularJS files)
+* [Javascript Files](public/js) (contains files responsible for the back-end of the project, e.g., AngularJS files)
 
-* [Plugins](plugins) (contains files responsible for add specifics features to the back-end of the project)
+* [Plugins](public/plugins) (contains files responsible for add specifics features to the back-end of the project)
 
-* [Resources](resources) (contains the diagrams of the project, e.g., astah files)
+* [Resources](public/resources) (contains the diagrams of the project, e.g., astah files)
 
 ## Relationship among the packages in a high level approach
 
 The packages diagram can be viewed in the image bellow.
 
-![packages](resources/packages.jpg)
+![packages](public/resources/packages.jpg)
 
 The system currently can be seen in the picture bellow (not yet).
 
-![Mock-Up Environment](img/readme/system.jpg)
+![Mock-Up Environment](public/img/readme/system.jpg)
 
 Also the format of the database is as following:
 
-![Database Format](img/readme/database-format.jpg)
+![Database Format](public/img/readme/database-format.jpg)
 
 ## How it will work (Initial idea)
 
@@ -181,7 +181,7 @@ $ npm start
 
 Another way to start the application in the browser is with the Zervit.
 
-Also it should be added on [package.json](package.json) in "scripts":
+Also it should be added on [package.json](public/package.json) in "scripts":
 ```json
 "start": "http-server ./Implementierung -a localhost -p 8080"
 ```
