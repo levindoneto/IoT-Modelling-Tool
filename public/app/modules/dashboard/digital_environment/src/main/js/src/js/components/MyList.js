@@ -108,7 +108,7 @@ export default class MyList extends React.Component {
             var childData = childSnapshot.val();
             vectorr.push(childSnapshot.val()); // Append the vector of information into the vector of devices
             //this.state.one_id_to_render = childData;
-            console.log({vectorr}); // it's working
+            //console.log({vectorr}); // it's working
             //console.log("THIS STATE TO RENDER", this.state.one_id_to_render);
 
         });

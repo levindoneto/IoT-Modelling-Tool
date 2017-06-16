@@ -58,7 +58,7 @@ class Device extends Component {
       let parentClasses = utils.getParentClasses(this.props.type);
       if (parentClasses.includes("ssn:SensingDevice")) {
           const img = new Image();
-          img.src = "images/sensor.png";
+          img.src = "https://storage.googleapis.com/gweb-uniblog-publish-prod/static/blog/images/google-200x200.7714256da16f.png";
           img.onload = () => connectDragPreview(img);
       }
   }
@@ -162,7 +162,7 @@ class Device extends Component {
 
       let parentClasses = utils.getParentClasses(this.props.type);
       if (parentClasses.includes("ssn:SensingDevice")) {
-          sensingDeviceAvatar = (<Avatar src="app/modules/dashboard/digital_environment/src/main/resources/static/images/sensor.png"/>);
+          sensingDeviceAvatar = (<Avatar src="https://storage.googleapis.com/gweb-uniblog-publish-prod/static/blog/images/google-200x200.7714256da16f.png"/>);
           isSensingDevice = true;
       } else if(parentClasses.includes("ssn:Device") && !parentClasses.includes("iot-lite:ActuatingDevice")) {
           //deviceAvatar = ();
