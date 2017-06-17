@@ -1,54 +1,73 @@
 import fire from '../database/fire' // Database to be accessed for this part of the application
 import reactfire from 'reactfire' // Binding between the database and reactjs
 
-var lst_devices   = []; // list_infos_devices.type == "device"
-var lst_sensors   = []; // list_infos_devices.type == "sensor"
-var lst_actuators = []; // list_infos_devices.type == "actuator"
+const lstComponenents = {
+    device: [], // list_infos_devices.type == "device"
+    sensor: [], // list_infos_devices.type == "sensor"
+    actuator: [], // list_infos_devices.type == "actuator"
+};
 
-var aux_device;
-var aux_sensor;
-var aux_actuator;
+const prefixIPVS = "ipvs:";
+const one_id_random = "RaspberryPiTwo"
 
-function Component(childSnapValue) {
-    this.numberOfPins = childSnapValue.NumberOfPins;
-    this.id = childSnapValue.id;
-    this.imageFileKey = childSnapValue.imageFile; // This key is used to access the correct image in the another data structure
-    this.ownerUser = childSnapValue.userUid;
+var rv = {};
+var test_lst = new Array();
+
+
+
+function Component(element, word) {
+    //test_lst.push(word);
+    this.numberOfPins = word;
+    this.id = word;
+    this.imageFileKey = word; // This key is used to access the correct image in the another data structure
+    this.ownerUser = word;
 }
 
-
-const one_id_random = "RASPTEST";
-const prefixIPVS = "ipvs:";
+function createComponent(element, type, word) {
+    /* if element.type is definied */
+    console.log(type);
+    test_lst.push(word);
+    //console.log("LIST CESAR", test_lst);
+    //console.log("LIST FIRST ELEMENT CESAR", test_lst[0]);
+    lstComponenents[type].push(new Component(element, word));
+    return lstComponenents;
+}
 
 // Reading the data from the database (key: "models")
 firebase.database().ref("models").orderByKey().once("value")
-.then(function(snapshot) {
+.then(function(snapshot) { // after function(snapshot)
     snapshot.forEach(function(childSnapshot) {  // Loop into database's information
     //var key = childSnapshot.key;
         switch (childSnapshot.val().type) {
             case "device":
-                aux_device = new Component(childSnapshot.val());
-                lst_devices.push(aux_device);
+                createComponent(snapshot.val(), childSnapshot.val().type, "seen");
+                console.log("INSIDE THE SWITCH option DEVICE:: ", test_lst.length);
+                console.log("INSIDE THE SWITCH first element  option DEVICE:: ", test_lst[3]);
                 break;
             case "sensor":
-                aux_sensor = new Component(childSnapshot.val());
-                lst_sensors.push(aux_sensor);
+                createComponent(snapshot.val(), childSnapshot.val().type, "soon")
                 break;
             case "actuator":
-                aux_actuator = new Component(childSnapshot.val());
-                lst_actuators.push(aux_actuator);
-                console.log("LUANS: ", lst_actuators[0].ownerUser);
+                createComponent(snapshot.val(), childSnapshot.val().type, "son")
+                //console.log("OWNER: ", lst_actuators[0].ownerUser);
                 break;
             default:
-                aux_device = new Component(childSnapshot.val());
-                lst_devices.push(aux_device);
+                createComponent(snapshot.val(), childSnapshot.val().type, "filho");
         }
     });
 });
 
-alert(lst_actuators);
 
-const definitions = {
+try {
+    setTimeout(function(){
+            console.log("TRYs: ", test_lst[0]);
+    }, 4000);
+}
+catch (e) {
+    console.log("CATCH: ", test_lst);
+}
+
+var definitions = {
     "@context": {
         "geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
         "m3-lite": "http://purl.org/iot/vocab/m3-lite#",
@@ -519,7 +538,7 @@ const definitions = {
 
         //##### Extensions of IoT-Lite Scheme for own Device-Types #####################################################
         {
-            "@id": "ipvs:RaspberryPis",          // Define a RaspberryPi as SubClass of Device
+            "@id": "ipvs:RaspberryPi",          // Define a RaspberryPi as SubClass of Device
             "@type": "owl:Class",
             "rdfs:subClassOf": [
                 {
@@ -652,5 +671,6 @@ const definitions = {
         }
     ]
 }
+
 
 export {definitions};
