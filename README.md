@@ -1,5 +1,21 @@
 # IoT - Modeling Tool
-__Author:__ Levindo Gabriel Taschetto Neto (IPVS)
+
+Iot Modelling Tool is a platform which allows users to have their own devices and components modeled in order to represent a physical environment.
+
+
+__Author__ 
+
+[Levindo Gabriel Taschetto Neto (IPVS)](http://levindoneto.com)
+
+__Advisors__
+
+[Prof. Dr.-Ing. habil. Bernhard Mitschang](https://www.ipvs.uni-stuttgart.de/abteilungen/as/abteilung/mitarbeiter/bernhard.mitschang)
+
+[M.Sc. Ana Cristina Franco da Silva](https://www.ipvs.uni-stuttgart.de/abteilungen/as/abteilung/mitarbeiter/Ana.Franco)
+
+[Dipl.-Inf. Pascal Hirmer](https://www.ipvs.uni-stuttgart.de/abteilungen/as/abteilung/mitarbeiter/Pascal.Hirmer)
+
+
 
 ## Repository Structure
 

@@ -10,27 +10,16 @@ const lstComponenents = {
 const prefixIPVS = "ipvs:";
 const one_id_random = "RaspberryPiTwo"
 
-var rv = {};
-var test_lst = new Array();
-
-
-
-function Component(element, word) {
-    //test_lst.push(word);
-    this.numberOfPins = word;
-    this.id = word;
-    this.imageFileKey = word; // This key is used to access the correct image in the another data structure
-    this.ownerUser = word;
+function Component(element) {
+    this.numberOfPins = element.NumberOfPins;
+    this.id = element.id;
+    this.imageFileKey = element.imageFile; // This key is used to access the correct image in the another data structure
+    this.ownerUser = element.userUid;
 }
 
-function createComponent(element, type, word) {
+function createComponent(element, type) {
     /* if element.type is definied */
-    console.log(type);
-    test_lst.push(word);
-    //console.log("LIST CESAR", test_lst);
-    //console.log("LIST FIRST ELEMENT CESAR", test_lst[0]);
-    lstComponenents[type].push(new Component(element, word));
-    return lstComponenents;
+    return lstComponenents[type].push(new Component(element)); // returns a promise
 }
 
 // Reading the data from the database (key: "models")
@@ -40,32 +29,22 @@ firebase.database().ref("models").orderByKey().once("value")
     //var key = childSnapshot.key;
         switch (childSnapshot.val().type) {
             case "device":
-                createComponent(snapshot.val(), childSnapshot.val().type, "seen");
-                console.log("INSIDE THE SWITCH option DEVICE:: ", test_lst.length);
-                console.log("INSIDE THE SWITCH first element  option DEVICE:: ", test_lst[3]);
+                createComponent(childSnapshot.val(), childSnapshot.val().type);
                 break;
             case "sensor":
-                createComponent(snapshot.val(), childSnapshot.val().type, "soon")
+                createComponent(childSnapshot.val(), childSnapshot.val().type);
                 break;
             case "actuator":
-                createComponent(snapshot.val(), childSnapshot.val().type, "son")
-                //console.log("OWNER: ", lst_actuators[0].ownerUser);
+                createComponent(childSnapshot.val(), childSnapshot.val().type);
                 break;
             default:
-                createComponent(snapshot.val(), childSnapshot.val().type, "filho");
+                createComponent(childSnapshot.val(), childSnapshot.val().type);
         }
     });
+})
+.then(function (createComponent) {
+    console.log("THEN: ", lstComponenents.actuator["0"].id); // Now the value isn't undefined
 });
-
-
-try {
-    setTimeout(function(){
-            console.log("TRYs: ", test_lst[0]);
-    }, 4000);
-}
-catch (e) {
-    console.log("CATCH: ", test_lst);
-}
 
 var definitions = {
     "@context": {
@@ -598,7 +577,7 @@ var definitions = {
             }
         },
         {
-            "@id": (prefixIPVS.concat(one_id_random)).toString(),          // Define a RaspberryPi as SubClass of Device
+            "@id": (prefixIPVS.concat(one_id_random)).toString(),          // Define a  Pi as SubClass of Device
             "@type": "owl:Class",
             "rdfs:comment": "Temperature Sensor with 3 pins. GND - 1, DQ - 2, VDD -3. Datasheet: https://datasheets.maximintegrated.com/en/ds/DS18B20.pdf",
             "rdfs:subClassOf": [
