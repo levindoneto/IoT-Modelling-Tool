@@ -17,9 +17,9 @@ function Component(element) {
     this.ownerUser = element.userUid;
 }
 
-function createComponent(element, type) {
+function createComponent(element) {
     /* if element.type is definied */
-    return lstComponenents[type].push(new Component(element)); // returns a promise
+    return lstComponenents[element.type].push(new Component(element)); // returns a promise
 }
 
 // Reading the data from the database (key: "models")
@@ -29,22 +29,24 @@ firebase.database().ref("models").orderByKey().once("value")
     //var key = childSnapshot.key;
         switch (childSnapshot.val().type) {
             case "device":
-                createComponent(childSnapshot.val(), childSnapshot.val().type);
+                createComponent(childSnapshot.val());
                 break;
             case "sensor":
-                createComponent(childSnapshot.val(), childSnapshot.val().type);
+                createComponent(childSnapshot.val());
                 break;
             case "actuator":
-                createComponent(childSnapshot.val(), childSnapshot.val().type);
+                createComponent(childSnapshot.val());
                 break;
             default:
-                createComponent(childSnapshot.val(), childSnapshot.val().type);
+                createComponent(childSnapshot.val());
         }
     });
 })
 .then(function (createComponent) {
     console.log("THEN: ", lstComponenents.actuator["0"].id); // Now the value isn't undefined
 });
+
+
 
 var definitions = {
     "@context": {
@@ -577,7 +579,7 @@ var definitions = {
             }
         },
         {
-            "@id": (prefixIPVS.concat(one_id_random)).toString(),          // Define a  Pi as SubClass of Device
+            "@id": (prefixIPVS.concat(one_id_random)).toString(),          // Define a Raspberry Pi as SubClass of Device
             "@type": "owl:Class",
             "rdfs:comment": "Temperature Sensor with 3 pins. GND - 1, DQ - 2, VDD -3. Datasheet: https://datasheets.maximintegrated.com/en/ds/DS18B20.pdf",
             "rdfs:subClassOf": [
@@ -649,7 +651,5 @@ var definitions = {
             }
         }
     ]
-}
-
-
+}; // close the object
 export {definitions};
