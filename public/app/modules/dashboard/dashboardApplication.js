@@ -48,12 +48,12 @@ dashboard.config(["$stateProvider", function ($stateProvider) {
 
 
   $stateProvider.state('app.mybelongings', {
-    url: '/mybelongings',
+    url: '/mydevices',
     templateUrl: 'app/modules/dashboard/views/mybelongings.html',
     controller: 'mybelongingsController',
     controllerAs: 'vm',
     data: {
-      pageTitle: 'My Belongings'
+      pageTitle: 'My Devices'
     }
   });
 
@@ -63,7 +63,7 @@ dashboard.config(["$stateProvider", function ($stateProvider) {
     controller: 'addbelongingController',
     controllerAs: 'vm',
     data: {
-      pageTitle: 'Add Belonging'
+      pageTitle: 'Add Device'
     }
   });
 

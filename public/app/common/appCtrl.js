@@ -21,26 +21,16 @@ $scope.readNotification = function(){
       });
 
   })
-
 }
 
     vm.auth.$onAuthStateChanged(function(firebaseUser) {
         if (firebaseUser) {
-
 
             vm.currentUser = vm.auth.$getAuth();
             $rootScope.userDB = vm.currentUser;
             console.log(vm.currentUser.uid);
             var refUser = firebase.database().ref('users/'+vm.currentUser.uid);
             var user = $firebaseObject(refUser);
-
-
-            var ref = firebase.database().ref('notifications/');
-            var notificationsList = $firebaseArray(ref);
-            notificationsList.$loaded().then(function(){
-                $scope.notifications = notificationsList;
-            });
-
 
             user.$loaded().then(function(){
                 console.log(user);
@@ -111,12 +101,12 @@ $scope.readNotification = function(){
             state: "digitalenvironment"
         },
         {
-            title: "My belongings",
+            title: "My Devices",
             icon: "book",
             state: "mybelongings"
         },
         {
-            title: "Add belonging",  // Can be devices, actuators or sensors
+            title: "Add Device",  // Can be devices, actuators or sensors
             icon: "plus-circle",
             state: "addbelonging"
         },
