@@ -1,7 +1,7 @@
 constants = {
     'layoutConstants': {
         'paletteContainerStyles': {
-            'width': 150,
+            'width': 200,
             'height': 300,
             'border': '1px solid black',
             'position': 'absolute',

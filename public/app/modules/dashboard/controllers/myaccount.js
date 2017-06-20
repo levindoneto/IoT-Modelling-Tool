@@ -16,6 +16,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
       var user = firebase.auth().currentUser;
       var ref = firebase.database().ref('users/'+$scope.id);
       var userDB = $firebaseObject(ref);
+      localStorage.setItem('currentUserBD', userDB);
 
       userDB.$loaded().then(function(){
         userDB.Username = $scope.Username;

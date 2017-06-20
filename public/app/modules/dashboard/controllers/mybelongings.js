@@ -33,7 +33,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
       var modelObject = $firebaseObject(ref);
 
       swal({
-        title: "Are you sure you wanna delet this model?",
+        title: "Are you sure you wanna delet this device/component?",
         text: "You can't change this after!",
         type: "warning",
         showCancelButton: true,
