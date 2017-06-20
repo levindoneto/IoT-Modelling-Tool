@@ -4,8 +4,10 @@ import reactfire from 'reactfire' // Binding between the database and reactjs
 //var prefixIPVS = require('./client').default;
 //console.log("PREFIX ON DEFINITIONS: ", prefixIPVS);
 //var prefixIPVS = localStorage.getItem('prefixIPVS');
-var storedValue = localStorage.getItem('text');
-console.log("STORED VALUE: ", storedValue);
+var deviceOne = localStorage.getItem('device');
+var sensorOne = localStorage.getItem('sensor');
+var actuatorOne = localStorage.getItem('actuator');
+console.log("STORED VALUE DEVICE ONE: ", localStorage.getItem('device'));
 
 
 var definitions = {
@@ -479,7 +481,7 @@ var definitions = {
 
         //##### Extensions of IoT-Lite Scheme for own Device-Types #####################################################
         {
-            "@id": storedValue.toString(),          // Define a RaspberryPi as SubClass of Device //(prefixIPVS.concat(lstComponenents.actuator["0"].id)).toString()
+            "@id": deviceOne.toString(),          // Define a RaspberryPi as SubClass of Device //(prefixIPVS.concat(lstComponenents.actuator["0"].id)).toString()
             "@type": "owl:Class",
             "rdfs:subClassOf": [
                 {
@@ -539,7 +541,7 @@ var definitions = {
             }
         },
         {
-            "@id": "ipvs:RaspberryPiss",          // Define a Raspberry Pi as SubClass of Device
+            "@id": sensorOne.toString(),          // Define a Raspberry Pi as SubClass of Device
             "@type": "owl:Class",
             "rdfs:comment": "Temperature Sensor with 3 pins. GND - 1, DQ - 2, VDD -3. Datasheet: https://datasheets.maximintegrated.com/en/ds/DS18B20.pdf",
             "rdfs:subClassOf": [
@@ -564,7 +566,7 @@ var definitions = {
             }
         },
         {
-            "@id": "ipvs:L293D",          // Define a RaspberryPi as SubClass of Device
+            "@id": actuatorOne.toString(),          // Define a RaspberryPi as SubClass of Device
             "@type": "owl:Class",
             "rdfs:comment": "TI Microcontrollor with 16 pins to drive up to two motors. Datasheet: http://www.ti.com/lit/ds/symlink/l293.pdf",
             "rdfs:subClassOf": [
