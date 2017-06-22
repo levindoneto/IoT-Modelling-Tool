@@ -1,19 +1,52 @@
+
+
 <!-- Content Header (Page header) -->
 <section class="content-header">
-   <h1 class="titleMYACC">
-      My account
-   </h1>
+    <h1 class="titleMYACC">
+        My Account
+    </h1>
+    
 </section>
 <!-- Main content -->
-<script>console.log("TEST1")</script>
 <section class="content">
-   <div class="box-content">
-      <div class="panel panel-default">
-         <h3 class="Titlemyaccount">User</h3>
-         <span class="InfoAccount">&emsp;{{user.Username}} </span>
-         <h3 class="Titlemyaccount">E-mail</h3>
-         <span class="InfoAccount">&emsp;{{user.Email}} </span>
-      </div>
-   </div>
-</section>
-<!-- /.content -->
+    <div class="box-content">
+        <div class="panel panel-default">
+            <h3 class="Titlemyaccount">Username</h3>
+            <span class="InfoAccount">&emsp;{{user.Username}} </span>
+            
+            <h3 class="Titlemyaccount">E-mail</h3>
+            <span class="InfoAccount">&emsp;{{user.Email}} </span>
+            
+            <div>
+                <button class="DataEdit" data-toggle="modal" ng-click="showAccountinfo(user)" data-target="#editModal">Edit</button>
+            </br>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="DataEdit">Edit User's Information</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form_id" role="form" ng-submit="editFormSubmit(user)" ng-show="show">
+                    <div class="form-group">
+                        <label for="name" class="EditInfoField control-label">Username</label>
+                        <input type="text" class="form-control" id="name" ng-model="Username">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Cancell</button>
+                        <button type="submit" class="btn btn-info">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</section><!-- /.content -->
