@@ -24,9 +24,8 @@ var list_sensors = []; // list_infos_devices.type == "sensor"
 var list_actuators = []; // list_infos_devices.type == "actuator"
 
 const styles = {
-    // width: 150,
     height: '100%',
-    weight: '35%',
+    width: '100%',
     border: '1px solid black',
     overflow: 'auto', // enable scrollable here
 };

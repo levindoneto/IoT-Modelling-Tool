@@ -16,229 +16,102 @@ import fire from '../database/fire' // Database to be accessed for this part of 
 import reactfire from 'reactfire' // Binding between the database and reactjs
 
 const layout = {
-    width: 200
+  width: '100%',
+  height: '100%'
 };
 
-var vectorr = [];
-
-//console.log("MYLIST.......");
 
 export default class MyList extends React.Component {
 
     constructor(props) {
-        //var keys = []; // Ordered vector of keys in 'models'
-        super(props);
-
-        this.handleStateChange = this.handleStateChange.bind(this);
-        this.state = {
-            testString: "HELLO WORLD",
-            messages: [], // to create some test messages in the database
-            //users: [], // To access the users in the appspot
-            numbers: [], // JUST AN ACCESS TEST -> migrate to reactfire...
-            models: [], // Devices, sensors and actuators stored in the firebase
-            infos: [], // NumberOfPins, id, imageFile, type, userUid, etc for each key
-            /* Infos about each device for the list infos*/
-            key_info: "",
-            NumberOfPins_info: 0,
-            id_info: "",
-            imageFile_info: "",
-            type_info: "",
-            userUid_info: "",
-            information_test: [],
-            keys: [], // orderByKey vector with the unique keys of the belongings
-            devices: DeviceStore.getAllDevices(),
-            testNum: 21,
-            left: 0,
-            one_id_to_render: "",
-            openSetProperty: false,
-            selectValues: [],
-            textValue: "",
-            id: "",
-            type: "",
-            selectAttribute: "",
-            selectedDevice: "",
-            key: 0
-        };
+      super(props);
+      this.handleStateChange = this.handleStateChange.bind(this);
+      this.state = {
+        devices: DeviceStore.getAllDevices(),
+        left: 0,
+        openSetProperty: false,
+        selectValues: [],
+        textValue: "",
+        id: "",
+        type: "",
+        selectAttribute: "",
+        selectedDevice: "",
+        key: 0
+      };
     }
 
 
     componentWillMount() {
-        /* Create reference to messages in Firebase Database */
-        let messagesRef = fire.database().ref('messages').orderByKey().limitToLast(100);
-        let numbersRef = fire.database().ref('numbers'); // Reference of the number text (reading test from the database)
-        let modelsRef = fire.database().ref('models');  //Reference to the objects (each one contains informations about a devices, a sensor or an actuator)
+      DeviceStore.on("change", this.handleStateChange);
+    }
 
-        var rootRef =  firebase.database().ref("models").orderByKey();
+    componentWillUnmount() {
+      DeviceStore.removeListener("change", this.handleStateChange);
+    }
 
-        rootRef.on('child_added', snap => {
-            const previousListModels = this.state.infos;
-            $(previousListModels).append({
-                information_test: snap.val(),
-                key_info: snap.key,
-                NumberOfPins_info: snap.val().NumberOfPins,
-                id_info: snap.val().id,
-                imageFile_info: snap.val().imageFile,
-                type_info: snap.val().type,
-                userUid_info:snap.val().userUid
-            });
-            this.setState({
-                infos: previousListModels // Updating the list of infos about the devices
-            });
-        });
-
-
-        /*
-        console.log("INFOS:::");
-        console.log(this.state.infos);
-        console.log("INFOS:::");
-        console.log("PREVIOUS:::");
-        console.log(previousListModels);
-        console.log("PREVIOUSEV:::");
-        */
-
-        var query = firebase.database().ref("models").orderByKey();
-        query.once("value")
-        .then(function(snapshot) {
-            snapshot.forEach(function(childSnapshot) {  // Loop into database's information
-            // key will be "-K..." the 1st time, "-K..." in the 2nd time and so on
-            var key = childSnapshot.key;
-
-            //console.log(key);
-            // childData will be the actual contents of the child (information about each device, sensor or actuator)
-            var childData = childSnapshot.val();
-            vectorr.push(childSnapshot.val()); // Append the vector of information into the vector of devices
-            //this.state.one_id_to_render = childData;
-            //console.log({vectorr}); // it's working
-            //console.log("THIS STATE TO RENDER", this.state.one_id_to_render);
-
-        });
-    });
-
-    //console.log("READING NUMBERS FROM THE DB:::::::");
-    numbersRef.on('child_added', snapshot => {
-        /* Update React state when message is added at Firebase Database */
-        let number = { text: snapshot.val(), id: snapshot.key };
-        this.setState({
-            numbers: [number].concat(this.state.numbers)
-        });
-    })
-    //console.log(":::::::FINISHING THE READING OF NUMBERS FROM THE DB");
-
-
-    //console.log("READING OBJECTS FROM MODELS.......");
-    modelsRef.on('child_added', snapshot => {
-        // Update React state when message is added at Firebase Database
-        let model = { text: snapshot.val(), id: snapshot.key };
-        this.setState({
-            models: [model].concat(this.state.models)
-        });
-    })
-
-
-    //console.log("FINISHING THE READING OF OBJECTS FROM MODELS.......");
-
-    //console.log("READING MESSAGES FROM THE DATABASE.......");
-    messagesRef.on('child_added', snapshot => {
-        /* Update React state when message is added at Firebase Database */
-        let message = { text: snapshot.val(), id: snapshot.key };
-        this.setState({
-            messages: [message].concat(this.state.messages)
-        });
-    })
-    //console.log("FINISHING THE READING OF MESSAGES FROM THE DATABASE.......");
-
-    DeviceStore.on("change", this.handleStateChange);
-}
-
-// ADD TO THE DATABASE - FUNCTION
-addMessage(e){
-    e.preventDefault(); // <- prevent form submit from reloading the page
-    /* Send the message to Firebase */
-    fire.database().ref('messages').push( this.inputEl.value );
-    this.inputEl.value = ''; // <- clear the input
-}
-
-componentWillUnmount() {
-    DeviceStore.removeListener("change", this.handleStateChange);
-}
-
-handleStateChange() {
-    this.setState({
+    handleStateChange() {
+      this.setState({
         devices: DeviceStore.getAllDevices(),
         selectedDevice: DeviceStore.getSelectedDevice()
-    });
-}
+      });
+    }
 
-handleOpenSetProperty = () => {
-    this.setState({openSetProperty: true});
-};
+    handleOpenSetProperty = () => {
+     this.setState({openSetProperty: true});
+    };
 
-handleCloseSetProperty = () => {
-    this.setState({openSetProperty: false});
-};
+    handleCloseSetProperty = () => {
+      this.setState({openSetProperty: false});
+    };
 
-handleChange = (event, index, selectValues) => {
-    // this.state.attributeInputs[name] = "";
+    handleChange = (event, index, selectValues) => {
+      // this.state.attributeInputs[name] = "";
 
-    this.setState({selectValues});
-}
+      this.setState({selectValues});
+    }
 
 
-menuItems(selectValues) {
-    var ExampleComponent = React.createClass({
-        mixins: [dsfsdfdsf],
-        // ...
-    });
-    if (!this.props.isPaletteItem) {
+    menuItems(selectValues) {
+
+      if (!this.props.isPaletteItem) {
         // var names = DeviceStore.getPossiblePropertiesOfDevice(this.props.type);
 
         if (this.state.type != "") {
-            var names = DeviceStore.getPossibleProperties(this.state.type);
+          var names = DeviceStore.getPossibleProperties(this.state.type);
 
-            return names.map((name) => (
-                <MenuItem
-                key={name}
-                insetChildren={true}
-                checked={selectValues && selectValues.includes(name)}
-                value={name}
-                primaryText={name}
-                />
-            ));
+          return names.map((name) => (
+            <MenuItem
+              key={name}
+              insetChildren={true}
+              checked={selectValues && selectValues.includes(name)}
+              value={name}
+              primaryText={name}
+            />
+          ));
         }
         else {
-            return [
-                <MenuItem
-                key={"unitialized"}
-                insetChildren={true}
-                checked={false}
-                value={"unitialized"}
-                primaryText={"unitialized"}
-                />
-            ];
+          return [
+            <MenuItem
+              key={"unitialized"}
+              insetChildren={true}
+              checked={false}
+              value={"unitialized"}
+              primaryText={"unitialized"}
+            />
+          ];
         }
 
+      }
     }
-}
 
 
-render() {
+    render() {
 
 
 
-    const infos = vectorr.map(deviceModel =>
-        <div>
-            <h1>{deviceModel.type}</h1>
-        </div>
-    );
+      let selectedDevice;
 
-    return (
-        <div>
-            this:>>>>> {infos}
-        </div>
-    );
-    let selectedDevice;
-
-    if (this.state.selectedDevice != "") {
+      if (this.state.selectedDevice != "") {
         selectedDevice = utils.getObjectFromGraphById(this.state.selectedDevice, this.state.devices);
 
 
@@ -255,28 +128,30 @@ render() {
         //     selectedDevice[iterKey] = tempObject;
         //   }
         // });
-    }
+      }
 
-    if (selectedDevice != null)
-    utils.cleanOutAttributes(["@type"], selectedDevice);
+      if (selectedDevice != null)
+        utils.cleanOutAttributes(["@type"], selectedDevice);
 
-    const actionsSetProperty = [
+
+
+      const actionsSetProperty = [
         <FlatButton
-        label="Cancel"
-        onTouchTap={this.handleCloseSetProperty}
+          label="Cancel"
+          onTouchTap={this.handleCloseSetProperty}
         />,
         <FlatButton
-        label="Save"
-        primary={true}
-        onTouchTap={ () => {
+          label="Save"
+          primary={true}
+          onTouchTap={ () => {
             DropActions.setProperty(this.state.id, [this.state.selectAttribute], this.state.textValue, this.state.key);
             this.handleCloseSetProperty();
             this.state.textValue = "";
-        } }
+          } }
         />
-    ];
+      ];
 
-    const styles = {
+      const styles = {
         // position: 'absolute',
         // left: 465,
         // width: layout.width,
@@ -288,143 +163,116 @@ render() {
         backgroundColor: '#cfd8dc'
     };
 
-    if (selectedDevice == null) {
-
+      if (selectedDevice == null) {
         return (
-            <div ng-app='app' ng-controller="MyController">
-            <h1> MY FRIEND {this.state.testString}</h1>
+          <div>
             <MuiThemeProvider>
-            <div>
-            <List style={styles}>
-            <Subheader>Model Details</Subheader>
+              <div>
+                <List style={styles}>
+                  <Subheader>Model Details</Subheader>
 
-            <ListItem key={1} primaryText={"Select a device"} />
-            </List>
-            </div>
+                  <ListItem key={1} primaryText={"Select a device"} />
+                </List>
+              </div>
             </MuiThemeProvider>
-            </div>
+          </div>
         );
-    }
-    // device selected, only show that information
-    else {
+      }
+      // device selected, only show that information
+      else {
         return (
-            <div>
-            <form onSubmit={this.addMessage.bind(this)}>
-            <p> HERE.... </p>
-            <input type="text" ref={ el => this.inputEl = el }/>
-            <input type="submit"/>
-            <ul>
-            { /* Render the list of messages */
-                this.state.messages.map( message => <li key={message.id}>{message.text}</li> )
-            }
-            </ul>
-            <p> ....HERE </p>
-            <p> .. THE NUMBER BELLOW </p> // Just rendering the read number
-            { /* Render the list of numbers */
-                this.state.numbers.map( number => <li key={number.id}>{number.text}</li> )
-            }
-            <p> .. THE NUMBER ABOVE </p>
-
-            <h4> THE MODELS BELLOW</h4>
-            { /* Render the list of models */
-
-            }
-            <h4> THE MODELS ABOVE</h4>
-
-
-
-            </form>
+          <div>
             <MuiThemeProvider>
-            <div>
-            <List style={styles}>
-            <Subheader>Model Details</Subheader>
-            {Object.keys(selectedDevice).map(key => {
+              <div>
+                <List style={styles}>
+                  <Subheader>Model Details</Subheader>
+                  {Object.keys(selectedDevice).map(key => {
 
-                // Array of objects as property value:
-                // 1. iterate through objects in array
-                // 2. if there are property values of the current object
-                // which are also object, we just show the id
-                if (Array.isArray(selectedDevice[key])) {
-                    // list-element for device attribute
-                    return (<ListItem key={key} primaryText={key} initiallyOpen={false} primaryTogglesNestedList={true} nestedItems={
+                    // Array of objects as property value:
+                    // 1. iterate through objects in array
+                    // 2. if there are property values of the current object
+                    // which are also object, we just show the id
+                    if (Array.isArray(selectedDevice[key])) {
+                      // list-element for device attribute
+                      return (<ListItem key={key} primaryText={key} initiallyOpen={false} primaryTogglesNestedList={true} nestedItems={
                         selectedDevice[key].map((lowerDevice) => {
 
-                            if (typeof lowerDevice === "object") {
-                                // list-element for each lower device in array (pin)
-                                return (<ListItem onClick={() => {if (selectedDevice["@id"] != lowerDevice["@id"]) DropActions.selectDevice(lowerDevice["@id"])}} key={selectedDevice[key].indexOf(lowerDevice)} primaryText={lowerDevice["@id"]} initiallyOpen={false} primaryTogglesNestedList={true} nestedItems={
-                                    // sub-list-elements: traverse keys of lower device (pin)
-                                    Object.keys(lowerDevice).map((lowerKey) => {
-                                        if (lowerDevice[lowerKey]["@id"] != null)
-                                        return (<ListItem onDoubleClick={ () => {
+                          if (typeof lowerDevice === "object") {
+                            // list-element for each lower device in array (pin)
+                            return (<ListItem onClick={() => {if (selectedDevice["@id"] != lowerDevice["@id"]) DropActions.selectDevice(lowerDevice["@id"])}} key={selectedDevice[key].indexOf(lowerDevice)} primaryText={lowerDevice["@id"]} initiallyOpen={false} primaryTogglesNestedList={true} nestedItems={
+                              // sub-list-elements: traverse keys of lower device (pin)
+                              Object.keys(lowerDevice).map((lowerKey) => {
+                                if (lowerDevice[lowerKey]["@id"] != null)
+                                  return (<ListItem onDoubleClick={ () => {
                                             const tempDevice = utils.getObjectFromGraphById(selectedDevice["@id"], this.state.devices);
                                             this.setState({id: tempDevice["@id"], type: tempDevice["@type"], selectAttribute: lowerKey});
                                             this.handleOpenSetProperty()
-                                        } } key={lowerKey} primaryText={lowerKey + ": " + lowerDevice[lowerKey]["@id"]} />);
-                                        else
-                                        return (<ListItem onDoubleClick={ () => {
+                                          } } key={lowerKey} primaryText={lowerKey + ": " + lowerDevice[lowerKey]["@id"]} />);
+                                else
+                                  return (<ListItem onDoubleClick={ () => {
                                             const tempDevice = utils.getObjectFromGraphById(selectedDevice["@id"], this.state.devices);
                                             this.setState({id: tempDevice["@id"], type: tempDevice["@type"], selectAttribute: lowerKey});
                                             this.handleOpenSetProperty()
-                                        } } key={lowerKey} primaryText={lowerKey + ": " + lowerDevice[lowerKey]} />);
-                                    })
-                                } />);
-                            }
-                            // we have an array of primitve values as our attribute
-                            else {
-                                return (<ListItem onDoubleClick={ () => {
-                                    const tempDevice = utils.getObjectFromGraphById(selectedDevice["@id"], this.state.devices);
-                                    this.setState({id: tempDevice["@id"], type: tempDevice["@type"], selectAttribute: key, key: selectedDevice[key].indexOf(lowerDevice)});
-                                    this.handleOpenSetProperty()
-                                } }
-                                key={selectedDevice[key].indexOf(lowerDevice)} primaryText={selectedDevice[key].indexOf(lowerDevice) + ": " + lowerDevice} />);
-                            }
+                                          } } key={lowerKey} primaryText={lowerKey + ": " + lowerDevice[lowerKey]} />);
+                              })
+                            } />);
+                          }
+                          // we have an array of primitve values as our attribute
+                          else {
+                            return (<ListItem onDoubleClick={ () => {
+                                const tempDevice = utils.getObjectFromGraphById(selectedDevice["@id"], this.state.devices);
+                                this.setState({id: tempDevice["@id"], type: tempDevice["@type"], selectAttribute: key, key: selectedDevice[key].indexOf(lowerDevice)});
+                                this.handleOpenSetProperty()
+                              } }
+                              key={selectedDevice[key].indexOf(lowerDevice)} primaryText={selectedDevice[key].indexOf(lowerDevice) + ": " + lowerDevice} />);
+                          }
 
                         })
-                    } />);
-                }
-                // Object as property value:
-                // if there are property values of this object
-                // which are also object, we just show the id
-                else if (!Array.isArray(selectedDevice[key]) && typeof selectedDevice[key] == "object" && selectedDevice[key]["@id"] != null) {
+                      } />);
+                    }
+                    // Object as property value:
+                    // if there are property values of this object
+                    // which are also object, we just show the id
+                    else if (!Array.isArray(selectedDevice[key]) && typeof selectedDevice[key] == "object" && selectedDevice[key]["@id"] != null) {
 
-                    return (<ListItem onClick={() => DropActions.selectDevice(selectedDevice[key]["@id"])}
-                    onDoubleClick={ () => {
-                        const tempDevice = utils.getObjectFromGraphById(selectedDevice["@id"], this.state.devices);
-                        this.setState({id: tempDevice["@id"], type: tempDevice["@type"], selectAttribute: key});
-                        this.handleOpenSetProperty()
-                    } } key={key} primaryText={key + ": " + selectedDevice[key]["@id"]} initiallyOpen={false} primaryTogglesNestedList={true} />);
-                }
-                // primitive data as property value
-                else
-                return (<ListItem onDoubleClick={ () => {
-                    const tempDevice = utils.getObjectFromGraphById(selectedDevice["@id"], this.state.devices);
-                    this.setState({id: tempDevice["@id"], type: tempDevice["@type"], selectAttribute: key});
-                    this.handleOpenSetProperty()
-                } }
-                key={key} primaryText={key + ": " + selectedDevice[key]} />);
+                      return (<ListItem onClick={() => DropActions.selectDevice(selectedDevice[key]["@id"])}
+                          onDoubleClick={ () => {
+                            const tempDevice = utils.getObjectFromGraphById(selectedDevice["@id"], this.state.devices);
+                            this.setState({id: tempDevice["@id"], type: tempDevice["@type"], selectAttribute: key});
+                            this.handleOpenSetProperty()
+                          } } key={key} primaryText={key + ": " + selectedDevice[key]["@id"]} initiallyOpen={false} primaryTogglesNestedList={true} />);
+                    }
+                    // primitive data as property value
+                    else
+                      return (<ListItem onDoubleClick={ () => {
+                                const tempDevice = utils.getObjectFromGraphById(selectedDevice["@id"], this.state.devices);
+                                this.setState({id: tempDevice["@id"], type: tempDevice["@type"], selectAttribute: key});
+                                this.handleOpenSetProperty()
+                              } }
+                              key={key} primaryText={key + ": " + selectedDevice[key]} />);
 
-            })}
-            </List>
+                  })}
+                </List>
 
-            <Dialog
-            title="Set Property"
-            actions={actionsSetProperty}
-            modal={false}
-            open={this.state.openSetProperty}
-            onRequestClose={this.handleCloseSetProperty}
-            >
-            <TextField value={this.state.textValue} onChange={ (e) => {this.setState({textValue: e.target.value}) } }
-            hintText="New Value"
-            />
-            </Dialog>
+                <Dialog
+                  title="Set Property"
+                  actions={actionsSetProperty}
+                  modal={false}
+                  open={this.state.openSetProperty}
+                  onRequestClose={this.handleCloseSetProperty}
+                >
+                  <TextField value={this.state.textValue} onChange={ (e) => {this.setState({textValue: e.target.value}) } }
+                    hintText="New Value"
+                  />
+                </Dialog>
 
-            </div>
+              </div>
             </MuiThemeProvider>
-            </div>
+          </div>
         );
-    }
+      }
 
-}
+  }
 
 
 }

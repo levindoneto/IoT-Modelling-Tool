@@ -5,7 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import * as DeviceActions from "../actions/DropActions";
 import DeviceStore from "../stores/DeviceStore";
 
-const paletteContainerWidth = 155;
+const paletteContainerWidth = 305;
 const paletteContainerHeight = 300;
 const myListWidth = 205;
 var myButtonHeight = 0;

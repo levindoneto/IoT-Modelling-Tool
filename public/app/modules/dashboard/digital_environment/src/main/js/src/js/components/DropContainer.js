@@ -11,7 +11,7 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 
-const paletteContainerWidth = 155;
+const paletteContainerWidth = 100;
 const paletteContainerHeight = 300;
 const myListWidth = 205;
 
