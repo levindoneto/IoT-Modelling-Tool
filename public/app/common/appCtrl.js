@@ -66,8 +66,74 @@ $scope.readNotification = function(){
         {
             theme: "black",
             color: "skin-black",
-            title: "Dark Gray",
+            title: "Dark Blue",
             icon:""
+        },
+        {
+            theme: "purple",
+            color: "skin-purple",
+            title: "Gray and Purple",
+            icon: ""
+        },
+        {
+            theme: "black",
+            color: "skin-black-light",
+            title: "White",
+            icon:"-o"
+        },
+        {
+            theme: "blue",
+            color: "skin-blue",
+            title: "Blue and Gray",
+            icon:""
+        },
+        {
+            theme: "blue",
+            color: "skin-blue-light",
+            title: "White and Blue",
+            icon:"-o"
+        },
+        {
+            theme: "green",
+            color: "skin-green",
+            title: "Gray and Green",
+            icon:""
+        },
+        {
+            theme: "green",
+            color: "skin-green-light",
+            title: "White and Green",
+            icon:"-o"
+        },
+        {
+            theme: "yellow",
+            color: "skin-yellow",
+            title: "Yellow and Gray",
+            icon:""
+        },
+        {
+            theme: "yellow",
+            color: "skin-yellow-light",
+            title: "White and Yellow",
+            icon:"-o"
+        },
+        {
+            theme: "red",
+            color: "skin-red",
+            title: "Red and Gray",
+            icon: ""
+        },
+        {
+            theme: "red",
+            color: "skin-red-light",
+            title: "White and Red",
+            icon: "-o"
+        },
+        {
+            theme: "purple",
+            color: "skin-purple-light",
+            title: "Purple and White",
+            icon: "-o"
         }
     ];
 
