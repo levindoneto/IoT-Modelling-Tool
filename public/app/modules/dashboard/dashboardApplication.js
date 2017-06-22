@@ -83,7 +83,7 @@ dashboard.config(["$stateProvider", function ($stateProvider) {
     controller: 'digitalenvironmentController',
     controllerAs: 'vm',
     data: {
-      pageTitle: 'Digital Environment'
+      pageTitle: 'IoT Environment Modelling'
     }
   });
 

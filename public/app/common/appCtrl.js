@@ -96,7 +96,7 @@ $scope.readNotification = function(){
             state: "myaccount"
         },
         {
-            title: "Digital Environment",
+            title: "IoT Environment Modelling",
             icon: "exchange",
             state: "digitalenvironment"
         },
