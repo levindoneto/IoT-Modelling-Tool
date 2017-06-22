@@ -254,7 +254,7 @@
 
 .InfoAccount {
     font-size: 18px;
-    color: #1f2b3a;
+    color: #004C70;
 }
 
 .EditInfoField {
@@ -265,7 +265,7 @@
 }
 
 .AddProperty{
-    background-color: #1f2b3a;
+    background-color: #004C70;
     padding: 4px;
     border-radius: 8px;
     margin-top: 10px;
@@ -278,7 +278,7 @@
 }
 
 .DataEdit {
-    background-color: #1f2b3a;
+    background-color: #004C70;
     padding: 10px;
     border-radius: 8px;
     margin-top: 20px;
@@ -317,7 +317,7 @@
 }
 
 .RmvButtonaddbelonging {
-    background-color: #1f2b3a;
+    background-color: #004C70;
     padding: 5px;
     border-radius: 8px;
     margin-top: 10px;
@@ -345,7 +345,7 @@
 }
 
 .MyEvaluationsRatingUser, .MyEvaluationsRatingUser, .MyInfo {
-    color: #1f2b3a;
+    color: #004C70;
     font-size: 18px;
     font-weight: bold;
 }
@@ -363,7 +363,7 @@ input[type="file"] {
 
 .custom-file-upload {
     border: 1px;
-    background-color: #1f2b3a;
+    background-color: #004C70;
     font-size: 15px;
     color: white;
     padding: 5px;
@@ -403,7 +403,7 @@ input[type="file"] {
 
 .BtnCloseSearch {
     border: 1px;
-    background-color: #1f2b3a;
+    background-color: #004C70;
     color: white;
     border-radius: 8px;
     margin: auto
@@ -423,7 +423,7 @@ input[type="file"] {
 
 .DetailsmodelSearch {
     border: 1px;
-    background-color: #1f2b3a;
+    background-color: #004C70;
     color: white;
     font-size: 20px;
     border-radius: 8px;
@@ -457,7 +457,7 @@ input[type="file"] {
 
 .DetailsUserSearch:hover {
     border: 1px;
-    background-color: #1f2b3a;
+    background-color: #004C70;
     color: white;
     font-size: 20px;
     border-radius: 8px;
@@ -468,7 +468,7 @@ input[type="file"] {
 
 .MakeTradeSearch {
     border: 1px;
-    background-color: #1f2b3a;
+    background-color: #004C70;
     color: white;
     font-size: 20px;
     border-radius: 8px;
@@ -514,7 +514,7 @@ input[type="file"] {
 
 .BtnClosemybelongings {
     border: 1px;
-    background-color: #1f2b3a;
+    background-color: #004C70;
     color: white;
     border-radius: 8px;
     margin: auto
@@ -522,7 +522,7 @@ input[type="file"] {
 
 .BtnClosemybelongings:hover {
     border: 1px;
-    background-color: #3c536b;
+    background-color: #0093D1;
     font-size: 15px;
     color: white;
     border-radius: 8px;
@@ -540,7 +540,7 @@ input[type="file"] {
 /* Trades */
 .BtnBookTrade {
     border: 1px;
-    background-color: #1f2b3a;
+    background-color: #004C70;
     color: white;
     font-size: 20px;
     border-radius: 8px;
@@ -550,7 +550,7 @@ input[type="file"] {
 
 .BtnBookTrade:hover {
     border: 1px;
-    background-color: #3c536b;
+    background-color: #0093D1;
     font-size: 20px;
     color: white;
     border-radius: 8px;
@@ -574,7 +574,7 @@ input[type="file"] {
 
 .BtnUserTrade:hover {
     border: 1px;
-    background-color: #1f2b3a;
+    background-color: #004C70;
     color: white;
     font-size: 20px;
     border-radius: 8px;
@@ -593,7 +593,7 @@ input[type="file"] {
 }
 
 .AcceptTrade:hover {
-    background-color: #3c536b;
+    background-color: #0093D1;
     font-size: 20px;
     border-radius: 8px;
     transition: all 0.5s;
@@ -612,7 +612,7 @@ input[type="file"] {
 }
 
 .DemonstrateInterestTrade:hover {
-    background-color: #3c536b;
+    background-color: #0093D1;
     font-size: 20px;
     border-radius: 8px;
     transition: all 0.5s;
@@ -631,7 +631,7 @@ input[type="file"] {
 }
 
 .SeemodelsTrade:hover {
-    background-color: #3c536b;
+    background-color: #0093D1;
     font-size: 20px;
     border-radius: 8px;
     transition: all 0.5s;
@@ -649,7 +649,7 @@ input[type="file"] {
 }
 
 .SendCodeTrade:hover {
-    background-color: #3c536b;
+    background-color: #0093D1;
     font-size: 20px;
     border-radius: 8px;
     transition: all 0.5s;
@@ -666,7 +666,7 @@ input[type="file"] {
 }
 
 .Send:hover {
-    background-color: #3c536b;
+    background-color: #0093D1;
     font-size: 20px;
     border-radius: 8px;
     transition: all 0.5s;
@@ -683,7 +683,7 @@ input[type="file"] {
 }
 
 .Report:hover {
-    background-color: #3c536b;
+    background-color: #0093D1;
     font-size: 20px;
     border-radius: 8px;
     transition: all 0.5s;
@@ -795,7 +795,7 @@ input[type="file"] {
 
 /* Withlist */
 .RemoveDesire, .BanUser, .DisLogApp {
-    background-color: #5f5151;
+    background-color: #F2635F;
     font-size: 15px;
     border-radius: 8px;
     color: white;
@@ -814,7 +814,7 @@ input[type="file"] {
 }
 
 .ADDWordKey, .DisBanUser, .MyAccountApp {
-    background-color: #1f2b3a;
+    background-color: #004C70;
     font-size: 15px;
     border-radius: 8px;
     color: white;

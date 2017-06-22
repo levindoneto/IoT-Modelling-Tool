@@ -66,7 +66,7 @@ $scope.readNotification = function(){
         {
             theme: "black",
             color: "skin-black",
-            title: "Cinza escuro",
+            title: "Dark Gray",
             icon:""
         }
     ];
