@@ -163,7 +163,7 @@ render() {
                 );
             }
         })}
-        <Subheader>Sensorssd</Subheader>
+        <Subheader>Sensors</Subheader>
         {definitionsDevices.map(
             iterDevice => {
                 if ( iterDevice["@id"].startsWith("ipvs:") && iterDevice["rdfs:subClassOf"] && utils.getParentClasses(iterDevice["@id"]).includes("ssn:SensingDevice") ) {

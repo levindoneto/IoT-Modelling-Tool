@@ -12,7 +12,7 @@
             <ul style="list-style-type: none;">
                 <li ng-repeat=" model in models | filter:{ userUid: userDB.uid }" > <!-- models is a list  provided by the controller-->
                     <h3>
-                        {{model.id}} - {{model.type}} <button type="button" data-toggle="modal" ng-click="modal(model)"  data-target="#popUp" class="fa fa-info-circle Btnmybelongings"></button> <button ng-click="remove(model)" type="button" class="fa fa-trash Btnmybelongings"> </button>
+                        {{model.id}} | {{model.type}} <button type="button" data-toggle="modal" ng-click="modal(model)"  data-target="#popUp" class="fa fa-info-circle Btnmybelongings"></button> <button ng-click="remove(model)" type="button" class="fa fa-trash Btnmybelongings"> </button>
                     </h3>
 
                     <div id="popUp" class="modal fade" role="dialog">
@@ -25,12 +25,10 @@
                                 </div>
                                 <div class="modal-body">
                                     <h3 align="center">
-                                        ID: {{modalmodel.id}} </br>
-                                        Icon:<br>
-                                        <img class="Imgmybelongings" src="{{imagemodel}}" height="300px" width="auto" /><br>
+
+                                        <span class="MyInfo"> Id:        </span> <span class="MyInfoP"> {{modalmodel.id}}       </span></br></br></br>
                                         <span class="MyInfo"> Type:        </span> <span class="MyInfoP"> {{modalmodel.type}}       </span></br>
                                         <span class="MyInfo"> Number of Pins:          </span> <span class="MyInfoP"> {{modalmodel.NumberOfPins}} </span></br>
-                                        <span class="MyInfo"> Location: </span> <span class="MyInfoP"> {{modalmodel.location}}     </span></br>
                                     </h3>
                                 </div>
                                 <div class="modal-footer">

@@ -533,8 +533,7 @@ input[type="file"] {
 
 .Imgmybelongings {
     border: 1px;
-    border-radius: 8px;
-    box-shadow: 3px 3px 1px grey;
+    box-shadow: 1px 1px 1px 1px grey;
 }
 
 /* Trades */
