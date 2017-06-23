@@ -6,6 +6,8 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import fire from './database/fire' // Database to be accessed for this part of the application
 import reactfire from 'reactfire' // Binding between the database and reactjs
 
+var allIcons = {}; //Object with the icons of the devices (basis 64)
+
 const lstComponenents = {
     device: [], // list_infos_devices.type == "device"
     sensor: [], // list_infos_devices.type == "sensor"
@@ -17,7 +19,7 @@ const one_id_random = "RaspberryPiTwo"
 function Component(element) {
     this.numberOfPins = element.NumberOfPins;
     this.id = element.id;
-    this.imageFileKey = element.imageFile; // This key is used to access the correct image in the another data structure
+    this.iconComponentKey = element.imageFile; // This key is used to access the correct image in the another data structure
     this.ownerUser = element.userUid;
 }
 
@@ -26,7 +28,14 @@ function createComponent(element) {
     return lstComponenents[element.type].push(new Component(element)); // returns a promise
 }
 
-// Reading the data from the database (key: "models")
+// Reading data from the database (key: images)
+firebase.database().ref("images").orderByKey().once("value")
+.then(function(snapshot) { // after function(snapshot)
+    snapshot.forEach(function(childSnapshot) {
+        allIcons[childSnapshot.key] = childSnapshot.val();
+    });
+});
+// Reading data from the database (key: "models")
 firebase.database().ref("models").orderByKey().once("value")
 .then(function(snapshot) { // after function(snapshot)
     snapshot.forEach(function(childSnapshot) {  // Loop into database's information
@@ -46,8 +55,8 @@ firebase.database().ref("models").orderByKey().once("value")
         }
     });
 }).then(function(createComponent) {
-    var global = "across";
-    localStorage.setItem('text', lstComponenents.device["0"].id);
+    //var global = "across";
+    //localStorage.setItem('text', lstComponenents.device["0"].id);
 setTimeout(function () {
     console.log("THEN (IN CLIENT) ", lstComponenents.actuator["0"].id); // Now the value isn't undefined
     var prefixIPVS = "ipvs:";
