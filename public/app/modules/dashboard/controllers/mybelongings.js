@@ -48,8 +48,8 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
           modelObject.$loaded().then(function(){
             modelObject.$remove().then(function(){
               swal({
-                title: "The model was removed with success!",
-                timer: 1700,
+                title: "The device has been deleted with success!",
+                timer: 1500,
                 showConfirmButton: false });
             }, function(error) {
               console.log("Error:", error);
@@ -57,8 +57,8 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
           });
         } else {
           swal({
-            title: "Your model wasn't deleted!",
-            timer: 1700,
+            title: "Your device hasn't been deleted!",
+            timer: 1500,
             showConfirmButton: false });
         }
       });

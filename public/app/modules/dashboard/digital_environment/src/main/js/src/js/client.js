@@ -33,6 +33,7 @@ firebase.database().ref("images").orderByKey().once("value")
 .then(function(snapshot) { // after function(snapshot)
     snapshot.forEach(function(childSnapshot) {
         allIcons[childSnapshot.key] = childSnapshot.val();
+        localStorage.setItem(childSnapshot.key, childSnapshot.val());
     });
 });
 // Reading data from the database (key: "models")
@@ -43,15 +44,19 @@ firebase.database().ref("models").orderByKey().once("value")
         switch (childSnapshot.val().type) {
             case "device":
                 createComponent(childSnapshot.val());
+                localStorage.setItem(childSnapshot.key, childSnapshot.val().id); // Key:Id will be able to access from the whole application
                 break;
             case "sensor":
                 createComponent(childSnapshot.val());
+                localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
                 break;
             case "actuator":
                 createComponent(childSnapshot.val());
+                localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
                 break;
             default:
                 createComponent(childSnapshot.val());
+                localStorage.setItem(childSnapshot.key, childSnapshot.val());
         }
     });
 }).then(function(createComponent) {
@@ -66,7 +71,7 @@ firebase.database().ref("models").orderByKey().once("value")
     localStorage.setItem('sensor', sensorOne);
     localStorage.setItem('actuator', actuatorOne);
     //localStorage.setItem('prefixIPVS', prefixIPVS);
-    
+
     const rootEl = document.getElementById('root');
     window.boxes = []
 
@@ -75,4 +80,5 @@ firebase.database().ref("models").orderByKey().once("value")
      <DragAroundNaive />,
      rootEl
     );
+
 });
