@@ -57,7 +57,6 @@ firebase.database().ref("models").orderByKey().once("value")
 }).then(function(createComponent) {
     //var global = "across";
     //localStorage.setItem('text', lstComponenents.device["0"].id);
-setTimeout(function () {
     console.log("THEN (IN CLIENT) ", lstComponenents.actuator["0"].id); // Now the value isn't undefined
     var prefixIPVS = "ipvs:";
     var deviceOne = lstComponenents.device["0"].id;
@@ -67,8 +66,7 @@ setTimeout(function () {
     localStorage.setItem('sensor', sensorOne);
     localStorage.setItem('actuator', actuatorOne);
     //localStorage.setItem('prefixIPVS', prefixIPVS);
-
-
+    
     const rootEl = document.getElementById('root');
     window.boxes = []
 
@@ -77,6 +75,4 @@ setTimeout(function () {
      <DragAroundNaive />,
      rootEl
     );
-}, 1000);
-
 });
