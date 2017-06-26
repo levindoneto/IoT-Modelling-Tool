@@ -1,278 +1,220 @@
-import ActionGrade from 'material-ui/svg-icons/action/grade';
-import DeviceStore from "../stores/DeviceStore";
-import * as DropActions from '../actions/DropActions';
+import Device from './Device';
+import { DropTarget, DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
+import ItemTypes from '../dnd/ItemTypes';
+import React, { Component, PropTypes } from 'react';
+import update    from    'react/lib/update';
 import { List, ListItem } from 'material-ui/List';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import React from "react";
 import Subheader from 'material-ui/Subheader';
-import Toggle from 'material-ui/Toggle';
-import SelectField from 'material-ui/SelectField';
-import TextField from 'material-ui/TextField';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import MenuItem from 'material-ui/MenuItem';
+import { definitions } from '../constants/definitions';
 import * as utils from '../utils/utils';
 import fire from '../database/fire' // Database to be accessed for this part of the application
 import reactfire from 'reactfire' // Binding between the database and reactjs
 
-const layout = {
-  width: '100%',
-  height: '100%'
+
+const paletteItemsStyles = {
+    left: 5,
+    top: 40
 };
 
+var list_infos_devices = []; // List with information about devices, sensors and actuators in the database
+var list_devices = []; // list_infos_devices.type == "device"
+var list_sensors = []; // list_infos_devices.type == "sensor"
+var list_actuators = []; // list_infos_devices.type == "actuator"
 
-export default class MyList extends React.Component {
+const styles = {
+    height: '100%',
+    width: '100%',
+    border: '1px solid black',
+    overflow: 'auto', // enable scrollable here
+};
+
+const boxTarget = {
+    drop(props, monitor, component) {
+        // do nothing
+    }
+};
+
+class PaletteContainer extends Component {
+    static propTypes = {
+        hideSourceOnDrag: PropTypes.bool.isRequired,
+        connectDropTarget: PropTypes.func.isRequired
+    };
 
     constructor(props) {
-      super(props);
-      this.handleStateChange = this.handleStateChange.bind(this);
-      this.state = {
-        devices: DeviceStore.getAllDevices(),
-        left: 0,
-        openSetProperty: false,
-        selectValues: [],
-        textValue: "",
-        id: "",
-        type: "",
-        selectAttribute: "",
-        selectedDevice: "",
-        key: 0
-      };
+        super(props);
     }
-
 
     componentWillMount() {
-      DeviceStore.on("change", this.handleStateChange);
-    }
+        // Reading the data from the database (key: "models")
+        var query = firebase.database().ref("models").orderByKey(); // query is the variable of reference from the database
+        var index = 0; // Using in the binding among the information
+        query.once("value")
+        .then(function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {  // Loop into database's information
+            var key = childSnapshot.key;
+            var aux = []; // Using to store a list with len=2 with the information and the index of the device, sensor or actuator
+            list_infos_devices.push(childSnapshot.val().type); // Append the vector of information into the vector of devices
 
-    componentWillUnmount() {
-      DeviceStore.removeListener("change", this.handleStateChange);
-    }
+            switch (childSnapshot.val().type) {
+                case "device":
+                    aux = []; // Erasing the auxiliar list
+                    aux.push(childSnapshot.val().id);
+                    aux.push(index);
+                    list_devices.push(aux); // Adding device in the list of devices
+                    break;
+                case "sensor":
+                    aux = []; // Erasing the auxiliar list
+                    aux.push(childSnapshot.val().id);
+                    aux.push(index);
+                    list_sensors.push(aux);  // Adding sensor in the list of sensors
+                break;
+                case "actuator":
+                    //aux = []; // Erasing the auxiliar list
+                    //aux.push(childSnapshot.val().id);
+                    //aux.push(index);
+                    list_actuators.push(childSnapshot.val().id)  // Adding actuators in the list of actuators
+                    break;
+                default:
+                    aux.push(childSnapshot.val().id);
+                    aux.push(index);
+                    list_devices.push(aux); // The default type device
+            }
+            index++;
+        });
+    })
+    //console.log("BUGGED DEVICES...");
+    //console.log({list_devices});
+    //console.log(".....BUGGED DEVICES");
+    //console.log({list_sensors});
+    //console.log({list_actuators});
 
-    handleStateChange() {
-      this.setState({
-        devices: DeviceStore.getAllDevices(),
-        selectedDevice: DeviceStore.getSelectedDevice()
-      });
-    }
-
-    handleOpenSetProperty = () => {
-     this.setState({openSetProperty: true});
-    };
-
-    handleCloseSetProperty = () => {
-      this.setState({openSetProperty: false});
-    };
-
-    handleChange = (event, index, selectValues) => {
-      // this.state.attributeInputs[name] = "";
-
-      this.setState({selectValues});
-    }
-
-
-    menuItems(selectValues) {
-
-      if (!this.props.isPaletteItem) {
-        // var names = DeviceStore.getPossiblePropertiesOfDevice(this.props.type);
-
-        if (this.state.type != "") {
-          var names = DeviceStore.getPossibleProperties(this.state.type);
-
-          return names.map((name) => (
-            <MenuItem
-              key={name}
-              insetChildren={true}
-              checked={selectValues && selectValues.includes(name)}
-              value={name}
-              primaryText={name}
-            />
-          ));
-        }
-        else {
-          return [
-            <MenuItem
-              key={"unitialized"}
-              insetChildren={true}
-              checked={false}
-              value={"unitialized"}
-              primaryText={"unitialized"}
-            />
-          ];
-        }
-
-      }
-    }
-
-
-    render() {
-
-
-
-      let selectedDevice;
-
-      if (this.state.selectedDevice != "") {
-        selectedDevice = utils.getObjectFromGraphById(this.state.selectedDevice, this.state.devices);
-
-
-        // Object.keys(selectedDevice).map((iterKey) => {
-        //
-        //   if (Array.isArray(selectedDevice[iterKey])) {
-        //     selectedDevice[iterKey] = selectedDevice[iterKey].map((iterObject) => {
-        //       const tempObject = utils.getObjectFromGraphById(iterObject["@id"], this.state.devices);
-        //       return tempObject;
-        //     });
-        //   }
-        //   else if (typeof selectedDevice[iterKey] == "object") {
-        //     const tempObject = utils.getObjectFromGraphById(selectedDevice[iterKey]["@id"], this.state.devices);
-        //     selectedDevice[iterKey] = tempObject;
-        //   }
-        // });
-      }
-
-      if (selectedDevice != null)
-        utils.cleanOutAttributes(["@type"], selectedDevice);
-
-
-
-      const actionsSetProperty = [
-        <FlatButton
-          label="Cancel"
-          onTouchTap={this.handleCloseSetProperty}
-        />,
-        <FlatButton
-          label="Save"
-          primary={true}
-          onTouchTap={ () => {
-            DropActions.setProperty(this.state.id, [this.state.selectAttribute], this.state.textValue, this.state.key);
-            this.handleCloseSetProperty();
-            this.state.textValue = "";
-          } }
-        />
-      ];
-
-      const styles = {
-        // position: 'absolute',
-        // left: 465,
-        // width: layout.width,
-        // top: 5,
-        maxHeight: '100%',
-        height: '100%',
-        border: '1px solid black',
-        overflow: 'auto',    // enable scrollable here
-        backgroundColor: '#cfd8dc'
-    };
-
-      if (selectedDevice == null) {
-        return (
-          <div>
-            <MuiThemeProvider>
-              <div>
-                <List style={styles}>
-                  <Subheader>Model Details</Subheader>
-
-                  <ListItem key={1} primaryText={"Select a device"} />
-                </List>
-              </div>
-            </MuiThemeProvider>
-          </div>
-        );
-      }
-      // device selected, only show that information
-      else {
-        return (
-          <div>
-            <MuiThemeProvider>
-              <div>
-                <List style={styles}>
-                  <Subheader>Model Details</Subheader>
-                  {Object.keys(selectedDevice).map(key => {
-
-                    // Array of objects as property value:
-                    // 1. iterate through objects in array
-                    // 2. if there are property values of the current object
-                    // which are also object, we just show the id
-                    if (Array.isArray(selectedDevice[key])) {
-                      // list-element for device attribute
-                      return (<ListItem key={key} primaryText={key} initiallyOpen={false} primaryTogglesNestedList={true} nestedItems={
-                        selectedDevice[key].map((lowerDevice) => {
-
-                          if (typeof lowerDevice === "object") {
-                            // list-element for each lower device in array (pin)
-                            return (<ListItem onClick={() => {if (selectedDevice["@id"] != lowerDevice["@id"]) DropActions.selectDevice(lowerDevice["@id"])}} key={selectedDevice[key].indexOf(lowerDevice)} primaryText={lowerDevice["@id"]} initiallyOpen={false} primaryTogglesNestedList={true} nestedItems={
-                              // sub-list-elements: traverse keys of lower device (pin)
-                              Object.keys(lowerDevice).map((lowerKey) => {
-                                if (lowerDevice[lowerKey]["@id"] != null)
-                                  return (<ListItem onDoubleClick={ () => {
-                                            const tempDevice = utils.getObjectFromGraphById(selectedDevice["@id"], this.state.devices);
-                                            this.setState({id: tempDevice["@id"], type: tempDevice["@type"], selectAttribute: lowerKey});
-                                            this.handleOpenSetProperty()
-                                          } } key={lowerKey} primaryText={lowerKey + ": " + lowerDevice[lowerKey]["@id"]} />);
-                                else
-                                  return (<ListItem onDoubleClick={ () => {
-                                            const tempDevice = utils.getObjectFromGraphById(selectedDevice["@id"], this.state.devices);
-                                            this.setState({id: tempDevice["@id"], type: tempDevice["@type"], selectAttribute: lowerKey});
-                                            this.handleOpenSetProperty()
-                                          } } key={lowerKey} primaryText={lowerKey + ": " + lowerDevice[lowerKey]} />);
-                              })
-                            } />);
-                          }
-                          // we have an array of primitve values as our attribute
-                          else {
-                            return (<ListItem onDoubleClick={ () => {
-                                const tempDevice = utils.getObjectFromGraphById(selectedDevice["@id"], this.state.devices);
-                                this.setState({id: tempDevice["@id"], type: tempDevice["@type"], selectAttribute: key, key: selectedDevice[key].indexOf(lowerDevice)});
-                                this.handleOpenSetProperty()
-                              } }
-                              key={selectedDevice[key].indexOf(lowerDevice)} primaryText={selectedDevice[key].indexOf(lowerDevice) + ": " + lowerDevice} />);
-                          }
-
-                        })
-                      } />);
-                    }
-                    // Object as property value:
-                    // if there are property values of this object
-                    // which are also object, we just show the id
-                    else if (!Array.isArray(selectedDevice[key]) && typeof selectedDevice[key] == "object" && selectedDevice[key]["@id"] != null) {
-
-                      return (<ListItem onClick={() => DropActions.selectDevice(selectedDevice[key]["@id"])}
-                          onDoubleClick={ () => {
-                            const tempDevice = utils.getObjectFromGraphById(selectedDevice["@id"], this.state.devices);
-                            this.setState({id: tempDevice["@id"], type: tempDevice["@type"], selectAttribute: key});
-                            this.handleOpenSetProperty()
-                          } } key={key} primaryText={key + ": " + selectedDevice[key]["@id"]} initiallyOpen={false} primaryTogglesNestedList={true} />);
-                    }
-                    // primitive data as property value
-                    else
-                      return (<ListItem onDoubleClick={ () => {
-                                const tempDevice = utils.getObjectFromGraphById(selectedDevice["@id"], this.state.devices);
-                                this.setState({id: tempDevice["@id"], type: tempDevice["@type"], selectAttribute: key});
-                                this.handleOpenSetProperty()
-                              } }
-                              key={key} primaryText={key + ": " + selectedDevice[key]} />);
-
-                  })}
-                </List>
-
-                <Dialog
-                  title="Set Property"
-                  actions={actionsSetProperty}
-                  modal={false}
-                  open={this.state.openSetProperty}
-                  onRequestClose={this.handleCloseSetProperty}
-                >
-                  <TextField value={this.state.textValue} onChange={ (e) => {this.setState({textValue: e.target.value}) } }
-                    hintText="New Value"
-                  />
-                </Dialog>
-
-              </div>
-            </MuiThemeProvider>
-          </div>
-        );
-      }
-
-  }
-
-
+    var imgRandomFromBD;
+    this.imgRandomFromBD = localStorage.getItem('-KmO9pKQmrM-qMmXYk36');
+    console.log("THE PATH IMG: ", imgRandomFromBD);
 }
+
+render() {
+
+    let oneImg = this.imgRandomFromBD;
+
+    /*
+    const NumberComponent = props => (<td>{ props.number }</td>);
+
+    const Resultset = props => (
+        <tr>
+            {
+                props.rows.map( number => <NumberComponent number={number} />)
+            }
+        </tr>
+    );
+    */
+    const devices_content = list_devices.map(deviceInfo =>
+            <div>
+                <h1>{deviceInfo}</h1>
+            </div>
+        );
+
+    const sensors_content = list_sensors.map(sensorInfo =>
+
+        <div>
+        <h1>{sensorInfo}</h1>
+        </div>
+    );
+    const actuators_content = list_actuators.map(actuatorInfo =>
+        <div>
+        <h1>{actuatorInfo}</h1>
+        </div>
+    );
+
+    const { hideSourceOnDrag, connectDropTarget } = this.props;
+    const definitionsDevices = definitions["@graph"].filter((iterObject) => {
+        return !["owl:DatatypeProperty", "owl:ObjectProperty", "owl:AnnotationProperty"].includes(iterObject["@type"]);
+    });
+
+    // for key and y-value
+    let tempCount = -1;
+
+
+    return connectDropTarget(
+        <div style={styles}>
+        <MuiThemeProvider>
+        <List>
+
+        <Subheader>Devices</Subheader>
+        {definitionsDevices.map(iterDevice => {
+
+            let isDevice = false;
+            if (Array.isArray(iterDevice["rdfs:subClassOf"]))
+            iterDevice["rdfs:subClassOf"].map((iterSubClass) => {
+                if (iterSubClass["@id"] === "ssn:Device")
+                isDevice = true;
+            });
+
+            if ( iterDevice["@id"].startsWith("ipvs:") && isDevice ) {
+
+                tempCount = tempCount + 1;
+
+                return (
+                    <Device class="col-sm-3" key={tempCount + 1}
+                    id={iterDevice["@id"]}
+                    left={paletteItemsStyles.left}
+                    top={paletteItemsStyles.top * (tempCount + 1)}
+                    type={iterDevice["@id"]}
+                    isPaletteItem={true}
+                    hideSourceOnDrag={hideSourceOnDrag}>
+                    </Device>
+                );
+            }
+        })}
+        <Subheader>Sensors</Subheader>
+        {definitionsDevices.map(
+            iterDevice => {
+                if ( iterDevice["@id"].startsWith("ipvs:") && iterDevice["rdfs:subClassOf"] && utils.getParentClasses(iterDevice["@id"]).includes("ssn:SensingDevice") ) {
+
+                    tempCount = tempCount + 1;
+
+                    return (
+                        <div>
+                          <div >
+                             <img src = {oneImg} />
+                          </div>
+                        </div>
+                    );
+                }
+            }
+        )}
+
+        <Subheader>Actuators</Subheader>
+
+        {definitionsDevices.map(
+            iterDevice => {
+                if ( iterDevice["@id"].startsWith("ipvs:") && iterDevice["rdfs:subClassOf"] && utils.getParentClasses(iterDevice["@id"]).includes("iot-lite:ActuatingDevice") ) {
+                    tempCount = tempCount + 1;
+
+                    return (
+                            <Device class="col-sm-3" key={tempCount + 1}
+                            id={iterDevice["@id"]}
+                            left={paletteItemsStyles.left}
+                            top={paletteItemsStyles.top * (tempCount + 1)}
+                            type={iterDevice["@id"]}
+                            isPaletteItem={true}
+                            hideSourceOnDrag={hideSourceOnDrag}>
+                            </Device>
+                    );
+                }
+            }
+        )}
+        </List>
+        </MuiThemeProvider>
+        </div>
+    );
+}
+}
+
+
+
+export default DropTarget(ItemTypes.BOX, boxTarget, connect => ({
+    connectDropTarget: connect.dropTarget()
+}))(PaletteContainer);

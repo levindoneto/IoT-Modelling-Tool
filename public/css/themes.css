@@ -1511,8 +1511,12 @@
  * Skin: Purple
  * ------------
  */
+ .skin-purple .main-header .nameApp {
+   color: black;
+ }
 .skin-purple .main-header .navbar {
   background-color: #605ca8;
+  text-co
 }
 .skin-purple .main-header .navbar .nav > li > a {
   color: #ffffff;

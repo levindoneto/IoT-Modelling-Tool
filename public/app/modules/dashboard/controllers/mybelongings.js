@@ -22,6 +22,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
           $scope.imagemodel = imageObj.$value;
           $scope.modalmodel = model;
           console.log($scope.modalmodel);
+          //console.log("ONE IMAGE FROM THE DATABASE::: ", $scope.imagemodel);
       });
   }
 
