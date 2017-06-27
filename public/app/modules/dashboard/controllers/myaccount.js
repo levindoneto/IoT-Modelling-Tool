@@ -1,4 +1,5 @@
-﻿var allIcons = {}; //Object with the icons of the devices (basis 64)
+﻿
+var allIcons = {}; //Object with the icons of the devices (basis 64)
 
 const lstComponenents = {
     device: [], // list_infos_devices.type == "device"

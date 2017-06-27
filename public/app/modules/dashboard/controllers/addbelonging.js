@@ -21,22 +21,9 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
 
                         modelList.$add(model).then(function(ref) {
                             swal({
-                                title: "The model was added with sucess!",
+                                title: "It's been added with sucess!",
                                 timer: 1700,
                                 showConfirmButton: false });
-                                //Now it needs to send notifications to all users in wishlist
-                                var ref = firebase.database().ref('wishlist/');
-                                var wishListLoad = $firebaseArray(ref);
-                                wishListLoad.$loaded().then(function(){
-                                    var arrayOfKeywords = model.name.split(" ");
-                                    angular.forEach(wishListLoad, function(wish) {
-                                        angular.forEach(arrayOfKeywords, function(keyword) {
-                                            if(keyword.toUpperCase() == wish.word.toUpperCase()){
-                                                notification.send("Lista de Desejos: um model que possui a palavra chave '"+ keyword+"' foi adicionado! Use a pesquisa para encontrá-lo", wish.user)
-                                            }
-                                        });
-                                    });
-                                });
                             });
                         });
                     });

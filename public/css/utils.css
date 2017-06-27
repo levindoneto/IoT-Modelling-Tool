@@ -427,17 +427,15 @@ input[type="file"] {
     color: white;
     font-size: 20px;
     border-radius: 8px;
-    margin: auto;
     padding: 5px;
 }
 
 .DetailsmodelSearch:hover {
-    border: 1px;
+    border: 2px;
     background-color: #3c536b;
     font-size: 20px;
     color: white;
     border-radius: 8px;
-    margin: auto;
     transition: all 0.5s;
     cursor: pointer;
     padding: 5px;
@@ -445,45 +443,21 @@ input[type="file"] {
 
 .DetailsUserSearch {
     border: 1px;
-    background-color: #3c536b;
-    font-size: 20px;
+    background-color: #004C70;
     color: white;
+    font-size: 20px;
     border-radius: 8px;
-    margin: auto;
-    transition: all 0.5s;
-    cursor: pointer;
+    margin-left: 4px;
     padding: 5px;
 }
 
 .DetailsUserSearch:hover {
-    border: 1px;
+    border: 2px;
     background-color: #004C70;
     color: white;
     font-size: 20px;
     border-radius: 8px;
-    margin: auto
-    cursor: pointer;
-    padding: 5px;
-}
-
-.MakeTradeSearch {
-    border: 1px;
-    background-color: #004C70;
-    color: white;
-    font-size: 20px;
-    border-radius: 8px;
-    margin: auto;
-    padding: 5px;
-}
-
-.MakeTradeSearch:hover {
-    border: 1px;
-    background-color: #3c536b;
-    font-size: 20px;
-    color: white;
-    border-radius: 8px;
-    margin: auto;
-    transition: all 0.5s;
+    margin-left: 4px;
     cursor: pointer;
     padding: 5px;
 }

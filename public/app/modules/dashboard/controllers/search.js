@@ -1,4 +1,3 @@
-
 dashboard.controller("searchController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash','$firebaseArray','notification','$firebaseObject',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseArray, notification, $firebaseObject) {
     var vm = this;
@@ -10,12 +9,11 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         var modelList = $firebaseArray(ref);
         modelList.$loaded().then(function(){
             console.log(modelList)
-            $scope.models = modelList;
-
+            $scope.models = modelList; //models
         });
     }
-    $scope.modal = function(model) {
 
+    $scope.modal = function(model) {
         var ref = firebase.database().ref('images/'+model.imageFile);
         var imageObj = $firebaseObject(ref);
         imageObj.$loaded().then(function(){
@@ -27,13 +25,11 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         });
     }
     $scope.modalUserDetail = function(model) {
-
         var ref = firebase.database().ref('users/'+model.userUid);
         var userDetail = $firebaseObject(ref);
         userDetail.$loaded().then(function(){
             $scope.modaluser = userDetail;
-
         });
     }
 
-    }]);
+}]);

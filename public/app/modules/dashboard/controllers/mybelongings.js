@@ -1,5 +1,4 @@
 
-
 dashboard.controller("mybelongingsController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash','$firebaseObject','$firebaseArray',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray) {
   var vm = this;
