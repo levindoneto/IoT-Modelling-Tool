@@ -47,51 +47,75 @@ class PaletteContainer extends Component {
     }
 
     componentWillMount() {
-        // Reading the data from the database (key: "models")
-        var query = firebase.database().ref("models").orderByKey(); // query is the variable of reference from the database
-        var index = 0; // Using in the binding among the information
-        query.once("value")
-        .then(function(snapshot) {
-            snapshot.forEach(function(childSnapshot) {  // Loop into database's information
-            var key = childSnapshot.key;
-            var aux = []; // Using to store a list with len=2 with the information and the index of the device, sensor or actuator
-            list_infos_devices.push(childSnapshot.val().type); // Append the vector of information into the vector of devices
+        var allIcons = {}; //Object with the icons of the devices (basis 64)
 
-            switch (childSnapshot.val().type) {
-                case "device":
-                    aux = []; // Erasing the auxiliar list
-                    aux.push(childSnapshot.val().id);
-                    aux.push(index);
-                    list_devices.push(aux); // Adding device in the list of devices
-                    break;
-                case "sensor":
-                    aux = []; // Erasing the auxiliar list
-                    aux.push(childSnapshot.val().id);
-                    aux.push(index);
-                    list_sensors.push(aux);  // Adding sensor in the list of sensors
-                break;
-                case "actuator":
-                    //aux = []; // Erasing the auxiliar list
-                    //aux.push(childSnapshot.val().id);
-                    //aux.push(index);
-                    list_actuators.push(childSnapshot.val().id)  // Adding actuators in the list of actuators
-                    break;
-                default:
-                    aux.push(childSnapshot.val().id);
-                    aux.push(index);
-                    list_devices.push(aux); // The default type device
-            }
-            index++;
+        const lstComponenents = {
+            device: [], // list_infos_devices.type == "device"
+            sensor: [], // list_infos_devices.type == "sensor"
+            actuator: [], // list_infos_devices.type == "actuator"
+        };
+
+        const one_id_random = "RaspberryPiTwo"
+
+        function Component(element) {
+            this.numberOfPins = element.NumberOfPins;
+            this.id = element.id;
+            this.iconComponentKey = element.imageFile; // This key is used to access the correct image in the another data structure
+            this.ownerUser = element.userUid;
+        }
+
+        function createComponent(element) {
+            /* if element.type is definied */
+            return lstComponenents[element.type].push(new Component(element)); // returns a promise
+        }
+
+        // Reading data from the database (key: images) and setting it into the local storage
+        firebase.database().ref("images").orderByKey().once("value")
+        .then(function(snapshot) { // after function(snapshot)
+            snapshot.forEach(function(childSnapshot) {
+                allIcons[childSnapshot.key] = childSnapshot.val();
+                localStorage.setItem(childSnapshot.key, childSnapshot.val());
+            });
         });
-    })
-    //console.log("BUGGED DEVICES...");
-    //console.log({list_devices});
-    //console.log(".....BUGGED DEVICES");
-    //console.log({list_sensors});
-    //console.log({list_actuators});
+        // Reading data from the database (key: "models")
+        firebase.database().ref("models").orderByKey().once("value")
+        .then(function(snapshot) { // after function(snapshot)
+            snapshot.forEach(function(childSnapshot) {  // Loop into database's information
+            //var key = childSnapshot.key;
+                switch (childSnapshot.val().type) {
+                    case "device":
+                        createComponent(childSnapshot.val());
+                        localStorage.setItem(childSnapshot.key, childSnapshot.val().id); // Key:Id will be able to access from the whole application
+                        break;
+                    case "sensor":
+                        createComponent(childSnapshot.val());
+                        localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
+                        break;
+                    case "actuator":
+                        createComponent(childSnapshot.val());
+                        localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
+                        break;
+                    default:
+                        createComponent(childSnapshot.val());
+                        localStorage.setItem(childSnapshot.key, childSnapshot.val());
+                }
+            });
+        }).then(function(createComponent) {
+            //var global = "across";
+            //localStorage.setItem('text', lstComponenents.device["0"].id);
+            console.log("THEN (IN CLIENT) ", lstComponenents.actuator["0"].id); // Now the value isn't undefined
+
+        });
+
+    var imgRandomFromBD;
+    this.imgRandomFromBD = localStorage.getItem('-KmO9pKQmrM-qMmXYk36');
+    console.log("THE PATH IMG: ", imgRandomFromBD);
 }
 
 render() {
+
+    let oneImg = this.imgRandomFromBD;
+
 
     /*
     const NumberComponent = props => (<td>{ props.number }</td>);
@@ -104,10 +128,9 @@ render() {
         </tr>
     );
     */
-
     const devices_content = list_devices.map(deviceInfo =>
             <div>
-            <h1>{deviceInfo}</h1>
+                <h1>{deviceInfo}</h1>
             </div>
         );
 
@@ -179,11 +202,11 @@ render() {
                         isPaletteItem={true}
                         hideSourceOnDrag={hideSourceOnDrag}>
                         </Device>
-
                     );
                 }
             }
         )}
+
 
         <Subheader>Actuators</Subheader>
 

@@ -1,3 +1,4 @@
+
 import DeviceStore from "../stores/DeviceStore";
 import FlatButton from 'material-ui/FlatButton';
 import React, { Component, PropTypes, SyntheticEvent } from 'react';
@@ -61,6 +62,13 @@ class Device extends Component {
           img.src = "https://storage.googleapis.com/gweb-uniblog-publish-prod/static/blog/images/google-200x200.7714256da16f.png";
           img.onload = () => connectDragPreview(img);
       }
+      // Icons to be rendered in components
+      var deviceIcon;
+      var sensorIcon;
+      var actuatorIcon;
+      this.deviceIcon = localStorage.getItem('-KmO9pKQmrM-qMmXYk36');
+      this.sensorIcon = localStorage.getItem('-KmOBotz19i_OxIOOY8A');
+      this.actuatorIcon = localStorage.getItem('-KmOBuxbEHErqHYaPwvn');
   }
 
 
@@ -152,6 +160,10 @@ class Device extends Component {
   render() {
     const { hideSourceOnDrag, left, top, type, connectDragSource, isDragging, children, id, isPaletteItem, key } = this.props;
 
+      let iconDevice =  this.deviceIcon;
+      let iconSensor = this.sensorIcon;
+      let iconActuator = this.actuatorIcon;
+
       let sensingDeviceAvatar = undefined;
       let deviceAvatar = undefined;
       let actuatingDeviceAvatar = undefined;
@@ -162,13 +174,13 @@ class Device extends Component {
 
       let parentClasses = utils.getParentClasses(this.props.type);
       if (parentClasses.includes("ssn:SensingDevice")) {
-          sensingDeviceAvatar = (<Avatar src="https://storage.googleapis.com/gweb-uniblog-publish-prod/static/blog/images/google-200x200.7714256da16f.png"/>);
+          sensingDeviceAvatar = (<Avatar src={iconSensor}/>);
           isSensingDevice = true;
       } else if(parentClasses.includes("ssn:Device") && !parentClasses.includes("iot-lite:ActuatingDevice")) {
-          //deviceAvatar = ();
+          deviceAvatar = (<Avatar src={iconDevice}/>);
           isDevice = true;
       } else if(parentClasses.includes("iot-lite:ActuatingDevice")) {
-          //actuatingDeviceAvatar = ();
+          actuatingDeviceAvatar = (<Avatar src={iconActuator}/>);
           isActuatingDevice = true;
       }
 
