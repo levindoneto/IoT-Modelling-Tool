@@ -7,7 +7,77 @@ const lstComponenents = {
     actuator: [], // list_infos_devices.type == "actuator"
 };
 
-const one_id_random = "RaspberryPiTwo"
+/*********************************************************/
+/************************ Objects ************************/
+/*********************************************************/
+// Object with default context indormation
+function simpleContext (elementSimpleContext) {
+    this.geo = elementContext.geo;
+    this["m3-lite"] = elementContext["m3-lite"];
+    this.owl = elementContext.owl;
+    this.qu = elementContext.qu;
+    this["qu-rec20"] = elementContext["qu-rec20"];
+    this.rdf = elementContext.rdf;
+    this.rdfs = elementContext.rdfs;
+    this.ssn = elementContext.ssn;
+    this.time = elementContext.time;
+    this.xsd = elementContext.xsd;
+    this["iot-lite"] = elementContext["iot-lite"];
+    // For non-default information, another method is called
+}
+
+// Object with extra information to be bound with simpleContext
+function extraContext (elementExtraContent) {
+    //TODO
+    return true;
+}
+
+function identificationDevice (elementIdentificationDevice) {
+    //TODO
+    return true;
+}
+
+function propertiesDevice (elementPropertiesDevice) {
+    //TODO
+    return true;
+}
+
+function extraGraph (elementExtraGraph) {
+    //TODO
+    return true;
+}
+
+function defintions (elementDefinitions) {
+    //TODO // basically update the obj definitions in @context and @graph
+    return true;
+}
+
+/*****************************************************/
+/********************** Functions ********************/
+/******* to create/update definitions' objects *******/
+/*****************************************************/
+
+// Function to create/update the object context
+function createUpdateContext (elementSimpleContext, elementExtraContent) {
+    return true;
+}
+
+// Function to create/update the object context
+function createUpdateGraph (elementIdentificationDevice, elementPropertiesDevice, elementExtraGraph ) {
+    //TODO
+    return true; // return a push of objects on the @graph list
+}
+
+/*****************************************************/
+/************** Database's manipulation **************/
+/*****************************************************/
+
+// Function to create the object of definitions
+function createDefinitions(objContext, objGraph) {
+    //TODO
+    return true;
+}
+
 
 function Component(element) {
     this.numberOfPins = element.NumberOfPins;
@@ -83,6 +153,7 @@ firebase.database().ref("models").orderByKey().once("value")
                 "@container": "@list"
             }
         },
+
         "@graph": [
             {
                 "@id": "iot-lite:altRelative",
@@ -533,20 +604,30 @@ firebase.database().ref("models").orderByKey().once("value")
                 }
             },
 
-            //##### Extensions of IoT-Lite Scheme for own Device-Types #####################################################
-            {
-                "@id": deviceOne.toString(),          // Define a RaspberryPi as SubClass of Device //(prefixIPVS.concat(lstComponenents.actuator["0"].id)).toString()
-                "@type": "owl:Class",
-                "rdfs:subClassOf": [
-                    {
-                        "@id": "ssn:Device"
-                    },
-                    {
-                        "@id" : "ipvs:RaspberryPi-numberOfPins"
-                    }
-                ]
 
-            },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            //##### Extensions of IoT-Lite Scheme for own Device-Types #####################################################
+
             {
                 "@id": "ipvs:macAddress",     // Define the MacAdress property as Attribute of RaspberryPi
                 "@type": "owl:DatatypeProperty",
@@ -594,7 +675,8 @@ firebase.database().ref("models").orderByKey().once("value")
                     "@id": "xsd:string"
                 }
             },
-            {
+
+			{
                 "@id": sensorOne.toString(),          // Define a Raspberry Pi as SubClass of Device
                 "@type": "owl:Class",
                 "rdfs:comment": "Temperature Sensor with 3 pins. GND - 1, DQ - 2, VDD -3. Datasheet: https://datasheets.maximintegrated.com/en/ds/DS18B20.pdf",
@@ -619,6 +701,63 @@ firebase.database().ref("models").orderByKey().once("value")
                     "@id": "xsd:nonNegativeInteger"
                 }
             },
+
+
+
+            {
+                "@id": deviceOne.toString(),          // Define a RaspberryPi as SubClass of Device //(prefixIPVS.concat(lstComponenents.actuator["0"].id)).toString()
+                "@type": "owl:Class",
+                "rdfs:subClassOf": [
+                    {
+                        "@id": "ssn:Device"
+                    },
+                    {
+                        "@id" : "ipvs:RaspberryPi-numberOfPins"
+                    }
+                ]
+
+            },
+
+            {
+                "@id" : "ipvs:RaspberryPi-numberOfPins",
+                "@type": "owl:Restriction",
+                "rdfs:comment": "OWL restriction specifying the number of pins of a raspberry pi.",
+                "owl:onProperty": {
+                    "@id": "ipvs:numberOfPins"
+                },
+                "owl:cardinality": {
+                    "@value": "1",
+                    "@type": "xsd:nonNegativeInteger"
+                }
+            },
+
+
+            {
+                "@id": "ipvs:actuatosnon",          // Define a RaspberryPi as SubClass of Device
+                "@type": "owl:Class",
+                "rdfs:comment": "TI Microcontrollor with 16 pins to drive up to two motors. Datasheet: http://www.ti.com/lit/ds/symlink/l293.pdf",
+                "rdfs:subClassOf": [
+                    {
+                        "@id": "iot-lite:ActuatingDevice",
+                        "@id": "iot-lite:ActuatingDevice"
+                    },
+                    {
+                        "@id": "ipvs:L293D-hasPin"
+                    }
+                ]
+            },
+
+
+
+
+
+
+
+
+
+
+
+
             {
                 "@id": actuatorOne.toString(),          // Define a RaspberryPi as SubClass of Device
                 "@type": "owl:Class",
@@ -632,18 +771,20 @@ firebase.database().ref("models").orderByKey().once("value")
                     }
                 ]
             },
-            {
-                "@id" : "ipvs:RaspberryPi-numberOfPins",
-                "@type": "owl:Restriction",
-                "rdfs:comment": "OWL restriction specifying the number of pins of a raspberry pi.",
-                "owl:onProperty": {
-                    "@id": "ipvs:numberOfPins"
-                },
-                "owl:cardinality": {
-                    "@value": "26",
-                    "@type": "xsd:nonNegativeInteger"
-                }
-            },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             {
                 "@id" : "ipvs:DS18B20TEST-hasPin",
                 "@type": "owl:Restriction",
@@ -655,6 +796,7 @@ firebase.database().ref("models").orderByKey().once("value")
                     "@type": "xsd:nonNegativeInteger"
                 }
             },
+
             {
                 "@id" : "ipvs:L293D-hasPin",
                 "@type": "owl:Restriction",
@@ -666,9 +808,11 @@ firebase.database().ref("models").orderByKey().once("value")
                     "@type": "xsd:nonNegativeInteger"
                 }
             }
-        ]
+        ] //close graph
+
     }; // close the object
     // Storing the object into the local storage |
+    console.log(defObject);
     localStorage.setItem('defObject', JSON.stringify(defObject));
 
 });
