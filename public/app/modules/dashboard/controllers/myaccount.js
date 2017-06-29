@@ -32,9 +32,10 @@ function extraContext (elementExtraContent) {
     return true;
 }
 
-function identificationDevice (elementIdentificationDevice) {
-    //TODO
-    return true;
+function identificationDevice (elementIdentificationDevice, rdfsSubClassOf) {
+    this["@id"] = elementIdentificationDevice.id;
+    this["@type"] = elementIdentificationDevice.type;
+    this["rdfs:subClassOf"] = rdfsSubClassOf;
 }
 
 function propertiesDevice (elementPropertiesDevice) {
@@ -66,6 +67,12 @@ function createUpdateContext (elementSimpleContext, elementExtraContent) {
 function createUpdateGraph (elementIdentificationDevice, elementPropertiesDevice, elementExtraGraph ) {
     //TODO
     return true; // return a push of objects on the @graph list
+}
+
+function createRdfs (type, prefix, id) {
+    var rdfsSubClassOf = [];
+    //TODO
+    return rdfsSubClassOf;
 }
 
 /*****************************************************/
