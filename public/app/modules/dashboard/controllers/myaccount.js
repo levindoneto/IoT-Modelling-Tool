@@ -7,6 +7,8 @@ const lstComponenents = {
     actuator: [], // list_infos_devices.type == "actuator"
 };
 
+var graph = []; // IoT List for the @Graph information (in definitions)
+
 /*********************************************************/
 /************************ Objects ************************/
 /*********************************************************/
@@ -47,11 +49,6 @@ function propertiesDevice (elementPropertiesDevice, objOwlOnProperty, objOwlOnCa
     this["owl:cardinality"] = objOwlOnCardinality;
 }
 
-function extraGraph (elementExtraGraph) {
-    //TODO
-    return true;
-}
-
 function defintions (elementDefinitions) {
     //TODO // basically update the obj definitions in @context and @graph
     return true;
@@ -77,6 +74,11 @@ function createRdfs (type, prefix, id) {
     var rdfsSubClassOf = [];
     //TODO
     return rdfsSubClassOf;
+}
+
+// Function that adds the IoT extra information into the @graph (list of objects)
+function extraGraph (elementExtraGraph) {
+    return graph.push(elementExtraGraph); // Updating the IoT graph list of the definitions
 }
 
 /*****************************************************/
