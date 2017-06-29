@@ -72,9 +72,11 @@ function createUpdateGraph (elementIdentificationDevice, elementPropertiesDevice
 }
 
 
-function createRdfs (type, prefix, id) {
+function createRdfs (rdfsSubClassOfInfo) {
     var rdfsSubClassOf = [];
-    //TODO
+    for (var i in rdfsSubClassOfInfo.length) { // property isn't known beforehand
+        rdfsSubClassOf.push(rdfsSubClassOfInfo.i); // Each index of rdfsSubClassOfInfo should contain one object with a info about the device/component
+    }
     return rdfsSubClassOf;
 }
 
