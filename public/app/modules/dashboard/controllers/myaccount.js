@@ -35,12 +35,16 @@ function extraContext (elementExtraContent) {
 function identificationDevice (elementIdentificationDevice, rdfsSubClassOf) {
     this["@id"] = elementIdentificationDevice.id;
     this["@type"] = elementIdentificationDevice.type;
-    this["rdfs:subClassOf"] = rdfsSubClassOf;
+    this["rdfs:subClassOf"] = rdfsSubClassOf; // List of objects with information as type, number of pins, and so on
 }
 
-function propertiesDevice (elementPropertiesDevice) {
-    //TODO
-    return true;
+// This object contains information as how many pins the device/component has
+function propertiesDevice (elementPropertiesDevice, objOwlOnProperty, objOwlOnCardinality) {
+    this["@id"] = elementPropertiesDevice.id; //CHECK IF CAN BE "ipvs:RaspberryPi3-numberOfPins"
+    this["@type"] = elementPropertiesDevice.type;
+    this["rdfs:comment"] = elementPropertiesDevice.rdfsComment;
+    this["owl:onProperty"] = objOwlOnProperty;
+    this["owl:cardinality"] = objOwlOnCardinality;
 }
 
 function extraGraph (elementExtraGraph) {
