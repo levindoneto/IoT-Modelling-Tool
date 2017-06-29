@@ -7,13 +7,13 @@ const lstComponenents = {
     actuator: [], // list_infos_devices.type == "actuator"
 };
 
-var graph = []; // IoT List for the @Graph information (in definitions)
 
 /*********************************************************/
 /************************ Objects ************************/
 /*********************************************************/
 // Object with default context indormation
-function simpleContext (elementSimpleContext) {
+// The default information should have all properies defined
+function objContext (elementDefaultContext) {
     this.geo = elementContext.geo;
     this["m3-lite"] = elementContext["m3-lite"];
     this.owl = elementContext.owl;
@@ -26,12 +26,6 @@ function simpleContext (elementSimpleContext) {
     this.xsd = elementContext.xsd;
     this["iot-lite"] = elementContext["iot-lite"];
     // For non-default information, another method is called
-}
-
-// Object with extra information to be bound with simpleContext
-function extraContext (elementExtraContent) {
-    //TODO
-    return true;
 }
 
 function identificationDevice (elementIdentificationDevice, rdfsSubClassOf) {
@@ -49,10 +43,6 @@ function propertiesDevice (elementPropertiesDevice, objOwlOnProperty, objOwlOnCa
     this["owl:cardinality"] = objOwlOnCardinality;
 }
 
-function defintions (elementDefinitions) {
-    //TODO // basically update the obj definitions in @context and @graph
-    return true;
-}
 
 /*****************************************************/
 /********************** Functions ********************/
@@ -60,15 +50,26 @@ function defintions (elementDefinitions) {
 /*****************************************************/
 
 // Function to create/update the object context
-function createUpdateContext (elementSimpleContext, elementExtraContent) {
-    return true;
+function createUpdateContext (elementDefaultContext, elementExtraContext) {
+    var context = {} // IoT object for the @context information (in definitions)
+    context = new objContext(elementDefaultContext); // Creating an object with default IoT information
+
+    // Updating the created object with extra information in random properties
+    for (var property in elementExtraContext) { // property isn't known beforehand
+        if (elementExtraContext.hasOwnProperty(property)) {
+            context[property.toString()] = elementExtraContext[property];
+        }
+    }
+    return context; // Object @context
 }
 
 // Function to create/update the object context
 function createUpdateGraph (elementIdentificationDevice, elementPropertiesDevice, elementExtraGraph ) {
-    //TODO
-    return true; // return a push of objects on the @graph list
+    var graph = []; // IoT List for the @graph information (in definitions)
+
+    return graph;
 }
+
 
 function createRdfs (type, prefix, id) {
     var rdfsSubClassOf = [];
@@ -81,15 +82,18 @@ function extraGraph (elementExtraGraph) {
     return graph.push(elementExtraGraph); // Updating the IoT graph list of the definitions
 }
 
-/*****************************************************/
-/************** Database's manipulation **************/
-/*****************************************************/
 
 // Function to create the object of definitions
 function createDefinitions(objContext, objGraph) {
     //TODO
     return true;
 }
+
+/*****************************************************/
+/************** Database's manipulation **************/
+/*****************************************************/
+
+
 
 
 function Component(element) {
