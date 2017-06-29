@@ -51,48 +51,45 @@ function propertiesDevice (elementPropertiesDevice, objOwlOnProperty, objOwlOnCa
 
 // Function to create/update the object context
 function createUpdateContext (elementDefaultContext, elementExtraContext) {
-    var context = {} // IoT object for the @context information (in definitions)
-    context = new objContext(elementDefaultContext); // Creating an object with default IoT information
+    let this_context = {} // IoT object for the @context information (in definitions)
+    this_context = new objContext(elementDefaultContext); // Creating an object with default IoT information
 
     // Updating the created object with extra information in random properties
     for (var property in elementExtraContext) { // property isn't known beforehand
         if (elementExtraContext.hasOwnProperty(property)) {
-            context[property.toString()] = elementExtraContext[property];
+            this_context[property.toString()] = elementExtraContext[property];
         }
     }
-    return context; // Object @context
+    return this_context; // Object @context
 }
 
 // Function to create/update the object context
-function createUpdateGraph (elementIdentificationDevice, elementPropertiesDevice, elementDefaultGraph ) {
-    var graph = []; // IoT List for the @graph information (in definitions)
-    graph.push(elementDefaultGraph); // Updating the IoT graph list of the definitions
+function createGraph (elementDefaultGraph) {
+    let this_graph = []; // IoT List for the @graph information (in definitions)
+    this_graph.push(elementDefaultGraph); // Updating the IoT graph list of the definitions
     // The storing of devices/components in the graph will be made by the manipulation of the data from thedatabase
-    return graph;
+    return this_graph;
 }
-
 
 function createRdfs (rdfsSubClassOfInfo) {
-    var rdfsSubClassOf = [];
+    let this_rdfsSubClassOf = [];
     for (var i in rdfsSubClassOfInfo.length) { // property isn't known beforehand
-        rdfsSubClassOf.push(rdfsSubClassOfInfo.i); // Each index of rdfsSubClassOfInfo should contain one object with a info about the device/component
+        this_rdfsSubClassOf.push(rdfsSubClassOfInfo.i); // Each index of rdfsSubClassOfInfo should contain one object with a info about the device/component
     }
-    return rdfsSubClassOf;
+    return this_rdfsSubClassOf;
 }
-
 
 // Function to create the object of definitions
 function createDefinitions(objContext, objGraph) {
-    //TODO
-    return true;
+    let this_definitions = {};
+    this_definitions["@context"] = objContext;
+    this_definitions["@graph"] = objGraph;
+    return this_definitions;
 }
 
 /*****************************************************/
 /************** Database's manipulation **************/
 /*****************************************************/
-
-
-
 
 function Component(element) {
     this.numberOfPins = element.NumberOfPins;
@@ -116,28 +113,47 @@ firebase.database().ref("images").orderByKey().once("value")
 });
 // Reading data from the database (key: "models")
 firebase.database().ref("models").orderByKey().once("value")
-.then(function(snapshot) { // after function(snapshot)
+.then(function(snapshot) { // after function(snapshot), snapshot is the whole data structure
+    // CREATE CONTEXT
+    //CREATE GRAPH
     snapshot.forEach(function(childSnapshot) {  // Loop into database's information
     //var key = childSnapshot.key;
         switch (childSnapshot.val().type) {
             case "device":
+                // CREATE OBJ IDENTIFICATION
+                // PUSH IDENTIFICATION INTO GRAPH
+                // CREATE OBJ PROPERTIES
+                // PUSH PROPERTIES INTO GRAPH
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id); // Key:Id will be able to access from the whole application
                 break;
             case "sensor":
+                // CREATE OBJ IDENTIFICATION
+                // PUSH IDENTIFICATION INTO GRAPH
+                // CREATE OBJ PROPERTIES
+                // PUSH PROPERTIES INTO GRAPH
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
                 break;
             case "actuator":
+                // CREATE OBJ IDENTIFICATION
+                // PUSH IDENTIFICATION INTO GRAPH
+                // CREATE OBJ PROPERTIES
+                // PUSH PROPERTIES INTO GRAPH
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
                 break;
             default:
+                // CREATE OBJ IDENTIFICATION
+                // PUSH IDENTIFICATION INTO GRAPH
+                // CREATE OBJ PROPERTIES
+                // PUSH PROPERTIES INTO GRAPH
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
         }
     });
-}).then(function(createComponent) {
+}).then(function(createComponent) { // then the firebase parsing (figure out how...)
+    // CALL CREATE DEFINITIONS
     //var global = "across";
     //localStorage.setItem('text', lstComponenents.device["0"].id);
     console.log("THEN (IN CLIENT) ", lstComponenents.actuator["0"].id); // Now the value isn't undefined

@@ -3,17 +3,17 @@
 Iot Modelling Tool is a platform which allows users to have their own devices and components modeled in order to represent a physical environment.
 
 
-__Author__ 
+__Author__
 
 [Levindo Gabriel Taschetto Neto (IPVS)](http://levindoneto.com)
 
 __Advisors__
 
-[Prof. Dr.-Ing. habil. Bernhard Mitschang](https://www.ipvs.uni-stuttgart.de/abteilungen/as/abteilung/mitarbeiter/bernhard.mitschang)
+[Prof. Dr.-Ing. habil. Bernhard Mitschang (IPVS)](https://www.ipvs.uni-stuttgart.de/abteilungen/as/abteilung/mitarbeiter/bernhard.mitschang)
 
-[M.Sc. Ana Cristina Franco da Silva](https://www.ipvs.uni-stuttgart.de/abteilungen/as/abteilung/mitarbeiter/Ana.Franco)
+[M.Sc. Ana Cristina Franco da Silva (IPVS)](https://www.ipvs.uni-stuttgart.de/abteilungen/as/abteilung/mitarbeiter/Ana.Franco)
 
-[Dipl.-Inf. Pascal Hirmer](https://www.ipvs.uni-stuttgart.de/abteilungen/as/abteilung/mitarbeiter/Pascal.Hirmer)
+[Dipl.-Inf. Pascal Hirmer (IPVS)](https://www.ipvs.uni-stuttgart.de/abteilungen/as/abteilung/mitarbeiter/Pascal.Hirmer)
 
 
 
@@ -37,7 +37,7 @@ The packages diagram can be viewed in the image bellow.
 
 ![packages](public/resources/packages.jpg)
 
-The system currently can be seen in the picture bellow (not yet).
+The system currently can be seen in the picture bellow.
 
 ![Mock-Up Environment](public/img/readme/system.jpg)
 
