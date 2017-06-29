@@ -64,9 +64,10 @@ function createUpdateContext (elementDefaultContext, elementExtraContext) {
 }
 
 // Function to create/update the object context
-function createUpdateGraph (elementIdentificationDevice, elementPropertiesDevice, elementExtraGraph ) {
+function createUpdateGraph (elementIdentificationDevice, elementPropertiesDevice, elementDefaultGraph ) {
     var graph = []; // IoT List for the @graph information (in definitions)
-
+    graph.push(elementDefaultGraph); // Updating the IoT graph list of the definitions
+    // The storing of devices/components in the graph will be made by the manipulation of the data from thedatabase
     return graph;
 }
 
@@ -75,11 +76,6 @@ function createRdfs (type, prefix, id) {
     var rdfsSubClassOf = [];
     //TODO
     return rdfsSubClassOf;
-}
-
-// Function that adds the IoT extra information into the @graph (list of objects)
-function extraGraph (elementExtraGraph) {
-    return graph.push(elementExtraGraph); // Updating the IoT graph list of the definitions
 }
 
 
