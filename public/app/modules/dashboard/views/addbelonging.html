@@ -1,7 +1,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
    <h1 class="titleMYACC">
-      Add Device
+      Add Device/Component
    </h1>
 </section>
 <!-- Main content -->
@@ -12,8 +12,7 @@
          <div class="col-lg-12">
             <div class="panel panel-default">
                <form name="myForm" ng-submit="vm.addbelonging(vm.model,picFile)">
-                  <h4 class="Titlemyaccount">Type:
-                  </h4>
+                  <h4 class="Titlemyaccount">Type </h4>
                   <select class="BoxInput" ng-model="vm.model.type" required>
                      <option value="device">Hardware Device
                      </option>
@@ -21,10 +20,19 @@
                      </option>
                      <option class="BoxInput" value="actuator">Actuator Component
                   </select>
-                  <h4 class="Titlemyaccount">Name (ID):
-                  </h4>
-                  <input class="BoxInput" type="text" ng-model="vm.model.id">
-                  <h4 class="Titlemyaccount">Upload of the Icon:
+                  <h4 class="Titlemyaccount">Id </h4>
+                  <input class="BoxInput" placeholder="Id" type="text" ng-model="vm.model.id">
+
+                  <h4 class="Titlemyaccount">Owl Restriction (Let the box empty for the default option) </h4>
+                  <input class="BoxInput"  placeholder="Owl Restriction" type="text" ng-model="vm.model.owlRestriction">
+
+                  <h4 class="Titlemyaccount">RDFS Comment </h4>
+                  <input class="BoxInput" placeholder="RDFS Comment" type="text" ng-model="vm.model.rdfsComment">
+
+                  <h4 class="Titlemyaccount">Company </h4>
+                  <input class="BoxInput" placeholder="Company" type="text" ng-model="vm.model.prefixCompany">
+
+                  <h4 class="Titlemyaccount">Upload an Icon
                   </h4>
                   <label class="custom-file-upload">
                   <input  type="file" ngf-select ng-model="picFile" name="file"
@@ -43,9 +51,9 @@
                      <div style="width:{{picFile.progress}}%"
                         ng-bind="picFile.progress + '%'"></div>
                   </span>
-                  <span ng-show="picFile.result">Image added with success!</span>
+                  <span ng-show="picFile.result">The icon has been added with success!</span>
                   <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
-                  <h4 class="Titlemyaccount">Number of pins
+                  <h4 class="Titlemyaccount">Number of Pins
                   </h4>
                   <input class="BoxInput" type="number" value="" min="0" ng-model="vm.model.NumberOfPins" required>
                   </h4>
