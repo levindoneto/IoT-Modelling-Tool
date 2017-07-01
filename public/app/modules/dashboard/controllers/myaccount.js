@@ -45,10 +45,10 @@ function identificationDevice (elementIdentDevice, elementRdfsSubClassOf) {
 }
 
 // This object contains information as how many pins the device/component has
-function propertiesDevice (elementPropertiesDevice, elementObjOwlOnProperty, elementObjOwlOnCardinality) {
-    this["@id"] = elementPropertiesDevice.id; //CHECK IF CAN BE "ipvs:RaspberryPi3-numberOfPins"
-    this["@type"] = elementPropertiesDevice.type;
-    this["rdfs:comment"] = elementPropertiesDevice.rdfsComment;
+function propertiesDevice (elementPropertiesDevice) { //, elementObjOwlOnProperty, elementObjOwlOnCardinality
+    this["@id"] = elementPropertiesDevice[0]; //CHECK IF CAN BE "ipvs:RaspberryPi3-numberOfPins"
+    this["@type"] = elementPropertiesDevice[1];
+    this["rdfs:comment"] = elementPropertiesDevice[2];
     //this["owl:onProperty"] = elementObjOwlOnProperty;
     //this["owl:cardinality"] = elementObjOwlOnCardinality;
 }
@@ -170,11 +170,6 @@ firebase.database().ref("models").orderByKey().once("value")
                                 childSnapshotVal_owlRestriction,
                                 childSnapshot.val().rdfsComment
                             ];
-
-                            console.log("LET PROP 0: ", auxPropertiesDevice[0]);
-                            console.log("LET PROP 0: ", auxPropertiesDevice[1]);
-                            console.log("LET PROP 0: ", auxPropertiesDevice[2]);
-
                             /* Example:
                              *     auxPropertiesDevice[0] -> 'ipvs' + ':' + 'RaspberryPi' + '-' + 'numberOfPins'
                              *     auxPropertiesDevice[1] -> "owl:Restriction" (default value in case of the user fill this box out with empty)
@@ -182,8 +177,8 @@ firebase.database().ref("models").orderByKey().once("value")
                              */
 
 
-                            //auxObjAddProperty = new propertiesDevice(auxPropertiesDevice);
-                            //console.log(auxObjAddProperty);
+                            auxObjAddProperty = new propertiesDevice(auxPropertiesDevice);
+                            console.log("The aux object:::: ", auxObjAddProperty);
 
 
                             //at_graph.push(auxObjAddProperty); // Adding a new property (related to a device) to the @graph
