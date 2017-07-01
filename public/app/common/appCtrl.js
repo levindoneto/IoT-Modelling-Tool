@@ -13,7 +13,6 @@ $scope.readNotification = function(){
   var ref = firebase.database().ref('users/'+$rootScope.userDB.uid)
   var userDB = $firebaseObject(ref);
   userDB.$loaded().then(function(){
-      userDB.haveNotification = false;
       userDB.$save().then(function(ref) {
 
       }, function(error) {
@@ -37,21 +36,7 @@ $scope.readNotification = function(){
                 $rootScope.user = user;
                 console.log($rootScope.user)
                 //Check if it is banned CPF
-                var refBan = firebase.database().ref('admin/banned');
-                var bannedList = $firebaseArray(refBan);
                 var alreadyExist = false;
-                bannedList.$loaded().then(function(){
-                    angular.forEach(bannedList, function(cpf) {
-                        console.log(cpf);
-                        if(user.CPF == cpf.$value){
-                            Flash.create('danger', 'CPF - Banido!', 'large-text');
-                            vm.auth.$signOut();
-
-
-                        }
-                    })
-
-                });
             });
             console.log(vm.currentUser);
 
@@ -163,12 +148,12 @@ $scope.readNotification = function(){
         },
         {
             title: "IoT Environment Modelling",
-            icon: "exchange",
+            icon: "fa fa-home",
             state: "digitalenvironment"
         },
         {
             title: "My Devices",
-            icon: "book",
+            icon: "fa fa-tablet",
             state: "mybelongings"
         },
         {

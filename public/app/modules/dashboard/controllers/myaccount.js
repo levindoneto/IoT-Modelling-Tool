@@ -100,6 +100,10 @@ function createDefinitions(elementObjContext, elementObjGraph) {
 /*****************************************************/
 /***************** Auxiliar Functions ****************/
 /*****************************************************/
+
+/*
+ * Function used to verify if a property is default (e.g.: Id) or additional (e.g.: Number of Pins)
+ */
 function verifyAdditionalProperty(elementProperty_i) {
     let this_is_additional_property = true; // It'll be false just if the property has be found in the default properties' list
     for (var prop = 0; prop < default_properties.length; prop++) {
@@ -113,6 +117,12 @@ function verifyAdditionalProperty(elementProperty_i) {
     return this_is_additional_property;
 }
 
+/*
+ * Function used to verify if a value is a Integer or not
+ */
+function isInt(elementValue){
+    return (typeof elementValue == 'number' && elementValue%1 == 0 && elementValue>0);
+}
 
 /*****************************************************/
 /************** Database's manipulation **************/
@@ -162,6 +172,10 @@ firebase.database().ref("models").orderByKey().once("value")
                             //CALL THINGS TO CREATE A NEW PROPERTY HERE..
                             //I have de id in childSnapshot, and a bunch of information!!
                             let childSnapshotVal_owlRestriction;
+                            let auxObj_OwlOnProperty = {};
+                            let auxObj_owlCardinality = {};
+
+
                             // If the ownRestriction is empty is because the user has prefered the default option for this IoT Lite information
                             childSnapshot.val().owlRestriction == "" ? childSnapshotVal_owlRestriction="owl:Restriction" : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
 
@@ -176,18 +190,24 @@ firebase.database().ref("models").orderByKey().once("value")
                              *     auxPropertiesDevice[1] -> "OWL restriction specifying the number of pins of a raspberry pi."
                              */
 
+                            auxObj_OwlOnProperty["@id"] = (childSnapshot.val().prefixCompany.concat(":")).concat(property_i);
+
+                            auxObj_owlCardinality["@value"] = childSnapshot.val().property_i;
+
+                            //auxObj_owlCardinality["@type"] = "xsd:nonNegativeInteger"
 
                             auxObjAddProperty = new propertiesDevice(auxPropertiesDevice);
-                            console.log("The aux object:::: ", auxObjAddProperty);
+                            auxObjAddProperty["owl:onProperty"] = auxObj_OwlOnProperty;
+                            //auxObjAddProperty["owl:cardinality"] = auxObj_owlCardinality;
+
+                            console.log("obj:: ", auxObjAddProperty);
 
 
                             //at_graph.push(auxObjAddProperty); // Adding a new property (related to a device) to the @graph
 
                             // , *elementObjOwlOnProperty, *elementObjOwlOnCardinality
                             /*
-                            "owl:onProperty": {
-                                "@id": "ipvs:numberOfPins"
-                            },
+
                             "owl:cardinality": {
                                 "@value": "26",
                                 "@type": "xsd:nonNegativeInteger"
