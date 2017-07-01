@@ -1,12 +1,21 @@
 ﻿
 var allIcons = {}; //Object with the icons of the devices (basis 64)
-
+var obj_identification = {};
+var obj_properties = {};
+const default_properties = ["id",
+                            "imageFile",
+                            "owlRestriction",
+                            "prefixCompany",
+                            "rdfsComment",
+                            "type",
+                            "userUid"];
 const lstComponenents = {
     device: [], // list_infos_devices.type == "device"
     sensor: [], // list_infos_devices.type == "sensor"
     actuator: [], // list_infos_devices.type == "actuator"
 };
 
+//var is_dditional_property
 
 /*********************************************************/
 /************************ Objects ************************/
@@ -28,19 +37,19 @@ function objContext (elementDefaultContext) {
     // For non-default information, another method is called
 }
 
-function identificationDevice (elementIdentificationDevice, rdfsSubClassOf) {
-    this["@id"] = elementIdentificationDevice.id;
-    this["@type"] = elementIdentificationDevice.type;
-    this["rdfs:subClassOf"] = rdfsSubClassOf; // List of objects with information as type, number of pins, and so on
+function identificationDevice (elementIdentDevice, elementRdfsSubClassOf) {
+    this["@id"] = elementIdentDevice.id;
+    this["@type"] = elementIdentDevice.type;
+    this["rdfs:subClassOf"] = elementRdfsSubClassOf; // List of objects with information as type, number of pins, and so on
 }
 
 // This object contains information as how many pins the device/component has
-function propertiesDevice (elementPropertiesDevice, objOwlOnProperty, objOwlOnCardinality) {
+function propertiesDevice (elementPropertiesDevice, elementObjOwlOnProperty, elementObjOwlOnCardinality) {
     this["@id"] = elementPropertiesDevice.id; //CHECK IF CAN BE "ipvs:RaspberryPi3-numberOfPins"
     this["@type"] = elementPropertiesDevice.type;
     this["rdfs:comment"] = elementPropertiesDevice.rdfsComment;
-    this["owl:onProperty"] = objOwlOnProperty;
-    this["owl:cardinality"] = objOwlOnCardinality;
+    this["owl:onProperty"] = elementObjOwlOnProperty;
+    this["owl:cardinality"] = elementObjOwlOnCardinality;
 }
 
 
@@ -80,17 +89,38 @@ function createRdfs (rdfsSubClassOfInfo) {
 }
 
 // Function to create the object of definitions
-function createDefinitions(objContext, objGraph) {
+function createDefinitions(elementObjContext, elementObjGraph) {
     let this_definitions = {};
-    this_definitions["@context"] = objContext;
-    this_definitions["@graph"] = objGraph;
+    this_definitions["@context"] = elementObjContext;
+    this_definitions["@graph"] = elementObjGraph;
     return this_definitions;
 }
+
+/*****************************************************/
+/***************** Auxiliar Functions ****************/
+/*****************************************************/
+function verifyAdditionalProperty(elementProperty_i) {
+    let this_is_additional_property = true; // It'll be false just if the property has be found in the default properties' list
+    console.log("IM HERE ..MASKDMKSANDJANBS");
+    console.log("LST: ", );
+    for (var prop = 0; prop < default_properties.length; prop++) {
+        console.log(">>>> index: ", prop, "property: ", elementProperty_i.toUpperCase(), " ==? ", default_properties[prop].toUpperCase());
+        if (elementProperty_i.toUpperCase() == default_properties[prop].toUpperCase()) { // the property is a default one
+            this_is_additional_property = false; // This means property_i is in the list of default properties
+        }
+        else {
+            continue; // Don't set the variable up to one because all the list of default properties ought to be checked
+        }
+    }
+    return this_is_additional_property;
+}
+
 
 /*****************************************************/
 /************** Database's manipulation **************/
 /*****************************************************/
 
+// Object Component
 function Component(element) {
     this.numberOfPins = element.NumberOfPins;
     this.id = element.id;
@@ -111,49 +141,77 @@ firebase.database().ref("images").orderByKey().once("value")
         localStorage.setItem(childSnapshot.key, childSnapshot.val());
     });
 });
+
 // Reading data from the database (key: "models")
 firebase.database().ref("models").orderByKey().once("value")
 .then(function(snapshot) { // after function(snapshot), snapshot is the whole data structure
-    // CREATE CONTEXT
-    //CREATE GRAPH
+    //var at_context = createUpdateContext (defaultContext, extraContext);
+    //var at_graph = createGraph (defaultGraph);
     snapshot.forEach(function(childSnapshot) {  // Loop into database's information
     //var key = childSnapshot.key;
         switch (childSnapshot.val().type) {
             case "device":
-                // CREATE OBJ IDENTIFICATION
-                // PUSH IDENTIFICATION INTO GRAPH
-                // CREATE OBJ PROPERTIES
-                // PUSH PROPERTIES INTO GRAPH
+                let is_add_property;
+                window.obj_identification = {}; // Auxiliar for the object identification which will be pushed into the @graph list
+                window.obj_properties = {}; // Auxiliar for the object properties which will be pushed into the @graph list
+                // This will be a function to get the properties' names
+                console.log("STARTING THE LOOP");
+                for (var property_i in childSnapshot.val()) {
+                    if((childSnapshot.val()).hasOwnProperty(property_i)) { // This will check all properties' names on database's key
+                        is_add_property = verifyAdditionalProperty(property_i);
+                        console.log(is_add_property, "-", property_i);
+                    }
+                }
+                console.log("FINISHING LOOP");
+                /*
+                obj_identification = new identificationDevice(identDevice, rdfsSubClassOf);
+                at_graph.push(obj_identification);
+                obj_properties = new propertiesDevice(propertiesDevice, objOwlOnProperty, objOwlOnCardinality);
+                at_graph.push(obj_properties);
+                */
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id); // Key:Id will be able to access from the whole application
                 break;
             case "sensor":
-                // CREATE OBJ IDENTIFICATION
-                // PUSH IDENTIFICATION INTO GRAPH
-                // CREATE OBJ PROPERTIES
-                // PUSH PROPERTIES INTO GRAPH
+                window.obj_identification = {};
+                window.obj_properties = {};
+                /*
+                obj_identification = new identificationDevice(identDevice, rdfsSubClassOf);
+                at_graph.push(obj_identification);
+                obj_properties = new propertiesDevice(propertiesDevice, objOwlOnProperty, objOwlOnCardinality);
+                at_graph.push(obj_properties);
+                */
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
                 break;
             case "actuator":
-                // CREATE OBJ IDENTIFICATION
-                // PUSH IDENTIFICATION INTO GRAPH
-                // CREATE OBJ PROPERTIES
-                // PUSH PROPERTIES INTO GRAPH
+                window.obj_identification = {};
+                window.obj_properties = {};
+                /*
+                obj_identification = new identificationDevice(identDevice, rdfsSubClassOf);
+                at_graph.push(obj_identification);
+                obj_properties = new propertiesDevice(propertiesDevice, objOwlOnProperty, objOwlOnCardinality);
+                at_graph.push(obj_properties);
+                */
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
                 break;
             default:
-                // CREATE OBJ IDENTIFICATION
-                // PUSH IDENTIFICATION INTO GRAPH
-                // CREATE OBJ PROPERTIES
-                // PUSH PROPERTIES INTO GRAPH
+                window.obj_identification = {};
+                window.obj_properties = {};
+                /*
+                obj_identification = new identificationDevice(identDevice, rdfsSubClassOf);
+                at_graph.push(obj_identification);
+                obj_properties = new propertiesDevice(propertiesDevice, objOwlOnProperty, objOwlOnCardinality);
+                at_graph.push(obj_properties);
+                */
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
         }
     });
 }).then(function(createComponent) { // then the firebase parsing (figure out how...)
-    // CALL CREATE DEFINITIONS
+    //var definitions = createDefinitions(objContext, objGraph);
+
     //var global = "across";
     //localStorage.setItem('text', lstComponenents.device["0"].id);
     console.log("THEN (IN CLIENT) ", lstComponenents.actuator["0"].id); // Now the value isn't undefined
