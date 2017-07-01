@@ -120,7 +120,7 @@ function verifyAdditionalProperty(elementProperty_i) {
 /*
  * Function used to verify if a value is a Integer or not
  */
-function isInt(elementValue){
+function isNonNegativeInteger(elementValue){
     return (typeof elementValue == 'number' && elementValue%1 == 0 && elementValue>0);
 }
 
@@ -191,14 +191,15 @@ firebase.database().ref("models").orderByKey().once("value")
                              */
 
                             auxObj_OwlOnProperty["@id"] = (childSnapshot.val().prefixCompany.concat(":")).concat(property_i);
+                            console.log("MY PROPERTY I HERE:: ", property_i);
+                            auxObj_owlCardinality["@value"] = childSnapshot.val()[property_i.toString()];
+                            // auxObj_owlCardinality["@type"]
+                            isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality["@type"] = "xsd:nonNegativeInteger" : auxObj_owlCardinality["@type"] = "xsd:string";
 
-                            auxObj_owlCardinality["@value"] = childSnapshot.val().property_i;
-
-                            //auxObj_owlCardinality["@type"] = "xsd:nonNegativeInteger"
 
                             auxObjAddProperty = new propertiesDevice(auxPropertiesDevice);
                             auxObjAddProperty["owl:onProperty"] = auxObj_OwlOnProperty;
-                            //auxObjAddProperty["owl:cardinality"] = auxObj_owlCardinality;
+                            auxObjAddProperty["owl:cardinality"] = auxObj_owlCardinality;
 
                             console.log("obj:: ", auxObjAddProperty);
 
