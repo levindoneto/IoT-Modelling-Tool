@@ -2,13 +2,14 @@
 var allIcons = {}; //Object with the icons of the devices (basis 64)
 var obj_identification = {};
 var obj_properties = {};
-const default_properties = ["id",
-                            "imageFile",
-                            "owlRestriction",
-                            "prefixCompany",
-                            "rdfsComment",
-                            "type",
-                            "userUid"];
+const default_properties = [
+    "id",
+    "imageFile",
+    "owlRestriction",
+    "prefixCompany",
+    "rdfsComment",
+    "type",
+    "userUid"];
 const lstComponenents = {
     device: [], // list_infos_devices.type == "device"
     sensor: [], // list_infos_devices.type == "sensor"
@@ -48,8 +49,8 @@ function propertiesDevice (elementPropertiesDevice, elementObjOwlOnProperty, ele
     this["@id"] = elementPropertiesDevice.id; //CHECK IF CAN BE "ipvs:RaspberryPi3-numberOfPins"
     this["@type"] = elementPropertiesDevice.type;
     this["rdfs:comment"] = elementPropertiesDevice.rdfsComment;
-    this["owl:onProperty"] = elementObjOwlOnProperty;
-    this["owl:cardinality"] = elementObjOwlOnCardinality;
+    //this["owl:onProperty"] = elementObjOwlOnProperty;
+    //this["owl:cardinality"] = elementObjOwlOnCardinality;
 }
 
 
@@ -101,10 +102,7 @@ function createDefinitions(elementObjContext, elementObjGraph) {
 /*****************************************************/
 function verifyAdditionalProperty(elementProperty_i) {
     let this_is_additional_property = true; // It'll be false just if the property has be found in the default properties' list
-    console.log("IM HERE ..MASKDMKSANDJANBS");
-    console.log("LST: ", );
     for (var prop = 0; prop < default_properties.length; prop++) {
-        console.log(">>>> index: ", prop, "property: ", elementProperty_i.toUpperCase(), " ==? ", default_properties[prop].toUpperCase());
         if (elementProperty_i.toUpperCase() == default_properties[prop].toUpperCase()) { // the property is a default one
             this_is_additional_property = false; // This means property_i is in the list of default properties
         }
@@ -159,7 +157,49 @@ firebase.database().ref("models").orderByKey().once("value")
                 for (var property_i in childSnapshot.val()) {
                     if((childSnapshot.val()).hasOwnProperty(property_i)) { // This will check all properties' names on database's key
                         is_add_property = verifyAdditionalProperty(property_i);
-                        console.log(is_add_property, "-", property_i);
+                        if (is_add_property == true) {
+                            let auxObjAddProperty = {}; // Auxiliar object for an additional property which will be pushed on thr @graph list
+                            //CALL THINGS TO CREATE A NEW PROPERTY HERE..
+                            //I have de id in childSnapshot, and a bunch of information!!
+                            let childSnapshotVal_owlRestriction;
+                            // If the ownRestriction is empty is because the user has prefered the default option for this IoT Lite information
+                            childSnapshot.val().owlRestriction == "" ? childSnapshotVal_owlRestriction="owl:Restriction" : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
+
+                            let auxPropertiesDevice = [
+                                ((("ipvs").concat(":")).concat(childSnapshot.val().id)).concat("-").concat(property_i),
+                                childSnapshotVal_owlRestriction,
+                                childSnapshot.val().rdfsComment
+                            ];
+
+                            console.log("LET PROP 0: ", auxPropertiesDevice[0]);
+                            console.log("LET PROP 0: ", auxPropertiesDevice[1]);
+                            console.log("LET PROP 0: ", auxPropertiesDevice[2]);
+
+                            /* Example:
+                             *     auxPropertiesDevice[0] -> 'ipvs' + ':' + 'RaspberryPi' + '-' + 'numberOfPins'
+                             *     auxPropertiesDevice[1] -> "owl:Restriction" (default value in case of the user fill this box out with empty)
+                             *     auxPropertiesDevice[1] -> "OWL restriction specifying the number of pins of a raspberry pi."
+                             */
+
+
+                            //auxObjAddProperty = new propertiesDevice(auxPropertiesDevice);
+                            //console.log(auxObjAddProperty);
+
+
+                            //at_graph.push(auxObjAddProperty); // Adding a new property (related to a device) to the @graph
+
+                            // , *elementObjOwlOnProperty, *elementObjOwlOnCardinality
+                            /*
+                            "owl:onProperty": {
+                                "@id": "ipvs:numberOfPins"
+                            },
+                            "owl:cardinality": {
+                                "@value": "26",
+                                "@type": "xsd:nonNegativeInteger"
+                            }
+                            */
+
+                        }
                     }
                 }
                 console.log("FINISHING LOOP");
