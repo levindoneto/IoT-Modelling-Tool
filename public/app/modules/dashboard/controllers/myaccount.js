@@ -148,7 +148,7 @@ function isNonNegativeInteger(elementValue){
 /* Object Component
  */
 function Component(element) {
-    this.numberOfPins = element.NumberOfPins;
+    this.numberOfPins = element.numberOfPins;
     this.id = element.id;
     this.iconComponentKey = element.imageFile; // This key is used to access the correct image in the another data structure
     this.ownerUser = element.userUid;

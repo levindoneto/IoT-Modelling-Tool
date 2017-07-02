@@ -30,6 +30,9 @@
                                         <span class="MyInfo"> Type: </span> <span class="MyInfoP"> {{modalmodel.type}} </span></br>
                                         <span class="MyInfo"> Number of Pins: </span> <span class="MyInfoP"> {{modalmodel.numberOfPins}} </span></br>
                                         <span class="MyInfo"> Company: </span> <span class="MyInfoP"> {{modalmodel.prefixCompany.toUpperCase()}} </span></br>
+                                        <span class="MyInfo"> Owl Restriction: </span> <span class="MyInfoP"> {{modalmodel.owlRestriction === "" ? "owl:Restriction" : modalmodel.owlRestriction.toUpperCase()}} </span></br>
+                                        <span class="MyInfo"> RDFS Comment: </span> <span class="MyInfoP"> {{modalmodel.prefixCompany.rdfsComment()}} </span></br>
+                                        <span class="MyInfo"> Ontology: </span> <span class="MyInfoP"> {{modalmodel.prefixCompany.toUpperCase()}} </span></br>
                                     </h3>
                                 </div>
                                 <div class="modal-footer">
