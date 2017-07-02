@@ -50,9 +50,9 @@ class PaletteContainer extends Component {
         var allIcons = {}; //Object with the icons of the devices (basis 64)
 
         const lstComponenents = {
-            device: [], // list_infos_devices.type == "device"
-            sensor: [], // list_infos_devices.type == "sensor"
-            actuator: [], // list_infos_devices.type == "actuator"
+            Device: [], // list_infos_devices.type == "Device"
+            SensingDevice: [], // list_infos_devices.type == "SensingDevice"
+            ActuatingDevice: [], // list_infos_devices.type == "ActuatingDevice"
         };
 
         const one_id_random = "RaspberryPiTwo"
@@ -66,7 +66,7 @@ class PaletteContainer extends Component {
 
         function createComponent(element) {
             /* if element.type is definied */
-            return lstComponenents[element.type].push(new Component(element)); // returns a promise
+            return lstComponenents["Device"].push(new Component(element)); // returns a promise
         }
 
         // Reading data from the database (key: images) and setting it into the local storage
@@ -83,15 +83,15 @@ class PaletteContainer extends Component {
             snapshot.forEach(function(childSnapshot) {  // Loop into database's information
             //var key = childSnapshot.key;
                 switch (childSnapshot.val().type) {
-                    case "device":
+                    case "Device":
                         createComponent(childSnapshot.val());
                         localStorage.setItem(childSnapshot.key, childSnapshot.val().id); // Key:Id will be able to access from the whole application
                         break;
-                    case "sensor":
+                    case "SensingDevice":
                         createComponent(childSnapshot.val());
                         localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
                         break;
-                    case "actuator":
+                    case "ActuatingDevice":
                         createComponent(childSnapshot.val());
                         localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
                         break;
@@ -102,8 +102,8 @@ class PaletteContainer extends Component {
             });
         }).then(function(createComponent) {
             //var global = "across";
-            //localStorage.setItem('text', lstComponenents.device["0"].id);
-            console.log("THEN (IN CLIENT) ", lstComponenents.actuator["0"].id); // Now the value isn't undefined
+            //localStorage.setItem('text', lstComponenents.Device["0"].id);
+            console.log("THEN (IN CLIENT) ", lstComponenents.Device["0"].id); // Now the value isn't undefined
 
         });
 

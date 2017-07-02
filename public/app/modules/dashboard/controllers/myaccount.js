@@ -11,18 +11,19 @@ const default_properties = [
     "type",
     "userUid"];
 const lstComponenents = {
-    device: [], // list_infos_devices.type == "device"
-    sensor: [], // list_infos_devices.type == "sensor"
-    actuator: [], // list_infos_devices.type == "actuator"
+    Device: [], // list_infos_Devices.type == "Device"
+    SensingDevice: [], // list_infos_devices.type == "SensingDevice"
+    ActuatingDevice: [], // list_infos_devices.type == "ActuatingDevice"
 };
 
-//var is_dditional_property
 
 /*********************************************************/
 /************************ Objects ************************/
 /*********************************************************/
-// Object with default context indormation
-// The default information should have all properies defined
+
+/* Object with default context indormation
+ * The default information should have all properies defined
+ */
 function objContext (elementDefaultContext) {
     this.geo = elementContext.geo;
     this["m3-lite"] = elementContext["m3-lite"];
@@ -38,19 +39,24 @@ function objContext (elementDefaultContext) {
     // For non-default information, another method is called
 }
 
+/* Object with identification information about a device or component,
+* as id, type and additional properties
+*/
 function identificationDevice (elementIdentDevice, elementRdfsSubClassOf) {
     this["@id"] = elementIdentDevice.id;
     this["@type"] = elementIdentDevice.type;
     this["rdfs:subClassOf"] = elementRdfsSubClassOf; // List of objects with information as type, number of pins, and so on
 }
 
-// This object contains information as how many pins the device/component has
+/* This object contains information as how many pins the device/component has
+ */
 function propertiesDevice (elementPropertiesDevice) { //, elementObjOwlOnProperty, elementObjOwlOnCardinality
     this["@id"] = elementPropertiesDevice[0]; //CHECK IF CAN BE "ipvs:RaspberryPi3-numberOfPins"
     this["@type"] = elementPropertiesDevice[1];
     this["rdfs:comment"] = elementPropertiesDevice[2];
-    //this["owl:onProperty"] = elementObjOwlOnProperty;
-    //this["owl:cardinality"] = elementObjOwlOnCardinality;
+    /* The properties onProperty and cardinality will be update after the
+     *     creation of the object
+     */
 }
 
 
@@ -59,7 +65,8 @@ function propertiesDevice (elementPropertiesDevice) { //, elementObjOwlOnPropert
 /******* to create/update definitions' objects *******/
 /*****************************************************/
 
-// Function to create/update the object context
+/* Function to create/update the object context
+ */
 function createUpdateContext (elementDefaultContext, elementExtraContext) {
     let this_context = {} // IoT object for the @context information (in definitions)
     this_context = new objContext(elementDefaultContext); // Creating an object with default IoT information
@@ -73,7 +80,8 @@ function createUpdateContext (elementDefaultContext, elementExtraContext) {
     return this_context; // Object @context
 }
 
-// Function to create/update the object context
+/* Function to create/update the object context
+ */
 function createGraph (elementDefaultGraph) {
     let this_graph = []; // IoT List for the @graph information (in definitions)
     this_graph.push(elementDefaultGraph); // Updating the IoT graph list of the definitions
@@ -81,28 +89,38 @@ function createGraph (elementDefaultGraph) {
     return this_graph;
 }
 
-function createRdfs (rdfsSubClassOfInfo) {
+/* Function to create the list rdfs,
+ *     this list contains two objects:
+ *         -> One with the information about the ontology and the type of the device or component
+ *         -> Another one with the new properties
+ */
+function createRdfs (rdfsSubClassOfInfo) { // TODO: Finish this function with the new achieved information
     let this_rdfsSubClassOf = [];
     for (var i in rdfsSubClassOfInfo.length) { // property isn't known beforehand
         this_rdfsSubClassOf.push(rdfsSubClassOfInfo.i); // Each index of rdfsSubClassOfInfo should contain one object with a info about the device/component
     }
-    return this_rdfsSubClassOf;
+    return this_rdfsSubClassOf; /* This list will be the value for the key "rdfs:subClassOf" in
+                                 *     the object identificationDevice
+                                 */
 }
 
-// Function to create the object of definitions
+/* Function to create the object of IoT Lite definitions
+ */
 function createDefinitions(elementObjContext, elementObjGraph) {
     let this_definitions = {};
     this_definitions["@context"] = elementObjContext;
     this_definitions["@graph"] = elementObjGraph;
-    return this_definitions;
+    return this_definitions; /* This object's gonna be stored on the browser's
+                              *     local storage in each initialization of the
+                              *     Platform
+                              */
 }
 
 /*****************************************************/
 /***************** Auxiliar Functions ****************/
 /*****************************************************/
 
-/*
- * Function used to verify if a property is default (e.g.: Id) or additional (e.g.: Number of Pins)
+/* Function used to verify if a property is default (e.g.: Id) or additional (e.g.: Number of Pins)
  */
 function verifyAdditionalProperty(elementProperty_i) {
     let this_is_additional_property = true; // It'll be false just if the property has be found in the default properties' list
@@ -117,18 +135,18 @@ function verifyAdditionalProperty(elementProperty_i) {
     return this_is_additional_property;
 }
 
-/*
- * Function used to verify if a value is a Integer or not
+/* Function used to verify if a value is a Integer or not
  */
 function isNonNegativeInteger(elementValue){
-    return (typeof elementValue == 'number' && elementValue%1 == 0 && elementValue>0);
+    return (typeof elementValue == 'number' && elementValue%1 == 0 && elementValue > 0);
 }
 
 /*****************************************************/
 /************** Database's manipulation **************/
 /*****************************************************/
 
-// Object Component
+/* Object Component
+ */
 function Component(element) {
     this.numberOfPins = element.NumberOfPins;
     this.id = element.id;
@@ -136,12 +154,16 @@ function Component(element) {
     this.ownerUser = element.userUid;
 }
 
+/* Function which is called for each device/component in worder to create a new
+ *     object with their information
+ */
 function createComponent(element) {
-    /* if element.type is definied */
+    //if element.type is definied
     return lstComponenents[element.type].push(new Component(element)); // returns a promise
 }
 
-// Reading data from the database (key: images)
+/* Reading data from the database (key: images)
+ */
 firebase.database().ref("images").orderByKey().once("value")
 .then(function(snapshot) { // after function(snapshot)
     snapshot.forEach(function(childSnapshot) {
@@ -150,7 +172,8 @@ firebase.database().ref("images").orderByKey().once("value")
     });
 });
 
-// Reading data from the database (key: "models")
+/* Reading data from the database (key: "models")
+ */
 firebase.database().ref("models").orderByKey().once("value")
 .then(function(snapshot) { // after function(snapshot), snapshot is the whole data structure
     //var at_context = createUpdateContext (defaultContext, extraContext);
@@ -158,7 +181,7 @@ firebase.database().ref("models").orderByKey().once("value")
     snapshot.forEach(function(childSnapshot) {  // Loop into database's information
     //var key = childSnapshot.key;
         switch (childSnapshot.val().type) {
-            case "device":
+            case "Device":
                 let is_add_property;
                 window.obj_identification = {}; // Auxiliar for the object identification which will be pushed into the @graph list
                 window.obj_properties = {}; // Auxiliar for the object properties which will be pushed into the @graph list
@@ -169,12 +192,9 @@ firebase.database().ref("models").orderByKey().once("value")
                         is_add_property = verifyAdditionalProperty(property_i);
                         if (is_add_property == true) {
                             let auxObjAddProperty = {}; // Auxiliar object for an additional property which will be pushed on thr @graph list
-                            //CALL THINGS TO CREATE A NEW PROPERTY HERE..
-                            //I have de id in childSnapshot, and a bunch of information!!
                             let childSnapshotVal_owlRestriction;
                             let auxObj_OwlOnProperty = {};
                             let auxObj_owlCardinality = {};
-
 
                             // If the ownRestriction is empty is because the user has prefered the default option for this IoT Lite information
                             childSnapshot.val().owlRestriction == "" ? childSnapshotVal_owlRestriction="owl:Restriction" : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
@@ -228,7 +248,7 @@ firebase.database().ref("models").orderByKey().once("value")
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id); // Key:Id will be able to access from the whole application
                 break;
-            case "sensor":
+            case "SensingDevice":
                 window.obj_identification = {};
                 window.obj_properties = {};
                 /*
@@ -240,7 +260,7 @@ firebase.database().ref("models").orderByKey().once("value")
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
                 break;
-            case "actuator":
+            case "ActuatingDevice":
                 window.obj_identification = {};
                 window.obj_properties = {};
                 /*
@@ -270,11 +290,11 @@ firebase.database().ref("models").orderByKey().once("value")
 
     //var global = "across";
     //localStorage.setItem('text', lstComponenents.device["0"].id);
-    console.log("THEN (IN CLIENT) ", lstComponenents.actuator["0"].id); // Now the value isn't undefined
+    console.log("THEN (IN CLIENT) ", lstComponenents.ActuatingDevice["0"].id); // Now the value isn't undefined
     var prefixIPVS = "ipvs:";
-    var deviceOne = lstComponenents.device["0"].id;
-    var sensorOne = lstComponenents.sensor["0"].id;
-    var actuatorOne = lstComponenents.actuator["0"].id;
+    var deviceOne = lstComponenents.Device["0"].id;
+    var sensorOne = lstComponenents.SensingDevice["0"].id;
+    var actuatorOne = lstComponenents.ActuatingDevice["0"].id;
     localStorage.setItem('device', deviceOne);
     localStorage.setItem('sensor', sensorOne);
     localStorage.setItem('actuator', actuatorOne);

@@ -14,11 +14,15 @@
                <form name="myForm" ng-submit="vm.addbelonging(vm.model,picFile)">
                   <h4 class="Titlemyaccount">Type </h4>
                   <select class="BoxInput" ng-model="vm.model.type" required>
-                     <option value="device">Hardware Device
+                     <option value="Device">
+                         Hardware Device
                      </option>
-                     <option class="BoxInput" value="sensor">Sensor Component
+                     <option value="SensingDevice">
+                         Sensor Component
                      </option>
-                     <option class="BoxInput" value="actuator">Actuator Component
+                     <option value="ActuatingDevice">
+                         Actuator Component
+                     </option>
                   </select>
                   <h4 class="Titlemyaccount">Id </h4>
                   <input class="BoxInput" placeholder="Id" type="text" ng-model="vm.model.id">
@@ -42,25 +46,38 @@
                   Click here
                   </label>
                   <i ng-show="myForm.file.$error.required"></br>*Needed</i><br>
-                  <i ng-show="myForm.file.$error.maxSize">The files is too big!
-                  {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
+                  <i ng-show="myForm.file.$error.maxSize">
+                      The files is too big!
+                      {{errorFile.size / 1000000|number:1}}Mb and maximum allowed is 2 Mb
+                  </i>
                   <img ng-show="myForm.file.$valid" > </br>
-                  <p ng-click="picFile = null" ng-show="picFile"> Imagem added with success! </p>
-                  <button class="RmvButtonaddbelonging" ng-click="picFile = null" ng-show="picFile">Remove image of the {{vm.model.type}}</button>
+                  <p ng-click="picFile = null" ng-show="picFile">
+                      Imagem added with success!
+                  </p>
+                  <button class="RmvButtonaddbelonging" ng-click="picFile = null" ng-show="picFile">
+                      Remove image of the {{vm.model.type}}
+                  </button>
                   <span class="progress" ng-show="picFile.progress >= 0">
                      <div style="width:{{picFile.progress}}%"
                         ng-bind="picFile.progress + '%'"></div>
                   </span>
-                  <span ng-show="picFile.result">The icon has been added with success!</span>
-                  <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
-                  <h4 class="Titlemyaccount">Number of Pins
+                  <span ng-show="picFile.result">
+                      The icon has been added with success!
+                  </span>
+                  <span class="err" ng-show="errorMsg">
+                      {{errorMsg}}
+                  </span>
+                  <h4 class="Titlemyaccount">
+                      Number of Pins
                   </h4>
                   <input class="BoxInput" type="number" value="" min="0" ng-model="vm.model.numberOfPins" required>
                   </h4>
                   </br></br>
-                  <button  class="AddProperty" type="submit" >Add new property
+                  <button  class="AddProperty" type="submit" >
+                      Add new property
                   </button>
-                  <button class="DataEdit" type="submit" >Add {{vm.model.type}}
+                  <button class="DataEdit" type="submit">
+                      Add {{vm.model.type}}
                   </button>
                   </br>
             </div>
