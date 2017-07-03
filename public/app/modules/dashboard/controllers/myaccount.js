@@ -93,12 +93,31 @@ function createGraph (elementDefaultGraph) {
  *     this list contains two objects:
  *         -> One with the information about the ontology and the type of the device or component
  *         -> Another one with the new properties
+ * This function is called for each additional property and the device might have
+ *     more than one additional property.
+ * If the device/component has more than one property already defined on the list,
+ *     a function for just updating the inner object ought be called.
  */
-function createRdfs (rdfsSubClassOfInfo) { // TODO: Finish this function with the new achieved information
+function createRdfs (elementOntology, elementType, elementPrefixCompany, elementId, elementIdProperty) {
+    let this_ontology = elementOntology;
+    let this_type = elementType;
+    let this_prefix_company = elementPrefixCompany;
+    let this_id = elementId;
+    let this_id_property = elementIdProperty;
+
+    let aux_obj_type = {}; /* Key: "@id"
+                            * Value: ontology:type
+                            */
+    let aux_obj_properties = {}; /* Keys: "@id" for each property
+                                  * Value of each key: prefixCompany:Id-id_property
+                                  */
     let this_rdfsSubClassOf = [];
-    for (var i in rdfsSubClassOfInfo.length) { // property isn't known beforehand
-        this_rdfsSubClassOf.push(rdfsSubClassOfInfo.i); // Each index of rdfsSubClassOfInfo should contain one object with a info about the device/component
-    }
+
+    aux_obj_type["@id"] = (this_ontology.concat(":")).concat(this_type);
+    aux_obj_properties["@id"] = (((this_prefix_company.concat(":")).concat(this_id)).concat("-")).concat(this_id_property);
+
+    this_rdfsSubClassOf.push(aux_obj_type);
+    this_rdfsSubClassOf.push(aux_obj_properties);
     return this_rdfsSubClassOf; /* This list will be the value for the key "rdfs:subClassOf" in
                                  *     the object identificationDevice
                                  */
