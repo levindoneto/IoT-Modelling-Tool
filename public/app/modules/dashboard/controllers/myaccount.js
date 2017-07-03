@@ -100,26 +100,17 @@ function createGraph (elementDefaultGraph) {
  *     updating the inner object ought be called to insert the properties'
  *     objects into the rdfs list.
  */
-function createRdfs (elementOntology, elementType, elementPrefixCompany, elementId, elementIdProperty) {
+function createRdfs (elementOntology, elementType) {
     let this_ontology = elementOntology;
     let this_type = elementType;
-    let this_prefix_company = elementPrefixCompany;
-    let this_id = elementId;
-    let this_id_property = elementIdProperty;
 
     let aux_obj_type = {}; /* Key: "@id"
                             * Value: ontology:type
                             */
-    let aux_obj_properties = {}; /* Keys: "@id" for each property
-                                  * Value of each key: prefixCompany:Id-id_property
-                                  */
     let this_rdfsSubClassOf = [];
 
-    aux_obj_type["@id"] = (this_ontology.concat(":")).concat(this_type);
-
-
+    aux_obj_type["@id"] = ("ssn".concat(":")).concat("Device");
     this_rdfsSubClassOf.push(aux_obj_type);
-    this_rdfsSubClassOf.push(aux_obj_properties);
     return this_rdfsSubClassOf; /* This list will be the value for the key "rdfs:subClassOf" in
                                  *     the object identificationDevice
                                  */
@@ -127,20 +118,20 @@ function createRdfs (elementOntology, elementType, elementPrefixCompany, element
 
 /* Function used for updating the rdfs list with additional properties' objects
  */
-function updateRdfsProperties (elementRdfsSubClassOf, elementPrefixCompany, elementId, elementIdProperty) {
+function updateRdfsProperties (elementRdfsSubClassOf, elementChildSnapshot, elementIdProperty) {
     let this_rdfsSubClassOf = elementRdfsSubClassOf; /* Current rdfs list for a device/component on an iteration
                                                       *     inside the Firebase's parsing
                                                       */
-    let this_prefix_company = elementPrefixCompany;
-    let this_id = elementId;
+    let this_prefix_company = elementChildSnapshot.prefixCompany;
+    let this_id = elementChildSnapshot.id;
     let this_id_property = elementIdProperty;
 
     let aux_obj_properties = {}; /* Keys: "@id" for each property
                                   * Value of each key: prefixCompany:Id-id_property
                                   */
     aux_obj_properties["@id"] = (((this_prefix_company.concat(":")).concat(this_id)).concat("-")).concat(this_id_property);
-
-    return this_rdfsSubClassOf.push(aux_obj_properties); // Updating the rdfs list with a additional property
+    this_rdfsSubClassOf.push(aux_obj_properties);
+    return this_rdfsSubClassOf; // Updating the rdfs list with a additional property
 }
 
 /* Function to create the object of IoT Lite definitions
@@ -221,15 +212,17 @@ firebase.database().ref("models").orderByKey().once("value")
     //var key = childSnapshot.key;
         switch (childSnapshot.val().type) {
             case "Device":
+                let rdfsSubClassOf;
+                rdfsSubClassOf = createRdfs (childSnapshot.val().ontology, childSnapshot.val().type);
                 let is_add_property;
-                window.obj_identification = {}; // Auxiliar for the object identification which will be pushed into the @graph list
-                window.obj_properties = {}; // Auxiliar for the object properties which will be pushed into the @graph list
-                // This will be a function to get the properties' names
-                console.log("STARTING THE LOOP");
+                /* Starting to get the additional properties of the device/
+                 *     component with the key childSnapshot.key
+                 */
                 for (var property_i in childSnapshot.val()) {
                     if((childSnapshot.val()).hasOwnProperty(property_i)) { // This will check all properties' names on database's key
                         is_add_property = verifyAdditionalProperty(property_i);
                         if (is_add_property == true) {
+                            rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i)
                             let auxObjAddProperty = {}; // Auxiliar object for an additional property which will be pushed on thr @graph list
                             let childSnapshotVal_owlRestriction;
                             let auxObj_OwlOnProperty = {};
@@ -238,16 +231,16 @@ firebase.database().ref("models").orderByKey().once("value")
                             // If the ownRestriction is empty is because the user has prefered the default option for this IoT Lite information
                             childSnapshot.val().owlRestriction == "" ? childSnapshotVal_owlRestriction="owl:Restriction" : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
 
-                            let auxPropertiesDevice = [
-                                ((("ipvs").concat(":")).concat(childSnapshot.val().id)).concat("-").concat(property_i),
-                                childSnapshotVal_owlRestriction,
-                                childSnapshot.val().rdfsComment
-                            ];
                             /* Example:
                              *     auxPropertiesDevice[0] -> 'ipvs' + ':' + 'RaspberryPi' + '-' + 'numberOfPins'
                              *     auxPropertiesDevice[1] -> "owl:Restriction" (default value in case of the user fill this box out with empty)
                              *     auxPropertiesDevice[1] -> "OWL restriction specifying the number of pins of a raspberry pi."
                              */
+                            let auxPropertiesDevice = [
+                                ((("ipvs").concat(":")).concat(childSnapshot.val().id)).concat("-").concat(property_i),
+                                childSnapshotVal_owlRestriction,
+                                childSnapshot.val().rdfsComment
+                            ];
 
                             auxObj_OwlOnProperty["@id"] = (childSnapshot.val().prefixCompany.concat(":")).concat(property_i);
                             console.log("MY PROPERTY I HERE:: ", property_i);
@@ -277,49 +270,21 @@ firebase.database().ref("models").orderByKey().once("value")
                         }
                     }
                 }
-                console.log("FINISHING LOOP");
-                /*
-                obj_identification = new identificationDevice(identDevice, rdfsSubClassOf);
-                at_graph.push(obj_identification);
-                obj_properties = new propertiesDevice(propertiesDevice, objOwlOnProperty, objOwlOnCardinality);
-                at_graph.push(obj_properties);
-                */
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id); // Key:Id will be able to access from the whole application
                 break;
             case "SensingDevice":
-                window.obj_identification = {};
-                window.obj_properties = {};
-                /*
-                obj_identification = new identificationDevice(identDevice, rdfsSubClassOf);
-                at_graph.push(obj_identification);
-                obj_properties = new propertiesDevice(propertiesDevice, objOwlOnProperty, objOwlOnCardinality);
-                at_graph.push(obj_properties);
-                */
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
                 break;
             case "ActuatingDevice":
-                window.obj_identification = {};
-                window.obj_properties = {};
-                /*
-                obj_identification = new identificationDevice(identDevice, rdfsSubClassOf);
-                at_graph.push(obj_identification);
-                obj_properties = new propertiesDevice(propertiesDevice, objOwlOnProperty, objOwlOnCardinality);
-                at_graph.push(obj_properties);
-                */
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
                 break;
             default:
                 window.obj_identification = {};
                 window.obj_properties = {};
-                /*
-                obj_identification = new identificationDevice(identDevice, rdfsSubClassOf);
-                at_graph.push(obj_identification);
-                obj_properties = new propertiesDevice(propertiesDevice, objOwlOnProperty, objOwlOnCardinality);
-                at_graph.push(obj_properties);
-                */
+
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
         }
