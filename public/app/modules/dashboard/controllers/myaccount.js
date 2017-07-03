@@ -90,13 +90,15 @@ function createGraph (elementDefaultGraph) {
 }
 
 /* Function to create the list rdfs,
- *     this list contains two objects:
+ *     this list contains at least one object:
  *         -> One with the information about the ontology and the type of the device or component
- *         -> Another one with the new properties
- * This function is called for each additional property and the device might have
+ *     also, it might have more objects. The amount of other objects depends on
+ *         the number of additional properties that the device/component has.
+ * This function is called for each device/component, and the device might have
  *     more than one additional property.
- * If the device/component has more than one property already defined on the list,
- *     a function for just updating the inner object ought be called.
+ * If the device/component has on or more properties, a function for just
+ *     updating the inner object ought be called to insert the properties'
+ *     objects into the rdfs list.
  */
 function createRdfs (elementOntology, elementType, elementPrefixCompany, elementId, elementIdProperty) {
     let this_ontology = elementOntology;
@@ -114,13 +116,31 @@ function createRdfs (elementOntology, elementType, elementPrefixCompany, element
     let this_rdfsSubClassOf = [];
 
     aux_obj_type["@id"] = (this_ontology.concat(":")).concat(this_type);
-    aux_obj_properties["@id"] = (((this_prefix_company.concat(":")).concat(this_id)).concat("-")).concat(this_id_property);
+
 
     this_rdfsSubClassOf.push(aux_obj_type);
     this_rdfsSubClassOf.push(aux_obj_properties);
     return this_rdfsSubClassOf; /* This list will be the value for the key "rdfs:subClassOf" in
                                  *     the object identificationDevice
                                  */
+}
+
+/* Function used for updating the rdfs list with additional properties' objects
+ */
+function updateRdfsProperties (elementRdfsSubClassOf, elementPrefixCompany, elementId, elementIdProperty) {
+    let this_rdfsSubClassOf = elementRdfsSubClassOf; /* Current rdfs list for a device/component on an iteration
+                                                      *     inside the Firebase's parsing
+                                                      */
+    let this_prefix_company = elementPrefixCompany;
+    let this_id = elementId;
+    let this_id_property = elementIdProperty;
+
+    let aux_obj_properties = {}; /* Keys: "@id" for each property
+                                  * Value of each key: prefixCompany:Id-id_property
+                                  */
+    aux_obj_properties["@id"] = (((this_prefix_company.concat(":")).concat(this_id)).concat("-")).concat(this_id_property);
+
+    return this_rdfsSubClassOf.push(aux_obj_properties); // Updating the rdfs list with a additional property
 }
 
 /* Function to create the object of IoT Lite definitions
