@@ -5,6 +5,7 @@ var obj_properties = {};
 const default_properties = [
     "id",
     "imageFile",
+    "ontology",
     "owlRestriction",
     "prefixCompany",
     "rdfsComment",
@@ -69,7 +70,7 @@ function propertiesDevice (elementPropertiesDevice) { //, elementObjOwlOnPropert
  * @parameters:
  * @return: Object: @context for definitions
  */
-function createUpdateContext (elementDefaultContext, elementExtraContext) { // TODO: Finish this function
+function createUpdateContext (elementDefaultContext, elementExtraContext) {
     let this_context = {} // IoT object for the @context information (in definitions)
     this_context = new objContext(elementDefaultContext); // Creating an object with default IoT information
 
