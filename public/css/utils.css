@@ -472,7 +472,7 @@ input[type="file"] {
 .Btnmybelongings {
     border: 1px;
     background-color: #879bb1;
-    padding: 15px 32px;
+    padding: 4px 6px;
     margin-left: 1px;
     border-radius: 8px;
 }
@@ -482,7 +482,7 @@ input[type="file"] {
     background-color: #3c536b;
     transition: all 0.5s;
     margin-left: 1px;
-    padding: 15px 32px;
+    padding: 6px 8px;
     border-radius: 8px;
 }
 

@@ -66,8 +66,10 @@ function propertiesDevice (elementPropertiesDevice) { //, elementObjOwlOnPropert
 /*****************************************************/
 
 /* Function to create/update the object context
+ * @parameters:
+ * @return: Object: @context for definitions
  */
-function createUpdateContext (elementDefaultContext, elementExtraContext) {
+function createUpdateContext (elementDefaultContext, elementExtraContext) { // TODO: Finish this function
     let this_context = {} // IoT object for the @context information (in definitions)
     this_context = new objContext(elementDefaultContext); // Creating an object with default IoT information
 
@@ -81,7 +83,10 @@ function createUpdateContext (elementDefaultContext, elementExtraContext) {
 }
 
 /* Function to create/update the object context
- */
+* @parameters: List: with of objects that composes the default part of @graph
+* @return: Object: @graph for definitions, which is updated with devices and
+*          components by other functions
+*/
 function createGraph (elementDefaultGraph) {
     let this_graph = []; // IoT List for the @graph information (in definitions)
     this_graph.push(elementDefaultGraph); // Updating the IoT graph list of the definitions
@@ -89,7 +94,7 @@ function createGraph (elementDefaultGraph) {
     return this_graph;
 }
 
-/* Function to create the list rdfs,
+/* Function to create the list rdfs
  *     this list contains at least one object:
  *         -> One with the information about the ontology and the type of the device or component
  *     also, it might have more objects. The amount of other objects depends on
@@ -99,6 +104,8 @@ function createGraph (elementDefaultGraph) {
  * If the device/component has on or more properties, a function for just
  *     updating the inner object ought be called to insert the properties'
  *     objects into the rdfs list.
+ * @parameters: String: ontology, String: type (both retrieved from the database)
+ * @return: List: The rdfs list with the identification information (only one object pushed)
  */
 function createRdfs (elementOntology, elementType) {
     let this_ontology = elementOntology;
@@ -112,11 +119,13 @@ function createRdfs (elementOntology, elementType) {
     aux_obj_type["@id"] = ("ssn".concat(":")).concat("Device");
     this_rdfsSubClassOf.push(aux_obj_type);
     return this_rdfsSubClassOf; /* This list will be the value for the key "rdfs:subClassOf" in
-                                 *     the object identificationDevice
+                 and                  *     the object identificationDevice
                                  */
 }
 
 /* Function used for updating the rdfs list with additional properties' objects
+ * @parameters: List: current rdfs list, Object: childSnapshot, String: id of the additional property
+ * @return: List: the rfds list with one object with a new property pushed into its
  */
 function updateRdfsProperties (elementRdfsSubClassOf, elementChildSnapshot, elementIdProperty) {
     let this_rdfsSubClassOf = elementRdfsSubClassOf; /* Current rdfs list for a device/component on an iteration
@@ -135,11 +144,13 @@ function updateRdfsProperties (elementRdfsSubClassOf, elementChildSnapshot, elem
 }
 
 /* Function to create the object of IoT Lite definitions
+ * @parameters: Object: Iot Lite Context, List: Iot Lite Graph
+ * @return: Object: definitions
  */
-function createDefinitions(elementObjContext, elementObjGraph) {
+function createDefinitions(elementContext, elementGraph) {
     let this_definitions = {};
-    this_definitions["@context"] = elementObjContext;
-    this_definitions["@graph"] = elementObjGraph;
+    this_definitions["@context"] = elementContext;
+    this_definitions["@graph"] = elementGraph;
     return this_definitions; /* This object's gonna be stored on the browser's
                               *     local storage in each initialization of the
                               *     Platform
@@ -151,6 +162,8 @@ function createDefinitions(elementObjContext, elementObjGraph) {
 /*****************************************************/
 
 /* Function used to verify if a property is default (e.g.: Id) or additional (e.g.: Number of Pins)
+ * @parameters: String: property
+ * @return: Boolean: true->the property isn't default, false->the property is a default one
  */
 function verifyAdditionalProperty(elementProperty_i) {
     let this_is_additional_property = true; // It'll be false just if the property has be found in the default properties' list
@@ -166,6 +179,8 @@ function verifyAdditionalProperty(elementProperty_i) {
 }
 
 /* Function used to verify if a value is a Integer or not
+ * @parameters: Data type
+ * @return: Boolean: true->if the data is a non-negative-integer, false->another type of data
  */
 function isNonNegativeInteger(elementValue){
     return (typeof elementValue == 'number' && elementValue%1 == 0 && elementValue > 0);

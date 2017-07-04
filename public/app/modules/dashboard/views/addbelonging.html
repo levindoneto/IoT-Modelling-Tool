@@ -80,7 +80,18 @@
                       Add new property
                   </button>
                   <button class="DataEdit" type="submit">
-                      Add {{vm.model.type}}
+                     <div ng-if="vm.model.type != 'Device' && vm.model.type != 'SensingDevice' && vm.model.type != 'ActuatingDevice'">
+                        Add
+                     </div>
+                      <div ng-if="vm.model.type == 'Device'">
+                         Add Device
+                      </div>
+                      <div ng-if="vm.model.type == 'SensingDevice'">
+                         Add Sensor
+                      </div>
+                      <div ng-if="vm.model.type == 'ActuatingDevice'">
+                         Add Actuator
+                      </div>
                   </button>
                   </br>
             </div>
