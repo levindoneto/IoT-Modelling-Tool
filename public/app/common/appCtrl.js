@@ -147,13 +147,38 @@ $scope.readNotification = function(){
             state: "myaccount"
         },
         {
+            title: "Add Default @Context",
+            icon: "cubes",
+            state: "adddefaultcontext"
+        },
+        {
+            title: "Add Specific @Context",
+            icon: "linode",
+            state: "addspecificcontext"
+        },
+        {
+            title: "Add Default @Graph",
+            icon: "compass",
+            state: "adddefaultgraph"
+        },
+        {
+            title: "My @Context",
+            icon: "fa fa-tablet",
+            state: "mycontext"
+        },
+        {
+            title: "My @Graph",
+            icon: "exchange",
+            state: "mygraph"
+        },
+        {
             title: "IoT Environment Modelling",
             icon: "fa fa-home",
             state: "digitalenvironment"
         },
         {
             title: "My Devices",
-            icon: "fa fa-tablet",
+            icon: "thermometer-three-quarters",
             state: "mybelongings"
         },
         {
@@ -203,6 +228,6 @@ $scope.readNotification = function(){
         $state.go('app.search');
     };
 
-    console.log('getting in to the app controller');
+    console.log('getting into the app controller');
 
 }]);

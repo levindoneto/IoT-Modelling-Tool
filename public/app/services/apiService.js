@@ -71,9 +71,6 @@ app.service('apiService', ['$http', '$q', 'appSettings', function ($http, $q, ap
         return deferred.promise;
     };
 
-
-
-
     apiService.get = get;
 
     apiService.create = create;
