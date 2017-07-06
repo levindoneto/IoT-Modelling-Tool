@@ -7,4 +7,36 @@
 
 <!-- Main content -->
 <section class="content">
+   <!-- Info boxes -->
+   <div>
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="panel panel-default">
+               <form name="myForm" ng-submit="vm.adddefaultgraph(vm.graph)">
+                  <h4 class="Titlemyaccount">Does this default graph be the default one? </h4>
+                  <!-- With the ng-model directive you can bind the value of an input field to a variable created in AngularJS -->
+                  <select class="BoxInput" ng-model="vm.graph.defaultOption" required>
+                     <option value="yes_default">
+                        Yes
+                     </option>
+                     <option value="no_default">
+                        No
+                     </option>
+                  </select>
+
+                  <h4 class="Titlemyaccount">Default Objects</h4>
+                  <textarea  class="BoxInputDefaultObjects" placeholder="Default Objects" type="text" ng-model="vm.graph.defaultobjectsgraph">
+                  </textarea></br>
+                  </br>
+                  <button class="DataEdit" type="submit">
+                     <div>
+                        Add Default @Graph
+                     </div>
+                  </button></br>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
 </section>
+<!-- /.content -->

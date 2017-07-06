@@ -390,6 +390,14 @@ input[type="file"] {
     font-size: 14px;
 }
 
+.BoxInputDefaultObjects {
+    color: black;
+    word-break: break-word;
+    font-size: 14px;
+    height: 250px;
+    width: 100%;
+}
+
 /* Search */
 .SearchFilter {
     font-size: 18px;
