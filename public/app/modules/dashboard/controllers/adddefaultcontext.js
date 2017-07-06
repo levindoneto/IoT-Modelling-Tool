@@ -1,15 +1,19 @@
 
 dashboard.controller("adddefaultcontextController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash','$firebaseObject','$firebaseArray','Upload','$timeout','notification',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray, Upload, $timeout, notification) {
-    //TODO
-    console.log("IM HERE11111");
-    console.log("IM HERE11111");
-    console.log("IM HERE11111");
-    console.log("IM HERE11111");
-    console.log("IM HERE11111");
-    console.log("IM HERE11111");
-    console.log("IM HERE11111");
-    console.log("IM HERE11111");
-    var vm = this; //controllerAs
-    return true;
-}]);
+    var vm = this;
+    vm.adddefaultcontext = function (context) {
+            //context.userUid = $rootScope.userDB.uid;
+                    var ref = firebase.database().ref('contexts/');
+                    var contextList = $firebaseArray(ref);
+                    contextList.$loaded().then(function(){
+                        contextList.$add(context).then(function(ref) {
+                            swal({
+                                title: "It's been added with sucess!",
+                                timer: 1700,
+                                showConfirmButton: false });
+                            console.log("The context: ", context)
+                            });
+                        });
+            }
+        }]);
