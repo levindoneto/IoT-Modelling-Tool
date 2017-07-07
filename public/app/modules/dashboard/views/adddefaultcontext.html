@@ -37,11 +37,14 @@
                                 No
                             </option>
                         </select>
-                        <h4 class="Titlemyaccount">Geo </h4>
+                        <!-- This add is used in order the user be able to choose a default context to update with specific information -->
+                        <h4 class="Titlemyaccount">Id (@Context) </h4>
+                        <input class="BoxInput" placeholder='Id' type="text" ng-model="vm.context.idcontext">
 
+                        <h4 class="Titlemyaccount">Geo </h4>
                         <input class="BoxInput" placeholder='"geo"' type="text" ng-model="vm.context.geo">
 
-                        <h4 class="Titlemyaccount">M3-Liten</h4>
+                        <h4 class="Titlemyaccount">M3-Lite</h4>
                         <input class="BoxInput"  placeholder='"m3-lite"' type="text" ng-model="vm.context.m3lite">
 
                         <h4 class="Titlemyaccount">Owl </h4>
