@@ -1,8 +1,8 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
-   <h1 class="titleMYACC">
-      Add Default @Context
-   </h1>
+    <h1 class="titleMYACC">
+        Add Default @Context
+    </h1>
 </section>
 
 <!-- Example of a default IoT Lite context
@@ -21,65 +21,65 @@
 
 <!-- Main content -->
 <section class="content">
-   <!-- Info boxes -->
-   <div>
-      <div class="row">
-         <div class="col-lg-12">
-            <div class="panel panel-default">
-               <form name="myForm" ng-submit="vm.adddefaultcontext(vm.context)">
-                  <h4 class="Titlemyaccount">Does this default context be the default one? </h4>
-                  <!-- With the ng-model directive you can bind the value of an input field to a variable created in AngularJS -->
-                  <select class="BoxInput" ng-model="vm.context.defaultOption" required>
-                     <option value="yes_default">
-                        Yes
-                     </option>
-                     <option value="no_default">
-                        No
-                     </option>
-                  </select>
-                  <h4 class="Titlemyaccount">Geo </h4>
+    <!-- Info boxes -->
+    <div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <form name="myForm" ng-submit="vm.adddefaultcontext(vm.context)">
+                        <h4 class="Titlemyaccount">Does this default context be the default one? </h4>
+                        <!-- With the ng-model directive you can bind the value of an input field to a variable created in AngularJS -->
+                        <select class="BoxInput" ng-model="vm.context.defaultOption" required>
+                            <option value="yes_default">
+                                Yes
+                            </option>
+                            <option value="no_default">
+                                No
+                            </option>
+                        </select>
+                        <h4 class="Titlemyaccount">Geo </h4>
 
-                  <input class="BoxInput" placeholder='"geo"' type="text" ng-model="vm.context.geo">
+                        <input class="BoxInput" placeholder='"geo"' type="text" ng-model="vm.context.geo">
 
-                  <h4 class="Titlemyaccount">M3-Liten</h4>
-                  <input class="BoxInput"  placeholder='"m3-lite"' type="text" ng-model="vm.context.m3lite">
+                        <h4 class="Titlemyaccount">M3-Liten</h4>
+                        <input class="BoxInput"  placeholder='"m3-lite"' type="text" ng-model="vm.context.m3lite">
 
-                  <h4 class="Titlemyaccount">Owl </h4>
-                  <input class="BoxInput" placeholder='"owl"' type="text" ng-model="vm.context.owl">
+                        <h4 class="Titlemyaccount">Owl </h4>
+                        <input class="BoxInput" placeholder='"owl"' type="text" ng-model="vm.context.owl">
 
-                  <h4 class="Titlemyaccount">Qu </h4>
-                  <input class="BoxInput" placeholder='"qu"' type="text" ng-model="vm.context.qu">
+                        <h4 class="Titlemyaccount">Qu </h4>
+                        <input class="BoxInput" placeholder='"qu"' type="text" ng-model="vm.context.qu">
 
-                  <h4 class="Titlemyaccount">Qu-Rec 20 </h4> <!--e.g.: iot-lite, ssn, etc -->
-                  <input class="BoxInput" placeholder='"qu-rec20"' type="text" ng-model="vm.context.qurectwenty">
+                        <h4 class="Titlemyaccount">Qu-Rec 20 </h4> <!--e.g.: iot-lite, ssn, etc -->
+                        <input class="BoxInput" placeholder='"qu-rec20"' type="text" ng-model="vm.context.qurectwenty">
 
-                  <h4 class="Titlemyaccount">RDF </h4>
-                  <input class="BoxInput" placeholder='"rdf"' type="text" ng-model="vm.context.rdf">
+                        <h4 class="Titlemyaccount">RDF </h4>
+                        <input class="BoxInput" placeholder='"rdf"' type="text" ng-model="vm.context.rdf">
 
-                  <h4 class="Titlemyaccount">RDFS </h4>
-                  <input class="BoxInput" placeholder='"rdfs"' type="text" ng-model="vm.context.rdfs">
+                        <h4 class="Titlemyaccount">RDFS </h4>
+                        <input class="BoxInput" placeholder='"rdfs"' type="text" ng-model="vm.context.rdfs">
 
-                  <h4 class="Titlemyaccount">SSN </h4>
-                  <input class="BoxInput" placeholder='"ssn"' type="text" ng-model="vm.context.ssn">
+                        <h4 class="Titlemyaccount">SSN </h4>
+                        <input class="BoxInput" placeholder='"ssn"' type="text" ng-model="vm.context.ssn">
 
-                  <h4 class="Titlemyaccount">Time </h4>
-                  <input class="BoxInput" placeholder='"time"' type="text" ng-model="vm.context.time">
+                        <h4 class="Titlemyaccount">Time </h4>
+                        <input class="BoxInput" placeholder='"time"' type="text" ng-model="vm.context.time">
 
-                  <h4 class="Titlemyaccount">XSD </h4>
-                  <input class="BoxInput" placeholder='"xsd"' type="text" ng-model="vm.context.xsd">
+                        <h4 class="Titlemyaccount">XSD </h4>
+                        <input class="BoxInput" placeholder='"xsd"' type="text" ng-model="vm.context.xsd">
 
-                  <h4 class="Titlemyaccount">IoT Lite </h4>
-                  <input class="BoxInput" placeholder='"iot-lite"' type="text" ng-model="vm.context.iotlite">
-
-                  <button class="DataEdit" type="submit">
-                     <div>
-                        Add Default Context
-                     </div>
-                  </button></br>
-               </form>
+                        <h4 class="Titlemyaccount">IoT Lite </h4>
+                        <input class="BoxInput" placeholder='"iot-lite"' type="text" ng-model="vm.context.iotlite">
+                    </br></br>
+                    <button class="DataEdit" type="submit">
+                        <div>
+                            Add Default Context
+                        </div>
+                    </button></br>
+                </form>
             </div>
-         </div>
-      </div>
-   </div>
+        </div>
+    </div>
+</div>
 </section>
 <!-- /.content -->

@@ -388,6 +388,7 @@ input[type="file"] {
 .BoxInput {
     color: black;
     font-size: 14px;
+    width: 100%;
 }
 
 .BoxInputDefaultObjects {

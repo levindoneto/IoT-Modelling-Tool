@@ -1,7 +1,7 @@
 
 dashboard.controller("adddefaultcontextController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash','$firebaseObject','$firebaseArray','Upload','$timeout','notification',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray, Upload, $timeout, notification) {
-    var vm = this;
+    var vm = this; //controllerAs
     vm.adddefaultcontext = function (context) {
         //context.userUid = $rootScope.userDB.uid;
         var ref = firebase.database().ref('contexts/');

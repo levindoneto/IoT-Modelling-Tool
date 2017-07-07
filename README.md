@@ -82,6 +82,10 @@ II) When an item is drag and dropped into the trash icon it'll be removed from t
 * [AngularFire v2.3.0](https://github.com/firebase/angularfire)
 * [ReactFire v1.0.0](https://github.com/firebase/reactfire)
 
+### Linter
+
+* [ESLint v4.1.1](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+
 ## Setup IoT Modeling Tool
 
 ### On windows

@@ -1,7 +1,7 @@
 
 dashboard.controller("adddefaultgraphController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash','$firebaseObject','$firebaseArray','Upload','$timeout','notification',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray, Upload, $timeout, notification) {
-    var vm = this;
+    var vm = this; //controllerAs
     vm.adddefaultgraph = function (graph) {
         //graph.userUid = $rootScope.userDB.uid;
         var ref = firebase.database().ref('graphs/');
