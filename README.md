@@ -86,6 +86,10 @@ II) When an item is drag and dropped into the trash icon it'll be removed from t
 
 * [ESLint v4.1.1](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
+### Alert animations
+
+* [Sweet Alert](http://t4t5.github.io/sweetalert/)
+
 ## Setup IoT Modeling Tool
 
 ### On windows

@@ -1,10 +1,21 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
-   <h1 class="titleMYACC">
-      Add Specific @Context
-   </h1>
+    <h1 class="titleMYACC">
+        Add Specific @Context
+    </h1>
 </section>
 
 <!-- Main content -->
 <section class="content">
-</section>
+    <div class="box-content">
+        <div class="panel panel-default">
+            <ul style="list-style-type: none;">
+                <li ng-repeat=" context in contexts" > <!-- contexts is a list  provided by the controller-->
+                    <h3>
+                        {{context.geo}} 
+                    </h3>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section><!-- /.content -->

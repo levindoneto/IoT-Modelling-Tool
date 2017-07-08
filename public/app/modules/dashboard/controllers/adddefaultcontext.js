@@ -13,8 +13,8 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                     timer: 1700,
                     showConfirmButton: false
                 });
-            console.log("The context: ", context)
+            console.log("The context: ", context);
             });
         });
-    }
+    };
 }]);
