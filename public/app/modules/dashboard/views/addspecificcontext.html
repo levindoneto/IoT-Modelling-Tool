@@ -9,11 +9,14 @@
 <section class="content">
     <div class="box-content">
         <div class="panel panel-default">
-            <select class="BoxInput" ng-model="vm.contexts" required> <!--Editions will be made on contexts in the key with the idcontext chosen by the user -->
+            <h4 class="Titlemyaccount">Choose a @context to add information</h4>
+            <select class="BoxInput" ng-model="selectedContext" required> <!--Editions will be made on contexts in the key with the idcontext chosen by the user -->
                 <option ng-repeat="context in contexts" value={{context.$id}} > <!-- contexts is a list  provided by the controller-->
-                        {{context.idcontext}} <!--$id provides the information about -->
+                        {{context.idcontext}} <!--$id provides the information about the context's key -->
                 </option>
             </select>
+            
+            <h4> This is the key: {{selectedContext}} </h4>
         </div>
     </div>
 </section><!-- /.content -->
