@@ -15,8 +15,24 @@
                         {{context.idcontext}} <!--$id provides the information about the context's key -->
                 </option>
             </select>
-            
             <h4> This is the key: {{selectedContext}} </h4>
+            
+            <div ng-show="selectedContext">
+                </br><h6 class="titleMYACC"> Add more information on the selected @context </h6>
+
+                <h4 class="Titlemyaccount">IPVS </h4>
+                <input class="BoxInput" placeholder='"ipvs"' type="text" ng-model="ipvspropvalue">
+
+                </br></br>
+                <button class="DataEdit" type="submit" ng-click="addspecificproperty(selectedContext, new_propertyNOTDONEYET, ipvspropvalue)">
+                    <div>
+                        Add Specific Information
+                    </div>
+                </button></br>
+
+            </div>
+            
+            
         </div>
     </div>
 </section><!-- /.content -->

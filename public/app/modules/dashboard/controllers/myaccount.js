@@ -1,4 +1,4 @@
-﻿
+
 var allIcons = {}; //Object with the icons of the devices (basis 64)
 var obj_identification = {};
 var obj_properties = {};

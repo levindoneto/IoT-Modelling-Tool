@@ -24,6 +24,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
             console.log($scope.modalmodel);
         });
     }
+    
     $scope.modalUserDetail = function(model) {
         var ref = firebase.database().ref('users/'+model.userUid);
         var userDetail = $firebaseObject(ref);

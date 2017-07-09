@@ -5,7 +5,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
       var ref = firebase.database().ref('models/');
       var modelList = $firebaseArray(ref);
       modelList.$loaded().then(function(){
-            console.log(modelList)
+            console.log("The model list: ", modelList[0].$id);
             $scope.models = modelList;
       });
 
