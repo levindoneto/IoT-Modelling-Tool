@@ -26,7 +26,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
             timer: 1700,
             showConfirmButton: false
         });
-    }
+    };
     
     /* Function to emulate the for i in range with AngularJS 
      * for (min, max, step) {
@@ -40,5 +40,5 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
             input.push(i);
         }
     return input;
-    };
+    }
 }]);

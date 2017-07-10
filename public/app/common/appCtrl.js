@@ -177,14 +177,19 @@ $scope.readNotification = function(){
             state: "digitalenvironment"
         },
         {
+            title: "Add Device",  // Can be devices, actuators or sensors
+            icon: "plus-circle",
+            state: "addbelonging"
+        },
+        {
             title: "My Devices",
             icon: "thermometer-three-quarters",
             state: "mybelongings"
         },
         {
-            title: "Add Device",  // Can be devices, actuators or sensors
-            icon: "plus-circle",
-            state: "addbelonging"
+            title: "Add Additional Properties",
+            icon: "puzzle-piece",
+            state: "addadditionalproperties"
         },
         {
             title: "Search",

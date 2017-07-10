@@ -89,6 +89,15 @@ dashboard.factory('notification', function($firebaseArray, $firebaseObject) {
           }
       });
 
+      $stateProvider.state('app.addbelonging', {
+          url: '/addbelonging',
+          templateUrl: 'app/modules/dashboard/views/addbelonging.html',
+          controller: 'addbelongingController',
+          controllerAs: 'vm',
+          data: {
+              pageTitle: 'Add Device'
+          }
+      });
 
       $stateProvider.state('app.mybelongings', {
           url: '/mydevices',
@@ -100,13 +109,13 @@ dashboard.factory('notification', function($firebaseArray, $firebaseObject) {
           }
       });
 
-      $stateProvider.state('app.addbelonging', {
-          url: '/addbelonging',
-          templateUrl: 'app/modules/dashboard/views/addbelonging.html',
-          controller: 'addbelongingController',
+      $stateProvider.state('app.addadditionalproperties', {
+          url: '/addadditionalproperties',
+          templateUrl: 'app/modules/dashboard/views/addadditionalproperties.html',
+          controller: 'addadditionalpropertiesController',
           controllerAs: 'vm',
           data: {
-              pageTitle: 'Add Device'
+              pageTitle: 'Add Additional Properties on Devices/Components'
           }
       });
 
