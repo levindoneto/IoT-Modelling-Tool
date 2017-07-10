@@ -18,21 +18,28 @@
             <h4> This is the key: {{selectedContext}} </h4>
             
             <div ng-show="selectedContext">
-                </br><h6 class="titleMYACC"> Add more information on the selected @context </h6>
-
-                <h4 class="Titlemyaccount">IPVS </h4>
-                <input class="BoxInput" placeholder='"ipvs"' type="text" ng-model="ipvspropvalue">
-
+                </br><h6 class="titleMYACC"> Add more information on the selected @Context </h6>
+                
+                <h6 class="Titlemyaccount"> Number of Properties to be added </h6>
+                <input class="BoxInput" type="number" min="0" ng-model="numberOfProperties">
                 </br></br>
-                <button class="DataEdit" type="submit" ng-click="addspecificproperty(selectedContext, new_propertyNOTDONEYET, ipvspropvalue)">
-                    <div>
-                        Add Specific Information
-                    </div>
-                </button></br>
+                <!-- ng-model can't be bound to a function, that's why ng-value is needed in this case -->
+                <span ng-value="showForms=1"></span></br>
 
+                <div ng-if="showForms===1">
+                    <div ng-repeat="n in range(1,numberOfProperties)"> <!-- Iteration on a list returned by the functinon range -->
+                        <h4 class="Titlemyaccount">Fill out the new property and its value bellow</h4>
+                        <input class="BoxInput" placeholder="Property's Id" type="text" ng-model="new_property_key">
+                        <input class="BoxInput" placeholder="Property's Value" type="text" ng-model="new_property_value">
+                        <!-- Updating the database with the new property:value -->
+                        <button class="AddSpecificPropButton" type="submit" ng-click="addspecificproperty(selectedContext, new_property_key, new_property_value)">
+                            <div>
+                                Add Specific Information
+                            </div>
+                        </button></br>
+                    </div>
+                </div>
             </div>
-            
-            
         </div>
     </div>
 </section><!-- /.content -->

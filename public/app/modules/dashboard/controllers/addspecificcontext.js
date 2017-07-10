@@ -21,6 +21,11 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         auxObjContext[new_property] = new_property_value; // In this way just a key with a value is added, not a new object
         ref.update(auxObjContext); // Updating the object on the database
         console.log("add the value: ", new_property_value);
+        swal({
+            title: "The new property and its value have been added with success!",
+            timer: 1700,
+            showConfirmButton: false
+        });
     }
     
     /* Function to emulate the for i in range with AngularJS 

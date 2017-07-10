@@ -248,6 +248,7 @@
 }
 
 .titleMYACC {
+    margin-left: 4px;
     font-size: 25px;
     font-weight: bold;
 }
@@ -289,20 +290,6 @@
     align: center;
 }
 
-.AddProperty:hover{
-    background-color: #557fac;
-    padding: 4px;
-    border-radius: 8px;
-    margin-top: 10px;
-    font-size: 18px;
-    color: white;
-    display: inline;
-    margin: auto;
-    align: left;
-    transition: all 0.5s;
-}
-
-
 .DataEdit:hover{
     background-color: #557fac;
     padding: 10px;
@@ -313,6 +300,44 @@
     display: block;
     margin: auto;
     align: center;
+    transition: all 0.5s;
+}
+
+.AddSpecificPropButton {
+    background-color: #004C70;
+    padding: 5px;
+    border-radius: 3px;
+    margin-top: 15px;
+    font-size: 13px;
+    color: white;
+    display: block;
+    margin: auto;
+    align: center;
+}
+
+.AddSpecificPropButton:hover{
+    background-color: #557fac;
+    padding: 5px;
+    border-radius: 4px;
+    margin-top: 20px;
+    font-size: 15px;
+    color: white;
+    display: block;
+    margin: auto;
+    align: center;
+    transition: all 0.5s;
+}
+
+.AddProperty:hover{
+    background-color: #557fac;
+    padding: 4px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 18px;
+    color: white;
+    display: inline;
+    margin: auto;
+    align: left;
     transition: all 0.5s;
 }
 
