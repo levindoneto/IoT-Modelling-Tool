@@ -22,4 +22,18 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         ref.update(auxObjContext); // Updating the object on the database
         console.log("add the value: ", new_property_value);
     }
+    
+    /* Function to emulate the for i in range with AngularJS 
+     * for (min, max, step) {
+     *     do something;
+     * }
+     */
+    $scope.range = function(min, max, step) {
+        step = step || 1;
+        var input = [];
+        for (var i = min; i <= max; i += step) {
+            input.push(i);
+        }
+    return input;
+    };
 }]);
