@@ -41,8 +41,8 @@ function objContext (elementDefaultContext) {
 }
 
 /* Object with identification information about a device or component,
-* as id, type and additional properties
-*/
+ * as id, type and additional properties
+ */
 function identificationDevice (elementIdentDevice, elementRdfsSubClassOf) {
     this["@id"] = elementIdentDevice.id;
     this["@type"] = elementIdentDevice.type;
@@ -84,10 +84,10 @@ function createUpdateContext (elementDefaultContext, elementExtraContext) {
 }
 
 /* Function to create/update the object context
-* @parameters: List: with of objects that composes the default part of @graph
-* @return: Object: @graph for definitions, which is updated with devices and
-*          components by other functions
-*/
+ * @parameters: List: with of objects that composes the default part of @graph
+ * @return: Object: @graph for definitions, which is updated with devices and
+ *          components by other functions
+ */
 function createGraph (elementDefaultGraph) {
     let this_graph = []; // IoT List for the @graph information (in definitions)
     this_graph.push(elementDefaultGraph); // Updating the IoT graph list of the definitions
