@@ -15,6 +15,42 @@
                 </option>
             </select>
             <h4> Selected context: {{selectedContext}} </h4>
+
+            <button type="button" data-toggle="modal" ng-click="modal(selectedContext)" data-target="#popUp" class="fa fa-info-circle BtnmyContexts">
+                See more information about the selected @Context
+            </button>
+            <button ng-click="setcontextdefault(selectedContext.$id)" type="button" class="fa fa-check-circle BtnmyContexts">
+                Set the selected @Context as the default one
+            </button></br>
+
+            <!-- Displaying the information about the selected @context -->
+            <div id="popUp" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="BtnClosemybelongings close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Details</h4>
+                        </div>
+                        <div class="modal-body" align="center">
+                            <span class="MyInfo"> Geo: </span> <span class="MyInfoP"> {{(modelcontext.geo).toString()}} </span> </br> <!-- It has to be a string value, otherwise it isn't printed -->
+                            <span class="MyInfo"> IoT Lite: </span> <span class="MyInfoP"> {{(modelcontext.iotlite).toString()}} </span> </br>
+                            <span class="MyInfo"> M3 Lite: </span> <span class="MyInfoP"> {{(modelcontext.m3lite).toString()}} </span> </br>
+                            <span class="MyInfo"> Owl: </span> <span class="MyInfoP"> {{(modelcontext.owl).toString()}} </span> </br>
+                            <span class="MyInfo"> Qu: </span> <span class="MyInfoP"> {{(modelcontext.qu).toString()}} </span> </br>
+                            <span class="MyInfo"> QuRec 20: </span> <span class="MyInfoP"> {{(modelcontext.qurectwenty).toString()}} </span> </br>
+                            <span class="MyInfo"> RDF: </span> <span class="MyInfoP"> {{(modelcontext.rdf).toString()}} </span> </br>
+                            <span class="MyInfo"> RDFS: </span> <span class="MyInfoP"> {{(modelcontext.rdfs).toString()}} </span> </br>
+                            <span class="MyInfo"> SSN: </span> <span class="MyInfoP"> {{(modelcontext.ssn).toString()}} </span> </br>
+                            <span class="MyInfo"> Time: </span> <span class="MyInfoP"> {{(modelcontext.time).toString()}} </span> </br>
+                            <span class="MyInfo"> Xsd: </span> <span class="MyInfoP"> {{(modelcontext.xsd).toString()}} </span> </br>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="BtnClosemybelongings" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section><!-- /.content -->

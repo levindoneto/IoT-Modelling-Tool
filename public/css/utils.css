@@ -502,6 +502,40 @@ input[type="file"] {
     box-shadow: 3px 3px 1px grey;
 }
 
+/*My Contexts*/
+.BtnmyContexts {
+    background-color: #004C70;
+    padding: 5px;
+    border-radius: 8px;
+    margin-top: 3px;
+    margin-bottom: 4px;
+    /* To centralize the button */
+    margin-left: auto;
+    margin-right: auto;
+    /****************************/
+    font-size: 17px;
+    color: white;
+    display: block;
+    align: center;
+}
+
+.BtnmyContexts:hover{
+    background-color: #879bb1;
+    padding: 5px;
+    border-radius: 8px;
+    margin-top: 3px;
+    margin-bottom: 4px;
+    /* To centralize the button */
+    margin-left: auto;
+    margin-right: auto;
+    /****************************/
+    font-size: 18px;
+    color: black;
+    display: block;
+    align: center;
+    transition: all 0.5s;
+}
+
 /*My models*/
 .Btnmybelongings {
     border: 1px;
