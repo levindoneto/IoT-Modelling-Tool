@@ -11,7 +11,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     });
 
     /* Function responsible for passing the selected context to the scope */
-    $scope.modal = function(keySelContext) {
+    $scope.modal = function (keySelContext) {
         console.log("KEY CONTEXT:::: ", keySelContext);
         var ref = firebase.database().ref('contexts/'+keySelContext);
         var contextObj = $firebaseObject(ref);
@@ -19,6 +19,18 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
             $scope.modelcontext = contextObj;
             console.log("THE VALUE::::::", contextObj);
         });
- }
-
+    };
+    
+    /* Function to set a default @context for real time digital environment */
+    $scope.setcontextdefault = function (keyContext) {
+         var ref = firebase.database().ref('defaults/');
+        let auxObjContext = {}; 
+        auxObjContext["defaultcontext"] = keyContext; 
+        ref.update(auxObjContext);
+        swal({
+            title: "The selected context has been set as a default one",
+            timer: 1700,
+            showConfirmButton: false
+        });
+    };
 }]);
