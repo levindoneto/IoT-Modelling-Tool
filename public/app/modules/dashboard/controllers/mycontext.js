@@ -33,4 +33,26 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
             showConfirmButton: false
         });
     };
+
+    /* Function to emulate the for i in range with AngularJS 
+     * for (min, max, step) {
+     *     do something;
+     * }
+     */
+    $scope.range = function(min, max, step) {
+        step = step || 1;
+        var input = [];
+        for (var i = min; i <= max; i += step) {
+            input.push(i);
+        }
+        return input;
+    };
+
+    $scope.getAdditionalProperties = function (keySelContext) {
+        var ref = firebase.database().ref('contexts/'+keySelContext);
+        var contextObj = $firebaseObject(ref);
+        console.log ("REF::: ", ref);
+        console.log ("CONTEXT_OBJ: ", contextObj); // For each should be done on contextObj
+    };
+
 }]);

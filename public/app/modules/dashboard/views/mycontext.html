@@ -23,6 +23,10 @@
                 Set the selected @Context as the default one
             </button></br>
 
+            <button ng-click="getAdditionalProperties(selectedContext)" type="button" class="BtnmyContexts">
+                Test get add prop
+            </button></br>
+
             <!-- Displaying the information about the selected @context -->
             <div id="popUp" class="modal fade" role="dialog">
                 <div class="modal-dialog">
@@ -44,6 +48,12 @@
                             <span class="MyInfo"> SSN: </span> <span class="MyInfoP"> {{(modelcontext.ssn).toString()}} </span> </br>
                             <span class="MyInfo"> Time: </span> <span class="MyInfoP"> {{(modelcontext.time).toString()}} </span> </br>
                             <span class="MyInfo"> Xsd: </span> <span class="MyInfoP"> {{(modelcontext.xsd).toString()}} </span> </br>
+                            <!--
+                            <div ng-repeat="n in range(1,numberOfProperties)">
+                                <span class="MyInfo"> {{keyAdditionalInfo}}: </span> <span class="MyInfoP"> {{(valueAdditionalInfo).toString()}} </span> </br>
+                            </div>
+                            -->
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="BtnClosemybelongings" data-dismiss="modal">Close</button>
