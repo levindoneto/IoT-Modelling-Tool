@@ -87,7 +87,8 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     $scope.getAdditionalProperties = function (keySelContext) {
         var ref = firebase.database().ref('contexts/'+keySelContext);
         var contextObj = $firebaseObject(ref);
-        //console.log ("REF::: ", ref);
+        let objAddPropsContext = {}; /* Object with the key:value of the additional properties.
+                                      * It'll be accessed via scope variable on the view */
         console.log ("CONTEXT_OBJ: ", contextObj); // For each should be done on contextObj
 
         /* This is needed because of the asynchronous way of processing data */
@@ -104,7 +105,9 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                     is_add_cont_property = verifyAdditionalPropertyContext(contextProp_i);
                     if (is_add_cont_property == true) {
                         console.log("I have found some additional props");
+                        objAddPropsContext[contextProp_i] = contextObj[contextProp_i];
                         console.log("THIS ONE: ", contextProp_i);
+                        console.log("THE VALUE OF THIS ONE: ", contextObj[contextProp_i]);
                     }
                 }
                 //console.log("Key ", i, ": ", Object.keys(contextObj)[i]);
@@ -112,7 +115,8 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
             console.log("ENDING...");
         }, 0);
         
-        return true;
+        console.log ("RETURNED OBJECT: ", objAddPropsContext);
+        return objAddPropsContext;
     };
 
 }]);
