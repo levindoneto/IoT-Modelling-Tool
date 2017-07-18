@@ -50,4 +50,10 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         return input;
     };
 
+    $scope.getAdditionalGraph = function (keySelGraph) {
+        var ref = firebase.database().ref('graphs/'+keySelGraph); // Accesing the object graph selected by the user
+        var graphObj = $firebaseObject(ref);
+        //TODO (get the devices/components' elements)
+        return true;
+    };
 }]);
