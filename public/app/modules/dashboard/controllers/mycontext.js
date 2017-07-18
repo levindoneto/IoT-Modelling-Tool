@@ -3,7 +3,6 @@ dashboard.controller("mycontextController", ['$rootScope', '$scope', '$state', '
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray) {
     var vm = this; //controllerAs
     const default_contextProps = [
-        "defaultOption",
         "geo",
         "idcontext",
         "iotlite",
@@ -85,43 +84,25 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     };
 
     $scope.getAdditionalProperties = function (keySelContext) {
-        var ref = firebase.database().ref('contexts/'+keySelContext);
+        var ref = firebase.database().ref('contexts/'+keySelContext); // Accesing the object context selected by the user
         var contextObj = $firebaseObject(ref);
         let objAddPropsContext = {}; /* Object with the key:value of the additional properties.
                                       * It'll be accessed via scope variable on the view */
-        //console.log ("CONTEXT_OBJ: ", contextObj); // For each should be done on contextObj
-
+                                      
         /* This is needed because of the asynchronous way of processing data */
         setTimeout(function()
         {
-            let len_contextObj = Object.keys(contextObj).length;
-            //console.log("LENGTH: ", len_contextObj);
-            //console.log ("ALL KEYS: ", Object.keys(contextObj));
-            //console.log ("ALL VALUES: ", Object.values(contextObj));
-
-            //console.log("STARTING...");
             for (var contextProp_i in contextObj) { // Ranging on the object @context->key
                 if(contextObj.hasOwnProperty(contextProp_i)) { // This will check all properties' names on database's key
                     is_add_cont_property = verifyAdditionalPropertyContext(contextProp_i);
-                    if (is_add_cont_property == true) {
-                        //console.log("I have found some additional props");
-                        objAddPropsContext[contextProp_i] = contextObj[contextProp_i];
-                        //console.log("THIS ONE: ", contextProp_i);
-                        //console.log("THE VALUE OF THIS ONE: ", contextObj[contextProp_i]);
+                    if (is_add_cont_property == true) { // Additional info has been found
+                        objAddPropsContext[contextProp_i] = contextObj[contextProp_i]; // Updating the object with a new pair key:value
                     }
                 }
-                //console.log("Key ", i, ": ", Object.keys(contextObj)[i]);
             }
-            $scope.objAddionalPropsContext = objAddPropsContext;
-
-            console.log ("TYPE SCOPE OBJ INSIDE TIMEOUT: ", typeof objAddPropsContext);
-            //console.log("ENDING...");
+            $scope.objAddionalPropsContext = objAddPropsContext; /* Now the object with the additional properties
+                                                                  * can be accessed from the view */
         }, 0);
-        
-        //console.log ("RETURNED OBJECT: ", objAddPropsContext);
-        
-        //console.log ("SCOPE OBJ (after timeout): ", $scope.objAddionalPropsContext);
-        return objAddPropsContext;
     };
 
 }]);
