@@ -23,13 +23,12 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     var ref = firebase.database().ref('contexts/'); // Loading all the contexts from the database
     var contextList = $firebaseArray(ref);
 
-
     /* Function used to verify if a property on @context is default (e.g.: Id) or additional (e.g.: geo)
      * @parameters: String: property
      * @return: Boolean: true->the property isn't default, false->the property is a default one
      */
     function verifyAdditionalPropertyContext(elementProperty_i) {
-        console.log("MAN, IM HERE...");
+        //console.log("MAN, IM HERE...");
         let this_is_additional_property = true; // It'll be false just if the property has be found in the default properties' list
         for (var prop = 0; prop < default_contextProps.length; prop++) {
             if (elementProperty_i.toUpperCase() == default_contextProps[prop].toUpperCase()) { // the property is a default one
@@ -41,6 +40,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         }
         return this_is_additional_property;
     }
+
     /* Loading data from the database */
     contextList.$loaded().then(function(){
           $scope.contexts = contextList; // scope.context = database->context 
@@ -89,33 +89,38 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         var contextObj = $firebaseObject(ref);
         let objAddPropsContext = {}; /* Object with the key:value of the additional properties.
                                       * It'll be accessed via scope variable on the view */
-        console.log ("CONTEXT_OBJ: ", contextObj); // For each should be done on contextObj
+        //console.log ("CONTEXT_OBJ: ", contextObj); // For each should be done on contextObj
 
         /* This is needed because of the asynchronous way of processing data */
         setTimeout(function()
         {
             let len_contextObj = Object.keys(contextObj).length;
-            console.log("LENGTH: ", len_contextObj);
-            console.log ("ALL KEYS: ", Object.keys(contextObj));
-            console.log ("ALL VALUES: ", Object.values(contextObj));
+            //console.log("LENGTH: ", len_contextObj);
+            //console.log ("ALL KEYS: ", Object.keys(contextObj));
+            //console.log ("ALL VALUES: ", Object.values(contextObj));
 
-            console.log("STARTING...");
+            //console.log("STARTING...");
             for (var contextProp_i in contextObj) { // Ranging on the object @context->key
                 if(contextObj.hasOwnProperty(contextProp_i)) { // This will check all properties' names on database's key
                     is_add_cont_property = verifyAdditionalPropertyContext(contextProp_i);
                     if (is_add_cont_property == true) {
-                        console.log("I have found some additional props");
+                        //console.log("I have found some additional props");
                         objAddPropsContext[contextProp_i] = contextObj[contextProp_i];
-                        console.log("THIS ONE: ", contextProp_i);
-                        console.log("THE VALUE OF THIS ONE: ", contextObj[contextProp_i]);
+                        //console.log("THIS ONE: ", contextProp_i);
+                        //console.log("THE VALUE OF THIS ONE: ", contextObj[contextProp_i]);
                     }
                 }
                 //console.log("Key ", i, ": ", Object.keys(contextObj)[i]);
             }
-            console.log("ENDING...");
+            $scope.objAddionalPropsContext = objAddPropsContext;
+
+            console.log ("TYPE SCOPE OBJ INSIDE TIMEOUT: ", typeof objAddPropsContext);
+            //console.log("ENDING...");
         }, 0);
         
-        console.log ("RETURNED OBJECT: ", objAddPropsContext);
+        //console.log ("RETURNED OBJECT: ", objAddPropsContext);
+        
+        //console.log ("SCOPE OBJ (after timeout): ", $scope.objAddionalPropsContext);
         return objAddPropsContext;
     };
 
