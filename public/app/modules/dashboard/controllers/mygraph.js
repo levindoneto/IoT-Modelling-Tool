@@ -22,6 +22,32 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         });
     };
     
+    /* Function to set a default @graph for the real time digital environment */
+    $scope.setgraphdefault = function (keyGraph) { // key is given by the user via a option box 
+        var ref = firebase.database().ref('defaults/'); /* defaults->defaultgraph provide the key on
+                                                         * graphs for the default @graph */ 
+        let auxObjGraph = {}; 
+        auxObjGraph["defaultgraph"] = keyGraph; 
+        ref.update(auxObjGraph); // It's just a replacement of values, once the object defaults has unique keys
+        swal({
+            title: "The selected graph has been set as a default one",
+            timer: 1700,
+            showConfirmButton: false
+        });
+    };
 
+    /* Function to emulate the for i in range with AngularJS 
+     * for (min, max, step) {
+     *     do something;
+     * }
+     */
+    $scope.range = function(min, max, step) {
+        step = step || 1;
+        var input = [];
+        for (var i = min; i <= max; i += step) {
+            input.push(i);
+        }
+        return input;
+    };
 
 }]);
