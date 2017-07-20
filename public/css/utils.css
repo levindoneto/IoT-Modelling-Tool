@@ -328,6 +328,31 @@
     transition: all 0.5s;
 }
 
+.Warnings {
+    background-color: #004C70;
+    padding: 5px;
+    padding-left: 7px;
+    padding-right: 7px;
+    border-radius: 4px;
+    margin-top: 10px;
+    font-size: 14px;
+    color: white;
+    margin: auto;
+}
+
+.Warnings:hover {
+    background-color: #557fac;
+    padding: 6px;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 4px;
+    margin-top: 10px;
+    font-size: 15px;
+    color: white;
+    margin: auto;
+    transition: all 0.5s;
+}
+
 .AddSpecificPropButton {
     background-color: #004C70;
     padding: 5px;

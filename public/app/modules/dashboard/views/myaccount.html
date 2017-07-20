@@ -62,12 +62,16 @@
             -->
             <!-- Button clicked -> Load the data from the database and update the view -->
             <button class="fa fa-refresh Refresh" ng-click="verifySettingDefaultContext()"> &emsp;Refresh </button></br>
-                <div ng-show="defaultContextIsSet">
-                    <span class="InfoAccount">&emsp;The user has defined a default @Context </span> <button> See the default one </button> <button>Change the default one</button></br>
+                <div ng-if="defaultContextIsSet===true">
+                    <span class="InfoAccount">&emsp;The user has defined a default @Context </span> <button class="Warnings"> See the default one </button>  <a href="/dashboard.html#/app/mycontext" ><button class="Warnings"> Change the default one </button></a></br>
                 </div></br>
-                <div ng-show="!defaultContextIsSet">
-                    <span class="InfoAccount">&emsp;The user hasn't defined a default @Context </span> <button> Set a default one </button></br>
+                <div ng-if="defaultContextIsSet===false">
+                    <span class="InfoAccount">&emsp;The user hasn't defined a default @Context </span> <button class="Warnings"> Set a default one </button> </br>
                 </div></br>
+                <div ng-if="defaultContextIsSet!==false && defaultContextIsSet!==true">
+                    <center><span class="InfoAccount">Click on Refresh to get the current information! </span></center>
+                </div></br>
+               
         </div>
     </div>
 </section>

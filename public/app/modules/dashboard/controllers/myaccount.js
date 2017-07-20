@@ -1021,7 +1021,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         var contextObj = $firebaseObject(ref);
 
         setTimeout(function() { // It works as a promise without using any function as parameter
-            if (contextObj.$value.toString() == "") {
+            if (!contextObj.$value.toString()) { // Default @context isn't set
                 $scope.defaultContextIsSet = false;
             }
             else {
