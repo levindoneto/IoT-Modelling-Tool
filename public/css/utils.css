@@ -282,8 +282,8 @@
     background-color: #004C70;
     padding: 10px;
     border-radius: 8px;
-    margin-top: 20px;
-    font-size: 20px;
+    margin-top: 10px;
+    font-size: 18px;
     color: white;
     display: block;
     margin: auto;
@@ -294,8 +294,33 @@
     background-color: #557fac;
     padding: 10px;
     border-radius: 8px;
-    margin-top: 20px;
-    font-size: 22px;
+    margin-top: 12px;
+    font-size: 20px;
+    color: white;
+    display: block;
+    margin: auto;
+    align: center;
+    transition: all 0.5s;
+}
+
+.Refresh {
+    background-color: #004C70;
+    padding: 7px;
+    border-radius: 4px;
+    margin-top: 10px;
+    font-size: 17px;
+    color: white;
+    display: block;
+    margin: auto;
+    align: center;
+}
+
+.Refresh:hover{
+    background-color: #557fac;
+    padding: 8px;
+    border-radius: 4px;
+    margin-top: 10px;
+    font-size: 19px;
     color: white;
     display: block;
     margin: auto;
