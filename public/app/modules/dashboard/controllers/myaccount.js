@@ -1005,6 +1005,18 @@ firebase.database().ref("models").orderByKey().once("value")
 dashboard.controller("myaccountController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseArray','$firebaseAuth','$firebaseObject',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseArray, $firebaseAuth, $firebaseObject) {
     var vm = this;
+    var ref = firebase.database().ref('defaults/defaultcontext'); // Accesing the object context selected by the user
+    var contextObj = $firebaseObject(ref);
+    var refContexts = firebase.database().ref('contexts/'); // Accesing the object context selected by the user
+    var allContexts = $firebaseObject(refContexts);
+
+    var contextObj = $firebaseObject(ref);
+    setTimeout(function() { // It works as a promise without using any function as parameter
+            let current_key = contextObj.$value.toString();
+            // id_default_context = contexts->current_key->idcontext;
+            console.log("KEY (DEFAULT): ", current_key);
+            $scope.currentDefaultContext = allContexts[current_key.toString()].idcontext.toString();
+        }, 500);
 
     $scope.showAccountinfo = function(user) {
         $scope.show = true;
@@ -1016,18 +1028,12 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
 
     /* Function to verify if a @Context has been set for the modelling environment */
     $scope.verifySettingDefaultContext = function() {
-        //$scope.defaultContextIsSet = true; // Initialization of the flag variable
-        var ref = firebase.database().ref('defaults/defaultcontext'); // Accesing the object context selected by the user
-        var contextObj = $firebaseObject(ref);
-
-        setTimeout(function() { // It works as a promise without using any function as parameter
-            if (!contextObj.$value.toString()) { // Default @context isn't set
-                $scope.defaultContextIsSet = false;
-            }
-            else {
-                $scope.defaultContextIsSet = true;
-            }
-        }, 2000);
+        if (!contextObj.$value.toString()) { // Default @context isn't set
+            $scope.defaultContextIsSet = false;
+        }
+        else {
+            $scope.defaultContextIsSet = true;
+        }
     }
 
     $scope.editFormSubmit = function() {

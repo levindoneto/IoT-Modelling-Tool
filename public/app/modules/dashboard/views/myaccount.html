@@ -62,16 +62,33 @@
             -->
             <!-- Button clicked -> Load the data from the database and update the view -->
             <button class="fa fa-refresh Refresh" ng-click="verifySettingDefaultContext()"> &emsp;Refresh </button></br>
-                <div ng-if="defaultContextIsSet===true">
-                    <span class="InfoAccount">&emsp;The user has defined a default @Context </span> <button class="Warnings"> See the default one </button>  <a href="/dashboard.html#/app/mycontext" ><button class="Warnings"> Change the default one </button></a></br>
-                </div></br>
-                <div ng-if="defaultContextIsSet===false">
-                    <span class="InfoAccount">&emsp;The user hasn't defined a default @Context </span> <button class="Warnings"> Set a default one </button> </br>
-                </div></br>
-                <div ng-if="defaultContextIsSet!==false && defaultContextIsSet!==true">
-                    <center><span class="InfoAccount">Click on Refresh to get the current information! </span></center>
-                </div></br>
-               
+            <div ng-if="defaultContextIsSet===true">
+                <span class="InfoAccount">&emsp;The user has defined a default @Context </span> <button type="button" data-toggle="modal" ng-click="modal()" data-target="#popUp" class="Warnings"> See the default one </button>  <a href="/dashboard.html#/app/mycontext"><button class="Warnings"> Change the default one </button></a></br>
+            </div></br>
+            <div ng-if="defaultContextIsSet===false">
+                <span class="InfoAccount">&emsp;The user hasn't defined a default @Context </span> <a href="/dashboard.html#/app/mycontext"><button class="Warnings"> Set a default one </button></a> </br>
+            </div></br>
+            <div ng-if="defaultContextIsSet!==false && defaultContextIsSet!==true">
+                <center><span class="InfoAccount">Click on Refresh for getting the current information! </span></center>
+            </div></br>
+            <!-- Displaying the information about the selected @context -->
+            <div id="popUp" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="BtnClosemybelongings close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Information</h4>
+                        </div>
+                        <div class="modal-body" align="center">
+                            <span class="MyInfo"> Current Default Context: </span> <span class="MyInfoP"> {{currentDefaultContext}} </span> </br>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="BtnClosemybelongings" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>   
         </div>
     </div>
 </section>
