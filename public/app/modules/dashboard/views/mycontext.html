@@ -1,74 +1,60 @@
-
-
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1 class="titleMYACC">
-        My Account
+        My @Context
     </h1>
 </section>
 
-<!-- Main content -->
 <section class="content">
     <div class="box-content">
         <div class="panel panel-default">
-            <h3 class="Titlemyaccount">Username</h3>
-            <span class="InfoAccount">&emsp;{{user.Username}} </span>
+            <h4 class="Titlemyaccount">Select a @Context</h4>
+            <select class="BoxInput" ng-click="getAdditionalProperties(selectedContext)" ng-model="selectedContext" required> <!--Editions will be made on contexts in the key with the idcontext chosen by the user -->
+                <option ng-repeat="context in contexts" value={{context.$id}} > <!-- contexts is a list  provided by the controller-->
+                        {{context.idcontext}} <!--$id provides the information about the context's key -->
+                </option>
+            </select>
+            <h4> Selected context: {{selectedContext}} </h4>
 
-            <h3 class="Titlemyaccount">E-mail</h3>
-            <span class="InfoAccount">&emsp;{{user.Email}}</br></br> </span>
-        </div>
-        <div>
-            <button class="DataEdit" data-toggle="modal" ng-click="showAccountinfo(user)" data-target="#editModal">Edit</button>
-        </br>
-    </div>
-</section>
-
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-                </button>
-                <h4 class="DataEdit">Edit User's Information</h4>
-            </div>
-            <div class="modal-body">
-                <form id="form_id" role="form" ng-submit="editFormSubmit(user)" ng-show="show">
-                    <div class="form-group">
-                        <label for="name" class="EditInfoField control-label">Username</label>
-                        <input type="text" class="form-control" id="name" ng-model="Username">
+            <button type="button" data-toggle="modal" ng-click="modal(selectedContext)" data-target="#popUp" class="fa fa-info-circle BtnmyContexts">
+                See more information about the selected @Context
+            </button>
+            <button ng-click="setcontextdefault(selectedContext)" type="button" class="fa fa-check-circle BtnmyContexts">
+                Set the selected @Context as the default one
+            </button></br>
+            
+            <!-- Displaying the information about the selected @context -->
+            <div id="popUp" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="BtnClosemybelongings close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Details</h4>
+                        </div>
+                        <div class="modal-body" align="center">
+                            <span class="MyInfo"> Geo: </span> <span class="MyInfoP"> {{(modelcontext.geo).toString()}} </span> </br> <!-- It has to be a string value, otherwise it isn't printed -->
+                            <span class="MyInfo"> IoT Lite: </span> <span class="MyInfoP"> {{(modelcontext.iotlite).toString()}} </span> </br>
+                            <span class="MyInfo"> M3 Lite: </span> <span class="MyInfoP"> {{(modelcontext.m3lite).toString()}} </span> </br>
+                            <span class="MyInfo"> Owl: </span> <span class="MyInfoP"> {{(modelcontext.owl).toString()}} </span> </br>
+                            <span class="MyInfo"> Qu: </span> <span class="MyInfoP"> {{(modelcontext.qu).toString()}} </span> </br>
+                            <span class="MyInfo"> QuRec 20: </span> <span class="MyInfoP"> {{(modelcontext.qurectwenty).toString()}} </span> </br>
+                            <span class="MyInfo"> RDF: </span> <span class="MyInfoP"> {{(modelcontext.rdf).toString()}} </span> </br>
+                            <span class="MyInfo"> RDFS: </span> <span class="MyInfoP"> {{(modelcontext.rdfs).toString()}} </span> </br>
+                            <span class="MyInfo"> SSN: </span> <span class="MyInfoP"> {{(modelcontext.ssn).toString()}} </span> </br>
+                            <span class="MyInfo"> Time: </span> <span class="MyInfoP"> {{(modelcontext.time).toString()}} </span> </br>
+                            <span class="MyInfo"> Xsd: </span> <span class="MyInfoP"> {{(modelcontext.xsd).toString()}} </span> </br>
+                            <!-- Getting the additional information of the selected @context -->
+                            <div ng-repeat="(key, value) in objAddionalPropsContext">
+                                <span class="MyInfo"> {{key.toString()}}: </span> <span class="MyInfoP"> {{value.toString()}} </span> </br>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="BtnClosemybelongings" data-dismiss="modal">Close</button>
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-info" data-dismiss="modal">Cancell</button>
-                        <button type="submit" class="btn btn-info">Update</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<!-- Flags warning the users if they can proceed to the digital environment -->
-<section class="content">
-    <div class="box-content">
-        <div "verifySettingDefaultContext()" class="panel panel-default">
-            <h3 class="Titlemyaccount">IoT Lite Warnings</h3>
-            <!-- Conditions for default @context and @graph
-                    HAS DEFAULT:
-	                    button to see the default one
-	                    button go to change the default one
-                    HASN'T DEFAULT:
-	                    button to set a default one
-            -->
-            <!-- Button clicked -> Load the data from the database and update the view -->
-            <button class="fa fa-refresh Refresh" ng-click="verifySettingDefaultContext()"> &emsp;Refresh </button></br>
-                <div ng-show="defaultContextIsSet">
-                    <span class="InfoAccount">&emsp;The user has defined a default @Context </span> <button> See the default one </button> <button>Change the default one</button></br>
-                </div></br>
-                <div ng-show="!defaultContextIsSet">
-                    <span class="InfoAccount">&emsp;The user hasn't defined a default @Context </span> <button> Set a default one </button></br>
-                </div></br>
-        </div>
-    </div>
-</section>
 </section><!-- /.content -->
