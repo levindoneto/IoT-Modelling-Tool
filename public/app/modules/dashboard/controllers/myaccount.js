@@ -1006,35 +1006,50 @@ dashboard.controller("myaccountController", ['$rootScope', '$scope', '$state', '
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseArray, $firebaseAuth, $firebaseObject) {
     var vm = this;
 
-    $scope.showAccountinfo = function(user){
-      $scope.show = true;
-      $scope.Username = user.Username;
-      $scope.Email = user.Email;
-      $scope.addr = user.addr;
-      $scope.id = user.$id;
+    $scope.showAccountinfo = function(user) {
+        $scope.show = true;
+        $scope.Username = user.Username;
+        $scope.Email = user.Email;
+        $scope.addr = user.addr;
+        $scope.id = user.$id;
     }
 
-    $scope.editFormSubmit = function(){
-      var user = firebase.auth().currentUser;
-      var ref = firebase.database().ref('users/'+$scope.id);
-      var userDB = $firebaseObject(ref);
+    /* Function to verify if a @Context has been set for the modelling environment */
+    $scope.verifySettingDefaultContext = function() {
+        //$scope.defaultContextIsSet = true; // Initialization of the flag variable
+        var ref = firebase.database().ref('defaults/defaultcontext'); // Accesing the object context selected by the user
+        var contextObj = $firebaseObject(ref);
 
-      userDB.$loaded().then(function(){
-        userDB.Username = $scope.Username;
-        userDB.addr = $scope.addr;
-        userDB.Email = $scope.Email;
-        userDB.$save().then(function(ref) {
+        setTimeout(function() { // It works as a promise without using any function as parameter
+            if (contextObj.$value.toString() == "") {
+                $scope.defaultContextIsSet = false;
+            }
+            else {
+                $scope.defaultContextIsSet = true;
+            }
+        }, 2000);
+    }
 
-        },
-        function(error) {
-          console.log("Error:", error);
+    $scope.editFormSubmit = function() {
+        var user = firebase.auth().currentUser;
+        var ref = firebase.database().ref('users/'+$scope.id);
+        var userDB = $firebaseObject(ref);
+
+        userDB.$loaded().then(function(){
+            userDB.Username = $scope.Username;
+            userDB.addr = $scope.addr;
+            userDB.Email = $scope.Email;
+            userDB.$save().then(function(ref) {
+            },
+            function(error) {
+                console.log("Error:", error);
+            });
         });
-      });
-    user.updateEmail($scope.Email);
-  }
+        user.updateEmail($scope.Email);
+    }
 
-  $('#form_id').submit(function() {
-    $('#editModal').modal('hide');
-  });
+    $('#form_id').submit(function() {
+        $('#editModal').modal('hide');
+    });
 
 }]);

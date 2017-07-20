@@ -135,7 +135,7 @@ dashboard.factory('notification', function($firebaseArray, $firebaseObject) {
           controller: 'digitalenvironmentController',
           controllerAs: 'vm',
           data: {
-              pageTitle: 'IoT Environment Modelling'
+              pageTitle: 'IoT Modelling Environment'
           }
       });
  }]);

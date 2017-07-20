@@ -172,7 +172,7 @@ $scope.readNotification = function(){
             state: "mygraph"
         },
         {
-            title: "IoT Environment Modelling",
+            title: "IoT Modelling Environment",
             icon: "fa fa-home",
             state: "digitalenvironment"
         },
