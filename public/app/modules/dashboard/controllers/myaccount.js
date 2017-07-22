@@ -1006,17 +1006,28 @@ dashboard.controller("myaccountController", ['$rootScope', '$scope', '$state', '
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseArray, $firebaseAuth, $firebaseObject) {
     var vm = this;
     var ref = firebase.database().ref('defaults/defaultcontext'); // Accesing the object context selected by the user
-    var contextObj = $firebaseObject(ref);
+    var refg = firebase.database().ref('defaults/defaultgraph');
+    var contextDefaultObj = $firebaseObject(ref); // Accessing the default @context key
     var refContexts = firebase.database().ref('contexts/'); // Accesing the object context selected by the user
     var allContexts = $firebaseObject(refContexts);
+    var refGraphs = firebase.database().ref('graphs/'); // Accessing the object @graphs from Firebase
+    var allGraphs = $firebaseObject(refGraphs);
+    var graphDefaultObj = $firebaseObject(refg); // Acessing the default @graph key
 
-    var contextObj = $firebaseObject(ref);
     setTimeout(function() { // It works as a promise without using any function as parameter
-            let current_key = contextObj.$value.toString();
+            let current_key = contextDefaultObj.$value.toString();
             // id_default_context = contexts->current_key->idcontext;
             console.log("KEY (DEFAULT): ", current_key);
             $scope.currentDefaultContext = allContexts[current_key.toString()].idcontext.toString();
         }, 1500);
+
+    setTimeout(function() { 
+            let current_key_graph = graphDefaultObj.$value.toString();
+            // id_default_graph = graphs->current_key_graph->idgraph;
+            console.log("KEY (DEFAULT GRAPH): ", current_key_graph);
+            $scope.graphDefaultObj = allGraphs[current_key_graph.toString()].idgraph.toString();
+        }, 1600);
+    
 
     $scope.showAccountinfo = function(user) {
         $scope.show = true;
@@ -1028,7 +1039,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
 
     /* Function to verify if a @Context has been set for the modelling environment */
     $scope.verifySettingDefaultContext = function() {
-        if (!contextObj.$value.toString()) { // Default @context isn't set
+        if (!contextDefaultObj.$value.toString()) { // Default @context isn't set
             $scope.defaultContextIsSet = false;
         }
         else {
