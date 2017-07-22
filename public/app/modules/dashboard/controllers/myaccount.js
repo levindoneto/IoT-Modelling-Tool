@@ -1036,6 +1036,15 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         }
     }
 
+    $scope.verifySettingDefaultGraph = function () {
+        if (!graphObj.$value.toString()) { // Default @graph isn't set
+            $scope.defaultGraphIsSet = false;
+        }
+        else {
+            $scope.defaultGraphIsSet = true;
+        }
+    }
+
     $scope.editFormSubmit = function() {
         var user = firebase.auth().currentUser;
         var ref = firebase.database().ref('users/'+$scope.id);
