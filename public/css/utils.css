@@ -262,19 +262,18 @@
     color: black;
     font-size: 14px;
     font-weight: normal;
-
 }
 
 .AddProperty{
     background-color: #004C70;
     padding: 4px;
     border-radius: 8px;
-    margin-top: 10px;
+    margin-bottom: -110px;
     margin-left: 2px;
     font-size: 18px;
     color: white;
     display: inline;
-    margin: auto;
+
     align: left;
 }
 
@@ -282,11 +281,14 @@
     background-color: #004C70;
     padding: 10px;
     border-radius: 8px;
-    margin-top: 10px;
+    margin-top: -12px;
+    margin-bottom: -40px;
+    /* Horizontal centralizing */
+    margin-left: auto;
+    margin-right: auto;
     font-size: 18px;
     color: white;
     display: block;
-    margin: auto;
     align: center;
 }
 
@@ -294,11 +296,13 @@
     background-color: #557fac;
     padding: 10px;
     border-radius: 8px;
-    margin-top: 12px;
+    margin-top: -12px;
+    margin-bottom: -42px;
+    margin-left: auto;
+    margin-right: auto;
     font-size: 20px;
     color: white;
     display: block;
-    margin: auto;
     align: center;
     transition: all 0.5s;
 }
@@ -307,11 +311,12 @@
     background-color: #004C70;
     padding: 7px;
     border-radius: 4px;
-    margin-top: 10px;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
     font-size: 17px;
     color: white;
     display: block;
-    margin: auto;
     align: center;
 }
 
@@ -319,14 +324,16 @@
     background-color: #557fac;
     padding: 8px;
     border-radius: 4px;
-    margin-top: 10px;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
     font-size: 19px;
     color: white;
     display: block;
-    margin: auto;
     align: center;
     transition: all 0.5s;
 }
+
 
 .Warnings {
     background-color: #004C70;
@@ -360,8 +367,7 @@
     margin-top: 15px;
     font-size: 13px;
     color: white;
-    display: block;
-    margin: auto;
+    margin-top: auto;
     align: center;
 }
 

@@ -1016,7 +1016,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
             // id_default_context = contexts->current_key->idcontext;
             console.log("KEY (DEFAULT): ", current_key);
             $scope.currentDefaultContext = allContexts[current_key.toString()].idcontext.toString();
-        }, 500);
+        }, 1500);
 
     $scope.showAccountinfo = function(user) {
         $scope.show = true;
