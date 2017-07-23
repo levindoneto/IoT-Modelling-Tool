@@ -67,20 +67,20 @@ function propertiesDevice (elementPropertiesDevice) { //, elementObjOwlOnPropert
 /*****************************************************/
 
 /* Function to create/update the object context
- * @parameters:
+ * @parameters: void, all the parameters are gotten from the database in real-time
  * @return: Object: @context for definitions
  */
-function createUpdateContext (elementDefaultContext, elementExtraContext) {
-    let this_context = {} // IoT object for the @context information (in definitions)
-    this_context = new objContext(elementDefaultContext); // Creating an object with default IoT information
+function createUpdateContext () {
+    // Getting the default context key (defaults->defaultcontext)
+    firebase.database().ref("defaults/defaultcontext").orderByKey().once("value")
+    .then(function(snapshot) {
+        console.log("Default Context (cc): ", snapshot.val()); // snapshot.val() contains the value (string) with the key of the default context
+    });
+    
+    // Getting the data from the database (default context)
+    // TODO
 
-    // Updating the created object with extra information in random properties
-    for (var property in elementExtraContext) { // property isn't known beforehand
-        if (elementExtraContext.hasOwnProperty(property)) {
-            this_context[property.toString()] = elementExtraContext[property];
-        }
-    }
-    return this_context; // Object @context
+    return true;
 }
 
 /* Function to create/update the object context
@@ -218,12 +218,14 @@ firebase.database().ref("images").orderByKey().once("value")
     });
 });
 
+
+
 /* Reading data from the database (key: "models")
  */
 firebase.database().ref("models").orderByKey().once("value")
 .then(function(snapshot) { // after function(snapshot), snapshot is the whole data structure
-    //var at_context = createUpdateContext (defaultContext, extraContext);
-    //var at_graph = createGraph (defaultGraph);
+    var at_context = createUpdateContext (); // The whole context object is built based on the default @context set by the user
+    //var at_graph = createGraph () // The whole default graph list is built based on the default @graph set by the use;
     snapshot.forEach(function(childSnapshot) {  // Loop into database's information
     //var key = childSnapshot.key;
         switch (childSnapshot.val().type) {
