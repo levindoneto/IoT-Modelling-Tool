@@ -68,12 +68,12 @@ function propertiesDevice (elementPropertiesDevice) { //, elementObjOwlOnPropert
 /******* to create/update definitions' objects *******/
 /*****************************************************/
 
-/* Function to create/update the object context
+/* Function to create the object context based on the one set by the user as default
  * @parameters: void, all the parameters are gotten from the database in real-time
- * @return: Object: @context for definitions
+ * @return: Creation of the object definitions with the the object definitions' updating  with an object
  */
-function createUpdateContext() {
-    // Getting the default context key (defaults->defaultcontext)
+function createContext() {
+    // Getting the default @context key (defaults->defaultcontext)
     firebase.database().ref("defaults/defaultcontext").orderByKey().once("value")
     .then(function(snapshot) {
         let key_default_context = snapshot.val(); // snapshot.val() contains the value (string) with the key of the default context
@@ -89,26 +89,27 @@ function createUpdateContext() {
              * otherwise undefined variables appear because of the asynchronous execution */
         });
     });
-
-    setTimeout(function() {
-        console.log("The return: ", window.definitions);
-        return definitions;
-        console.log ("return: ", definitions);
-    }, 3000);
 }
 
-/* Function to create/update the object context
- * @parameters: List: with of objects that composes the default part of @graph
- * @return: Object: @graph for definitions, which is updated with devices and
- *          components by other functions
+/* Function to create/update the list graph
+ * @parameters: void, all the parameters are gotten from the database in real-time
+ * @return: Updating of the object definitions with a list
+ * This function ought to be called after createContext(), since this one also
+ * creates the object definitions, which should be update by the @graph list (generated
+ * by createGraph())
  */
-function createGraph (elementDefaultGraph) {
-    let this_graph = []; // IoT List for the @graph information (in definitions)
-    this_graph.push(elementDefaultGraph); // Updating the IoT graph list of the definitions
-    // The storing of devices/components in the graph will be made by the manipulation of the data from thedatabase
-    return this_graph;
+function createGraph() {
+    // Getting the default @graph key (defaults->defaultgraph)
+    firebase.database().ref("defaults/defaultgraph").orderByKey().once("value")
+    .then(function(snapshot) {
+        let key_default_graph = snapshot.val(); // snapshot.val() contains the value (string) with the key of the default graph
+        firebase.database().ref('graphs/'+key_default_graph).orderByKey().once("value") // Accessing the object of the default graph
+        .then(function(snapshot) {
+            //TODO
+            console.log("Insert logic here"); 
+        });
+    });
 }
-
 /* Function to create the list rdfs
  *     this list contains at least one object:
  *         -> One with the information about the ontology and the type of the device or component
@@ -238,7 +239,12 @@ firebase.database().ref("images").orderByKey().once("value")
  */
 firebase.database().ref("models").orderByKey().once("value")
 .then(function(snapshot) { // after function(snapshot), snapshot is the whole data structure
-    createUpdateContext(); // Creating definitions with context and storing it on the local storage
+    createContext();
+    //******************************************************************
+    // Insert here a logic to guarantee createGraph will be executed   *
+    // after createContext                                             * 
+    //******************************************************************
+    createGraph();
     snapshot.forEach(function(childSnapshot) {  // Loop into database's information
     //var key = childSnapshot.key;
         switch (childSnapshot.val().type) {
