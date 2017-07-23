@@ -16,6 +16,8 @@ const lstComponenents = {
     SensingDevice: [], // list_infos_devices.type == "SensingDevice"
     ActuatingDevice: [], // list_infos_devices.type == "ActuatingDevice"
 };
+var at_context = {};
+var definitions = {};
 
 
 /*********************************************************/
@@ -56,7 +58,7 @@ function propertiesDevice (elementPropertiesDevice) { //, elementObjOwlOnPropert
     this["@type"] = elementPropertiesDevice[1];
     this["rdfs:comment"] = elementPropertiesDevice[2];
     /* The properties onProperty and cardinality will be update after the
-     *     creation of the object
+     * creation of the object
      */
 }
 
@@ -70,17 +72,29 @@ function propertiesDevice (elementPropertiesDevice) { //, elementObjOwlOnPropert
  * @parameters: void, all the parameters are gotten from the database in real-time
  * @return: Object: @context for definitions
  */
-function createUpdateContext () {
+function createUpdateContext() {
     // Getting the default context key (defaults->defaultcontext)
     firebase.database().ref("defaults/defaultcontext").orderByKey().once("value")
     .then(function(snapshot) {
-        console.log("Default Context (cc): ", snapshot.val()); // snapshot.val() contains the value (string) with the key of the default context
+        let key_default_context = snapshot.val(); // snapshot.val() contains the value (string) with the key of the default context
+        
+        firebase.database().ref('contexts/'+key_default_context).orderByKey().once("value") // Accessing the object of the default context
+        .then(function(snapshot) {
+            window.definitions["@context"] = snapshot.val(); /* The whole context object is built based on the default @context 
+                                                              * set by the user is being set on the global definitions object */
+            localStorage.setItem("definitions", JSON.stringify(window.definitions)); /* Initializing definitions with the @context, 
+                                                                                      * this is an variable of type string, which 
+                                                                                      * needs to be converted to object afterwards */
+            /* The object has to be built and armazened on the local storage during the execution,
+             * otherwise undefined variables appear because of the asynchronous execution */
+        });
     });
-    
-    // Getting the data from the database (default context)
-    // TODO
 
-    return true;
+    setTimeout(function() {
+        console.log("The return: ", window.definitions);
+        return definitions;
+        console.log ("return: ", definitions);
+    }, 3000);
 }
 
 /* Function to create/update the object context
@@ -224,8 +238,7 @@ firebase.database().ref("images").orderByKey().once("value")
  */
 firebase.database().ref("models").orderByKey().once("value")
 .then(function(snapshot) { // after function(snapshot), snapshot is the whole data structure
-    var at_context = createUpdateContext (); // The whole context object is built based on the default @context set by the user
-    //var at_graph = createGraph () // The whole default graph list is built based on the default @graph set by the use;
+    createUpdateContext(); // Creating definitions with context and storing it on the local storage
     snapshot.forEach(function(childSnapshot) {  // Loop into database's information
     //var key = childSnapshot.key;
         switch (childSnapshot.val().type) {
@@ -261,7 +274,7 @@ firebase.database().ref("models").orderByKey().once("value")
                             ];
 
                             auxObj_OwlOnProperty["@id"] = (childSnapshot.val().prefixCompany.concat(":")).concat(property_i);
-                            console.log("MY PROPERTY I HERE:: ", property_i);
+                            //console.log("MY PROPERTY I HERE:: ", property_i);
                             auxObj_owlCardinality["@value"] = childSnapshot.val()[property_i.toString()];
                             // auxObj_owlCardinality["@type"]
                             isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality["@type"] = "xsd:nonNegativeInteger" : auxObj_owlCardinality["@type"] = "xsd:string";
@@ -271,7 +284,7 @@ firebase.database().ref("models").orderByKey().once("value")
                             auxObjAddProperty["owl:onProperty"] = auxObj_OwlOnProperty;
                             auxObjAddProperty["owl:cardinality"] = auxObj_owlCardinality;
 
-                            console.log("obj:: ", auxObjAddProperty);
+                            //console.log("obj:: ", auxObjAddProperty);
 
 
                             //at_graph.push(auxObjAddProperty); // Adding a new property (related to a device) to the @graph
@@ -309,10 +322,11 @@ firebase.database().ref("models").orderByKey().once("value")
     });
 }).then(function(createComponent) { // then the firebase parsing (figure out how...)
     //var definitions = createDefinitions(objContext, objGraph);
-
+    //var at_graph = createGraph () // The whole default graph list is built based on the default @graph set by the use;
+   
     //var global = "across";
     //localStorage.setItem('text', lstComponenents.device["0"].id);
-    console.log("THEN (IN CLIENT) ", lstComponenents.ActuatingDevice["0"].id); // Now the value isn't undefined
+    //console.log("THEN (IN CLIENT) ", lstComponenents.ActuatingDevice["0"].id); // Now the value isn't undefined
     var prefixIPVS = "ipvs:";
     var deviceOne = lstComponenents.Device["0"].id;
     var sensorOne = lstComponenents.SensingDevice["0"].id;
@@ -999,9 +1013,8 @@ firebase.database().ref("models").orderByKey().once("value")
 
     }; // close the object
     // Storing the object into the local storage |
-    console.log(defObject);
+    //console.log(defObject);
     localStorage.setItem('defObject', JSON.stringify(defObject));
-
 });
 
 dashboard.controller("myaccountController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseArray','$firebaseAuth','$firebaseObject',
@@ -1019,14 +1032,14 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     setTimeout(function() { // It works as a promise without using any function as parameter
             let current_key = contextDefaultObj.$value.toString();
             // id_default_context = contexts->current_key->idcontext;
-            console.log("KEY (DEFAULT): ", current_key);
+            //console.log("KEY (DEFAULT): ", current_key);
             $scope.currentDefaultContext = allContexts[current_key.toString()].idcontext.toString();
         }, 1500);
 
     setTimeout(function() { 
             let current_key_graph = graphDefaultObj.$value.toString();
             // id_default_graph = graphs->current_key_graph->idgraph;
-            console.log("KEY (DEFAULT GRAPH): ", current_key_graph);
+            //console.log("KEY (DEFAULT GRAPH): ", current_key_graph);
             $scope.currentDefaultGraph = allGraphs[current_key_graph.toString()].idgraph.toString();
         }, 1600);
     

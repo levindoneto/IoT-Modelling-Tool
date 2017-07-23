@@ -27,21 +27,21 @@ $scope.readNotification = function(){
 
             vm.currentUser = vm.auth.$getAuth();
             $rootScope.userDB = vm.currentUser;
-            console.log(vm.currentUser.uid);
+            //console.log(vm.currentUser.uid);
             var refUser = firebase.database().ref('users/'+vm.currentUser.uid);
             var user = $firebaseObject(refUser);
 
             user.$loaded().then(function(){
-                console.log(user);
+                //console.log(user);
                 $rootScope.user = user;
-                console.log($rootScope.user)
+                //console.log($rootScope.user)
                 //Check if it is banned CPF
                 var alreadyExist = false;
             });
-            console.log(vm.currentUser);
+            //console.log(vm.currentUser);
 
         } else {
-            console.log("Signed out");
+            //console.log("Signed out");
             $state.go('login');
         }
     });
@@ -233,6 +233,6 @@ $scope.readNotification = function(){
         $state.go('app.search');
     };
 
-    console.log('getting into the app controller');
+    //console.log('getting into the app controller');
 
 }]);
