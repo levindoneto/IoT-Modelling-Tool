@@ -279,7 +279,10 @@
 
 .DataEdit {
     background-color: #004C70;
-    padding: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
     border-radius: 8px;
     margin-top: -12px;
     margin-bottom: -40px;
@@ -294,7 +297,10 @@
 
 .DataEdit:hover{
     background-color: #557fac;
-    padding: 10px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 7px;
+    padding-right: 7px;
     border-radius: 8px;
     margin-top: -12px;
     margin-bottom: -42px;
