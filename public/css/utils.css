@@ -341,10 +341,11 @@
     padding-left: 7px;
     padding-right: 7px;
     border-radius: 4px;
-    margin-top: 10px;
+    margin-top: -10px;
+    margin-bottom: -50px;
     font-size: 14px;
     color: white;
-    margin: auto;
+    display: inline;
 }
 
 .Warnings:hover {
@@ -353,11 +354,14 @@
     padding-left: 8px;
     padding-right: 8px;
     border-radius: 4px;
-    margin-top: 10px;
+    margin-top: -8px;
     font-size: 15px;
     color: white;
-    margin: auto;
     transition: all 0.5s;
+}
+
+.WarningsDiv {
+    margin-bottom: -15px;
 }
 
 .AddSpecificPropButton {

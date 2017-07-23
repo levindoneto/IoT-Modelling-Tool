@@ -61,13 +61,23 @@
 	                    button to set a default one
             -->
             <!-- Button clicked -> Load the data from the database and update the view -->
-            <button class="fa fa-refresh Refresh" ng-click="verifySettingDefaultContext()"> &emsp;Refresh </button></br>
-            <div ng-if="defaultContextIsSet===true">
+            <button class="fa fa-refresh Refresh" ng-click="verifySettingDefaultContext(); verifySettingDefaultGraph()"> &emsp;Refresh </button></br>
+            <div class="WarningsDiv" ng-if="defaultContextIsSet===true">
                 <span class="InfoAccount">&emsp;The user has defined a default @Context </span> <button type="button" data-toggle="modal" ng-click="modal()" data-target="#popUp" class="Warnings"> See the default one </button>  <a href="/dashboard.html#/app/mycontext"><button class="Warnings"> Change the default one </button></a></br>
             </div></br>
-            <div ng-if="defaultContextIsSet===false">
+            <div class="WarningsDiv" ng-if="defaultContextIsSet===false">
                 <span class="InfoAccount">&emsp;The user hasn't defined a default @Context </span> <a href="/dashboard.html#/app/mycontext"><button class="Warnings"> Set a default one </button></a> </br>
             </div></br>
+
+            <div class="WarningsDiv" ng-if="defaultGraphIsSet===true">
+                <span class="InfoAccount">&emsp;The user has defined a default @Graph </span> <button type="button" data-toggle="modal" ng-click="modal()" data-target="#popUp" class="Warnings"> See the default one </button>  <a href="/dashboard.html#/app/mygraph"><button class="Warnings"> Change the default one </button></a></br>
+            </div></br>
+            <div class="WarningsDiv" ng-if="defaultGraphIsSet===false">
+                <span class="InfoAccount">&emsp;The user hasn't defined a default @Graph </span> <a href="/dashboard.html#/app/mygraph"><button class="Warnings"> Set a default one </button></a> </br>
+            </div></br>
+
+
+
 
             <!-- Displaying the information about the selected @context -->
             <div id="popUp" class="modal fade" role="dialog">

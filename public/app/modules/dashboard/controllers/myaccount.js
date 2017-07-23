@@ -1025,7 +1025,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
             let current_key_graph = graphDefaultObj.$value.toString();
             // id_default_graph = graphs->current_key_graph->idgraph;
             console.log("KEY (DEFAULT GRAPH): ", current_key_graph);
-            $scope.graphDefaultObj = allGraphs[current_key_graph.toString()].idgraph.toString();
+            $scope.currentDefaultGraph = allGraphs[current_key_graph.toString()].idgraph.toString();
         }, 1600);
     
 
@@ -1048,7 +1048,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     }
 
     $scope.verifySettingDefaultGraph = function () {
-        if (!graphObj.$value.toString()) { // Default @graph isn't set
+        if (!graphDefaultObj.$value.toString()) { // Default @graph isn't set
             $scope.defaultGraphIsSet = false;
         }
         else {
