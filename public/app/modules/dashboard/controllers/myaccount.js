@@ -103,10 +103,12 @@ function createGraph() {
     firebase.database().ref("defaults/defaultgraph").orderByKey().once("value")
     .then(function(snapshot) {
         let key_default_graph = snapshot.val(); // snapshot.val() contains the value (string) with the key of the default graph
-        firebase.database().ref('graphs/'+key_default_graph).orderByKey().once("value") // Accessing the object of the default graph
+        firebase.database().ref(`graphs/${key_default_graph}`).orderByKey().once("value") // Accessing the object of the default graph, `graphs/${key_default_graph}` = 'graphs'+key_default_graph on ES6
         .then(function(snapshot) {
-            //TODO
-            console.log("Insert logic here"); 
+            console.log(snapshot.val().defaultobjectsgraph); // not formatted
+            console.log("Type: ", typeof snapshot.val().defaultobjectsgraph); // object
+            console.log("The default object: ", JSON.parse(snapshot.val().defaultobjectsgraph));
+            //console.log("Keys: ", Object.keys(snapshot.val()));
         });
     });
 }
