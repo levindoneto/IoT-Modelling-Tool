@@ -313,6 +313,38 @@
     transition: all 0.5s;
 }
 
+.AddElementBtn {
+    background-color: #004C70;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+    border-radius: 8px;
+    margin: auto;
+    /* Horizontal centralizing */
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 18px;
+    color: white;
+    display: block;
+    align: center;
+}
+
+.AddElementBtn:hover{
+    background-color: #557fac;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 7px;
+    padding-right: 7px;
+    border-radius: 8px;
+    margin: auto;
+    font-size: 20px;
+    color: white;
+    display: block;
+    align: center;
+    transition: all 0.5s;
+}
+
 .Refresh {
     background-color: #004C70;
     padding: 7px;
