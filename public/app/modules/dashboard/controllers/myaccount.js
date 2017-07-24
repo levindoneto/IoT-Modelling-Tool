@@ -105,10 +105,18 @@ function createGraph() {
         let key_default_graph = snapshot.val(); // snapshot.val() contains the value (string) with the key of the default graph
         firebase.database().ref(`graphs/${key_default_graph}`).orderByKey().once("value") // Accessing the object of the default graph, `graphs/${key_default_graph}` = 'graphs'+key_default_graph on ES6
         .then(function(snapshot) {
-            console.log(snapshot.val().defaultobjectsgraph); // not formatted
-            console.log("Type: ", typeof snapshot.val().defaultobjectsgraph); // object
-            console.log("The default object: ", JSON.parse(snapshot.val().defaultobjectsgraph));
-            //console.log("Keys: ", Object.keys(snapshot.val()));
+            //console.log(snapshot.val().defaultobjectsgraph); // not formatted
+            //console.log("Type: ", snapshot.val().defaultobjectsgraph); // type: string
+            var list_default_elements = Object.values(JSON.parse(snapshot.val().defaultobjectsgraph)["@graph"]); // List with the default elements (object->list)
+            
+            // Retrieving the current definitions (just with the element @context) from the local storage
+            var currentDefinitions = localStorage.getItem('definitions');
+            var objCurrentDefinitions = JSON.parse(currentDefinitions);
+            //console.log("CURRENT OBJECT: ", objCurrentDefinitions);
+            objCurrentDefinitions["@graph"] = list_default_elements; // Updating the object definitions with the @graph elements
+            //console.log("NEW definitions: ", objCurrentDefinitions);
+
+            localStorage.setItem("definitions", JSON.stringify(objCurrentDefinitions)); // Updating the local storage with the new definitions object 
         });
     });
 }
@@ -1037,14 +1045,14 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     var allGraphs = $firebaseObject(refGraphs);
     var graphDefaultObj = $firebaseObject(refg); // Acessing the default @graph key
 
-    setTimeout(function() { // It works as a promise without using any function as parameter
+    setTimeout(() => { // It works as a promise without using any function as parameter
             let current_key = contextDefaultObj.$value.toString();
             // id_default_context = contexts->current_key->idcontext;
             //console.log("KEY (DEFAULT): ", current_key);
             $scope.currentDefaultContext = allContexts[current_key.toString()].idcontext.toString();
         }, 1500);
 
-    setTimeout(function() { 
+    setTimeout(() => { // setTimeout(function() { 
             let current_key_graph = graphDefaultObj.$value.toString();
             // id_default_graph = graphs->current_key_graph->idgraph;
             //console.log("KEY (DEFAULT GRAPH): ", current_key_graph);
