@@ -75,11 +75,11 @@ function propertiesDevice (elementPropertiesDevice) { //, elementObjOwlOnPropert
 function createContext() {
     // Getting the default @context key (defaults->defaultcontext)
     firebase.database().ref("defaults/defaultcontext").orderByKey().once("value")
-    .then(function(snapshot) {
+    .then((snapshot) => {
         let key_default_context = snapshot.val(); // snapshot.val() contains the value (string) with the key of the default context
         
         firebase.database().ref('contexts/'+key_default_context).orderByKey().once("value") // Accessing the object of the default context
-        .then(function(snapshot) {
+        .then((snapshot) => {
             window.definitions["@context"] = snapshot.val(); /* The whole context object is built based on the default @context 
                                                               * set by the user is being set on the global definitions object */
             localStorage.setItem("definitions", JSON.stringify(window.definitions)); /* Initializing definitions with the @context, 
@@ -101,10 +101,10 @@ function createContext() {
 function createGraph() {
     // Getting the default @graph key (defaults->defaultgraph)
     firebase.database().ref("defaults/defaultgraph").orderByKey().once("value")
-    .then(function(snapshot) {
+    .then((snapshot) => {
         let key_default_graph = snapshot.val(); // snapshot.val() contains the value (string) with the key of the default graph
         firebase.database().ref(`graphs/${key_default_graph}`).orderByKey().once("value") // Accessing the object of the default graph, `graphs/${key_default_graph}` = 'graphs'+key_default_graph on ES6
-        .then(function(snapshot) {
+        .then((snapshot) => {
             //console.log(snapshot.val().defaultobjectsgraph); // not formatted
             //console.log("Type: ", snapshot.val().defaultobjectsgraph); // type: string
             var list_default_elements = Object.values(JSON.parse(snapshot.val().defaultobjectsgraph)["@graph"]); // List with the default elements (object->list)
@@ -236,8 +236,8 @@ function createComponent(element) {
 /* Reading data from the database (key: images)
  */
 firebase.database().ref("images").orderByKey().once("value")
-.then(function(snapshot) { // after function(snapshot)
-    snapshot.forEach(function(childSnapshot) {
+.then((snapshot) => { // after function(snapshot)
+    snapshot.forEach((childSnapshot) => {
         allIcons[childSnapshot.key] = childSnapshot.val();
         localStorage.setItem(childSnapshot.key, childSnapshot.val());
     });
@@ -248,14 +248,13 @@ firebase.database().ref("images").orderByKey().once("value")
 /* Reading data from the database (key: "models")
  */
 firebase.database().ref("models").orderByKey().once("value")
-.then(function(snapshot) { // after function(snapshot), snapshot is the whole data structure
+.then((snapshot) => { // after function(snapshot), snapshot is the whole data structure
     createContext();
-    //******************************************************************
-    // Insert here a logic to guarantee createGraph will be executed   *
-    // after createContext                                             * 
-    //******************************************************************
-    createGraph();
-    snapshot.forEach(function(childSnapshot) {  // Loop into database's information
+    setTimeout(() => {
+        createGraph();    
+    }, 500);
+    
+    snapshot.forEach((childSnapshot) => {  // Loop into database's information
     //var key = childSnapshot.key;
         switch (childSnapshot.val().type) {
             case "Device":
@@ -336,7 +335,7 @@ firebase.database().ref("models").orderByKey().once("value")
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
         }
     });
-}).then(function(createComponent) { // then the firebase parsing (figure out how...)
+}).then((createComponent) => { // then the firebase parsing (figure out how...)
     //var definitions = createDefinitions(objContext, objGraph);
     //var at_graph = createGraph () // The whole default graph list is built based on the default @graph set by the use;
    
@@ -1092,20 +1091,20 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         var ref = firebase.database().ref('users/'+$scope.id);
         var userDB = $firebaseObject(ref);
 
-        userDB.$loaded().then(function(){
+        userDB.$loaded().then(() => {
             userDB.Username = $scope.Username;
             userDB.addr = $scope.addr;
             userDB.Email = $scope.Email;
-            userDB.$save().then(function(ref) {
+            userDB.$save().then((ref) => {
             },
-            function(error) {
+            (error) => {
                 console.log("Error:", error);
             });
         });
         user.updateEmail($scope.Email);
     }
 
-    $('#form_id').submit(function() {
+    $('#form_id').submit(() => {
         $('#editModal').modal('hide');
     });
 
