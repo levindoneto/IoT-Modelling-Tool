@@ -149,23 +149,29 @@ function createRdfs(elementOntology, elementType) {
                                  */
 }
 
-/* Function used for updating the rdfs list with additional properties' objects
- * @parameters: List: current rdfs list, Object: childSnapshot, String: id of the additional property
- * @return: List: the rfds list with one object with a new property pushed into its
+/* Function used for updating the rdfs list with one additional property element
+ * This function is responsible for adding one element with the additional property
+ * passed as parameter. Hence, this function is called for each time the flag
+ * "is_add_property" is true.
+ * The format of the pushed element (on the current rdfsSubClassOf) can be seen bellow:
+ * {
+ *   "@id" : "prefixCompany:id-additionalProperty"
+ * }              
+ * @parameters: List: current rdfs list, Object: childSnapshot (for prefixCompany and Id), String: id of the additional property
+ * @return: List: the rfds list with one object with a new property pushed into it
  */
 function updateRdfsProperties(elementRdfsSubClassOf, elementChildSnapshot, elementIdProperty) {
     let this_rdfsSubClassOf = elementRdfsSubClassOf; /* Current rdfs list for a device/component on an iteration
-                                                      *     inside the Firebase's parsing
-                                                      */
+                                                      * inside the Firebase's parsing */
     let this_prefix_company = elementChildSnapshot.prefixCompany;
-    let this_id = elementChildSnapshot.id;
-    let this_id_property = elementIdProperty;
+    let this_id = elementChildSnapshot.id; // Id of the device/company
+    let this_id_property = elementIdProperty; // Additional property
 
-    let aux_obj_properties = {}; /* Keys: "@id" for each property
-                                  * Value of each key: prefixCompany:Id-id_property
-                                  */
-    aux_obj_properties["@id"] = (((this_prefix_company.concat(":")).concat(this_id)).concat("-")).concat(this_id_property);
-    this_rdfsSubClassOf.push(aux_obj_properties);
+    let aux_obj_prop_id = {}; /* Key: "@id" for the additional property
+                               * Value: prefixCompany:Id-id_property */
+    
+    aux_obj_prop_id["@id"] = (((this_prefix_company.concat(":")).concat(this_id)).concat("-")).concat(this_id_property);
+    this_rdfsSubClassOf.push(aux_obj_prop_id);
     return this_rdfsSubClassOf; // Updating the rdfs list with a additional property
 }
 
@@ -306,14 +312,19 @@ firebase.database().ref("models").orderByKey().once("value")
                     if((childSnapshot.val()).hasOwnProperty(property_i)) { // This will check all properties' names on database's key
                         is_add_property = verifyAdditionalProperty(property_i);
                         if (is_add_property == true) {
-                            rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i)
-                            let auxObjAddProperty = {}; // Auxiliar object for an additional property which will be pushed on thr @graph list
+                            rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i) //rdfsSubClassOf: current list of elements
+                            /* Now, rdfsSubClassOf is updated with the new additional property (its identification element) */
+                            let auxObjAddProperty = {}; // Auxiliar object for an additional property which will be pushed on thr @graph list as a new element
                             let childSnapshotVal_owlRestriction;
                             let auxObj_OwlOnProperty = {};
                             let auxObj_owlCardinality = {};
 
                             // If the ownRestriction is empty is because the user has prefered the default option for this IoT Lite information
                             childSnapshot.val().owlRestriction == "" ? childSnapshotVal_owlRestriction="owl:Restriction" : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
+
+                            auxObjAddProperty["@id"] = ((((childSnapshot.val().prefixCompany).concat(":")).childSnapshot.val().id).concat("-")).concat(property_i); // "prefixCompany:id-additionalProperty"
+                            auxObjAddProperty["@type"] = childSnapshotVal_owlRestriction;
+                            auxObjAddProperty["rdfs:comment"] = childSnapshot.val().rdfsComment;
 
                             /* Example:
                              *     auxPropertiesDevice[0] -> 'ipvs' + ':' + 'RaspberryPi' + '-' + 'numberOfPins'
