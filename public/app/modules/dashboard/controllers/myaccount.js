@@ -257,8 +257,47 @@ firebase.database().ref("models").orderByKey().once("value")
     //var key = childSnapshot.key;
         switch (childSnapshot.val().type) {
             case "Device":
-                let rdfsSubClassOf;
+                let id_element = {}; // Element of identification 
+                let rdfsSubClassOf = []; // Value for the key "rdfs:subClassOf" on the element of identification
+                id_element["@id"] = ((childSnapshot.val().prefixCompany).concat(":")).concat(childSnapshot.val().id); //prefix:id
+                id_element["@type"] = "owl:Class";
+                /* Example of identification object with one additional property:
+                 * { // Element of identification  
+                 *   "@id": "ipvs:RaspberryPi",
+                 *   "@type": "owl:Class",
+                 *   "rdfs:subClassOf": [
+                 *     {
+                 *       "@id": "ssn:Device"
+                 *     },
+                 *     {
+                 *       "@id" : "ipvs:RaspberryPi-numberOfPins"
+                 *     }
+                 *   ]
+                 * },
+                 * 
+                 * { // Element of an additional property (numberOfPins)
+                 *   "@id" : "ipvs:RaspberryPi-numberOfPins",
+                 *   "@type": "owl:Restriction",
+                 *   "rdfs:comment": "OWL restriction specifying the number of pins of a raspberry pi.",
+                 *   "owl:onProperty": {
+                 *     "@id": "ipvs:numberOfPins"
+                 *   },
+                 *   "owl:cardinality": {
+                 *     "@value": "1",
+                 *     "@type": "xsd:nonNegativeInteger"
+                 *   }
+                 * },
+                 */ 
+                
                 rdfsSubClassOf = createRdfs (childSnapshot.val().ontology, childSnapshot.val().type);
+                /* Now, rdfsSubClassOf contains a list in this format:
+                 * [
+                 *     {
+                 *       "@id": "ssn:Device"
+                 *     }
+                 * ]
+                 * Which will be the value for the key "rdfs:subClassOf" on the element of identification
+                 */
                 let is_add_property;
                 /* Starting to get the additional properties of the device/
                  *     component with the key childSnapshot.key
