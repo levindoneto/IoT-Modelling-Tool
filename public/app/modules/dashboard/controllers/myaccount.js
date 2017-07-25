@@ -27,7 +27,7 @@ var definitions = {};
 /* Object with default context indormation
  * The default information should have all properies defined
  */
-function objContext (elementDefaultContext) {
+function objContext(elementDefaultContext) {
     this.geo = elementContext.geo;
     this["m3-lite"] = elementContext["m3-lite"];
     this.owl = elementContext.owl;
@@ -45,7 +45,7 @@ function objContext (elementDefaultContext) {
 /* Object with identification information about a device or component,
  * as id, type and additional properties
  */
-function identificationDevice (elementIdentDevice, elementRdfsSubClassOf) {
+function identificationDevice(elementIdentDevice, elementRdfsSubClassOf) {
     this["@id"] = elementIdentDevice.id;
     this["@type"] = elementIdentDevice.type;
     this["rdfs:subClassOf"] = elementRdfsSubClassOf; // List of objects with information as type, number of pins, and so on
@@ -53,7 +53,7 @@ function identificationDevice (elementIdentDevice, elementRdfsSubClassOf) {
 
 /* This object contains information as how many pins the device/component has
  */
-function propertiesDevice (elementPropertiesDevice) { //, elementObjOwlOnProperty, elementObjOwlOnCardinality
+function propertiesDevice(elementPropertiesDevice) { //, elementObjOwlOnProperty, elementObjOwlOnCardinality
     this["@id"] = elementPropertiesDevice[0]; //CHECK IF CAN BE "ipvs:RaspberryPi3-numberOfPins"
     this["@type"] = elementPropertiesDevice[1];
     this["rdfs:comment"] = elementPropertiesDevice[2];
@@ -127,13 +127,13 @@ function createGraph() {
  *         the number of additional properties that the device/component has.
  * This function is called for each device/component, and the device might have
  *     more than one additional property.
- * If the device/component has on or more properties, a function for just
+ * If the device/component has one or more properties, a function for just
  *     updating the inner object ought be called to insert the properties'
  *     objects into the rdfs list.
  * @parameters: String: ontology, String: type (both retrieved from the database)
  * @return: List: The rdfs list with the identification information (only one object pushed)
  */
-function createRdfs (elementOntology, elementType) {
+function createRdfs(elementOntology, elementType) {
     let this_ontology = elementOntology;
     let this_type = elementType;
 
@@ -142,10 +142,10 @@ function createRdfs (elementOntology, elementType) {
                             */
     let this_rdfsSubClassOf = [];
 
-    aux_obj_type["@id"] = ("ssn".concat(":")).concat("Device");
+    aux_obj_type["@id"] = (this_ontology.concat(":")).concat(this_type);
     this_rdfsSubClassOf.push(aux_obj_type);
     return this_rdfsSubClassOf; /* This list will be the value for the key "rdfs:subClassOf" in
-                 and                  *     the object identificationDevice
+                                 *     the object identificationDevice
                                  */
 }
 
@@ -153,7 +153,7 @@ function createRdfs (elementOntology, elementType) {
  * @parameters: List: current rdfs list, Object: childSnapshot, String: id of the additional property
  * @return: List: the rfds list with one object with a new property pushed into its
  */
-function updateRdfsProperties (elementRdfsSubClassOf, elementChildSnapshot, elementIdProperty) {
+function updateRdfsProperties(elementRdfsSubClassOf, elementChildSnapshot, elementIdProperty) {
     let this_rdfsSubClassOf = elementRdfsSubClassOf; /* Current rdfs list for a device/component on an iteration
                                                       *     inside the Firebase's parsing
                                                       */
@@ -242,7 +242,6 @@ firebase.database().ref("images").orderByKey().once("value")
         localStorage.setItem(childSnapshot.key, childSnapshot.val());
     });
 });
-
 
 
 /* Reading data from the database (key: "models")
@@ -1059,7 +1058,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         }, 1600);
     
 
-    $scope.showAccountinfo = function(user) {
+    $scope.showAccountinfo = function (user) {
         $scope.show = true;
         $scope.Username = user.Username;
         $scope.Email = user.Email;
@@ -1068,7 +1067,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     }
 
     /* Function to verify if a @Context has been set for the modelling environment */
-    $scope.verifySettingDefaultContext = function() {
+    $scope.verifySettingDefaultContext = function () {
         if (!contextDefaultObj.$value.toString()) { // Default @context isn't set
             $scope.defaultContextIsSet = false;
         }
@@ -1086,7 +1085,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         }
     }
 
-    $scope.editFormSubmit = function() {
+    $scope.editFormSubmit = function () {
         var user = firebase.auth().currentUser;
         var ref = firebase.database().ref('users/'+$scope.id);
         var userDB = $firebaseObject(ref);
