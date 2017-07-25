@@ -51,18 +51,6 @@ function identificationDevice(elementIdentDevice, elementRdfsSubClassOf) {
     this["rdfs:subClassOf"] = elementRdfsSubClassOf; // List of objects with information as type, number of pins, and so on
 }
 
-/* This object contains information as how many pins the device/component has
- */
-function propertiesDevice(elementPropertiesDevice) { //, elementObjOwlOnProperty, elementObjOwlOnCardinality
-    this["@id"] = elementPropertiesDevice[0]; //CHECK IF CAN BE "ipvs:RaspberryPi3-numberOfPins"
-    this["@type"] = elementPropertiesDevice[1];
-    this["rdfs:comment"] = elementPropertiesDevice[2];
-    /* The properties onProperty and cardinality will be update after the
-     * creation of the object
-     */
-}
-
-
 /*****************************************************/
 /********************** Functions ********************/
 /******* to create/update definitions' objects *******/
@@ -288,7 +276,7 @@ firebase.database().ref("models").orderByKey().once("value")
                  *   "owl:onProperty": {
                  *     "@id": "ipvs:numberOfPins"
                  *   },
-                 *   "owl:cardinality": {
+                 *   "owl:cardinality": {a
                  *     "@value": "1",
                  *     "@type": "xsd:nonNegativeInteger"
                  *   }
@@ -314,54 +302,33 @@ firebase.database().ref("models").orderByKey().once("value")
                         if (is_add_property == true) {
                             rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i) //rdfsSubClassOf: current list of elements
                             /* Now, rdfsSubClassOf is updated with the new additional property (its identification element) */
+                            
+                            id_element["rdfs:subClassOf"] = rdfsSubClassOf; // Updating the id element with the rdfs list
+
                             let auxObjAddProperty = {}; // Auxiliar object for an additional property which will be pushed on thr @graph list as a new element
                             let childSnapshotVal_owlRestriction;
-                            let auxObj_OwlOnProperty = {};
-                            let auxObj_owlCardinality = {};
+                            let auxObj_OwlOnProperty = {}; // Object value for the key "owl:onProperty" on the additional property element
+                            let auxObj_owlCardinality = {}; // Object value for the key "owl:cardinality" on the additional property element 
 
                             // If the ownRestriction is empty is because the user has prefered the default option for this IoT Lite information
-                            childSnapshot.val().owlRestriction == "" ? childSnapshotVal_owlRestriction="owl:Restriction" : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
+                            childSnapshot.val().owlRestriction == "." ? childSnapshotVal_owlRestriction="owl:Restriction" : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
 
-                            auxObjAddProperty["@id"] = ((((childSnapshot.val().prefixCompany).concat(":")).childSnapshot.val().id).concat("-")).concat(property_i); // "prefixCompany:id-additionalProperty"
+                            auxObjAddProperty["@id"] = ((((childSnapshot.val().prefixCompany).concat(":")).concat(childSnapshot.val().id)).concat("-")).concat(property_i); // "prefixCompany:id-additionalProperty"
                             auxObjAddProperty["@type"] = childSnapshotVal_owlRestriction;
                             auxObjAddProperty["rdfs:comment"] = childSnapshot.val().rdfsComment;
 
-                            /* Example:
-                             *     auxPropertiesDevice[0] -> 'ipvs' + ':' + 'RaspberryPi' + '-' + 'numberOfPins'
-                             *     auxPropertiesDevice[1] -> "owl:Restriction" (default value in case of the user fill this box out with empty)
-                             *     auxPropertiesDevice[1] -> "OWL restriction specifying the number of pins of a raspberry pi."
-                             */
-                            let auxPropertiesDevice = [
-                                ((("ipvs").concat(":")).concat(childSnapshot.val().id)).concat("-").concat(property_i),
-                                childSnapshotVal_owlRestriction,
-                                childSnapshot.val().rdfsComment
-                            ];
-
                             auxObj_OwlOnProperty["@id"] = (childSnapshot.val().prefixCompany.concat(":")).concat(property_i);
-                            //console.log("MY PROPERTY I HERE:: ", property_i);
+                            
+                            /* Getting the data for the key "owl:cardinality" on the element of the additional property */
                             auxObj_owlCardinality["@value"] = childSnapshot.val()[property_i.toString()];
-                            // auxObj_owlCardinality["@type"]
                             isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality["@type"] = "xsd:nonNegativeInteger" : auxObj_owlCardinality["@type"] = "xsd:string";
 
-
-                            auxObjAddProperty = new propertiesDevice(auxPropertiesDevice);
-                            auxObjAddProperty["owl:onProperty"] = auxObj_OwlOnProperty;
-                            auxObjAddProperty["owl:cardinality"] = auxObj_owlCardinality;
-
-                            //console.log("obj:: ", auxObjAddProperty);
-
-
-                            //at_graph.push(auxObjAddProperty); // Adding a new property (related to a device) to the @graph
-
-                            // , *elementObjOwlOnProperty, *elementObjOwlOnCardinality
-                            /*
-
-                            "owl:cardinality": {
-                                "@value": "26",
-                                "@type": "xsd:nonNegativeInteger"
-                            }
-                            */
-
+                            /* Updating the objects for the additional property's element */
+                            auxObjAddProperty["owl:onProperty"] = auxObj_OwlOnProperty; // Updating the element of the additional property
+                            auxObjAddProperty["owl:cardinality"] = auxObj_owlCardinality; // Updating the element of the additional property
+                            
+                            console.log("The ID element (update): ", id_element); // tested: ok for binding
+                            console.log("Element info additional property: ", auxObjAddProperty); // tested: ok for binding
                         }
                     }
                 }
@@ -385,12 +352,6 @@ firebase.database().ref("models").orderByKey().once("value")
         }
     });
 }).then((createComponent) => { // then the firebase parsing (figure out how...)
-    //var definitions = createDefinitions(objContext, objGraph);
-    //var at_graph = createGraph () // The whole default graph list is built based on the default @graph set by the use;
-   
-    //var global = "across";
-    //localStorage.setItem('text', lstComponenents.device["0"].id);
-    //console.log("THEN (IN CLIENT) ", lstComponenents.ActuatingDevice["0"].id); // Now the value isn't undefined
     var prefixIPVS = "ipvs:";
     var deviceOne = lstComponenents.Device["0"].id;
     var sensorOne = lstComponenents.SensingDevice["0"].id;
