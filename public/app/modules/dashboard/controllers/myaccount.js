@@ -18,7 +18,7 @@ const lstComponenents = {
 };
 var at_context = {};
 var definitions = {};
-
+const DEFINITIONS_KEY = "definitions";
 
 /*********************************************************/
 /************************ Objects ************************/
@@ -206,6 +206,30 @@ function isNonNegativeInteger(elementValue){
     return (typeof elementValue == 'number' && elementValue%1 == 0 && elementValue > 0);
 }
 
+
+/*****************************************************/
+/*********** Local Storage's manipulation ************/
+/*****************************************************/
+
+/* Function to manipulate keyStored->@graph on the 
+ * local storage. This function is responsible for: 
+ * - retrieving the object definitions in a string format
+ * - conversion of the string into an object 
+ * - updating of the object with the element for @graph
+ *   (element of identification or additional property)
+ * - store of the updated object in a string format on
+ *   the local storage with the same key passed as parameter
+ * @parameters: String: key where the current object is stored, 
+ *              Object: element of identification or additional property
+ * @return: void, the function just updates the local storage
+ */
+function manageGraphLocalStorage(keyStored, elementGraph) {
+    var currentDefinitions = localStorage.getItem(keyStored); // type: string
+    var objCurrentDefinitions = JSON.parse(currentDefinitions); // string -> object
+    objCurrentDefinitions["@graph"].push(elementGraph); // Updating the @graph list inner the object of definitions
+    localStorage.setItem(keyStored, JSON.stringify(objCurrentDefinitions)); // Updating the object definitions with the 
+}
+
 /*****************************************************/
 /************** Database's manipulation **************/
 /*****************************************************/
@@ -306,7 +330,7 @@ firebase.database().ref("models").orderByKey().once("value")
                             id_element["rdfs:subClassOf"] = rdfsSubClassOf; // Updating the id element with the rdfs list
 
                             let auxObjAddProperty = {}; // Auxiliar object for an additional property which will be pushed on thr @graph list as a new element
-                            let childSnapshotVal_owlRestriction;
+                            let childSnapshotVal_owlRestriction; // Default value (set by a dot) is "owl:Restriction"
                             let auxObj_OwlOnProperty = {}; // Object value for the key "owl:onProperty" on the additional property element
                             let auxObj_owlCardinality = {}; // Object value for the key "owl:cardinality" on the additional property element 
 
@@ -329,12 +353,25 @@ firebase.database().ref("models").orderByKey().once("value")
                             
                             console.log("The ID element (update): ", id_element); // tested: ok for binding
                             console.log("Element info additional property: ", auxObjAddProperty); // tested: ok for binding
-                        }
-                    }
-                }
+
+                            // Retrieving the current definitions (just with the element @context) from the local storage
+                            // TODO-> UPDATE THE STORAGE WITH ADDITIONAL_PROPERTY
+                            
+                        } // is_add_property==true
+                    } // it's a property key
+                } // for each property
+                /* On this part, every property of the device in case has been checked,
+                 * so the element of identification can be pushed into @graph, whereas
+                 * definitions will be update with the new @graph 
+                 */
+
+                // TODO -> UPDATE THE STORAGE WITH ID_ELEMENT
+
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id); // Key:Id will be able to access from the whole application
                 break;
+
+
             case "SensingDevice":
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
@@ -368,6 +405,7 @@ firebase.database().ref("models").orderByKey().once("value")
             "qu": "http://purl.org/NET/ssnx/qu/qu#",
             "qu-rec20": "http://purl.org/NET/ssnx/qu/qu-rec20#",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+            "idcontext":"IoT Lite @Context (IPVS)",
             "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
             "ssn": "http://purl.oclc.org/NET/ssnx/ssn#",
             "time": "http://www.w3.org/2006/time#",
