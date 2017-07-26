@@ -224,10 +224,14 @@ function isNonNegativeInteger(elementValue){
  * @return: void, the function just updates the local storage
  */
 function manageGraphLocalStorage(keyAccess, keyStore, elementGraph) {
-    var currentDefinitions = localStorage.getItem(keyAccess); // type: string
-    var objCurrentDefinitions = JSON.parse(currentDefinitions); // string -> object
-    objCurrentDefinitions["@graph"].push(elementGraph); // Updating the @graph list inner the object of definitions
+    let currentDefinitions = localStorage.getItem(keyAccess); // type: string
+    let objCurrentDefinitions = JSON.parse(currentDefinitions); // string -> object
+    /* The elements shall be pushed one by one into the @graph list */
+    for (let i=0; i<elementGraph.length; i++) {
+        objCurrentDefinitions["@graph"].push(elementGraph[i]); // Updating the @graph list inner the object of definitions
+    }
     localStorage.setItem(keyStore, JSON.stringify(objCurrentDefinitions)); // Updating the object definitions with the 
+    console.log("THE WHOLE DEFINITIONS: ", objCurrentDefinitions);
 }
 
 /*****************************************************/
@@ -484,6 +488,8 @@ firebase.database().ref("models").orderByKey().once("value")
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
         }
     manageGraphLocalStorage("definitions", "upDefinitions", extensionsGraph); // Extension graph is already done to be stored, with all components, devices and additional properties
+    
+
     });
 }).then((createComponent) => { 
     var prefixIPVS = "ipvs:";
@@ -996,7 +1002,6 @@ firebase.database().ref("models").orderByKey().once("value")
                     "@id":"ssn:Device"
                 },
                 "rdfs:range": {
-                    //"@id": "ipvs:MacAdress"
                     "@id": "xsd:string"
                 }
             },
@@ -1008,7 +1013,6 @@ firebase.database().ref("models").orderByKey().once("value")
                     "@id":"ssn:Device"
                 },
                 "rdfs:range": {
-                    //"@id": "ipvs:MacAdress"
                     "@id": "xsd:nonNegativeInteger"
                 }
             },
