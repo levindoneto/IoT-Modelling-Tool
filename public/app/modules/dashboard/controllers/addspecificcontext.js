@@ -39,6 +39,6 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         for (var i = min; i <= max; i += step) {
             input.push(i);
         }
-    return input;
-    }
+        return input;
+    };
 }]);

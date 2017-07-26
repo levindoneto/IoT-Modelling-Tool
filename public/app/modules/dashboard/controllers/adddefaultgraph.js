@@ -13,7 +13,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                     timer: 1700,
                     showConfirmButton: false
                 });
-            console.log("The graph: ", graph)
+            //console.log("The graph: ", graph)
             });
         });
     }

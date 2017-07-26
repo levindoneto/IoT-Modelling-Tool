@@ -5,27 +5,27 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
       var ref = firebase.database().ref('models/');
       var modelList = $firebaseArray(ref);
       modelList.$loaded().then(function(){
-            console.log("The model list: ", modelList[0].$id);
+            //console.log("The model list: ", modelList[0].$id);
             $scope.models = modelList;
       });
 
   $scope.modal = function(model) {
+      //console.log("Model parameter: ", model);
       var ref = firebase.database().ref('images/'+model.imageFile);
       var imageObj = $firebaseObject(ref);
       imageObj.$loaded().then(function(){
-          console.log("image");
-          console.log(imageObj)
+          //console.log("image");
+          //console.log(imageObj)
           $scope.imagemodel = imageObj.$value;
           $scope.modalmodel = model;
-          console.log($scope.modalmodel);
           //console.log("ONE IMAGE FROM THE DATABASE::: ", $scope.imagemodel);
       });
   }
 
   $scope.remove = function(model) {
-      console.log("deleting...");
+      //console.log("Deleting...");
       var modelID = model.$id;
-      console.log(modelID);
+      //console.log(modelID);
       var ref = firebase.database().ref('models/'+model.$id);
       var modelObject = $firebaseObject(ref);
 
@@ -48,8 +48,9 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                       title: "The device has been deleted with success!",
                       timer: 1500,
                       showConfirmButton: false });
-                    }, function(error) {
-                          console.log("Error:", error);
+                    }, 
+                    (error) => {
+                        console.log("Error:", error);
                   });
               });
           } else {

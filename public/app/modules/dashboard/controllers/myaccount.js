@@ -223,11 +223,11 @@ function isNonNegativeInteger(elementValue){
  *              Object: element of identification or additional property
  * @return: void, the function just updates the local storage
  */
-function manageGraphLocalStorage(keyStored, elementGraph) {
-    var currentDefinitions = localStorage.getItem(keyStored); // type: string
+function manageGraphLocalStorage(keyAccess, keyStore, elementGraph) {
+    var currentDefinitions = localStorage.getItem(keyAccess); // type: string
     var objCurrentDefinitions = JSON.parse(currentDefinitions); // string -> object
     objCurrentDefinitions["@graph"].push(elementGraph); // Updating the @graph list inner the object of definitions
-    localStorage.setItem(keyStored, JSON.stringify(objCurrentDefinitions)); // Updating the object definitions with the 
+    localStorage.setItem(keyStore, JSON.stringify(objCurrentDefinitions)); // Updating the object definitions with the 
 }
 
 /*****************************************************/
@@ -266,6 +266,9 @@ firebase.database().ref("images").orderByKey().once("value")
  */
 firebase.database().ref("models").orderByKey().once("value")
 .then((snapshot) => { // after function(snapshot), snapshot is the whole data structure
+    var extensionsGraph = []; /* Contains all elements for extension of the @graph list on definitions.
+                               * All the elements will be pushed one by one into the list, and after that,
+                               * the whole object will be updated on the local storage */
     createContext();
     setTimeout(() => {
         createGraph();    
@@ -354,7 +357,8 @@ firebase.database().ref("models").orderByKey().once("value")
                             console.log("The ID element (update): ", id_element); // tested: ok for binding
                             console.log("Element info additional property: ", auxObjAddProperty); // tested: ok for binding
 
-                            // Retrieving the current definitions (just with the element @context) from the local storage
+                            extensionsGraph.push(auxObjAddProperty); // Updating the @graph with an additional property
+                            
                             // TODO-> UPDATE THE STORAGE WITH ADDITIONAL_PROPERTY
                             
                         } // is_add_property==true
@@ -364,13 +368,14 @@ firebase.database().ref("models").orderByKey().once("value")
                  * so the element of identification can be pushed into @graph, whereas
                  * definitions will be update with the new @graph 
                  */
+                extensionsGraph.push(id_element); // Updating the @graph with an additional property
 
-                // TODO -> UPDATE THE STORAGE WITH ID_ELEMENT
+                manageGraphLocalStorage("definitions", "upDefinitions", extensionsGraph);
+                console.log("EXTENSIONS: ", extensionsGraph);
 
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id); // Key:Id will be able to access from the whole application
                 break;
-
 
             case "SensingDevice":
                 createComponent(childSnapshot.val());

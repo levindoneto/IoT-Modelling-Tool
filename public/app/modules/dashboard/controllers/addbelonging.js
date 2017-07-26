@@ -10,8 +10,8 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
             var imageList = $firebaseArray(refImages);
             imageList.$loaded().then(function(){
                 imageList.$add(base64Url).then(function(imref) {
-                    console.log("imref");
-                    console.log(imref)
+                    //console.log("imref");
+                    //console.log(imref)
                     model.imageFile = imref.key;
 
                     var ref = firebase.database().ref('models/');

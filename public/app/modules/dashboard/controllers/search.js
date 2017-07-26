@@ -3,12 +3,12 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     var vm = this;
 
     $scope.search = function(query) {
-        console.log(query);
+        //console.log(query);
         $scope.searchItem = query;
         var ref = firebase.database().ref('models/');
         var modelList = $firebaseArray(ref);
         modelList.$loaded().then(function(){
-            console.log(modelList)
+            //console.log(modelList)
             $scope.models = modelList; //models
         });
     }
@@ -17,11 +17,11 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         var ref = firebase.database().ref('images/'+model.imageFile);
         var imageObj = $firebaseObject(ref);
         imageObj.$loaded().then(function(){
-            console.log("image");
-            console.log(imageObj)
+            //console.log("image");
+            //console.log(imageObj)
             $scope.imagemodel = imageObj.$value;
             $scope.modalmodel = model;
-            console.log($scope.modalmodel);
+            //console.log($scope.modalmodel);
         });
     }
     

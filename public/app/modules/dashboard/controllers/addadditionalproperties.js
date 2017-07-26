@@ -53,12 +53,12 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
      * On the Front-End: ng-click="addspecificproperty(new_property, new_property_value, context_key)
      */
     $scope.addspecificproperty = function (context_key, new_property, new_property_value) {
-        console.log("THE KEY: ",context_key);
+        //console.log(Key: ",context_key);
         var ref = firebase.database().ref('models/'+context_key); // Accessing context->context_key on the database
         let auxObjContext = {}; // Auxiliar to add a key:value on a specific object
         auxObjContext[new_property] = new_property_value; // In this way just a key with a value is added, not a new object
         ref.update(auxObjContext); // Updating the object on the database
-        console.log("add the value: ", new_property_value);
+        //console.log("Value: ", new_property_value);
         swal({
             title: "The new property and its value have been added with success!",
             timer: 1700,

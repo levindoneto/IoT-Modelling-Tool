@@ -27,7 +27,6 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
      * @return: Boolean: true->the property isn't default, false->the property is a default one
      */
     function verifyAdditionalPropertyContext(elementProperty_i) {
-        //console.log("MAN, IM HERE...");
         let this_is_additional_property = true; // It'll be false just if the property has be found in the default properties' list
         for (var prop = 0; prop < default_contextProps.length; prop++) {
             if (elementProperty_i.toUpperCase() == default_contextProps[prop].toUpperCase()) { // the property is a default one
@@ -47,12 +46,12 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
 
     /* Function responsible for passing the selected context to the scope */
     $scope.modal = function (keySelContext) {
-        console.log("KEY CONTEXT:::: ", keySelContext);
+        //console.log("Context key: ", keySelContext);
         var ref = firebase.database().ref('contexts/'+keySelContext);
         var contextObj = $firebaseObject(ref);
         contextObj.$loaded().then(function(){ //Loading contexts from the database as an object
             $scope.modelcontext = contextObj;
-            console.log("THE VALUE::::::", contextObj);
+            //console.log("Value:", contextObj);
         });
     };
     
@@ -88,7 +87,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         var contextObj = $firebaseObject(ref);
         let objAddPropsContext = {}; /* Object with the key:value of the additional properties.
                                       * It'll be accessed via scope variable on the view */
-                                      
+
         /* This is needed because of the asynchronous way of processing data */
         setTimeout(function()
         {

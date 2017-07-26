@@ -13,12 +13,11 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
 
     /* Function responsible for passing the selected graph to the scope */
     $scope.modal = function (keySelGraph) {
-        console.log("KEY GRAPH:::: ", keySelGraph);
+        //console.log("Key graph: ", keySelGraph);
         var ref = firebase.database().ref('graphs/'+keySelGraph);
         var graphObj = $firebaseObject(ref);
         graphObj.$loaded().then(function(){ //Loading graphs from the database as an object
             $scope.modelgraph = graphObj;
-            console.log("THE VALUE::::::", graphObj);
         });
     };
     
