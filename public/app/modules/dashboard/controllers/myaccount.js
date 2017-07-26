@@ -266,6 +266,14 @@ firebase.database().ref("images").orderByKey().once("value")
  */
 firebase.database().ref("models").orderByKey().once("value")
 .then((snapshot) => { // after function(snapshot), snapshot is the whole data structure
+    let id_element = {}; // Element of identification 
+    let rdfsSubClassOf = []; // Value for the key "rdfs:subClassOf" on the element of identification
+    let is_add_property;
+    let auxObjAddProperty = {}; // Auxiliar object for an additional property which will be pushed on thr @graph list as a new element
+    let childSnapshotVal_owlRestriction = ""; // Default value (set by a dot) is "owl:Restriction"
+    let auxObj_OwlOnProperty = {}; // Object value for the key "owl:onProperty" on the additional property element
+    let auxObj_owlCardinality = {}; // Object value for the key "owl:cardinality" on the additional property element 
+
     var extensionsGraph = []; /* Contains all elements for extension of the @graph list on definitions.
                                * All the elements will be pushed one by one into the list, and after that,
                                * the whole object will be updated on the local storage */
@@ -278,8 +286,8 @@ firebase.database().ref("models").orderByKey().once("value")
     //var key = childSnapshot.key;
         switch (childSnapshot.val().type) {
             case "Device":
-                let id_element = {}; // Element of identification 
-                let rdfsSubClassOf = []; // Value for the key "rdfs:subClassOf" on the element of identification
+                id_element = {}; 
+                rdfsSubClassOf = [];
                 id_element["@id"] = ((childSnapshot.val().prefixCompany).concat(":")).concat(childSnapshot.val().id); //prefix:id
                 id_element["@type"] = "owl:Class";
                 /* Example of identification object with one additional property:
@@ -319,7 +327,7 @@ firebase.database().ref("models").orderByKey().once("value")
                  * ]
                  * Which will be the value for the key "rdfs:subClassOf" on the element of identification
                  */
-                let is_add_property;
+                
                 /* Starting to get the additional properties of the device/
                  *     component with the key childSnapshot.key
                  */
@@ -331,11 +339,10 @@ firebase.database().ref("models").orderByKey().once("value")
                             /* Now, rdfsSubClassOf is updated with the new additional property (its identification element) */
                             
                             id_element["rdfs:subClassOf"] = rdfsSubClassOf; // Updating the id element with the rdfs list
-
-                            let auxObjAddProperty = {}; // Auxiliar object for an additional property which will be pushed on thr @graph list as a new element
-                            let childSnapshotVal_owlRestriction; // Default value (set by a dot) is "owl:Restriction"
-                            let auxObj_OwlOnProperty = {}; // Object value for the key "owl:onProperty" on the additional property element
-                            let auxObj_owlCardinality = {}; // Object value for the key "owl:cardinality" on the additional property element 
+                            auxObjAddProperty = {};
+                            childSnapshotVal_owlRestriction = "";
+                            auxObj_OwlOnProperty = {};
+                            auxObj_owlCardinality = {};
 
                             // If the ownRestriction is empty is because the user has prefered the default option for this IoT Lite information
                             childSnapshot.val().owlRestriction == "." ? childSnapshotVal_owlRestriction="owl:Restriction" : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
@@ -343,7 +350,6 @@ firebase.database().ref("models").orderByKey().once("value")
                             auxObjAddProperty["@id"] = ((((childSnapshot.val().prefixCompany).concat(":")).concat(childSnapshot.val().id)).concat("-")).concat(property_i); // "prefixCompany:id-additionalProperty"
                             auxObjAddProperty["@type"] = childSnapshotVal_owlRestriction;
                             auxObjAddProperty["rdfs:comment"] = childSnapshot.val().rdfsComment;
-
                             auxObj_OwlOnProperty["@id"] = (childSnapshot.val().prefixCompany.concat(":")).concat(property_i);
                             
                             /* Getting the data for the key "owl:cardinality" on the element of the additional property */
@@ -357,10 +363,7 @@ firebase.database().ref("models").orderByKey().once("value")
                             console.log("The ID element (update): ", id_element); // tested: ok for binding
                             console.log("Element info additional property: ", auxObjAddProperty); // tested: ok for binding
 
-                            extensionsGraph.push(auxObjAddProperty); // Updating the @graph with an additional property
-                            
-                            // TODO-> UPDATE THE STORAGE WITH ADDITIONAL_PROPERTY
-                            
+                            extensionsGraph.push(auxObjAddProperty); // Updating the @graph with an additional property                            
                         } // is_add_property==true
                     } // it's a property key
                 } // for each property
@@ -378,6 +381,37 @@ firebase.database().ref("models").orderByKey().once("value")
                 break;
 
             case "SensingDevice":
+                id_element = {};
+                rdfsSubClassOf = [];
+                id_element["@id"] = ((childSnapshot.val().prefixCompany).concat(":")).concat(childSnapshot.val().id);
+                id_element["@type"] = "owl:Class";
+                rdfsSubClassOf = createRdfs (childSnapshot.val().ontology, childSnapshot.val().type);
+                for (var property_i in childSnapshot.val()) {
+                    if((childSnapshot.val()).hasOwnProperty(property_i)) {
+                        is_add_property = verifyAdditionalProperty(property_i);
+                        if (is_add_property == true) {
+                            auxObjAddProperty = {};
+                            childSnapshotVal_owlRestriction = "";
+                            auxObj_OwlOnProperty = {};
+                            auxObj_owlCardinality = {};
+							rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i)
+                            id_element["rdfs:subClassOf"] = rdfsSubClassOf;
+                            childSnapshot.val().owlRestriction == "." ? childSnapshotVal_owlRestriction="owl:Restriction" : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
+                            auxObjAddProperty["@id"] = ((((childSnapshot.val().prefixCompany).concat(":")).concat(childSnapshot.val().id)).concat("-")).concat(property_i);
+                            auxObjAddProperty["@type"] = childSnapshotVal_owlRestriction;
+                            auxObjAddProperty["rdfs:comment"] = childSnapshot.val().rdfsComment;
+                            auxObj_OwlOnProperty["@id"] = (childSnapshot.val().prefixCompany.concat(":")).concat(property_i);
+                            auxObj_owlCardinality["@value"] = childSnapshot.val()[property_i.toString()];
+                            isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality["@type"] = "xsd:nonNegativeInteger" : auxObj_owlCardinality["@type"] = "xsd:string";
+                            auxObjAddProperty["owl:onProperty"] = auxObj_OwlOnProperty;
+                            auxObjAddProperty["owl:cardinality"] = auxObj_owlCardinality;
+                            extensionsGraph.push(auxObjAddProperty);
+                        } 
+                    }
+                }
+                extensionsGraph.push(id_element);
+                manageGraphLocalStorage("definitions", "upDefinitions", extensionsGraph);
+                console.log("EXTENSIONS: ", extensionsGraph);
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
                 break;
