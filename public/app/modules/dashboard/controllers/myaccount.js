@@ -416,18 +416,76 @@ firebase.database().ref("models").orderByKey().once("value")
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
                 break;
             case "ActuatingDevice":
+                id_element = {};
+                rdfsSubClassOf = [];
+                id_element["@id"] = ((childSnapshot.val().prefixCompany).concat(":")).concat(childSnapshot.val().id);
+                id_element["@type"] = "owl:Class";
+                rdfsSubClassOf = createRdfs (childSnapshot.val().ontology, childSnapshot.val().type);
+                for (var property_i in childSnapshot.val()) {
+                    if((childSnapshot.val()).hasOwnProperty(property_i)) {
+                        is_add_property = verifyAdditionalProperty(property_i);
+                        if (is_add_property == true) {
+                            auxObjAddProperty = {};
+                            childSnapshotVal_owlRestriction = "";
+                            auxObj_OwlOnProperty = {};
+                            auxObj_owlCardinality = {};
+							rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i)
+                            id_element["rdfs:subClassOf"] = rdfsSubClassOf;
+                            childSnapshot.val().owlRestriction == "." ? childSnapshotVal_owlRestriction="owl:Restriction" : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
+                            auxObjAddProperty["@id"] = ((((childSnapshot.val().prefixCompany).concat(":")).concat(childSnapshot.val().id)).concat("-")).concat(property_i);
+                            auxObjAddProperty["@type"] = childSnapshotVal_owlRestriction;
+                            auxObjAddProperty["rdfs:comment"] = childSnapshot.val().rdfsComment;
+                            auxObj_OwlOnProperty["@id"] = (childSnapshot.val().prefixCompany.concat(":")).concat(property_i);
+                            auxObj_owlCardinality["@value"] = childSnapshot.val()[property_i.toString()];
+                            isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality["@type"] = "xsd:nonNegativeInteger" : auxObj_owlCardinality["@type"] = "xsd:string";
+                            auxObjAddProperty["owl:onProperty"] = auxObj_OwlOnProperty;
+                            auxObjAddProperty["owl:cardinality"] = auxObj_owlCardinality;
+                            extensionsGraph.push(auxObjAddProperty);
+                        } 
+                    }
+                }
+                extensionsGraph.push(id_element);
+                manageGraphLocalStorage("definitions", "upDefinitions", extensionsGraph);
+                console.log("EXTENSIONS: ", extensionsGraph);
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
-                break;
             default:
-                window.obj_identification = {};
-                window.obj_properties = {};
-
+                id_element = {};
+                rdfsSubClassOf = [];
+                id_element["@id"] = ((childSnapshot.val().prefixCompany).concat(":")).concat(childSnapshot.val().id);
+                id_element["@type"] = "owl:Class";
+                rdfsSubClassOf = createRdfs (childSnapshot.val().ontology, childSnapshot.val().type);
+                for (var property_i in childSnapshot.val()) {
+                    if((childSnapshot.val()).hasOwnProperty(property_i)) {
+                        is_add_property = verifyAdditionalProperty(property_i);
+                        if (is_add_property == true) {
+                            auxObjAddProperty = {};
+                            childSnapshotVal_owlRestriction = "";
+                            auxObj_OwlOnProperty = {};
+                            auxObj_owlCardinality = {};
+							rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i)
+                            id_element["rdfs:subClassOf"] = rdfsSubClassOf;
+                            childSnapshot.val().owlRestriction == "." ? childSnapshotVal_owlRestriction="owl:Restriction" : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
+                            auxObjAddProperty["@id"] = ((((childSnapshot.val().prefixCompany).concat(":")).concat(childSnapshot.val().id)).concat("-")).concat(property_i);
+                            auxObjAddProperty["@type"] = childSnapshotVal_owlRestriction;
+                            auxObjAddProperty["rdfs:comment"] = childSnapshot.val().rdfsComment;
+                            auxObj_OwlOnProperty["@id"] = (childSnapshot.val().prefixCompany.concat(":")).concat(property_i);
+                            auxObj_owlCardinality["@value"] = childSnapshot.val()[property_i.toString()];
+                            isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality["@type"] = "xsd:nonNegativeInteger" : auxObj_owlCardinality["@type"] = "xsd:string";
+                            auxObjAddProperty["owl:onProperty"] = auxObj_OwlOnProperty;
+                            auxObjAddProperty["owl:cardinality"] = auxObj_owlCardinality;
+                            extensionsGraph.push(auxObjAddProperty);
+                        } 
+                    }
+                }
+                extensionsGraph.push(id_element);
+                console.log("EXTENSIONS: ", extensionsGraph);
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
         }
+    manageGraphLocalStorage("definitions", "upDefinitions", extensionsGraph); // Extension graph is already done to be stored, with all components, devices and additional properties
     });
-}).then((createComponent) => { // then the firebase parsing (figure out how...)
+}).then((createComponent) => { 
     var prefixIPVS = "ipvs:";
     var deviceOne = lstComponenents.Device["0"].id;
     var sensorOne = lstComponenents.SensingDevice["0"].id;
