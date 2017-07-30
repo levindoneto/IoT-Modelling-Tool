@@ -3,14 +3,14 @@ var allIcons = {}; //Object with the icons of the devices (basis 64)
 var obj_identification = {};
 var obj_properties = {};
 const default_properties = [
-    "id",
-    "imageFile",
-    "ontology",
-    "owlRestriction",
-    "prefixCompany",
-    "rdfsComment",
-    "type",
-    "userUid"];
+    'id',
+    'imageFile',
+    'ontology',
+    'owlRestriction',
+    'prefixCompany',
+    'rdfsComment',
+    'type',
+    'userUid'];
 const lstComponenents = {
     Device: [], // list_infos_Devices.type == "Device"
     SensingDevice: [], // list_infos_devices.type == "SensingDevice"
@@ -18,7 +18,7 @@ const lstComponenents = {
 };
 var at_context = {};
 var definitions = {};
-const DEFINITIONS_KEY = "definitions";
+const DEFINITIONS_KEY = 'definitions';
 
 /*********************************************************/
 /************************ Objects ************************/
@@ -29,16 +29,16 @@ const DEFINITIONS_KEY = "definitions";
  */
 function objContext(elementDefaultContext) {
     this.geo = elementContext.geo;
-    this["m3-lite"] = elementContext["m3-lite"];
+    this['m3-lite'] = elementContext['m3-lite'];
     this.owl = elementContext.owl;
     this.qu = elementContext.qu;
-    this["qu-rec20"] = elementContext["qu-rec20"];
+    this['qu-rec20'] = elementContext['qu-rec20'];
     this.rdf = elementContext.rdf;
     this.rdfs = elementContext.rdfs;
     this.ssn = elementContext.ssn;
     this.time = elementContext.time;
     this.xsd = elementContext.xsd;
-    this["iot-lite"] = elementContext["iot-lite"];
+    this['iot-lite'] = elementContext['iot-lite'];
     // For non-default information, another method is called
 }
 
@@ -46,9 +46,9 @@ function objContext(elementDefaultContext) {
  * as id, type and additional properties
  */
 function identificationDevice(elementIdentDevice, elementRdfsSubClassOf) {
-    this["@id"] = elementIdentDevice.id;
-    this["@type"] = elementIdentDevice.type;
-    this["rdfs:subClassOf"] = elementRdfsSubClassOf; // List of objects with information as type, number of pins, and so on
+    this['@id'] = elementIdentDevice.id;
+    this['@type'] = elementIdentDevice.type;
+    this['rdfs:subClassOf'] = elementRdfsSubClassOf; // List of objects with information as type, number of pins, and so on
 }
 
 /*****************************************************/
@@ -62,15 +62,15 @@ function identificationDevice(elementIdentDevice, elementRdfsSubClassOf) {
  */
 function createContext() {
     // Getting the default @context key (defaults->defaultcontext)
-    firebase.database().ref("defaults/defaultcontext").orderByKey().once("value")
+    firebase.database().ref('defaults/defaultcontext').orderByKey().once('value')
     .then((snapshot) => {
         let key_default_context = snapshot.val(); // snapshot.val() contains the value (string) with the key of the default context
         
-        firebase.database().ref('contexts/'+key_default_context).orderByKey().once("value") // Accessing the object of the default context
+        firebase.database().ref('contexts/'+key_default_context).orderByKey().once('value') // Accessing the object of the default context
         .then((snapshot) => {
-            window.definitions["@context"] = snapshot.val(); /* The whole context object is built based on the default @context 
+            window.definitions['@context'] = snapshot.val(); /* The whole context object is built based on the default @context 
                                                               * set by the user is being set on the global definitions object */
-            localStorage.setItem("definitions", JSON.stringify(window.definitions)); /* Initializing definitions with the @context, 
+            localStorage.setItem('definitions', JSON.stringify(window.definitions)); /* Initializing definitions with the @context, 
                                                                                       * this is an variable of type string, which 
                                                                                       * needs to be converted to object afterwards */
             /* The object has to be built and armazened on the local storage during the execution,
@@ -88,23 +88,23 @@ function createContext() {
  */
 function createGraph() {
     // Getting the default @graph key (defaults->defaultgraph)
-    firebase.database().ref("defaults/defaultgraph").orderByKey().once("value")
+    firebase.database().ref('defaults/defaultgraph').orderByKey().once('value')
     .then((snapshot) => {
         let key_default_graph = snapshot.val(); // snapshot.val() contains the value (string) with the key of the default graph
-        firebase.database().ref(`graphs/${key_default_graph}`).orderByKey().once("value") // Accessing the object of the default graph, `graphs/${key_default_graph}` = 'graphs'+key_default_graph on ES6
+        firebase.database().ref(`graphs/${key_default_graph}`).orderByKey().once('value') // Accessing the object of the default graph, `graphs/${key_default_graph}` = 'graphs'+key_default_graph on ES6
         .then((snapshot) => {
             //console.log(snapshot.val().defaultobjectsgraph); // not formatted
             //console.log("Type: ", snapshot.val().defaultobjectsgraph); // type: string
-            var list_default_elements = Object.values(JSON.parse(snapshot.val().defaultobjectsgraph)["@graph"]); // List with the default elements (object->list)
+            var list_default_elements = Object.values(JSON.parse(snapshot.val().defaultobjectsgraph)['@graph']); // List with the default elements (object->list)
             
             // Retrieving the current definitions (just with the element @context) from the local storage
             var currentDefinitions = localStorage.getItem('definitions');
             var objCurrentDefinitions = JSON.parse(currentDefinitions);
             //console.log("CURRENT OBJECT: ", objCurrentDefinitions);
-            objCurrentDefinitions["@graph"] = list_default_elements; // Updating the object definitions with the @graph elements
+            objCurrentDefinitions['@graph'] = list_default_elements; // Updating the object definitions with the @graph elements
             //console.log("NEW definitions: ", objCurrentDefinitions);
 
-            localStorage.setItem("definitions", JSON.stringify(objCurrentDefinitions)); // Updating the local storage with the new definitions object 
+            localStorage.setItem('definitions', JSON.stringify(objCurrentDefinitions)); // Updating the local storage with the new definitions object 
         });
     });
 }
@@ -130,7 +130,7 @@ function createRdfs(elementOntology, elementType) {
                             */
     let this_rdfsSubClassOf = [];
 
-    aux_obj_type["@id"] = (this_ontology.concat(":")).concat(this_type);
+    aux_obj_type['@id'] = (this_ontology.concat(':')).concat(this_type);
     this_rdfsSubClassOf.push(aux_obj_type);
     return this_rdfsSubClassOf; /* This list will be the value for the key "rdfs:subClassOf" in
                                  *     the object identificationDevice
@@ -158,7 +158,7 @@ function updateRdfsProperties(elementRdfsSubClassOf, elementChildSnapshot, eleme
     let aux_obj_prop_id = {}; /* Key: "@id" for the additional property
                                * Value: prefixCompany:Id-id_property */
     
-    aux_obj_prop_id["@id"] = (((this_prefix_company.concat(":")).concat(this_id)).concat("-")).concat(this_id_property);
+    aux_obj_prop_id['@id'] = (((this_prefix_company.concat(':')).concat(this_id)).concat('-')).concat(this_id_property);
     this_rdfsSubClassOf.push(aux_obj_prop_id);
     return this_rdfsSubClassOf; // Updating the rdfs list with a additional property
 }
@@ -169,8 +169,8 @@ function updateRdfsProperties(elementRdfsSubClassOf, elementChildSnapshot, eleme
  */
 function createDefinitions(elementContext, elementGraph) {
     let this_definitions = {};
-    this_definitions["@context"] = elementContext;
-    this_definitions["@graph"] = elementGraph;
+    this_definitions['@context'] = elementContext;
+    this_definitions['@graph'] = elementGraph;
     return this_definitions; /* This object's gonna be stored on the browser's
                               *     local storage in each initialization of the
                               *     Platform
@@ -228,10 +228,10 @@ function manageGraphLocalStorage(keyAccess, keyStore, elementGraph) {
     let objCurrentDefinitions = JSON.parse(currentDefinitions); // string -> object
     /* The elements shall be pushed one by one into the @graph list */
     for (let i=0; i<elementGraph.length; i++) {
-        objCurrentDefinitions["@graph"].push(elementGraph[i]); // Updating the @graph list inner the object of definitions
+        objCurrentDefinitions['@graph'].push(elementGraph[i]); // Updating the @graph list inner the object of definitions
     }
     localStorage.setItem(keyStore, JSON.stringify(objCurrentDefinitions)); // Updating the object definitions with the 
-    console.log("THE WHOLE DEFINITIONS: ", objCurrentDefinitions);
+    console.log('THE WHOLE DEFINITIONS: ', objCurrentDefinitions);
 }
 
 /*****************************************************/
@@ -257,7 +257,7 @@ function createComponent(element) {
 
 /* Reading data from the database (key: images)
  */
-firebase.database().ref("images").orderByKey().once("value")
+firebase.database().ref('images').orderByKey().once('value')
 .then((snapshot) => { // after function(snapshot)
     snapshot.forEach((childSnapshot) => {
         allIcons[childSnapshot.key] = childSnapshot.val();
@@ -268,13 +268,13 @@ firebase.database().ref("images").orderByKey().once("value")
 
 /* Reading data from the database (key: "models")
  */
-firebase.database().ref("models").orderByKey().once("value")
+firebase.database().ref('models').orderByKey().once('value')
 .then((snapshot) => { // after function(snapshot), snapshot is the whole data structure
     let id_element = {}; // Element of identification 
     let rdfsSubClassOf = []; // Value for the key "rdfs:subClassOf" on the element of identification
     let is_add_property;
     let auxObjAddProperty = {}; // Auxiliar object for an additional property which will be pushed on thr @graph list as a new element
-    let childSnapshotVal_owlRestriction = ""; // Default value (set by a dot) is "owl:Restriction"
+    let childSnapshotVal_owlRestriction = ''; // Default value (set by a dot) is "owl:Restriction"
     let auxObj_OwlOnProperty = {}; // Object value for the key "owl:onProperty" on the additional property element
     let auxObj_owlCardinality = {}; // Object value for the key "owl:cardinality" on the additional property element 
 
@@ -289,11 +289,11 @@ firebase.database().ref("models").orderByKey().once("value")
     snapshot.forEach((childSnapshot) => {  // Loop into database's information
     //var key = childSnapshot.key;
         switch (childSnapshot.val().type) {
-            case "Device":
+            case 'Device':
                 id_element = {}; 
                 rdfsSubClassOf = [];
-                id_element["@id"] = ((childSnapshot.val().prefixCompany).concat(":")).concat(childSnapshot.val().id); //prefix:id
-                id_element["@type"] = "owl:Class";
+                id_element['@id'] = ((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id); //prefix:id
+                id_element['@type'] = 'owl:Class';
                 /* Example of identification object with one additional property:
                  * { // Element of identification  
                  *   "@id": "ipvs:RaspberryPi",
@@ -342,30 +342,30 @@ firebase.database().ref("models").orderByKey().once("value")
                             rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i) //rdfsSubClassOf: current list of elements
                             /* Now, rdfsSubClassOf is updated with the new additional property (its identification element) */
                             
-                            id_element["rdfs:subClassOf"] = rdfsSubClassOf; // Updating the id element with the rdfs list
+                            id_element['rdfs:subClassOf'] = rdfsSubClassOf; // Updating the id element with the rdfs list
                             auxObjAddProperty = {};
-                            childSnapshotVal_owlRestriction = "";
+                            childSnapshotVal_owlRestriction = '';
                             auxObj_OwlOnProperty = {};
                             auxObj_owlCardinality = {};
 
                             // If the ownRestriction is empty is because the user has prefered the default option for this IoT Lite information
-                            childSnapshot.val().owlRestriction == "." ? childSnapshotVal_owlRestriction="owl:Restriction" : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
+                            childSnapshot.val().owlRestriction == '.' ? childSnapshotVal_owlRestriction='owl:Restriction' : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
 
-                            auxObjAddProperty["@id"] = ((((childSnapshot.val().prefixCompany).concat(":")).concat(childSnapshot.val().id)).concat("-")).concat(property_i); // "prefixCompany:id-additionalProperty"
-                            auxObjAddProperty["@type"] = childSnapshotVal_owlRestriction;
-                            auxObjAddProperty["rdfs:comment"] = childSnapshot.val().rdfsComment;
-                            auxObj_OwlOnProperty["@id"] = (childSnapshot.val().prefixCompany.concat(":")).concat(property_i);
+                            auxObjAddProperty['@id'] = ((((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id)).concat('-')).concat(property_i); // "prefixCompany:id-additionalProperty"
+                            auxObjAddProperty['@type'] = childSnapshotVal_owlRestriction;
+                            auxObjAddProperty['rdfs:comment'] = childSnapshot.val().rdfsComment;
+                            auxObj_OwlOnProperty['@id'] = (childSnapshot.val().prefixCompany.concat(':')).concat(property_i);
                             
                             /* Getting the data for the key "owl:cardinality" on the element of the additional property */
-                            auxObj_owlCardinality["@value"] = childSnapshot.val()[property_i.toString()];
-                            isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality["@type"] = "xsd:nonNegativeInteger" : auxObj_owlCardinality["@type"] = "xsd:string";
+                            auxObj_owlCardinality['@value'] = childSnapshot.val()[property_i.toString()];
+                            isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality['@type'] = 'xsd:nonNegativeInteger' : auxObj_owlCardinality['@type'] = 'xsd:string';
 
                             /* Updating the objects for the additional property's element */
-                            auxObjAddProperty["owl:onProperty"] = auxObj_OwlOnProperty; // Updating the element of the additional property
-                            auxObjAddProperty["owl:cardinality"] = auxObj_owlCardinality; // Updating the element of the additional property
+                            auxObjAddProperty['owl:onProperty'] = auxObj_OwlOnProperty; // Updating the element of the additional property
+                            auxObjAddProperty['owl:cardinality'] = auxObj_owlCardinality; // Updating the element of the additional property
                             
-                            console.log("The ID element (update): ", id_element); // tested: ok for binding
-                            console.log("Element info additional property: ", auxObjAddProperty); // tested: ok for binding
+                            console.log('The ID element (update): ', id_element); // tested: ok for binding
+                            console.log('Element info additional property: ', auxObjAddProperty); // tested: ok for binding
 
                             extensionsGraph.push(auxObjAddProperty); // Updating the @graph with an additional property                            
                         } // is_add_property==true
@@ -377,811 +377,788 @@ firebase.database().ref("models").orderByKey().once("value")
                  */
                 extensionsGraph.push(id_element); // Updating the @graph with an additional property
 
-                manageGraphLocalStorage("definitions", "upDefinitions", extensionsGraph);
-                console.log("EXTENSIONS: ", extensionsGraph);
+                console.log('EXTENSIONS: ', extensionsGraph);
+                manageGraphLocalStorage('definitions', 'upDefinitions', extensionsGraph);
+                
 
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id); // Key:Id will be able to access from the whole application
                 break;
 
-            case "SensingDevice":
+            case 'SensingDevice':
                 id_element = {};
                 rdfsSubClassOf = [];
-                id_element["@id"] = ((childSnapshot.val().prefixCompany).concat(":")).concat(childSnapshot.val().id);
-                id_element["@type"] = "owl:Class";
+                id_element['@id'] = ((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id);
+                id_element['@type'] = 'owl:Class';
                 rdfsSubClassOf = createRdfs (childSnapshot.val().ontology, childSnapshot.val().type);
                 for (var property_i in childSnapshot.val()) {
                     if((childSnapshot.val()).hasOwnProperty(property_i)) {
                         is_add_property = verifyAdditionalProperty(property_i);
                         if (is_add_property == true) {
                             auxObjAddProperty = {};
-                            childSnapshotVal_owlRestriction = "";
+                            childSnapshotVal_owlRestriction = '';
                             auxObj_OwlOnProperty = {};
                             auxObj_owlCardinality = {};
 							rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i)
-                            id_element["rdfs:subClassOf"] = rdfsSubClassOf;
-                            childSnapshot.val().owlRestriction == "." ? childSnapshotVal_owlRestriction="owl:Restriction" : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
-                            auxObjAddProperty["@id"] = ((((childSnapshot.val().prefixCompany).concat(":")).concat(childSnapshot.val().id)).concat("-")).concat(property_i);
-                            auxObjAddProperty["@type"] = childSnapshotVal_owlRestriction;
-                            auxObjAddProperty["rdfs:comment"] = childSnapshot.val().rdfsComment;
-                            auxObj_OwlOnProperty["@id"] = (childSnapshot.val().prefixCompany.concat(":")).concat(property_i);
-                            auxObj_owlCardinality["@value"] = childSnapshot.val()[property_i.toString()];
-                            isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality["@type"] = "xsd:nonNegativeInteger" : auxObj_owlCardinality["@type"] = "xsd:string";
-                            auxObjAddProperty["owl:onProperty"] = auxObj_OwlOnProperty;
-                            auxObjAddProperty["owl:cardinality"] = auxObj_owlCardinality;
+                            id_element['rdfs:subClassOf'] = rdfsSubClassOf;
+                            childSnapshot.val().owlRestriction == '.' ? childSnapshotVal_owlRestriction='owl:Restriction' : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
+                            auxObjAddProperty['@id'] = ((((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id)).concat('-')).concat(property_i);
+                            auxObjAddProperty['@type'] = childSnapshotVal_owlRestriction;
+                            auxObjAddProperty['rdfs:comment'] = childSnapshot.val().rdfsComment;
+                            auxObj_OwlOnProperty['@id'] = (childSnapshot.val().prefixCompany.concat(':')).concat(property_i);
+                            auxObj_owlCardinality['@value'] = childSnapshot.val()[property_i.toString()];
+                            isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality['@type'] = 'xsd:nonNegativeInteger' : auxObj_owlCardinality['@type'] = 'xsd:string';
+                            auxObjAddProperty['owl:onProperty'] = auxObj_OwlOnProperty;
+                            auxObjAddProperty['owl:cardinality'] = auxObj_owlCardinality;
                             extensionsGraph.push(auxObjAddProperty);
                         } 
                     }
                 }
                 extensionsGraph.push(id_element);
-                manageGraphLocalStorage("definitions", "upDefinitions", extensionsGraph);
-                console.log("EXTENSIONS: ", extensionsGraph);
+                manageGraphLocalStorage('definitions', 'upDefinitions', extensionsGraph);
+                console.log('EXTENSIONS: ', extensionsGraph);
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
                 break;
-            case "ActuatingDevice":
+            case 'ActuatingDevice':
                 id_element = {};
                 rdfsSubClassOf = [];
-                id_element["@id"] = ((childSnapshot.val().prefixCompany).concat(":")).concat(childSnapshot.val().id);
-                id_element["@type"] = "owl:Class";
+                id_element['@id'] = ((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id);
+                id_element['@type'] = 'owl:Class';
                 rdfsSubClassOf = createRdfs (childSnapshot.val().ontology, childSnapshot.val().type);
                 for (var property_i in childSnapshot.val()) {
                     if((childSnapshot.val()).hasOwnProperty(property_i)) {
                         is_add_property = verifyAdditionalProperty(property_i);
                         if (is_add_property == true) {
                             auxObjAddProperty = {};
-                            childSnapshotVal_owlRestriction = "";
+                            childSnapshotVal_owlRestriction = '';
                             auxObj_OwlOnProperty = {};
                             auxObj_owlCardinality = {};
 							rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i)
-                            id_element["rdfs:subClassOf"] = rdfsSubClassOf;
-                            childSnapshot.val().owlRestriction == "." ? childSnapshotVal_owlRestriction="owl:Restriction" : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
-                            auxObjAddProperty["@id"] = ((((childSnapshot.val().prefixCompany).concat(":")).concat(childSnapshot.val().id)).concat("-")).concat(property_i);
-                            auxObjAddProperty["@type"] = childSnapshotVal_owlRestriction;
-                            auxObjAddProperty["rdfs:comment"] = childSnapshot.val().rdfsComment;
-                            auxObj_OwlOnProperty["@id"] = (childSnapshot.val().prefixCompany.concat(":")).concat(property_i);
-                            auxObj_owlCardinality["@value"] = childSnapshot.val()[property_i.toString()];
-                            isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality["@type"] = "xsd:nonNegativeInteger" : auxObj_owlCardinality["@type"] = "xsd:string";
-                            auxObjAddProperty["owl:onProperty"] = auxObj_OwlOnProperty;
-                            auxObjAddProperty["owl:cardinality"] = auxObj_owlCardinality;
+                            id_element['rdfs:subClassOf'] = rdfsSubClassOf;
+                            childSnapshot.val().owlRestriction == '.' ? childSnapshotVal_owlRestriction='owl:Restriction' : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
+                            auxObjAddProperty['@id'] = ((((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id)).concat('-')).concat(property_i);
+                            auxObjAddProperty['@type'] = childSnapshotVal_owlRestriction;
+                            auxObjAddProperty['rdfs:comment'] = childSnapshot.val().rdfsComment;
+                            auxObj_OwlOnProperty['@id'] = (childSnapshot.val().prefixCompany.concat(':')).concat(property_i);
+                            auxObj_owlCardinality['@value'] = childSnapshot.val()[property_i.toString()];
+                            isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality['@type'] = 'xsd:nonNegativeInteger' : auxObj_owlCardinality['@type'] = 'xsd:string';
+                            auxObjAddProperty['owl:onProperty'] = auxObj_OwlOnProperty;
+                            auxObjAddProperty['owl:cardinality'] = auxObj_owlCardinality;
                             extensionsGraph.push(auxObjAddProperty);
                         } 
                     }
                 }
                 extensionsGraph.push(id_element);
-                manageGraphLocalStorage("definitions", "upDefinitions", extensionsGraph);
-                console.log("EXTENSIONS: ", extensionsGraph);
+                manageGraphLocalStorage('definitions', 'upDefinitions', extensionsGraph);
+                console.log('EXTENSIONS: ', extensionsGraph);
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
             default:
                 id_element = {};
                 rdfsSubClassOf = [];
-                id_element["@id"] = ((childSnapshot.val().prefixCompany).concat(":")).concat(childSnapshot.val().id);
-                id_element["@type"] = "owl:Class";
+                id_element['@id'] = ((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id);
+                id_element['@type'] = 'owl:Class';
                 rdfsSubClassOf = createRdfs (childSnapshot.val().ontology, childSnapshot.val().type);
                 for (var property_i in childSnapshot.val()) {
                     if((childSnapshot.val()).hasOwnProperty(property_i)) {
                         is_add_property = verifyAdditionalProperty(property_i);
                         if (is_add_property == true) {
                             auxObjAddProperty = {};
-                            childSnapshotVal_owlRestriction = "";
+                            childSnapshotVal_owlRestriction = '';
                             auxObj_OwlOnProperty = {};
                             auxObj_owlCardinality = {};
 							rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i)
-                            id_element["rdfs:subClassOf"] = rdfsSubClassOf;
-                            childSnapshot.val().owlRestriction == "." ? childSnapshotVal_owlRestriction="owl:Restriction" : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
-                            auxObjAddProperty["@id"] = ((((childSnapshot.val().prefixCompany).concat(":")).concat(childSnapshot.val().id)).concat("-")).concat(property_i);
-                            auxObjAddProperty["@type"] = childSnapshotVal_owlRestriction;
-                            auxObjAddProperty["rdfs:comment"] = childSnapshot.val().rdfsComment;
-                            auxObj_OwlOnProperty["@id"] = (childSnapshot.val().prefixCompany.concat(":")).concat(property_i);
-                            auxObj_owlCardinality["@value"] = childSnapshot.val()[property_i.toString()];
-                            isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality["@type"] = "xsd:nonNegativeInteger" : auxObj_owlCardinality["@type"] = "xsd:string";
-                            auxObjAddProperty["owl:onProperty"] = auxObj_OwlOnProperty;
-                            auxObjAddProperty["owl:cardinality"] = auxObj_owlCardinality;
+                            id_element['rdfs:subClassOf'] = rdfsSubClassOf;
+                            childSnapshot.val().owlRestriction == '.' ? childSnapshotVal_owlRestriction='owl:Restriction' : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
+                            auxObjAddProperty['@id'] = ((((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id)).concat('-')).concat(property_i);
+                            auxObjAddProperty['@type'] = childSnapshotVal_owlRestriction;
+                            auxObjAddProperty['rdfs:comment'] = childSnapshot.val().rdfsComment;
+                            auxObj_OwlOnProperty['@id'] = (childSnapshot.val().prefixCompany.concat(':')).concat(property_i);
+                            auxObj_owlCardinality['@value'] = childSnapshot.val()[property_i.toString()];
+                            isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality['@type'] = 'xsd:nonNegativeInteger' : auxObj_owlCardinality['@type'] = 'xsd:string';
+                            auxObjAddProperty['owl:onProperty'] = auxObj_OwlOnProperty;
+                            auxObjAddProperty['owl:cardinality'] = auxObj_owlCardinality;
                             extensionsGraph.push(auxObjAddProperty);
                         } 
                     }
                 }
                 extensionsGraph.push(id_element);
-                console.log("EXTENSIONS: ", extensionsGraph);
+                console.log('EXTENSIONS: ', extensionsGraph);
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
         }
-    manageGraphLocalStorage("definitions", "upDefinitions", extensionsGraph); // Extension graph is already done to be stored, with all components, devices and additional properties
+    manageGraphLocalStorage('definitions', 'upDefinitions', extensionsGraph); // Extension graph is already done to be stored, with all components, devices and additional properties
     
 
     });
 }).then((createComponent) => { 
-    var prefixIPVS = "ipvs:";
-    var deviceOne = lstComponenents.Device["0"].id;
-    var sensorOne = lstComponenents.SensingDevice["0"].id;
-    var actuatorOne = lstComponenents.ActuatingDevice["0"].id;
+    var prefixIPVS = 'ipvs:';
+    var deviceOne = lstComponenents.Device['0'].id;
+    var sensorOne = lstComponenents.SensingDevice['0'].id;
+    var actuatorOne = lstComponenents.ActuatingDevice['0'].id;
     localStorage.setItem('device', deviceOne);
     localStorage.setItem('sensor', sensorOne);
     localStorage.setItem('actuator', actuatorOne);
 
     var defObject = {
-        "@context": {
-            "geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
-            "m3-lite": "http://purl.org/iot/vocab/m3-lite#",
-            "owl": "http://www.w3.org/2002/07/owl#",
-            "qu": "http://purl.org/NET/ssnx/qu/qu#",
-            "qu-rec20": "http://purl.org/NET/ssnx/qu/qu-rec20#",
-            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-            "idcontext":"IoT Lite @Context (IPVS)",
-            "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-            "ssn": "http://purl.oclc.org/NET/ssnx/ssn#",
-            "time": "http://www.w3.org/2006/time#",
-            "xsd": "http://www.w3.org/2001/XMLSchema#",
-            "iot-lite": "http://purl.oclc.org/NET/UNIS/fiware/iot-lite#",
-            "ipvs": "http://www.ipvs.uni-stuttgart.de/iot-lite#",
-            "ipvs:hasPin": {
-                "@id": "ipvs:hasPin",
-                "@container": "@list"
+    "@context": {
+        "geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+        "m3-lite": "http://purl.org/iot/vocab/m3-lite#",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "qu": "http://purl.org/NET/ssnx/qu/qu#",
+        "qu-rec20": "http://purl.org/NET/ssnx/qu/qu-rec20#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "ssn": "http://purl.oclc.org/NET/ssnx/ssn#",
+        "time": "http://www.w3.org/2006/time#",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "iot-lite": "http://purl.oclc.org/NET/UNIS/fiware/iot-lite#",
+        "ipvs": "http://www.ipvs.uni-stuttgart.de/iot-lite#",
+        "ipvs:hasPin": {
+          "@id": "ipvs:hasPin",
+		      "@container": "@list"
+        }
+    },
+    "@graph": [
+        {
+            "@id": "iot-lite:altRelative",
+            "@type": "owl:AnnotationProperty",
+            "rdfs:domain": {
+                "@id": "geo:Point"
+            },
+            "rdfs:range": {
+                "@id": "xsd:string"
+            }
+        },
+        {
+            "@id": "geo:alt",
+            "@type": "owl:AnnotationProperty",
+            "rdfs:domain": {
+                "@id": "geo:Point"
+            }
+        },
+        {
+            "@id": "iot-lite:Service",
+            "@type": "owl:Class",
+            "rdfs:comment": {
+                "@language": "en",
+                "@value": "Service provided by an IoT Device"
+            }
+        },
+        {
+            "@id": "iot-lite:exposedBy",
+            "@type": "owl:ObjectProperty",
+            "rdfs:comment": "A device is exposed by a service.",
+            "rdfs:domain": {
+                "@id": "ssn:Device"
+            },
+            "rdfs:range": {
+                "@id": "iot-lite:Service"
+            }
+        },
+        {
+            "@id": "iot-lite:endpoint",
+            "@type": "owl:DatatypeProperty",
+            "rdfs:comment": "Endpoint of the service. It is usually a URL where the service is available.",
+            "rdfs:domain": {
+                "@id": "iot-lite:Service"
+            },
+            "rdfs:range": {
+                "@id": "xsd:anyURI"
+            }
+        },
+        {
+            "@id": "geo:location",
+            "@type": "owl:ObjectProperty",
+            "rdfs:range": {
+                "@id": "geo:Point"
+            }
+        },
+        {
+            "@id": "iot-lite:isAssociatedWith",
+            "@type": "owl:ObjectProperty",
+            "rdfs:comment": "Defines the associations between objects and sensors (e.g. A table (object) has an attribute (temperature at the table) which is associated with a sensor (the temperature sensor of the room). ",
+            "rdfs:domain": [
+                {
+                    "@id": "iot-lite:Object"
+                },
+                {
+                    "@id": "iot-lite:Entity"
+                }
+            ],
+            "rdfs:range": {
+                "@id": "iot-lite:Service"
+            }
+        },
+        {
+            "@id": "iot-lite:VirtualEntity",
+            "@type": "owl:Class",
+            "rdfs:subClassOf": {
+                "@id": "iot-lite:Entity"
+            }
+        },
+        {
+            "@id": "iot-lite:interfaceType",
+            "@type": "owl:DatatypeProperty",
+            "rdfs:comment": "Defines the type of interface of the service endpoint.",
+            "rdfs:domain": {
+                "@id": "iot-lite:Service"
+            },
+            "rdfs:range": {
+                "@id": "xsd:string"
+            }
+        },
+        {
+            "@id": "iot-lite:Attribute",
+            "@type": "owl:Class",
+            "rdfs:comment": {
+                "@language": "en",
+                "@value": "An attribute of an IoT object that can be exposed by an IoT service (i.e. a room (IoT Object) has a temperature (Attribute), that can be exposed by a temperature sensor (IoT device)."
+            }
+        },
+        {
+            "@id": "ssn:SensingDevice",
+            "@type": "owl:Class",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "ssn:Sensor"
+                },
+                {
+                    "@id": "ssn:Device"
+                }
+            ]
+        },
+        {
+            "@id": "iot-lite:hasMetadata",
+            "@type": "owl:ObjectProperty",
+            "rdfs:comment": "Links any concept with metadata about that concept.",
+            "rdfs:range": {
+                "@id": "iot-lite:Metadata"
+            }
+        },
+        {
+            "@id": "ssn:Platform",
+            "@type": "owl:Class"
+        },
+        {
+            "@id": "qu:Unit",
+            "@type": "owl:Class"
+        },
+        {
+            "@id": "iot-lite:metadataValue",
+            "@type": "owl:DatatypeProperty",
+            "rdfs:comment": "Value of the metadata",
+            "rdfs:domain": {
+                "@id": "iot-lite:Metadata"
+            },
+            "rdfs:range": {
+                "@id": "xsd:string"
+            }
+        },
+        {
+            "@id": "iot-lite:hasAttribute",
+            "@type": "owl:ObjectProperty",
+            "rdfs:comment": "Links the devices with their attributes.",
+            "rdfs:domain": [
+                {
+                    "@id": "iot-lite:Object"
+                },
+                {
+                    "@id": "iot-lite:Entity"
+                }
+            ],
+            "rdfs:range": {
+                "@id": "iot-lite:Attribute"
+            }
+        },
+        {
+            "@id": "iot-lite:interfaceDescription",
+            "@type": "owl:DatatypeProperty",
+            "rdfs:comment": "Description of the service.",
+            "rdfs:domain": {
+                "@id": "iot-lite:Service"
+            },
+            "rdfs:range": {
+                "@id": "xsd:anyURI"
+            }
+        },
+        {
+            "@id": "iot-lite:Object",
+            "@type": "owl:Class",
+            "rdfs:comment": {
+                "@language": "en",
+                "@value": "IoT entity"
+            }
+        },
+        {
+            "@id": "iot-lite:relativeLocation",
+            "@type": "owl:AnnotationProperty",
+            "rdfs:domain": {
+                "@id": "geo:Point"
+            },
+            "rdfs:range": {
+                "@id": "xsd:string"
+            }
+        },
+        {
+            "@id": "iot-lite:",
+            "@type": "owl:Ontology",
+            "owl:versionInfo": "0.3 fiesta",
+            "rdfs:comment": {
+                "@language": "en",
+                "@value": "iot-lite is a lightweight ontology based on SSN to describe Internet of Things (IoT) concepts and relationships."
+            },
+            "rdfs:label": "iot-lite"
+        },
+        {
+            "@id": "iot-lite:metadataType",
+            "@type": "owl:DatatypeProperty",
+            "rdfs:comment": "Defines the type pf the metadata value (e.g. resolution of the sensor).",
+            "rdfs:domain": {
+                "@id": "iot-lite:Metadata"
+            },
+            "rdfs:range": {
+                "@id": "xsd:string"
+            }
+        },
+        {
+            "@id": "ssn:System",
+            "@type": "owl:Class"
+        },
+        {
+            "@id": "geo:Point",
+            "@type": "owl:Class",
+            "geo:alt": "",
+            "geo:lat": "",
+            "geo:long": "",
+            "iot-lite:altRelative": "",
+            "iot-lite:relativeLocation": ""
+        },
+        {
+            "@id": "qu:QuantityKind",
+            "@type": "owl:Class"
+        },
+        {
+            "@id": "ssn:hasSubSystem",
+            "@type": "owl:ObjectProperty",
+            "rdfs:domain": {
+                "@id": "ssn:System"
+            },
+            "rdfs:range": {
+                "@id": "ssn:System"
+            }
+        },
+        {
+            "@id": "iot-lite:Metadata",
+            "@type": "owl:Class",
+            "rdfs:comment": {
+                "@language": "en",
+                "@value": "Class used to describe properties that cannot be described by QuantityKind and Units. i.e. the resolution of a sensor."
+            }
+        },
+        {
+            "@id": "iot-lite:Polygon",
+            "@type": "owl:Class",
+            "rdfs:comment": {
+                "@language": "en",
+                "@value": "The coverage is made up by linking several points by strait lines."
+            },
+            "rdfs:subClassOf": {
+                "@id": "iot-lite:Coverage"
+            }
+        },
+        {
+            "@id": "iot-lite:radius",
+            "@type": "owl:DatatypeProperty",
+            "rdfs:comment": "Specifies the radius of a circle coverage defined by a point -the center of the circle- and its radius.",
+            "rdfs:domain": {
+                "@id": "iot-lite:Circle"
+            },
+            "rdfs:range": {
+                "@id": "xsd:double"
+            }
+        },
+        {
+            "@id": "geo:lat",
+            "@type": "owl:AnnotationProperty",
+            "rdfs:domain": {
+                "@id": "geo:Point"
+            }
+        },
+        {
+            "@id": "iot-lite:Coverage",
+            "@type": "owl:Class",
+            "rdfs:comment": {
+                "@language": "en",
+                "@value": "The coverage of an IoT device (i.e. a temperature sensor inside a room has a coverage of that room)."
+            }
+        },
+        {
+            "@id": "iot-lite:TagDevice",
+            "@type": "owl:Class",
+            "rdfs:comment": {
+                "@language": "en",
+                "@value": "Tag Device such as QR code or bar code."
+            },
+            "rdfs:subClassOf": {
+                "@id": "ssn:Device"
+            }
+        },
+        {
+            "@id": "iot-lite:exposes",
+            "@type": "owl:ObjectProperty",
+            "owl:inverseOf": {
+                "@id": "iot-lite:exposedBy"
+            },
+            "rdfs:comment": "For service-oriented queries. The inverse of exposedBy.",
+            "rdfs:domain": {
+                "@id": "iot-lite:Service"
+            },
+            "rdfs:range": {
+                "@id": "ssn:Device"
+            }
+        },
+        {
+            "@id": "ssn:onPlatform",
+            "@type": "owl:ObjectProperty",
+            "rdfs:domain": {
+                "@id": "ssn:System"
+            },
+            "rdfs:range": {
+                "@id": "ssn:Platform"
+            }
+        },
+        {
+            "@id": "iot-lite:Entity",
+            "@type": "owl:Class",
+            "owl:equivalentClass": {
+                "@id": "iot-lite:Object"
+            }
+        },
+        {
+            "@id": "iot-lite:hasSensingDevice",
+            "@type": "owl:ObjectProperty",
+            "rdfs:comment": "Links a sensor with a sensing device the same way as SSN.",
+            "rdfs:domain": {
+                "@id": "ssn:Sensor"
+            },
+            "rdfs:range": {
+                "@id": "ssn:SensingDevice"
+            }
+        },
+        {
+            "@id": "iot-lite:hasCoverage",
+            "@type": "owl:ObjectProperty",
+            "rdfs:comment": "Links the devices with their coverages.",
+            "rdfs:domain": {
+                "@id": "ssn:Device"
+            },
+            "rdfs:range": {
+                "@id": "iot-lite:Coverage"
+            }
+        },
+        {
+            "@id": "iot-lite:isSubSystemOf",
+            "@type": "owl:ObjectProperty",
+            "owl:inverseOf": {
+                "@id": "ssn:hasSubSystem"
+            },
+            "rdfs:domain": {
+                "@id": "ssn:System"
+            },
+            "rdfs:range": {
+                "@id": "ssn:System"
+            }
+        },
+        {
+            "@id": "ssn:Sensor",
+            "@type": "owl:Class"
+        },
+        {
+            "@id": "iot-lite:hasQuantityKind",
+            "@type": "owl:ObjectProperty",
+            "rdfs:comment": "Links a sensor or an attribute with the quantity  kind it measures (e.g. A sensor -sensor1- measures temperature: sensor1 hasQuantityKind temperature).",
+            "rdfs:domain": [
+                {
+                    "@id": "iot-lite:Attribute"
+                },
+                {
+                    "@id": "ssn:Sensor"
+                }
+            ],
+            "rdfs:range": {
+                "@id": "qu:QuantityKind"
+            }
+        },
+        {
+            "@id": "iot-lite:hasUnit",
+            "@type": "owl:ObjectProperty",
+            "rdfs:comment": "Links the sensor with the units of the quantity kind it measures (e.g. A sensor -sensor1- measures temperature in Celsius: senso1 hasUnit celsius).",
+            "rdfs:domain": {
+                "@id": "ssn:Sensor"
+            },
+            "rdfs:range": {
+                "@id": "qu:Unit"
+            }
+        },
+        {
+            "@id": "iot-lite:Rectangle",
+            "@type": "owl:Class",
+            "rdfs:comment": {
+                "@language": "en",
+                "@value": "Teh coverage is made up by giving two points which are the oposite corners of a rentangle."
+            },
+            "rdfs:subClassOf": {
+                "@id": "iot-lite:Coverage"
+            }
+        },
+        {
+            "@id": "iot-lite:id",
+            "@type": "owl:DatatypeProperty",
+            "rdfs:domain": {
+                "@id": "ssn:Device"
+            },
+            "rdfs:range": {
+                "@id": "xsd:string"
+            }
+        },
+        {
+            "@id": "geo:long",
+            "@type": "owl:AnnotationProperty",
+            "rdfs:domain": {
+                "@id": "geo:Point"
+            }
+        },
+        {
+            "@id": "iot-lite:Circle",
+            "@type": "owl:Class",
+            "rdfs:comment": {
+                "@language": "en",
+                "@value": "Circle coverage it needs the location of the sensor as the centre of the circle and the radius as a DataProperty."
+            },
+            "rdfs:subClassOf": {
+                "@id": "iot-lite:Coverage"
+            }
+        },
+        {
+            "@id": "ssn:Device",
+            "@type": "owl:Class",
+            "rdfs:subClassOf": {
+                "@id": "ssn:System"
+            }
+        },
+        {
+            "@id": "iot-lite:ActuatingDevice",
+            "@type": "owl:Class",
+            "rdfs:comment": {
+                "@language": "en",
+                "@value": "Device that can actuate over an object or QuantityKind."
+            },
+            "rdfs:subClassOf": {
+                "@id": "ssn:Device"
+            }
+        },
+        {
+            "@id": "iot-lite:isMobile",
+            "@type": "owl:DatatypeProperty",
+            "rdfs:domain": {
+                "@id": "ssn:Platform"
+            },
+            "rdfs:range": {
+                "@id": "xsd:boolean"
             }
         },
 
-        "@graph": [
+        //##### Extensions of IoT-Lite Scheme for own Device-Types #####################################################
+        {
+          "@id": "ipvs:RaspberryPi",          // Define a RaspberryPi as SubClass of Device
+          "@type": "owl:Class",
+          "rdfs:subClassOf": [
             {
-                "@id": "iot-lite:altRelative",
-                "@type": "owl:AnnotationProperty",
-                "rdfs:domain": {
-                    "@id": "geo:Point"
-                },
-                "rdfs:range": {
-                    "@id": "xsd:string"
-                }
+                "@id": "ssn:Device"
             },
             {
-                "@id": "geo:alt",
-                "@type": "owl:AnnotationProperty",
-                "rdfs:domain": {
-                    "@id": "geo:Point"
-                }
-            },
-            {
-                "@id": "iot-lite:Service",
-                "@type": "owl:Class",
-                "rdfs:comment": {
-                    "@language": "en",
-                    "@value": "Service provided by an IoT Device"
-                }
-            },
-            {
-                "@id": "iot-lite:exposedBy",
-                "@type": "owl:ObjectProperty",
-                "rdfs:comment": "A device is exposed by a service.",
-                "rdfs:domain": {
-                    "@id": "ssn:Device"
-                },
-                "rdfs:range": {
-                    "@id": "iot-lite:Service"
-                }
-            },
-            {
-                "@id": "iot-lite:endpoint",
-                "@type": "owl:DatatypeProperty",
-                "rdfs:comment": "Endpoint of the service. It is usually a URL where the service is available.",
-                "rdfs:domain": {
-                    "@id": "iot-lite:Service"
-                },
-                "rdfs:range": {
-                    "@id": "xsd:anyURI"
-                }
-            },
-            {
-                "@id": "geo:location",
-                "@type": "owl:ObjectProperty",
-                "rdfs:range": {
-                    "@id": "geo:Point"
-                }
-            },
-            {
-                "@id": "iot-lite:isAssociatedWith",
-                "@type": "owl:ObjectProperty",
-                "rdfs:comment": "Defines the associations between objects and sensors (e.g. A table (object) has an attribute (temperature at the table) which is associated with a sensor (the temperature sensor of the room). ",
-                "rdfs:domain": [
-                    {
-                        "@id": "iot-lite:Object"
-                    },
-                    {
-                        "@id": "iot-lite:Entity"
-                    }
-                ],
-                "rdfs:range": {
-                    "@id": "iot-lite:Service"
-                }
-            },
-            {
-                "@id": "iot-lite:VirtualEntity",
-                "@type": "owl:Class",
-                "rdfs:subClassOf": {
-                    "@id": "iot-lite:Entity"
-                }
-            },
-            {
-                "@id": "iot-lite:interfaceType",
-                "@type": "owl:DatatypeProperty",
-                "rdfs:comment": "Defines the type of interface of the service endpoint.",
-                "rdfs:domain": {
-                    "@id": "iot-lite:Service"
-                },
-                "rdfs:range": {
-                    "@id": "xsd:string"
-                }
-            },
-            {
-                "@id": "iot-lite:Attribute",
-                "@type": "owl:Class",
-                "rdfs:comment": {
-                    "@language": "en",
-                    "@value": "An attribute of an IoT object that can be exposed by an IoT service (i.e. a room (IoT Object) has a temperature (Attribute), that can be exposed by a temperature sensor (IoT device)."
-                }
-            },
-            {
-                "@id": "ssn:SensingDevice",
-                "@type": "owl:Class",
-                "rdfs:subClassOf": [
-                    {
-                        "@id": "ssn:Sensor"
-                    },
-                    {
-                        "@id": "ssn:Device"
-                    }
-                ]
-            },
-            {
-                "@id": "iot-lite:hasMetadata",
-                "@type": "owl:ObjectProperty",
-                "rdfs:comment": "Links any concept with metadata about that concept.",
-                "rdfs:range": {
-                    "@id": "iot-lite:Metadata"
-                }
-            },
-            {
-                "@id": "ssn:Platform",
-                "@type": "owl:Class"
-            },
-            {
-                "@id": "qu:Unit",
-                "@type": "owl:Class"
-            },
-            {
-                "@id": "iot-lite:metadataValue",
-                "@type": "owl:DatatypeProperty",
-                "rdfs:comment": "Value of the metadata",
-                "rdfs:domain": {
-                    "@id": "iot-lite:Metadata"
-                },
-                "rdfs:range": {
-                    "@id": "xsd:string"
-                }
-            },
-            {
-                "@id": "iot-lite:hasAttribute",
-                "@type": "owl:ObjectProperty",
-                "rdfs:comment": "Links the devices with their attributes.",
-                "rdfs:domain": [
-                    {
-                        "@id": "iot-lite:Object"
-                    },
-                    {
-                        "@id": "iot-lite:Entity"
-                    }
-                ],
-                "rdfs:range": {
-                    "@id": "iot-lite:Attribute"
-                }
-            },
-            {
-                "@id": "iot-lite:interfaceDescription",
-                "@type": "owl:DatatypeProperty",
-                "rdfs:comment": "Description of the service.",
-                "rdfs:domain": {
-                    "@id": "iot-lite:Service"
-                },
-                "rdfs:range": {
-                    "@id": "xsd:anyURI"
-                }
-            },
-            {
-                "@id": "iot-lite:Object",
-                "@type": "owl:Class",
-                "rdfs:comment": {
-                    "@language": "en",
-                    "@value": "IoT entity"
-                }
-            },
-            {
-                "@id": "iot-lite:relativeLocation",
-                "@type": "owl:AnnotationProperty",
-                "rdfs:domain": {
-                    "@id": "geo:Point"
-                },
-                "rdfs:range": {
-                    "@id": "xsd:string"
-                }
-            },
-            {
-                "@id": "iot-lite:",
-                "@type": "owl:Ontology",
-                "owl:versionInfo": "0.3 fiesta",
-                "rdfs:comment": {
-                    "@language": "en",
-                    "@value": "iot-lite is a lightweight ontology based on SSN to describe Internet of Things (IoT) concepts and relationships."
-                },
-                "rdfs:label": "iot-lite"
-            },
-            {
-                "@id": "iot-lite:metadataType",
-                "@type": "owl:DatatypeProperty",
-                "rdfs:comment": "Defines the type pf the metadata value (e.g. resolution of the sensor).",
-                "rdfs:domain": {
-                    "@id": "iot-lite:Metadata"
-                },
-                "rdfs:range": {
-                    "@id": "xsd:string"
-                }
-            },
-            {
-                "@id": "ssn:System",
-                "@type": "owl:Class"
-            },
-            {
-                "@id": "geo:Point",
-                "@type": "owl:Class",
-                "geo:alt": "",
-                "geo:lat": "",
-                "geo:long": "",
-                "iot-lite:altRelative": "",
-                "iot-lite:relativeLocation": ""
-            },
-            {
-                "@id": "qu:QuantityKind",
-                "@type": "owl:Class"
-            },
-            {
-                "@id": "ssn:hasSubSystem",
-                "@type": "owl:ObjectProperty",
-                "rdfs:domain": {
-                    "@id": "ssn:System"
-                },
-                "rdfs:range": {
-                    "@id": "ssn:System"
-                }
-            },
-            {
-                "@id": "iot-lite:Metadata",
-                "@type": "owl:Class",
-                "rdfs:comment": {
-                    "@language": "en",
-                    "@value": "Class used to describe properties that cannot be described by QuantityKind and Units. i.e. the resolution of a sensor."
-                }
-            },
-            {
-                "@id": "iot-lite:Polygon",
-                "@type": "owl:Class",
-                "rdfs:comment": {
-                    "@language": "en",
-                    "@value": "The coverage is made up by linking several points by strait lines."
-                },
-                "rdfs:subClassOf": {
-                    "@id": "iot-lite:Coverage"
-                }
-            },
-            {
-                "@id": "iot-lite:radius",
-                "@type": "owl:DatatypeProperty",
-                "rdfs:comment": "Specifies the radius of a circle coverage defined by a point -the center of the circle- and its radius.",
-                "rdfs:domain": {
-                    "@id": "iot-lite:Circle"
-                },
-                "rdfs:range": {
-                    "@id": "xsd:double"
-                }
-            },
-            {
-                "@id": "geo:lat",
-                "@type": "owl:AnnotationProperty",
-                "rdfs:domain": {
-                    "@id": "geo:Point"
-                }
-            },
-            {
-                "@id": "iot-lite:Coverage",
-                "@type": "owl:Class",
-                "rdfs:comment": {
-                    "@language": "en",
-                    "@value": "The coverage of an IoT device (i.e. a temperature sensor inside a room has a coverage of that room)."
-                }
-            },
-            {
-                "@id": "iot-lite:TagDevice",
-                "@type": "owl:Class",
-                "rdfs:comment": {
-                    "@language": "en",
-                    "@value": "Tag Device such as QR code or bar code."
-                },
-                "rdfs:subClassOf": {
-                    "@id": "ssn:Device"
-                }
-            },
-            {
-                "@id": "iot-lite:exposes",
-                "@type": "owl:ObjectProperty",
-                "owl:inverseOf": {
-                    "@id": "iot-lite:exposedBy"
-                },
-                "rdfs:comment": "For service-oriented queries. The inverse of exposedBy.",
-                "rdfs:domain": {
-                    "@id": "iot-lite:Service"
-                },
-                "rdfs:range": {
-                    "@id": "ssn:Device"
-                }
-            },
-            {
-                "@id": "ssn:onPlatform",
-                "@type": "owl:ObjectProperty",
-                "rdfs:domain": {
-                    "@id": "ssn:System"
-                },
-                "rdfs:range": {
-                    "@id": "ssn:Platform"
-                }
-            },
-            {
-                "@id": "iot-lite:Entity",
-                "@type": "owl:Class",
-                "owl:equivalentClass": {
-                    "@id": "iot-lite:Object"
-                }
-            },
-            {
-                "@id": "iot-lite:hasSensingDevice",
-                "@type": "owl:ObjectProperty",
-                "rdfs:comment": "Links a sensor with a sensing device the same way as SSN.",
-                "rdfs:domain": {
-                    "@id": "ssn:Sensor"
-                },
-                "rdfs:range": {
-                    "@id": "ssn:SensingDevice"
-                }
-            },
-            {
-                "@id": "iot-lite:hasCoverage",
-                "@type": "owl:ObjectProperty",
-                "rdfs:comment": "Links the devices with their coverages.",
-                "rdfs:domain": {
-                    "@id": "ssn:Device"
-                },
-                "rdfs:range": {
-                    "@id": "iot-lite:Coverage"
-                }
-            },
-            {
-                "@id": "iot-lite:isSubSystemOf",
-                "@type": "owl:ObjectProperty",
-                "owl:inverseOf": {
-                    "@id": "ssn:hasSubSystem"
-                },
-                "rdfs:domain": {
-                    "@id": "ssn:System"
-                },
-                "rdfs:range": {
-                    "@id": "ssn:System"
-                }
-            },
-            {
-                "@id": "ssn:Sensor",
-                "@type": "owl:Class"
-            },
-            {
-                "@id": "iot-lite:hasQuantityKind",
-                "@type": "owl:ObjectProperty",
-                "rdfs:comment": "Links a sensor or an attribute with the quantity  kind it measures (e.g. A sensor -sensor1- measures temperature: sensor1 hasQuantityKind temperature).",
-                "rdfs:domain": [
-                    {
-                        "@id": "iot-lite:Attribute"
-                    },
-                    {
-                        "@id": "ssn:Sensor"
-                    }
-                ],
-                "rdfs:range": {
-                    "@id": "qu:QuantityKind"
-                }
-            },
-            {
-                "@id": "iot-lite:hasUnit",
-                "@type": "owl:ObjectProperty",
-                "rdfs:comment": "Links the sensor with the units of the quantity kind it measures (e.g. A sensor -sensor1- measures temperature in Celsius: senso1 hasUnit celsius).",
-                "rdfs:domain": {
-                    "@id": "ssn:Sensor"
-                },
-                "rdfs:range": {
-                    "@id": "qu:Unit"
-                }
-            },
-            {
-                "@id": "iot-lite:Rectangle",
-                "@type": "owl:Class",
-                "rdfs:comment": {
-                    "@language": "en",
-                    "@value": "Teh coverage is made up by giving two points which are the oposite corners of a rentangle."
-                },
-                "rdfs:subClassOf": {
-                    "@id": "iot-lite:Coverage"
-                }
-            },
-            {
-                "@id": "iot-lite:id",
-                "@type": "owl:DatatypeProperty",
-                "rdfs:domain": {
-                    "@id": "ssn:Device"
-                },
-                "rdfs:range": {
-                    "@id": "xsd:string"
-                }
-            },
-            {
-                "@id": "geo:long",
-                "@type": "owl:AnnotationProperty",
-                "rdfs:domain": {
-                    "@id": "geo:Point"
-                }
-            },
-            {
-                "@id": "iot-lite:Circle",
-                "@type": "owl:Class",
-                "rdfs:comment": {
-                    "@language": "en",
-                    "@value": "Circle coverage it needs the location of the sensor as the centre of the circle and the radius as a DataProperty."
-                },
-                "rdfs:subClassOf": {
-                    "@id": "iot-lite:Coverage"
-                }
-            },
-            {
-                "@id": "ssn:Device",
-                "@type": "owl:Class",
-                "rdfs:subClassOf": {
-                    "@id": "ssn:System"
-                }
-            },
-            {
-                "@id": "iot-lite:ActuatingDevice",
-                "@type": "owl:Class",
-                "rdfs:comment": {
-                    "@language": "en",
-                    "@value": "Device that can actuate over an object or QuantityKind."
-                },
-                "rdfs:subClassOf": {
-                    "@id": "ssn:Device"
-                }
-            },
-            {
-                "@id": "iot-lite:isMobile",
-                "@type": "owl:DatatypeProperty",
-                "rdfs:domain": {
-                    "@id": "ssn:Platform"
-                },
-                "rdfs:range": {
-                    "@id": "xsd:boolean"
-                }
-            },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            //##### Extensions of IoT-Lite Scheme for own Device-Types #####################################################
-
-            {
-                "@id": "ipvs:macAddress",     // Define the MacAdress property as Attribute of RaspberryPi
-                "@type": "owl:DatatypeProperty",
-                "rdfs:domain":{
-                    "@id":"ssn:Device"
-                },
-                "rdfs:range": {
-                    "@id": "xsd:string"
-                }
-            },
-            {
-                "@id": "ipvs:numberOfPins",     // Define the MacAdress property as Attribute of RaspberryPi
-                "@type": "owl:DatatypeProperty",
-                "rdfs:comment": "To specify the number of pins on a device.",
-                "rdfs:domain":{
-                    "@id":"ssn:Device"
-                },
-                "rdfs:range": {
-                    "@id": "xsd:nonNegativeInteger"
-                }
-            },
-            {
-                "@id": "ipvs:gpioMode",     // Define the MacAdress property as Attribute of RaspberryPi
-                "@type": "owl:DatatypeProperty",
-                "rdfs:comment": "To specify how the GPIO pin numbers are supposed to be interpreted.",
-                "rdfs:domain":{
-                    "@id":"ssn:Device"
-                },
-                "rdfs:range": {
-                    //"@id": "ipvs:MacAdress"
-                    "@id": "xsd:string"
-                }
-            },
-            {
-                "@id": "ipvs:modelNumber",     // Define the MacAdress property as Attribute of RaspberryPi
-                "@type": "owl:DatatypeProperty",
-                "rdfs:comment": "To specify whether it's a RPi model A or B.",
-                "rdfs:domain":{
-                    "@id":"ssn:Device"
-                },
-                "rdfs:range": {
-                    //"@id": "ipvs:MacAdress"
-                    "@id": "xsd:string"
-                }
-            },
-
-			{
-                "@id": sensorOne.toString(),          // Define a Raspberry Pi as SubClass of Device
-                "@type": "owl:Class",
-                "rdfs:comment": "Temperature Sensor with 3 pins. GND - 1, DQ - 2, VDD -3. Datasheet: https://datasheets.maximintegrated.com/en/ds/DS18B20.pdf",
-                "rdfs:subClassOf": [
-                    {
-                        "@id": "ssn:SensingDevice"
-                    }
-                    ,
-                    {
-                        "@id": "ipvs:DS18B20TEST-hasPin"
-                    }
-                ]
-            },
-            {
-                "@id": "ipvs:hasPin",     // Define the MacAdress property as Attribute of RaspberryPi
-                "@type": "owl:DatatypeProperty",
-                "rdfs:comment": "To list all pins of a device (sensor, actuator) and to what pins of the super-device they are connected to.",
-                "rdfs:domain": {
-                    "@id":"ipvs:Device"
-                },
-                "rdfs:range": {
-                    "@id": "xsd:nonNegativeInteger"
-                }
-            },
-
-
-
-            {
-                "@id": deviceOne.toString(),          // Define a RaspberryPi as SubClass of Device //(prefixIPVS.concat(lstComponenents.actuator["0"].id)).toString()
-                "@type": "owl:Class",
-                "rdfs:subClassOf": [
-                    {
-                        "@id": "ssn:Device"
-                    },
-                    {
-                        "@id" : "ipvs:RaspberryPi-numberOfPins"
-                    }
-                ]
-
-            },
-
-            {
-                "@id" : "ipvs:RaspberryPi-numberOfPins",
-                "@type": "owl:Restriction",
-                "rdfs:comment": "OWL restriction specifying the number of pins of a raspberry pi.",
-                "owl:onProperty": {
-                    "@id": "ipvs:numberOfPins"
-                },
-                "owl:cardinality": {
-                    "@value": "1",
-                    "@type": "xsd:nonNegativeInteger"
-                }
-            },
-
-
-            {
-                "@id": "ipvs:actuatosnon",          // Define a RaspberryPi as SubClass of Device
-                "@type": "owl:Class",
-                "rdfs:comment": "TI Microcontrollor with 16 pins to drive up to two motors. Datasheet: http://www.ti.com/lit/ds/symlink/l293.pdf",
-                "rdfs:subClassOf": [
-                    {
-                        "@id": "iot-lite:ActuatingDevice",
-                        "@id": "iot-lite:ActuatingDevice"
-                    },
-                    {
-                        "@id": "ipvs:L293D-hasPin"
-                    }
-                ]
-            },
-
-
-
-
-
-
-
-
-
-
-
-
-            {
-                "@id": actuatorOne.toString(),          // Define a RaspberryPi as SubClass of Device
-                "@type": "owl:Class",
-                "rdfs:comment": "TI Microcontrollor with 16 pins to drive up to two motors. Datasheet: http://www.ti.com/lit/ds/symlink/l293.pdf",
-                "rdfs:subClassOf": [
-                    {
-                        "@id": "iot-lite:ActuatingDevice"
-                    },
-                    {
-                        "@id": "ipvs:L293D-hasPin"
-                    }
-                ]
-            },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            {
-                "@id" : "ipvs:DS18B20TEST-hasPin",
-                "@type": "owl:Restriction",
-                "owl:onProperty": {
-                    "@id":"ipvs:hasPin"
-                },
-                "owl:cardinality": {
-                    "@value": "3",
-                    "@type": "xsd:nonNegativeInteger"
-                }
-            },
-
-            {
-                "@id" : "ipvs:L293D-hasPin",
-                "@type": "owl:Restriction",
-                "owl:onProperty": {
-                    "@id":"ipvs:hasPin"
-                },
-                "owl:cardinality": {
-                    "@value": "16",
-                    "@type": "xsd:nonNegativeInteger"
-                }
+              "@id" : "ipvs:RaspberryPi-numberOfPins"
             }
-        ] //close graph
+          ]
 
-    }; // close the object
+        },
+        {
+          "@id": "ipvs:Arduino",          // Define a RaspberryPi as SubClass of Device
+          "@type": "owl:Class",
+          "rdfs:subClassOf": [
+            {
+                "@id": "ssn:Device"
+            },
+            {
+              "@id" : "ipvs:Arduino-numberOfPins"
+            }
+          ]
+
+        },
+        {
+          "@id": "ipvs:macAddress",     // Define the MacAdress property as Attribute of RaspberryPi
+          "@type": "owl:DatatypeProperty",
+          "rdfs:domain":{
+              "@id":"ssn:Device"
+          },
+          "rdfs:range": {
+              //"@id": "ipvs:MacAdress"
+              "@id": "xsd:string"
+          }
+        },
+      {
+        "@id": "ipvs:numberOfPins",     // Define the MacAdress property as Attribute of RaspberryPi
+        "@type": "owl:DatatypeProperty",
+        "rdfs:comment": "To specify the number of pins on a device.",
+        "rdfs:domain":{
+            "@id":"ssn:Device"
+        },
+        "rdfs:range": {
+            //"@id": "ipvs:MacAdress"
+            "@id": "xsd:nonNegativeInteger"
+        }
+      },
+      {
+          "@id": "ipvs:gpioMode",     // Define the MacAdress property as Attribute of RaspberryPi
+          "@type": "owl:DatatypeProperty",
+          "rdfs:comment": "To specify how the GPIO pin numbers are supposed to be interpreted.",
+          "rdfs:domain":{
+              "@id":"ssn:Device"
+          },
+          "rdfs:range": {
+              //"@id": "ipvs:MacAdress"
+              "@id": "xsd:string"
+          }
+        },
+        {
+          "@id": "ipvs:modelNumber",     // Define the MacAdress property as Attribute of RaspberryPi
+          "@type": "owl:DatatypeProperty",
+          "rdfs:comment": "To specify whether it's a RPi model A or B.",
+          "rdfs:domain":{
+              "@id":"ssn:Device"
+          },
+          "rdfs:range": {
+              //"@id": "ipvs:MacAdress"
+              "@id": "xsd:string"
+          }
+        },
+        {
+          "@id": "ipvs:Temp-Sensor",          // Define a RaspberryPi as SubClass of Device
+          "@type": "owl:Class",
+          "rdfs:comment": "Temperature Sensor with 3 pins. GND - 1, DQ - 2, VDD -3. Datasheet: https://datasheets.maximintegrated.com/en/ds/DS18B20-1.pdf",
+          "rdfs:subClassOf": [
+            {
+                "@id": "ssn:SensingDevice"
+            }
+            ,
+            {
+              "@id": "ipvs:Temp-Sensor-hasPin"
+            }
+          ]
+        },
+        {
+          "@id": "ipvs:hasPin",     // Define the MacAdress property as Attribute of RaspberryPi
+          "@type": "owl:DatatypeProperty",
+          "rdfs:comment": "To list all pins of a device (sensor, actuator) and to what pins of the super-device they are connected to.",
+          "rdfs:domain": {
+              "@id":"ipvs:Device"
+          },
+          "rdfs:range": {
+              "@id": "xsd:nonNegativeInteger"
+          }
+        },
+        {
+          "@id": "ipvs:Motor-Chip",          // Define a RaspberryPi as SubClass of Device
+          "@type": "owl:Class",
+          "rdfs:comment": "TI Microcontrollor with 16 pins to drive up to two motors. Datasheet: http://www.ti.com/lit/ds/symlink/l293.pdf",
+          "rdfs:subClassOf": [
+            {
+                "@id": "iot-lite:ActuatingDevice"
+            },
+            {
+              "@id": "ipvs:Motor-Chip-hasPin"
+            }
+          ]
+        },
+        {
+          "@id": "ipvs:Buzzer",          // Define a RaspberryPi as SubClass of Device
+          "@type": "owl:Class",
+          "rdfs:subClassOf": [
+            {
+                "@id": "iot-lite:ActuatingDevice"
+            },
+            {
+              "@id": "ipvs:Buzzer-hasPin"
+            }
+          ]
+        },
+        {
+          "@id" : "ipvs:RaspberryPi-numberOfPins",
+          "@type": "owl:Restriction",
+          "rdfs:comment": "OWL restriction specifying the number of pins of a raspberry pi.",
+          "owl:onProperty": {
+            "@id": "ipvs:numberOfPins"
+          },
+          "owl:cardinality": {
+            "@value": "26",
+            "@type": "xsd:nonNegativeInteger"
+          }
+        },
+        {
+          "@id" : "ipvs:Arduino-numberOfPins",
+          "@type": "owl:Restriction",
+          "rdfs:comment": "OWL restriction specifying the number of pins of a raspberry pi.",
+          "owl:onProperty": {
+            "@id": "ipvs:numberOfPins"
+          },
+          "owl:cardinality": {
+            "@value": "14",
+            "@type": "xsd:nonNegativeInteger"
+          }
+        },
+        {
+          "@id" : "ipvs:Temp-Sensor-hasPin",
+          "@type": "owl:Restriction",
+          "owl:onProperty": {
+            "@id":"ipvs:hasPin"
+          },
+          "owl:cardinality": {
+            "@value": "3",
+            "@type": "xsd:nonNegativeInteger"
+          }
+        },
+        {
+          "@id" : "ipvs:Motor-Chip-hasPin",
+          "@type": "owl:Restriction",
+          "owl:onProperty": {
+            "@id":"ipvs:hasPin"
+          },
+          "owl:cardinality": {
+            "@value": "16",
+            "@type": "xsd:nonNegativeInteger"
+          }
+        },
+        {
+          "@id" : "ipvs:Buzzer-hasPin",
+          "@type": "owl:Restriction",
+          "owl:onProperty": {
+            "@id":"ipvs:hasPin"
+          },
+          "owl:cardinality": {
+            "@value": "4",
+            "@type": "xsd:nonNegativeInteger"
+          }
+        }
+    ]
+}; // close the object
     // Storing the object into the local storage |
     //console.log(defObject);
     localStorage.setItem('defObject', JSON.stringify(defObject));
 });
 
-dashboard.controller("myaccountController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseArray','$firebaseAuth','$firebaseObject',
+dashboard.controller('myaccountController', ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseArray','$firebaseAuth','$firebaseObject',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseArray, $firebaseAuth, $firebaseObject) {
     var vm = this;
     var ref = firebase.database().ref('defaults/defaultcontext'); // Accesing the object context selected by the user
@@ -1247,7 +1224,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
             userDB.$save().then((ref) => {
             },
             (error) => {
-                console.log("Error:", error);
+                console.log('Error:', error);
             });
         });
         user.updateEmail($scope.Email);
