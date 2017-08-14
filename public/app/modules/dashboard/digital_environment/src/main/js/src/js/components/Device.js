@@ -1,13 +1,15 @@
-import DeviceStore from '../stores/DeviceStore';
-import FlatButton from 'material-ui/FlatButton';
-import React, { Component, PropTypes, SyntheticEvent } from 'react';
-import ItemTypes from '../dnd/ItemTypes';
+import React, { Component, PropTypes } from 'react';
 import { DragSource } from 'react-dnd';
-import * as DropActions from '../actions/DropActions';
 import MenuItem from 'material-ui/MenuItem';
 import { ListItem } from 'material-ui/List';
-import * as utils from '../utils/utils';
 import Avatar from 'material-ui/Avatar';
+import FlatButton from 'material-ui/FlatButton';
+import ItemTypes from '../dnd/ItemTypes';
+
+import * as DropActions from '../actions/DropActions';
+
+import DeviceStore from '../stores/DeviceStore';
+import * as utils from '../utils/utils';
 
 const boxSource = {
     beginDrag(props) {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { DragDropContext } from 'react-dnd';
-import DropContainer from './DropContainer';
 import HTML5Backend from 'react-dnd-html5-backend';
+import DropContainer from './DropContainer';
 import ComponentDetailList from './ComponentDetailList';
 import NavigationBar from './NavigationBar';
 import PaletteContainer from './PaletteContainer';

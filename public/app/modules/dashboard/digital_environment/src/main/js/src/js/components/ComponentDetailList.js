@@ -1,8 +1,6 @@
-import DeviceStore from '../stores/DeviceStore';
-import * as DropActions from '../actions/DropActions';
+import React from 'react';
 import { List, ListItem } from 'material-ui/List';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import React from 'react';
 import Subheader from 'material-ui/Subheader';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
@@ -10,6 +8,8 @@ import FlatButton from 'material-ui/FlatButton';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import Divider from 'material-ui/Divider';
+import DeviceStore from '../stores/DeviceStore';
+import * as DropActions from '../actions/DropActions';
 import * as utils from '../utils/utils';
 
 
