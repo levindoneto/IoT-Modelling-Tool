@@ -115,7 +115,7 @@ export default class ComponentDetailList extends React.Component {
             namesResult = namesResult.concat(names.map((name) => (
                 <MenuItem
                     key={name}
-                    insetChildren
+                    insertChildren
                     checked={selectValues && selectValues.includes(name)}
                     value={name}
                     primaryText={name.replace(/(.)*:/, '')}
