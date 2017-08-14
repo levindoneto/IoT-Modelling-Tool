@@ -318,8 +318,8 @@ export default class NavigationBar extends React.Component {
                                 <Divider />
                                 <MenuItem primaryText="Save" secondaryText="Save Created Model" />
                                 <MenuItem primaryText="Load" secondaryText="Load Previously Saved Model" />
-                                <MenuItem primaryText="Export" secondaryText="Export" />
-                                <MenuItem primaryText="Import" secondaryText="Import" />
+                                <MenuItem primaryText="Export" secondaryText="Export Model" />
+                                <MenuItem primaryText="Import" secondaryText="Import Model" />
                                 <MenuItem primaryText="Clear" secondaryText="Clear Drop Zone" />
                                 <Subheader style={subHeaderStyle}>Mouse Commands</Subheader>
                                 <Divider />
