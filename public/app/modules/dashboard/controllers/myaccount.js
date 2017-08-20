@@ -231,7 +231,7 @@ function manageGraphLocalStorage(keyAccess, keyStore, elementGraph) {
         objCurrentDefinitions['@graph'].push(elementGraph[i]); // Updating the @graph list inner the object of definitions
     }
     localStorage.setItem(keyStore, JSON.stringify(objCurrentDefinitions)); // Updating the object definitions with the 
-    console.log('THE WHOLE DEFINITIONS: ', objCurrentDefinitions);
+    console.log(' Watching: THE WHOLE DEFINITIONS: ', objCurrentDefinitions);
 }
 
 /*****************************************************/
@@ -364,8 +364,8 @@ firebase.database().ref('models').orderByKey().once('value')
                             auxObjAddProperty['owl:onProperty'] = auxObj_OwlOnProperty; // Updating the element of the additional property
                             auxObjAddProperty['owl:cardinality'] = auxObj_owlCardinality; // Updating the element of the additional property
                             
-                            console.log('The ID element (update): ', id_element); // tested: ok for binding
-                            console.log('Element info additional property: ', auxObjAddProperty); // tested: ok for binding
+                            //console.log('The ID element (update): ', id_element); // tested: ok for binding
+                            //console.log('Element info additional property: ', auxObjAddProperty); // tested: ok for binding
 
                             extensionsGraph.push(auxObjAddProperty); // Updating the @graph with an additional property                            
                         } // is_add_property==true
@@ -377,8 +377,8 @@ firebase.database().ref('models').orderByKey().once('value')
                  */
                 extensionsGraph.push(id_element); // Updating the @graph with an additional property
 
-                console.log('EXTENSIONS: ', extensionsGraph);
-                manageGraphLocalStorage('definitions', 'upDefinitions', extensionsGraph);
+                //console.log('EXTENSIONS: ', extensionsGraph);
+                // manageGraphLocalStorage('definitions', 'upDefinitions', extensionsGraph);
                 
 
                 createComponent(childSnapshot.val());
@@ -415,8 +415,8 @@ firebase.database().ref('models').orderByKey().once('value')
                     }
                 }
                 extensionsGraph.push(id_element);
-                manageGraphLocalStorage('definitions', 'upDefinitions', extensionsGraph);
-                console.log('EXTENSIONS: ', extensionsGraph);
+                //manageGraphLocalStorage('definitions', 'upDefinitions', extensionsGraph);
+                //console.log('EXTENSIONS: ', extensionsGraph);
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
                 break;
@@ -450,8 +450,8 @@ firebase.database().ref('models').orderByKey().once('value')
                     }
                 }
                 extensionsGraph.push(id_element);
-                manageGraphLocalStorage('definitions', 'upDefinitions', extensionsGraph);
-                console.log('EXTENSIONS: ', extensionsGraph);
+                //manageGraphLocalStorage('definitions', 'upDefinitions', extensionsGraph);
+                //console.log('EXTENSIONS: ', extensionsGraph);
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
             default:
@@ -484,14 +484,14 @@ firebase.database().ref('models').orderByKey().once('value')
                     }
                 }
                 extensionsGraph.push(id_element);
-                console.log('EXTENSIONS: ', extensionsGraph);
+                //console.log('EXTENSIONS: ', extensionsGraph);
                 createComponent(childSnapshot.val());
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id);
         }
-    manageGraphLocalStorage('definitions', 'upDefinitions', extensionsGraph); // Extension graph is already done to be stored, with all components, devices and additional properties
-    
-
+        
+        // it was here
     });
+    manageGraphLocalStorage('definitions', 'upDefinitions', extensionsGraph); // Extension graph is already done to be stored, with all components, devices and additional properties
 }).then((createComponent) => { 
     var prefixIPVS = 'ipvs:';
     var deviceOne = lstComponenents.Device['0'].id;
@@ -501,25 +501,26 @@ firebase.database().ref('models').orderByKey().once('value')
     localStorage.setItem('sensor', sensorOne);
     localStorage.setItem('actuator', actuatorOne);
 
-    var defObject = {
-    "@context": {
-        "geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
-        "m3-lite": "http://purl.org/iot/vocab/m3-lite#",
-        "owl": "http://www.w3.org/2002/07/owl#",
-        "qu": "http://purl.org/NET/ssnx/qu/qu#",
-        "qu-rec20": "http://purl.org/NET/ssnx/qu/qu-rec20#",
-        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-        "ssn": "http://purl.oclc.org/NET/ssnx/ssn#",
-        "time": "http://www.w3.org/2006/time#",
-        "xsd": "http://www.w3.org/2001/XMLSchema#",
-        "iot-lite": "http://purl.oclc.org/NET/UNIS/fiware/iot-lite#",
-        "ipvs": "http://www.ipvs.uni-stuttgart.de/iot-lite#",
-        "ipvs:hasPin": {
-          "@id": "ipvs:hasPin",
-		      "@container": "@list"
-        }
-    },
+    let defObject = {
+        "@context":{
+            "geo":"http://www.w3.org/2003/01/geo/wgs84_pos#",
+            "idcontext":"IoT Lite @Context (IPVS)",
+            "iotlite":"http://purl.oclc.org/NET/UNIS/fiware/iot-lite#",
+            "ipvs":"http://www.ipvs.uni-stuttgart.de/iot-lite#",
+            "ipvs:hasPin":{
+               "@container":"@list",
+               "@id":"ipvs:hasPin"
+            },
+            "m3lite":"http://purl.org/iot/vocab/m3-lite#",
+            "owl":"http://www.w3.org/2002/07/owl#",
+            "qu":"http://purl.org/NET/ssnx/qu/qu#",
+            "qurectwenty":"http://purl.org/NET/ssnx/qu/qu-rec20#",
+            "rdf":"http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+            "rdfs":"http://www.w3.org/2000/01/rdf-schema#",
+            "ssn":"http://purl.oclc.org/NET/ssnx/ssn#",
+            "time":"http://www.w3.org/2006/time#",
+            "xsd":"http://www.w3.org/2006/time#"
+         },
     "@graph": [
         {
             "@id": "iot-lite:altRelative",

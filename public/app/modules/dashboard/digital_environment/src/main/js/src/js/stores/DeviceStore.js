@@ -75,7 +75,7 @@ class DeviceStore extends EventEmitter {
         }
 
         /* Device is a "primitive" (i.e. has no mac address) - a sensor or an actuator */
-        /* Sensors and Actuator might have the pinConfiguration property */
+        /* Sensors and Actuators might have the pinConfiguration property */
         else {
             createdDevice['ipvs:pinConfiguration'] = [];
             if (restrictionId.length > 0) {
