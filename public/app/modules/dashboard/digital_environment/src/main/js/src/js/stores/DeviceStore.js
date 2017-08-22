@@ -69,7 +69,8 @@ class DeviceStore extends EventEmitter {
             if (restrictionId.length > 0) {
                 const restriction = restrictions.find((findRestriction) => (findRestriction['@id'] === restrictionId));
                 if (restriction != null) {
-                    { createdDevice['ipvs:numberOfPins'] = parseInt(restriction['owl:cardinality']['@value']); }
+                    console.log("Dropped device on the environment"); 
+                    createdDevice['ipvs:numberOfPins'] = parseInt(restriction['owl:cardinality']['@value']); 
                 }
             }
         }
@@ -196,7 +197,7 @@ class DeviceStore extends EventEmitter {
     /* Return all property's ids of the definition that are one of the 
      * types specified in variable types. */
     getPossibleProperties(type) {
-        const types = ['owl:AnnotationProperty', 'owl:DatatypeProperty', 'owl:ObjectProperty'];
+        const types = ['owl:AnnotationProperty', 'owl:DatatypeProperty', 'owl:ObjectProperty', 'owl:Restriction']; // Just 'owl:Restriction' relies on values
         let tempResponse = [];
         let recursiveResponse = [];
 

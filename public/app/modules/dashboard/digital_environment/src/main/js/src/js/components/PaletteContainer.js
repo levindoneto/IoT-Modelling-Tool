@@ -1,3 +1,5 @@
+
+
 import React, { Component, PropTypes } from 'react';
 import { DropTarget, DragDropContext } from 'react-dnd';
 import { List, ListItem } from 'material-ui/List';
@@ -41,7 +43,7 @@ class PaletteContainer extends Component {
 
     render() {
         const { hideSourceOnDrag, connectDropTarget } = this.props;
-        const definitionsDevices = definitions['@graph'].filter((iterObject) => !['owl:DatatypeProperty', 'owl:ObjectProperty', 'owl:AnnotationProperty'].includes(iterObject['@type']));
+        const definitionsDevices = definitions['@graph'].filter((iterObject) => !['owl:Restriction', 'owl:ObjectProperty', 'owl:AnnotationProperty'].includes(iterObject['@type']));
 
         /* for key and y-value */
         let tempCount = -1;

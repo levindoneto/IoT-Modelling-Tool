@@ -1,7 +1,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1 class="titleMYACC">
-        Add Additional Properties on Devices/Components
+        Add Additional WYT Properties on Devices/Components
     </h1>
 </section>
 
@@ -36,8 +36,24 @@
                 <div ng-if="showForms===1">
                     <div ng-repeat="n in range(1,numberOfProperties)"> <!-- Iteration on a list returned by the functinon range -->
                         <h4 class="Titlemyaccount">Fill out the new property and its value bellow</h4>
-                        <input class="BoxInput" placeholder="Property's Id" type="text" ng-model="new_property_key">
-                        <input class="BoxInput" placeholder="Property's Value" type="text" ng-model="new_property_value">
+                        <!-- Boolean: xsd:boolean 
+                             Integer: xsd:nonNegativeInteger, 
+                             String: xsd:string -->
+                        <h4>Data Type </h4>
+                        <select class="BoxInput" ng-model="new_property_type" required> 
+                            <option value="xsd:boolean" > 
+                                Boolean
+                            </option>
+                            <option value="xsd:nonNegativeInteger" > 
+                                Integer
+                            </option>
+                            <option value="xsd:string" >
+                                String
+                            </option>                            
+                        </select>               
+
+                        <!-- The values can be added just on Add Device/Component-->
+                        <!-- <input class="BoxInput" placeholder="Property's Value" type="text" ng-model="new_property_value"> --> 
                         <!-- Updating the database with the new property:value -->
                         <button class="AddElementBtn" type="submit" ng-click="addspecificproperty(selectedModel, new_property_key, new_property_value)">
                             <div>
@@ -47,9 +63,6 @@
                     </div>
                 </div>
             </div>
-
-
-
         </div>
     </div>
 </section><!-- /.content -->
