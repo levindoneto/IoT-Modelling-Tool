@@ -50,8 +50,23 @@
                             <option value="xsd:string" >
                                 String
                             </option>                            
-                        </select>               
-
+                        </select>     
+                                  
+                        <h4>Owl Type </h4>
+                        <select class="BoxInput" ng-model="new_property_owl_type" required> 
+                            <option value="owl:AnnotationProperty" > 
+                                Annotation Property
+                            </option>
+                            <option value="owl:DatatypeProperty" > 
+                                Datatype Property
+                            </option>
+                            <option value="owl:ObjectProperty" > 
+                                Object Property
+                            </option>
+                            <option value="owl:Restriction" > <!-- The one which depends on values -->
+                                Restriction
+                            </option>                       
+                        </select>   
                         <!-- The values can be added just on Add Device/Component-->
                         <!-- <input class="BoxInput" placeholder="Property's Value" type="text" ng-model="new_property_value"> --> 
                         <!-- Updating the database with the new property:value -->
