@@ -1,26 +1,26 @@
 
 dashboard.controller("addbelongingController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash','$firebaseObject','$firebaseArray','Upload','$timeout','notification',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray, Upload, $timeout, notification) {
-    var vm = this;
+    const vm = this;
 
     vm.addbelonging = function (model, file) {
-        Upload.base64DataUrl(file).then(function(base64Url) {
+        Upload.base64DataUrl(file).then((base64Url) => {
             model.userUid = $rootScope.userDB.uid;
-            var refImages = firebase.database().ref('images/');
-            var imageList = $firebaseArray(refImages);
-            imageList.$loaded().then(function(){
-                imageList.$add(base64Url).then(function(imref) {
+            const refImages = firebase.database().ref('images/');
+            const imageList = $firebaseArray(refImages);
+            imageList.$loaded().then(() => {
+                imageList.$add(base64Url).then((imref) => {
                     //console.log("imref");
                     //console.log(imref)
                     model.imageFile = imref.key;
 
-                    var ref = firebase.database().ref('models/');
-                    var modelList = $firebaseArray(ref);
+                    const ref = firebase.database().ref('models/');
+                    const modelList = $firebaseArray(ref);
                     /* $loaded function:
                      * Returns a promise which is resolved when the initial object data has been 
                      * downloaded from the database. The promise resolves to the $firebaseObject itself.
                      */
-                    modelList.$loaded().then(function(){
+                    modelList.$loaded().then(() => {
                         /* $add function:
                          * Creates a new record in the database and adds the record to our 
                          * local synchronized array.
@@ -28,7 +28,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                          * saved to the server. The promise resolves to the Firebase reference 
                          * for the newly added record, providing easy access to its key.
                          */
-                        modelList.$add(model).then(function(ref) {
+                        modelList.$add(model).then((ref) => {
                             swal({
                                 title: "It's been added with sucess!",
                                 timer: 1700,
