@@ -1,7 +1,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1 class="titleMYACC">
-        Add Additional WYT Properties on Devices/Components
+        Add Additional Properties on Devices/Components
     </h1>
 </section>
 
@@ -44,29 +44,23 @@
                         <h4>Data Type </h4>
                         <select class="BoxInput" ng-model="new_property_type" required> 
                             <option value="xsd:boolean" > 
-                                Boolean
+                                Boolean (False/True)
                             </option>
                             <option value="xsd:nonNegativeInteger" > 
-                                Integer
+                                Integer (..., -1, 0, +1, ...)
                             </option>
                             <option value="xsd:string" >
-                                String
+                                String (Sequence of Characters)
                             </option>                            
                         </select>     
 
                         <h4>Owl Type </h4>
                         <select class="BoxInput" ng-model="new_property_owl_type" required> 
-                            <option value="owl:AnnotationProperty" > 
-                                Annotation Property
-                            </option>
                             <option value="owl:DatatypeProperty" > 
-                                Datatype Property
-                            </option>
-                            <option value="owl:ObjectProperty" > 
-                                Object Property
+                                Unhangeable Property
                             </option>
                             <option value="owl:Restriction" > <!-- The one which depends on values -->
-                                Restriction
+                                Changeable Property
                             </option>                       
                         </select>
 

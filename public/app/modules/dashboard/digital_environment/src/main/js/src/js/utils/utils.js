@@ -75,17 +75,8 @@ export function cleanOutAttributes(unwantedAttributes, object) {
 
 export function isPrimitiveProperty(property) {
     if (property == null || property === '@id' || property === '') {
-        return true; 
+        return true;
     }
-
     const tempObject = getObjectFromGraphById(property, definitions['@graph']);
-    if(typeof tempObject === 'undefined') {
-        //console.log("Unchageable properties can't be edited");
-        return false;
-    }
-    else {
-        console.log ('Property: ', property);
-        console.log('tempObject: ', tempObject); //undefined
-        return tempObject['@type'] !== 'owl:ObjectProperty';
-    }
+    return tempObject['@type'] !== 'owl:ObjectProperty';
 }
