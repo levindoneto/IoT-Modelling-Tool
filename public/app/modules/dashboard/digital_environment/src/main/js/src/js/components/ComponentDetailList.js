@@ -66,6 +66,7 @@ export default class ComponentDetailList extends React.Component {
       if (utils.isPrimitiveProperty(this.state.selectAttribute)) {
           this.setState({ textValue: '' });
       } else {
+          console.log('PRIMITIVE (01)');
           this.setState({ selectValues: null });
       }
       DropActions.closeSetProperty();
@@ -247,6 +248,7 @@ export default class ComponentDetailList extends React.Component {
                                 else if (!Array.isArray(selectedDevice[key]) && typeof selectedDevice[key] === 'object' && selectedDevice[key]['@id'] != null) {
                                     if (key === 'geo:location') {
                                         const tempLocation = utils.getObjectFromGraphById(selectedDevice[key]['@id'], this.state.devices);
+                                        console.log('THE ERROR IS BEING GOTTEN HERE (1)');
                                         return (
                                             <div>
                                             <ListItem key={'long'} primaryText={`x: ${  tempLocation['geo:long']}`} />
@@ -258,6 +260,7 @@ export default class ComponentDetailList extends React.Component {
                                         return (<ListItem
                                             onDoubleClick={ () => {
                                                 const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
+                                                console.log('THE ERROR IS BEING GOTTEN HERE (2)');
                                                 this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
                                                 this.handleOpenSetProperty();
                                             }} 
@@ -267,8 +270,10 @@ export default class ComponentDetailList extends React.Component {
                                 }
                                 // Primitive data as property value
                                 else if (typeof selectedDevice[key] === 'string') {
+                                    console.log('THE ERROR IS BEING GOTTEN HERE (3)');
                                     return (<ListItem onDoubleClick={ () => {
                                         if (key != 'geo:location') {
+                                            console.log('THE ERROR IS BEING GOTTEN HERE (4)');
                                             const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                             this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
                                             this.handleOpenSetProperty();
@@ -279,6 +284,7 @@ export default class ComponentDetailList extends React.Component {
                                 } 
                                 return (<ListItem onDoubleClick={ () => {
                                     if (key != 'geo:location') {
+                                        console.log('THE ERROR IS BEING GOTTEN HERE (5)');
                                         const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                         this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
                                         this.handleOpenSetProperty();
@@ -291,7 +297,7 @@ export default class ComponentDetailList extends React.Component {
                         </List>
 
                         <Dialog
-                            title="Set Property"
+                            title="Set Property (Unchangeable properties can just be deleted)"
                             actions={actionsSetProperty}
                             modal={false}
                             open={this.state.openSetProperty}
@@ -299,24 +305,27 @@ export default class ComponentDetailList extends React.Component {
                         >
                             {[1].map(
                                 () => {
-                                    if (utils.isPrimitiveProperty(this.state.selectAttribute)) {
+                                    if (utils.isPrimitiveProperty(this.state.selectAttribute) && utils.isPrimitiveProperty(this.state.selectAttribute) !== false) {
                                         return (
                                             <TextField value={this.state.textValue} onChange={ (e) => {
                                                 this.setState({ textValue: e.target.value }); 
                                             }} 
                                             hintText="New Value" />
                                         );
-                                    } 
-                                    return (
-                                        <SelectField
-                                            hintText="Select a device"
-                                            value={this.state.selectValues}
-                                            onChange={this.handleChange}
-                                        >
-                                            {this.menuItems(this.state.selectValues)}
-                                        </SelectField>
-                                    );
                                     }
+                                     
+                                    if (utils.isPrimitiveProperty(this.state.selectAttribute) !== false) {
+                                        return (
+                                            <SelectField
+                                                hintText="Select a device"
+                                                value={this.state.selectValues}
+                                                onChange={this.handleChange}
+                                            >
+                                                {this.menuItems(this.state.selectValues)}
+                                            </SelectField>
+                                        );
+                                    }
+                                }
                             )}
                         </Dialog>
                     </div>
