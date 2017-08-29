@@ -281,6 +281,9 @@ firebase.database().ref('models').orderByKey().once('value')
     var extensionsGraph = []; /* Contains all elements for extension of the @graph list on definitions.
                                * All the elements will be pushed one by one into the list, and after that,
                                * the whole object will be updated on the local storage */
+    let additionalChangeableProp = {}; // id, owl type, domain, range
+    let changeablePropRdfsDomain = {}; // ontology:type(device/component)
+    let changeablePropRdfsRange = {}; // xsd:type_value
     createContext();
     setTimeout(() => {
         createGraph();    
@@ -342,8 +345,30 @@ firebase.database().ref('models').orderByKey().once('value')
                             rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i) //rdfsSubClassOf: current list of elements
                             /* Now, rdfsSubClassOf is updated with the new additional property (its identification element) */
                             console.log("Additional Property: ", property_i);
+
+                            /* Example of a changeable property element:
+                            {
+                                "@id": "ipvs:macAddress",     // Define the MacAdress property as Attribute of RaspberryPi
+                                "@type": "owl:DatatypeProperty",
+                                "rdfs:domain": {
+                                    "@id": "ssn:Device"
+                                },
+                                "rdfs:range": {
+                                    "@id": "xsd:string"
+                                }
+                            },
+                            */
                             if(childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:DatatypeProperty') {
                                 console.log("It's changeable: ", property_i);
+                                additionalChangeableProp = {}; // id, owl type, domain, range
+                                changeablePropRdfsDomain = {}; // ontology:type(device/component)
+                                changeablePropRdfsRange = {};
+
+                                additionalChangeableProp["@id"] = (childSnapshot.val().prefixCompany).concat();
+                                additionalChangeableProp["@type"] = childSnapshot.val()[property_i].NewPropertyOwlType;
+                                console.log("Object add changeable prop: ", additionalChangeableProp);
+                                
+
                             }
                             else { // Unchangeable property: owl:Restriction
                                 console.log("It's not changeable");
