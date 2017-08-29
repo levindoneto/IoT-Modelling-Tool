@@ -364,12 +364,17 @@ firebase.database().ref('models').orderByKey().once('value')
                                 changeablePropRdfsDomain = {}; // ontology:type(device/component)
                                 changeablePropRdfsRange = {};
 
-                                additionalChangeableProp["@id"] = (childSnapshot.val().prefixCompany).concat();
-                                additionalChangeableProp["@type"] = childSnapshot.val()[property_i].NewPropertyOwlType;
-                                console.log("Object add changeable prop: ", additionalChangeableProp);
-                                
+                                additionalChangeableProp['@id'] = (childSnapshot.val().prefixCompany).concat();
+                                additionalChangeableProp['@type'] = childSnapshot.val()[property_i].NewPropertyOwlType;
+    
 
-                            }
+                                changeablePropRdfsDomain['@id'] = (childSnapshot.val().ontology).concat(childSnapshot.val().type);
+                                changeablePropRdfsRange['@id'] = childSnapshot.val()[property_i].NewPropertyType;
+                                additionalChangeableProp['rdfs:domain'] = changeablePropRdfsDomain;
+                                additionalChangeableProp['rdfs:range'] = changeablePropRdfsRange;
+                                console.log('Complet object additional changeable prop: ', additionalChangeableProp);
+                            }                                                                                    
+                        
                             else { // Unchangeable property: owl:Restriction
                                 console.log("It's not changeable");
                             }
@@ -380,7 +385,7 @@ firebase.database().ref('models').orderByKey().once('value')
                             auxObj_owlCardinality = {};
 
                             // If the ownRestriction is empty is because the user has prefered the default option for this IoT Lite information
-                            childSnapshot.val().owlRestriction == '.' ? childSnapshotVal_owlRestriction='owl:Restriction' : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
+                            childSnapshot.val().owlRestriction === '.' ? childSnapshotVal_owlRestriction='owl:Restriction' : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
 
                             auxObjAddProperty['@id'] = ((((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id)).concat('-')).concat(property_i); // "prefixCompany:id-additionalProperty"
                             auxObjAddProperty['@type'] = childSnapshotVal_owlRestriction;
