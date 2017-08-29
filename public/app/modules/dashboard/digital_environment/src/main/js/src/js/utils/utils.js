@@ -77,6 +77,10 @@ export function isPrimitiveProperty(property) {
     if (property == null || property === '@id' || property === '') {
         return true;
     }
+
     const tempObject = getObjectFromGraphById(property, definitions['@graph']);
+    if (typeof tempObject === 'undefined') {
+        console.log("Unchangeable properties can't be modified");
+    }
     return tempObject['@type'] !== 'owl:ObjectProperty';
 }

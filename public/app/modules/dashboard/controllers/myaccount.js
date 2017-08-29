@@ -341,7 +341,13 @@ firebase.database().ref('models').orderByKey().once('value')
                         if (is_add_property == true) {
                             rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i) //rdfsSubClassOf: current list of elements
                             /* Now, rdfsSubClassOf is updated with the new additional property (its identification element) */
-                            
+                            console.log("Additional Property: ", property_i);
+                            if(childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:DatatypeProperty') {
+                                console.log("It's changeable: ", property_i);
+                            }
+                            else { // Unchangeable property: owl:Restriction
+                                console.log("It's not changeable");
+                            }
                             id_element['rdfs:subClassOf'] = rdfsSubClassOf; // Updating the id element with the rdfs list
                             auxObjAddProperty = {};
                             childSnapshotVal_owlRestriction = '';
@@ -385,7 +391,7 @@ firebase.database().ref('models').orderByKey().once('value')
                 localStorage.setItem(childSnapshot.key, childSnapshot.val().id); // Key:Id will be able to access from the whole application
                 break;
 
-            case 'SensingDevice':
+                case 'SensingDevice':
                 id_element = {};
                 rdfsSubClassOf = [];
                 id_element['@id'] = ((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id);
@@ -498,7 +504,6 @@ firebase.database().ref('models').orderByKey().once('value')
     localStorage.setItem('device', deviceOne);
     localStorage.setItem('sensor', sensorOne);
     localStorage.setItem('actuator', actuatorOne);
-
     let defObject = {
         "@context": {
             "geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
