@@ -17,7 +17,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     const modelList = $firebaseArray(ref);
 
     modelList.$loaded().then(() => {
-        console.log('The model list: ', modelList[0].$id);
+        //console.log('The model list: ', modelList[0].$id);
         $scope.models = modelList;
     });
 
@@ -25,26 +25,23 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
      */
     $scope.keyByValue = function (value) {
         let typeDB;
-        console.log('Value:::::', value, '::::::');
-
-        if (value === 'Sensor') {
-            console.log('ASSHOLE');
-        }
-
         switch (value) {
             case 'Device':
                 typeDB = 'Device';
+                break;
             case 'Sensor':
                 typeDB = 'SensingDevice';
+                break;
             case 'Actuator':
                 typeDB = 'ActuatingDevice';
+                break;
             default:
                 typeDB = '';
         }
         const kArray = Object.keys(types); // Creating array of keys
         const vArray = Object.values(types); // Creating array of values
         const vIndex = vArray.indexOf(value);  // Finding value index 
-        console.log(typeDB);
+        //console.log(typeDB);
         return typeDB;                      // Returning key by value index
     };
 
