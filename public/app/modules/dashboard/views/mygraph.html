@@ -34,7 +34,11 @@
                             <h4 class="modal-title">Details</h4>
                         </div>
                         <div class="modal-body" align="center">
-                            <span class="MyInfo"> Graph: </span> <span class="MyInfoP"> {{(modelgraph.defaultobjectsgraph).toString()}} </span> </br> <!-- It has to be a string value, otherwise it isn't printed -->
+                            <span class="MyInfo"> Default Graph: </span><br>
+                                <!--allDefaultElementsGraph is a list with all the default elements of the set @graph -->
+                                <div ng-repeat="defElement in graphDefaultElements">
+                                    <span align="right" > {{defElement}} </span> <hr> <!-- It has to be a string value, otherwise it isn't printed -->
+                                </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="BtnClosemybelongings" data-dismiss="modal">Close</button>
