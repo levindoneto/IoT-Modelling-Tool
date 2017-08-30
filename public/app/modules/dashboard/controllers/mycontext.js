@@ -1,26 +1,26 @@
 
-dashboard.controller("mycontextController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash','$firebaseObject','$firebaseArray',
+dashboard.controller('mycontextController', ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseObject', '$firebaseArray',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray) {
-    var vm = this; //controllerAs
+    let vm = this; //controllerAs
     const default_contextProps = [
-        "geo",
-        "idcontext",
-        "iotlite",
-        "m3lite",
-        "owl",
-        "qu",
-        "qurectwenty",
-        "rdf",
-        "rdfs",
-        "ssn",
-        "time",
-        "xsd",
-        "$$conf",
-        "$id",
-        "$priority",
-        "$resolved"];
-    var ref = firebase.database().ref('contexts/'); // Loading all the contexts from the database
-    var contextList = $firebaseArray(ref);
+        'geo',
+        'idcontext',
+        'iotlite',
+        'm3lite',
+        'owl',
+        'qu',
+        'qurectwenty',
+        'rdf',
+        'rdfs',
+        'ssn',
+        'time',
+        'xsd',
+        '$$conf',
+        '$id',
+        '$priority',
+        '$resolved'];
+    let ref = firebase.database().ref('contexts/'); // Loading all the contexts from the database
+    let contextList = $firebaseArray(ref);
 
     /* Function used to verify if a property on @context is default (e.g.: Id) or additional (e.g.: geo)
      * @parameters: String: property
@@ -28,11 +28,10 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
      */
     function verifyAdditionalPropertyContext(elementProperty_i) {
         let this_is_additional_property = true; // It'll be false just if the property has be found in the default properties' list
-        for (var prop = 0; prop < default_contextProps.length; prop++) {
+        for (let prop = 0; prop < default_contextProps.length; prop++) {
             if (elementProperty_i.toUpperCase() == default_contextProps[prop].toUpperCase()) { // the property is a default one
                 this_is_additional_property = false; // This means property_i is in the list of default properties
-            }
-            else {
+            }            else {
                 continue; // Don't set the variable up to one because all the list of default properties ought to be checked
             }
         }
@@ -40,16 +39,16 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     }
 
     /* Loading data from the database */
-    contextList.$loaded().then(function(){
+    contextList.$loaded().then(() => {
           $scope.contexts = contextList; // scope.context = database->context 
     });
 
     /* Function responsible for passing the selected context to the scope */
     $scope.modal = function (keySelContext) {
         //console.log("Context key: ", keySelContext);
-        var ref = firebase.database().ref('contexts/'+keySelContext);
-        var contextObj = $firebaseObject(ref);
-        contextObj.$loaded().then(function(){ //Loading contexts from the database as an object
+        let ref = firebase.database().ref(`contexts/${keySelContext}`);
+        let contextObj = $firebaseObject(ref);
+        contextObj.$loaded().then(() => { //Loading contexts from the database as an object
             $scope.modelcontext = contextObj;
             //console.log("Value:", contextObj);
         });
@@ -57,12 +56,12 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     
     /* Function to set a default @context for real time digital environment */
     $scope.setcontextdefault = function (keyContext) {
-         var ref = firebase.database().ref('defaults/');
-        let auxObjContext = {}; 
-        auxObjContext["defaultcontext"] = keyContext; 
+        let ref = firebase.database().ref('defaults/');
+        const auxObjContext = {}; 
+        auxObjContext.defaultcontext = keyContext; 
         ref.update(auxObjContext);
         swal({
-            title: "The selected context has been set as a default one",
+            title: 'The selected context has been set as a default one',
             timer: 1700,
             showConfirmButton: false
         });
@@ -73,29 +72,43 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
      *     do something;
      * }
      */
-    $scope.range = function(min, max, step) {
+    $scope.range = function (min, max, step) {
         step = step || 1;
-        var input = [];
-        for (var i = min; i <= max; i += step) {
+        const input = [];
+        for (let i = min; i <= max; i += step) {
             input.push(i);
         }
         return input;
     };
 
+    /* Function for getting nested elements on @context */
+    $scope.getNestedElementsContext = function (elementAdditionalContext) {
+        console.log('objAddionalPropsContext: ', elementAdditionalContext);
+        const additionalContextInfo = {}; // Initalize the object from the nested element
+        for (var infoContextKey in elementAdditionalContext) {
+            if (elementAdditionalContext.hasOwnProperty(infoContextKey)) {
+                //console.log('Key: ', infoContextKey.toString());
+                additionalContextInfo[infoContextKey] = elementAdditionalContext[infoContextKey];
+                console.log('The whole object: ', additionalContextInfo);
+            }
+        }
+        return additionalContextInfo; // key:value, key:property_key, value:property_value
+    };
+
+    /* Function for getting additional properties on devices/components */
     $scope.getAdditionalProperties = function (keySelContext) {
-        var ref = firebase.database().ref('contexts/'+keySelContext); // Accesing the object context selected by the user
-        var contextObj = $firebaseObject(ref);
-        let objAddPropsContext = {}; /* Object with the key:value of the additional properties.
+        let ref = firebase.database().ref(`contexts/${keySelContext}`); // Accesing the object context selected by the user
+        let contextObj = $firebaseObject(ref);
+        const objAddPropsContext = {}; /* Object with the key:value of the additional properties.
                                       * It'll be accessed via scope variable on the view */
 
         /* This is needed because of the asynchronous way of processing data */
-        setTimeout(function()
-        {
-            for (var contextProp_i in contextObj) { // Ranging on the object @context->key
-                if(contextObj.hasOwnProperty(contextProp_i)) { // This will check all properties' names on database's key
-                    is_add_cont_property = verifyAdditionalPropertyContext(contextProp_i);
-                    if (is_add_cont_property == true) { // Additional info has been found
-                        objAddPropsContext[contextProp_i] = contextObj[contextProp_i]; // Updating the object with a new pair key:value
+        setTimeout(() => {
+            for (const contextPropI in contextObj) { // Ranging on the object @context->key
+                if (contextObj.hasOwnProperty(contextPropI)) { // This will check all properties' names on database's key
+                    const isAddContProperty = verifyAdditionalPropertyContext(contextPropI);
+                    if (isAddContProperty === true) { // Additional info has been found
+                        objAddPropsContext[contextPropI] = contextObj[contextPropI]; // Updating the object with a new pair key:value
                     }
                 }
             }
@@ -103,5 +116,4 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                                                                   * can be accessed from the view */
         }, 0);
     };
-
 }]);
