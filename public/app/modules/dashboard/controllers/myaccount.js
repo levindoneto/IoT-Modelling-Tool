@@ -396,7 +396,7 @@ firebase.database().ref('models').orderByKey().once('value')
                                 auxObj_OwlOnProperty['@id'] = (childSnapshot.val().prefixCompany.concat(':')).concat(property_i);
                                 
                                 /* Getting the data for the key "owl:cardinality" on the element of the additional property */
-                                auxObj_owlCardinality['@value'] = childSnapshot.val()[property_i.toString()];
+                                auxObj_owlCardinality['@value'] = childSnapshot.val()[property_i].NewPropertyValue;
                                 isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality['@type'] = 'xsd:nonNegativeInteger' : auxObj_owlCardinality['@type'] = 'xsd:string';
     
                                 /* Updating the objects for the additional property's element */
@@ -474,7 +474,7 @@ firebase.database().ref('models').orderByKey().once('value')
                                 auxObjAddProperty['rdfs:comment'] = childSnapshot.val().rdfsComment;
                                 auxObj_OwlOnProperty['@id'] = (childSnapshot.val().prefixCompany.concat(':')).concat(property_i);                              
                                 /* Getting the data for the key "owl:cardinality" on the element of the additional property */
-                                auxObj_owlCardinality['@value'] = childSnapshot.val()[property_i.toString()];
+                                auxObj_owlCardinality['@value'] = childSnapshot.val()[property_i].NewPropertyValue;
                                 isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality['@type'] = 'xsd:nonNegativeInteger' : auxObj_owlCardinality['@type'] = 'xsd:string';
                                 /* Updating the objects for the additional property's element */
                                 auxObjAddProperty['owl:onProperty'] = auxObj_OwlOnProperty; // Updating the element of the additional property
@@ -536,7 +536,7 @@ firebase.database().ref('models').orderByKey().once('value')
                                 auxObjAddProperty['rdfs:comment'] = childSnapshot.val().rdfsComment;
                                 auxObj_OwlOnProperty['@id'] = (childSnapshot.val().prefixCompany.concat(':')).concat(property_i);                              
                                 /* Getting the data for the key "owl:cardinality" on the element of the additional property */
-                                auxObj_owlCardinality['@value'] = childSnapshot.val()[property_i.toString()];
+                                auxObj_owlCardinality['@value'] = childSnapshot.val()[property_i].NewPropertyValue;
                                 isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality['@type'] = 'xsd:nonNegativeInteger' : auxObj_owlCardinality['@type'] = 'xsd:string';
                                 /* Updating the objects for the additional property's element */
                                 auxObjAddProperty['owl:onProperty'] = auxObj_OwlOnProperty; // Updating the element of the additional property
@@ -572,7 +572,7 @@ firebase.database().ref('models').orderByKey().once('value')
                             auxObjAddProperty['@type'] = childSnapshotVal_owlRestriction;
                             auxObjAddProperty['rdfs:comment'] = childSnapshot.val().rdfsComment;
                             auxObj_OwlOnProperty['@id'] = (childSnapshot.val().prefixCompany.concat(':')).concat(property_i);
-                            auxObj_owlCardinality['@value'] = childSnapshot.val()[property_i.toString()];
+                            auxObj_owlCardinality['@value'] = childSnapshot.val()[property_i].NewPropertyValue;
                             isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality['@type'] = 'xsd:nonNegativeInteger' : auxObj_owlCardinality['@type'] = 'xsd:string';
                             auxObjAddProperty['owl:onProperty'] = auxObj_OwlOnProperty;
                             auxObjAddProperty['owl:cardinality'] = auxObj_owlCardinality;
