@@ -601,9 +601,9 @@ firebase.database().ref('models').orderByKey().once('value')
             "idcontext": "IoT Lite @Context (IPVS)",
             "iotlite": "http://purl.oclc.org/NET/UNIS/fiware/iot-lite#",
             "ipvs": "http://www.ipvs.uni-stuttgart.de/iot-lite#",
-            "ipvs:hasPin": {
+            "ipvs:pinConfiguration": {
                "@container": "@list",
-               "@id": "ipvs:hasPin"
+               "@id": "ipvs:pinConfiguration"
             },
             "m3lite": "http://purl.org/iot/vocab/m3-lite#",
             "owl": "http://www.w3.org/2002/07/owl#",
@@ -1075,21 +1075,23 @@ firebase.database().ref('models').orderByKey().once('value')
 
 
         //##### Extensions of IoT-Lite Scheme for own Device-Types #####################################################
-        { 
-            "@id": "ipvs:RaspberryPi",
-            "@type": "owl:Class",
-            "rdfs:subClassOf": [
+
+
+         {
+            "@id":"ipvs:RaspberryPi",
+            "@type":"owl:Class",
+            "rdfs:subClassOf":[
                {
-                  "@id": "ssn:Device"
+                  "@id":"ssn:Device"
                },
                {
-                "@id": "ipvs:macAddress"
-                },
-               {
-                  "@id": "ipvs:RaspberryPi-pinConfiguration"
+                  "@id":"ipvs:RaspberryPi-pinConfiguration" // CHANGE TO numberOfPins for devices
                }
             ]
-         }, // ok
+         },
+
+
+
 
         {
           "@id": "ipvs:macAddress",     // Define the MacAdress property as Attribute of RaspberryPi
