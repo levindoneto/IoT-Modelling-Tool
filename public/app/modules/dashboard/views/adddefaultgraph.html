@@ -16,10 +16,11 @@
                 <!-- This add is used in order the user be able to choose a default graph to update it with specific information -->
                 <h4 class="Titlemyaccount">Id (@Graph) </h4>
                 <input class="BoxInput" placeholder='Id' type="text" ng-model="vm.graph.idgraph">
-                  <h4 class="Titlemyaccount">Default Objects</h4>
+                  <h4 class="Titlemyaccount">Default Elements ( <i>{ "@graph": [ {element_0},...{element_n} ] }</i> )</h4>
                   <textarea  class="BoxInputDefaultObjects" placeholder="Default Objects" type="text" ng-model="vm.graph.defaultobjectsgraph">
                   </textarea></br>
                   </br>
+                  <a class="exampleDefaultGraph" target="_blank" href="https://pastebin.com/yy6rGfLG">See an example</a>
                   <button class="AddElementBtn" type="submit">
                      <div>
                         Add Default @Graph

@@ -1034,3 +1034,15 @@ h5.H5Trades, h5.ReportedTrades, .Adm {
     font-size: 18px;
     color: black;
 }
+
+.exampleDefaultGraph {
+    color: #006495;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 14px;
+}
+
+.exampleDefaultGraph:hover {
+    color: black;
+    transition: all 0.5s;
+}
