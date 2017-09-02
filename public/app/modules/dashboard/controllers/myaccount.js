@@ -255,14 +255,16 @@ function createComponent(element) {
     return lstComponenents[element.type].push(new Component(element)); // returns a promise
 }
 
-/* Reading data from the database (key: images)
+/* Read the data from the database (key: images) and update them on the local storage
  */
-firebase.database().ref('images').orderByKey().once('value')
-.then((snapshot) => { // after function(snapshot)
-    snapshot.forEach((childSnapshot) => {
+firebase.database().ref("images").orderByKey().once("value")
+.then(function(snapshot) { // after function(snapshot)
+    snapshot.forEach(function(childSnapshot) {
         allIcons[childSnapshot.key] = childSnapshot.val();
+        //console.log("Image's id: ", allIcons[childSnapshot.key]);
+        //console.log("The key: ", childSnapshot.key);
         localStorage.setItem(childSnapshot.key, childSnapshot.val());
-    });
+});
 });
 
 

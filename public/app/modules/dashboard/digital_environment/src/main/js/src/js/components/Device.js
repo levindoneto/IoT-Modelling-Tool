@@ -1,15 +1,17 @@
 import React, { Component, PropTypes } from 'react';
+import reactfire from 'reactfire';
 import { DragSource } from 'react-dnd';
 import MenuItem from 'material-ui/MenuItem';
 import { ListItem } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 import FlatButton from 'material-ui/FlatButton';
 import ItemTypes from '../dnd/ItemTypes';
-
+import fire from '../database/fire';
 import * as DropActions from '../actions/DropActions';
-
 import DeviceStore from '../stores/DeviceStore';
 import * as utils from '../utils/utils';
+
+const allIcons = {};
 
 const boxSource = {
     beginDrag(props) {
@@ -39,24 +41,42 @@ class Device extends Component {
             textValue: ''
         };
     }
-    componentWillMount() {
-        DeviceStore.on('change', this.getSelectedDevice);
-    }
 
     /* Overwrite screenshot of DragPreview from HTML5
      * This is what will be showed when Device is dragged from Palette */
-    componentDidMount() {
+    componentWillMount() {
         const { connectDragPreview } = this.props;
         const parentClasses = utils.getParentClasses(this.props.type);
         if (this.props.isPaletteItem && parentClasses.includes('ssn:SensingDevice')) { // TODO: ssn -> other ontologies can be used
+            //console.log("PARAMETER: ", this.props.type.substr(5, this.props.type.length));
             const sensorImage = new Image();
-            sensorImage.src = `images/${this.props.type.substr(5, this.props.type.length)}.png`;
+            const ref = firebase.database().ref('models');
+            ref.on("value", (snapshot) => {
+                console.log("THE VALUE: ", snapshot.val());
+                for (var keyDC in snapshot.val()) {
+                    //console.log("DevComp: ", snapshot.val()[keyDC]);
+                    if (snapshot.val()[keyDC].id === this.props.type.substr(5, this.props.type.length)) {
+                        sensorImage.src = localStorage.getItem(snapshot.val()[keyDC].imageFile);
+                    }
+                }
+            });
+
+            /* id_local = this.props.type.substr(5, this.props.type.length)
+             * Queries on the firebase to get the icon:
+             * get model.imageFile where id_local===model.id
+             * With keySelectedIcon = model.imageFile:
+             * image = images.keySelectedIcon
+             */
+            
+            //console.log("Id: ", this.props.type.substr(5, this.props.type.length));
             sensorImage.onload = () => connectDragPreview(sensorImage);
-        } else if (this.props.isPaletteItem && parentClasses.includes('ssn:Device') && !parentClasses.includes('iot-lite:ActuatingDevice')) {
+        } 
+        else if (this.props.isPaletteItem && parentClasses.includes('ssn:Device') && !parentClasses.includes('iot-lite:ActuatingDevice')) {
             const deviceImage = new Image();
             deviceImage.src = `images/${this.props.type.substr(5, this.props.type.length)}.png`;
             deviceImage.onload = () => connectDragPreview(deviceImage);
-        } else if (this.props.isPaletteItem && parentClasses.includes('iot-lite:ActuatingDevice')) {
+        }
+        else if (this.props.isPaletteItem && parentClasses.includes('iot-lite:ActuatingDevice')) {
             const actuatorImage = new Image();
             actuatorImage.src = `images/${this.props.type.substr(5, this.props.type.length)}.png`;
             actuatorImage.onload = () => connectDragPreview(actuatorImage);
@@ -115,7 +135,7 @@ class Device extends Component {
     /* If the device is selected, it deletes the selected one
      * and deletes the device from the store */
     deleteDevice = () => {
-        if (this.state.selectedDevice == this.props.id) {
+        if (this.state.selectedDevice === this.props.id) {
             DropActions.selectDevice('');
             DropActions.deleteDevice(this.props.id);
         }
@@ -125,7 +145,8 @@ class Device extends Component {
         e.stopPropagation();
         if (DeviceStore.getSelectedDevice() === this.props.id) { 
             DropActions.selectDevice('');
-        } else {
+        } 
+        else {
             DropActions.selectDevice(this.props.id);
         }
     };
@@ -166,15 +187,27 @@ class Device extends Component {
         let isActuatingDevice = false;
 
         /* Set icons for Devices/Components */
-        //TODO: Get the images from the database (insert new logic here)
         const parentClasses = utils.getParentClasses(this.props.type);
         if (parentClasses.includes('ssn:SensingDevice')) {
-            sensingDeviceAvatar = (<Avatar src={`images/${this.props.type.substr(5, this.props.type.length)}.png`} style={{ backgroundColor: '#dcedc8', borderRadius: '0%', border: '1.5px dotted gray' }} />);
+            
+            const ref = firebase.database().ref('models');
+            ref.on("value", (snapshot) => {
+                console.log("THE VALUE: ", snapshot.val());
+                for (var keyDC in snapshot.val()) {
+                    //console.log("DevComp: ", snapshot.val()[keyDC]);
+                    if (snapshot.val()[keyDC].id === this.props.type.substr(5, this.props.type.length)) {
+                        sensingDeviceAvatar = (<Avatar src={localStorage.getItem(snapshot.val()[keyDC].imageFile)} style={{ backgroundColor: '#dcedc8', borderRadius: '0%', border: '1.5px dotted gray' }} />);
+                    }
+                }
+            });
+            
             isSensingDevice = true;
-        }         else if (parentClasses.includes('ssn:Device') && !parentClasses.includes('iot-lite:ActuatingDevice')) {
+        }         
+        else if (parentClasses.includes('ssn:Device') && !parentClasses.includes('iot-lite:ActuatingDevice')) {
             deviceAvatar = (<Avatar src={`images/${this.props.type.substr(5, this.props.type.length)}.png`} style={{ backgroundColor: '#dcedc8', borderRadius: '0%', border: '1.5px dotted gray' }} />);
             isDevice = true;
-        }         else if (parentClasses.includes('iot-lite:ActuatingDevice')) {
+        } 
+        else if (parentClasses.includes('iot-lite:ActuatingDevice')) {
             actuatingDeviceAvatar = (<Avatar src={`images/${this.props.type.substr(5, this.props.type.length)}.png`} style={{ backgroundColor: '#b3e5fc', borderRadius: '0%', border: '1.5px dotted gray' }} />);
             isActuatingDevice = true;
         }
@@ -182,7 +215,8 @@ class Device extends Component {
         let backgroundColor;
         if (this.state.selectedDevice === id) {
             backgroundColor = 'lightgreen';
-        }        else {
+        }        
+        else {
             backgroundColor = 'white';
         }
 
@@ -214,7 +248,8 @@ class Device extends Component {
 
         if (this.state.selectedDevice === id) {
             document.body.addEventListener('keyup', this.handleKeysDevice);
-        }        else {
+        }        
+        else {
             document.body.removeEventListener('keyup', this.handleKeysDevice);
         }
 
@@ -257,12 +292,19 @@ class Device extends Component {
         }
 
         /* Render Devices (dropped Devices) into the DropContainer */
+        
         return connectDragSource(
+            console.log("Parameter return: ", this.props.type.substr(5, this.props.type.length),
             <img
                 id={id} onClick={this.handleClick}
                 src={`images/${this.props.type.substr(5, this.props.type.length)}.png`}
                 style={{ ...style, left, top }}
             />
+
+
+
+
+
         );
     }
 }

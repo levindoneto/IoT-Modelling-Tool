@@ -1,5 +1,4 @@
 function routeSync() {
-    console.log("reload");
     if (window.localStorage) {
         if (!localStorage.getItem('firstLoad')) {
             localStorage.firstLoad = true;
