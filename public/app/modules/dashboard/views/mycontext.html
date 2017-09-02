@@ -1,4 +1,5 @@
 <!-- Content Header (Page header) -->
+<script>routeSync();</script>
 <section class="content-header">
     <h1 class="titleMYACC">
         My @Context
@@ -48,7 +49,6 @@
                             <div ng-repeat="(key, value) in objAddionalPropsContext">
                                 <span class="MyInfo"> {{key.toString()}}: </span> <span class="MyInfoP"> {{getNestedElementsContext(objAddionalPropsContext)[key]}} </span> </br>
                             </div>
-
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="BtnClosemybelongings" data-dismiss="modal">Close</button>

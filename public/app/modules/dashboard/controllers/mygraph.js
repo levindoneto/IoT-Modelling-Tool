@@ -1,6 +1,6 @@
 
 
-dashboard.controller("mygraphController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash','$firebaseObject','$firebaseArray',
+dashboard.controller('mygraphController', ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash','$firebaseObject','$firebaseArray',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray) {
     
     var vm = this; //controllerAs
@@ -20,18 +20,17 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         var ref = firebase.database().ref(`graphs/${keySelGraph}`);
         var graphObj = $firebaseObject(ref);
         graphObj.$loaded().then(() => { //Loading graphs from the database as an object
-            console.log("Keys @graph: ", Object.keys(graphObj));
-            console.log("Values @graph: ", typeof JSON.parse(graphObj.defaultobjectsgraph));
+            //console.log('Keys @graph: ', Object.keys(graphObj));
+            //console.log("Values @graph: ", typeof JSON.parse(graphObj.defaultobjectsgraph));
             let objDefaultGraph = JSON.parse(graphObj.defaultobjectsgraph);
-            console.log("::: objDefaultGraph :::");
-            console.log("KEYS: ", Object.keys(objDefaultGraph));
-            console.log("VALUES: ", Object.values(objDefaultGraph));
-            console.log("LENGTH: ", Object.keys(objDefaultGraph).length);
+            //console.log("::: objDefaultGraph :::");
+            //console.log("KEYS: ", Object.keys(objDefaultGraph));
+            //console.log("VALUES: ", Object.values(objDefaultGraph));
+            //console.log("LENGTH: ", Object.keys(objDefaultGraph).length);
             for (i in objDefaultGraph["@graph"]) {
                 graphDefaultElementsList.push(objDefaultGraph["@graph"][i]);
             }
-            console.log("graphDefaultElementsList: ", graphDefaultElementsList);
-            console.log(":::::::::::::");
+            //console.log("graphDefaultElementsList: ", graphDefaultElementsList);
             $scope.modelgraph = graphObj;
             $scope.graphDefaultElements = graphDefaultElementsList;
         });
@@ -73,12 +72,12 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     };
 
     $scope.graphDefaultFormatter = function (json) {
-        console.log("THE JSON: ", json);
+        //console.log("THE JSON: ", json);
         if (typeof json.defaultobjectsgraph !== 'undefined') {
-            console.log('Type of the parameter: ', typeof json.defaultobjectsgraph);
-            console.log('Value of the parameter: ', json.defaultobjectsgraph);
+            //console.log('Type of the parameter: ', typeof json.defaultobjectsgraph);
+            //console.log('Value of the parameter: ', json.defaultobjectsgraph);
             var jso = JSON.parse(json.defaultobjectsgraph);
-            console.log("TYPE OF JSON-GRAPH: ", jso["@graph"]);
+            //console.log("TYPE OF JSON-GRAPH: ", jso["@graph"]);
             $scope.allDefaultElementsGraph = jso["@graph"];
         }
         //JSON.parse();

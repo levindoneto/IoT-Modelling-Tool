@@ -6,8 +6,8 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     var contextList = $firebaseArray(ref);
 
     /* Loading data from the database */
-    contextList.$loaded().then(function(){
-          console.log("CTX LIST: ", contextList[0]);
+    contextList.$loaded().then(() => {
+          //console.log('CTX LIST: ', contextList[0]);
           $scope.contexts = contextList;
     });
 
@@ -35,8 +35,8 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
      */
     $scope.range = function(min, max, step) {
         step = step || 1;
-        var input = [];
-        for (var i = min; i <= max; i += step) {
+        const input = [];
+        for (let i = min; i <= max; i += step) {
             input.push(i);
         }
         return input;

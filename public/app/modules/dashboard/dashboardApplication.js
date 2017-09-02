@@ -1,3 +1,15 @@
+function routeSync() {
+    console.log("reload");
+    if (window.localStorage) {
+        if (!localStorage.getItem('firstLoad')) {
+            localStorage.firstLoad = true;
+            window.location.reload();
+        }
+        else {
+            localStorage.removeItem('firstLoad');
+        }
+    }
+}
 
 var dashboard = angular.module('dashboard', ['ui.router', 'ngAnimate','ngMaterial','firebase', 'react']);
 
@@ -132,7 +144,7 @@ dashboard.factory('notification', function($firebaseArray, $firebaseObject) {
       $stateProvider.state('app.digitalenvironment', {
           url: '/digitalenvironment',
           templateUrl: 'app/modules/dashboard/digital_environment/src/main/resources/templates/index.html',
-          controller: 'digitalenvironmentController',
+          controller: 'searchController',
           controllerAs: 'vm',
           data: {
               pageTitle: 'IoT Modelling Environment'

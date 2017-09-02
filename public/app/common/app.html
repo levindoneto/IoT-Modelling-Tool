@@ -8,7 +8,7 @@
             <a class="navbar-brand page-scroll hidden-xs hidden-sm"  style="border-color: transparent" href="../../../../index.html">
                 <i> <img src="img/IoT-MT-title.png"  height="30" width="30"> </i> <span style="color: white; ; ">IoT - Modeling Tool</span>
             </a>
-            
+
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top" role="navigation">
                 <!-- Sidebar toggle button-->
@@ -50,7 +50,7 @@
                                 </li>
                             </ul>
                         </li>
-                        
+
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu hidden-xs hidden-sm" >
                             <a class="dropdown-toggle" data-toggle="dropdown">
@@ -61,9 +61,9 @@
                                 <!-- User image -->
                                 <li class="user-header">
                                     <!--<img src="{{user.profilePhoto}}" class="img-circle" alt="User Image">-->
-                                    
+
                                     <h3 class="nameApp ">{{user.Username}}</h3>
-                                    
+
                                 </li>
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
@@ -78,8 +78,8 @@
                                 </li>
                             </ul>
                         </li>
-                        
-                        
+
+
                         <span ng-show="vm.currentUser != undefined"  class="hidden-md	hidden-lg">
                             <a href="#"  class="DisLogApp" ng-click="vm.auth.$signOut()">Logoff</a>
                         </span>
@@ -89,11 +89,11 @@
         </header>
         <!-- Left side column. contains the logo and sidebar -->
         <aside class="main-sidebar">
-            
+
             <!-- sidebar -->
             <section class="sidebar">
                 <br><br>
-                
+
                 <div class="user-panel">
                     <div class="pull-left image">
                     </div>
@@ -101,14 +101,14 @@
                         <a ng-if="ui-sref-active!='active'">
                             <p style="white-space: normal;">::: {{user.Username}} :::</p>
                         </a>
-                        
-                        
+
+
                     </div>
                 </div>
-                
+
                 <ul class="sidebar-menu">
                     <li class="treeview" ui-sref-active="active" ng-click="vm.sideBar();" data-ng-repeat="menu in vm.menuItems">
-                        
+
                         <a ng-if="menu.state != 'admin'" ui-sref="app.{{menu.state}}">
                             <i class="fa fa-{{menu.icon}}"></i> <span>{{menu.title}}</span>
                         </a>
@@ -116,12 +116,12 @@
                             <i class="fa fa-{{menu.icon}}"></i> <span>{{menu.title}}</span>
                         </a>
                     </li>
-                    
+
                 </ul>
             </section>
             <!-- /.sidebar -->
         </aside>
-        
+
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <br>

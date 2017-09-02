@@ -1,5 +1,5 @@
 
-app.controller("appCtrl", ['$rootScope', '$scope', '$state', '$location', 'Flash','appSettings','$firebaseAuth','$firebaseObject','$firebaseArray',
+app.controller('appCtrl', ['$rootScope', '$scope', '$state', '$location', 'Flash','appSettings','$firebaseAuth','$firebaseObject','$firebaseArray',
 function ($rootScope, $scope, $state, $location, Flash,appSettings,$firebaseAuth,  $firebaseObject, $firebaseArray) {
 
     $rootScope.theme = appSettings.theme;
@@ -16,7 +16,7 @@ $scope.readNotification = function(){
       userDB.$save().then(function(ref) {
 
       }, function(error) {
-          console.log("Error:", error);
+          console.log('Error:', error);
       });
 
   })
@@ -49,92 +49,92 @@ $scope.readNotification = function(){
     //avalilable themes
     vm.themes = [
         {
-            theme: "black",
-            color: "skin-black",
-            title: "Dark Blue",
-            icon:""
+            theme: 'black',
+            color: 'skin-black',
+            title: 'Dark Blue',
+            icon:''
         },
         {
-            theme: "purple",
-            color: "skin-purple",
-            title: "Gray and Purple",
-            icon: ""
+            theme: 'purple',
+            color: 'skin-purple',
+            title: 'Gray and Purple',
+            icon: ''
         },
         {
-            theme: "black",
-            color: "skin-black-light",
-            title: "White",
-            icon:"-o"
+            theme: 'black',
+            color: 'skin-black-light',
+            title: 'White',
+            icon:'-o'
         },
         {
-            theme: "blue",
-            color: "skin-blue",
-            title: "Blue and Gray",
-            icon:""
+            theme: 'blue',
+            color: 'skin-blue',
+            title: 'Blue and Gray',
+            icon:''
         },
         {
-            theme: "blue",
-            color: "skin-blue-light",
-            title: "White and Blue",
-            icon:"-o"
+            theme: 'blue',
+            color: 'skin-blue-light',
+            title: 'White and Blue',
+            icon:'-o'
         },
         {
-            theme: "green",
-            color: "skin-green",
-            title: "Gray and Green",
-            icon:""
+            theme: 'green',
+            color: 'skin-green',
+            title: 'Gray and Green',
+            icon:''
         },
         {
-            theme: "green",
-            color: "skin-green-light",
-            title: "White and Green",
-            icon:"-o"
+            theme: 'green',
+            color: 'skin-green-light',
+            title: 'White and Green',
+            icon:'-o'
         },
         {
-            theme: "yellow",
-            color: "skin-yellow",
-            title: "Yellow and Gray",
-            icon:""
+            theme: 'yellow',
+            color: 'skin-yellow',
+            title: 'Yellow and Gray',
+            icon:''
         },
         {
-            theme: "yellow",
-            color: "skin-yellow-light",
-            title: "White and Yellow",
-            icon:"-o"
+            theme: 'yellow',
+            color: 'skin-yellow-light',
+            title: 'White and Yellow',
+            icon:'-o'
         },
         {
-            theme: "red",
-            color: "skin-red",
-            title: "Red and Gray",
-            icon: ""
+            theme: 'red',
+            color: 'skin-red',
+            title: 'Red and Gray',
+            icon: ''
         },
         {
-            theme: "red",
-            color: "skin-red-light",
-            title: "White and Red",
-            icon: "-o"
+            theme: 'red',
+            color: 'skin-red-light',
+            title: 'White and Red',
+            icon: '-o'
         },
         {
-            theme: "purple",
-            color: "skin-purple-light",
-            title: "Purple and White",
-            icon: "-o"
+            theme: 'purple',
+            color: 'skin-purple-light',
+            title: 'Purple and White',
+            icon: '-o'
         }
     ];
 
     //available layouts
     vm.layouts = [
         {
-            name: "Boxed",
-            layout: "layout-boxed"
+            name: 'Boxed',
+            layout: 'layout-boxed'
         },
         {
-            name: "Fixed",
-            layout: "fixed"
+            name: 'Fixed',
+            layout: 'fixed'
         },
         {
-            name: "Sidebar Collapse",
-            layout: "sidebar-collapse"
+            name: 'Sidebar Collapse',
+            layout: 'sidebar-collapse'
         },
     ];
 
@@ -142,59 +142,59 @@ $scope.readNotification = function(){
     //Main menu items of the dashboard
     vm.menuItems = [
         {
-            title: "My Account",
-            icon: "user",
-            state: "myaccount"
+            title: 'My Account',
+            icon: 'user',
+            state: 'myaccount'
         },
         {
-            title: "Add Default @Context",
-            icon: "cubes",
-            state: "adddefaultcontext"
+            title: 'Add Default @Context',
+            icon: 'cubes',
+            state: 'adddefaultcontext'
         },
         {
-            title: "Add Specific @Context",
-            icon: "linode",
-            state: "addspecificcontext"
+            title: 'Add Specific @Context',
+            icon: 'linode',
+            state: 'addspecificcontext'
         },
         {
-            title: "Add Default @Graph",
-            icon: "compass",
-            state: "adddefaultgraph"
+            title: 'Add Default @Graph',
+            icon: 'compass',
+            state: 'adddefaultgraph'
         },
         {
-            title: "My @Context",
-            icon: "fa fa-tablet",
-            state: "mycontext"
+            title: 'My @Context',
+            icon: 'fa fa-tablet',
+            state: 'mycontext'
         },
         {
-            title: "My @Graph",
-            icon: "exchange",
-            state: "mygraph"
+            title: 'My @Graph',
+            icon: 'exchange',
+            state: 'mygraph'
         },
         {
-            title: "IoT Modelling Environment",
-            icon: "fa fa-home",
-            state: "digitalenvironment"
+            title: 'IoT Modelling Environment',
+            icon: 'fa fa-home',
+            state: 'digitalenvironment'
         },
         {
-            title: "Add Device",  // Can be devices, actuators or sensors
-            icon: "plus-circle",
-            state: "addbelonging"
+            title: 'Add Device',  // Can be devices, actuators or sensors
+            icon: 'plus-circle',
+            state: 'addbelonging'
         },
         {
-            title: "My Devices",
-            icon: "thermometer-three-quarters",
-            state: "mybelongings"
+            title: 'My Devices',
+            icon: 'thermometer-three-quarters',
+            state: 'mybelongings'
         },
         {
-            title: "Add Additional Properties",
-            icon: "puzzle-piece",
-            state: "addadditionalproperties"
+            title: 'Add Additional Properties',
+            icon: 'puzzle-piece',
+            state: 'addadditionalproperties'
         },
         {
-            title: "Search",
-            icon: "search",
-            state: "search"
+            title: 'Search',
+            icon: 'search',
+            state: 'search'
         },
     ];
 
@@ -213,17 +213,17 @@ $scope.readNotification = function(){
     //controll sidebar open & close in mobile and normal view
     vm.sideBar = function (value) {
         if($(window).width()<=767){
-            if ($("body").hasClass('sidebar-open'))
-            $("body").removeClass('sidebar-open');
+            if ($('body').hasClass('sidebar-open'))
+            $('body').removeClass('sidebar-open');
             else
-            $("body").addClass('sidebar-open');
+            $('body').addClass('sidebar-open');
         }
         else {
             if(value==1){
-                if ($("body").hasClass('sidebar-collapse'))
-                $("body").removeClass('sidebar-collapse');
+                if ($('body').hasClass('sidebar-collapse'))
+                $('body').removeClass('sidebar-collapse');
                 else
-                $("body").addClass('sidebar-collapse');
+                $('body').addClass('sidebar-collapse');
             }
         }
     };
