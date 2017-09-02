@@ -50,7 +50,7 @@ class Device extends Component {
         const parentClasses = utils.getParentClasses(this.props.type);
         if (this.props.isPaletteItem && parentClasses.includes('ssn:SensingDevice')) { // TODO: ssn -> other ontologies can be used
             const sensorImage = new Image();
-            sensorImage.src = 'images/Temp-Sensor.png';
+            sensorImage.src = `images/${this.props.type.substr(5, this.props.type.length)}.png`;
             sensorImage.onload = () => connectDragPreview(sensorImage);
         } else if (this.props.isPaletteItem && parentClasses.includes('ssn:Device') && !parentClasses.includes('iot-lite:ActuatingDevice')) {
             const deviceImage = new Image();
@@ -169,7 +169,7 @@ class Device extends Component {
         //TODO: Get the images from the database (insert new logic here)
         const parentClasses = utils.getParentClasses(this.props.type);
         if (parentClasses.includes('ssn:SensingDevice')) {
-            sensingDeviceAvatar = (<Avatar src="images/Temp-Sensor.png" style={{ backgroundColor: '#fff59d', borderRadius: '0%', border: '1.5px dotted gray' }} />);
+            sensingDeviceAvatar = (<Avatar src={`images/${this.props.type.substr(5, this.props.type.length)}.png`} style={{ backgroundColor: '#dcedc8', borderRadius: '0%', border: '1.5px dotted gray' }} />);
             isSensingDevice = true;
         }         else if (parentClasses.includes('ssn:Device') && !parentClasses.includes('iot-lite:ActuatingDevice')) {
             deviceAvatar = (<Avatar src={`images/${this.props.type.substr(5, this.props.type.length)}.png`} style={{ backgroundColor: '#dcedc8', borderRadius: '0%', border: '1.5px dotted gray' }} />);
