@@ -320,7 +320,7 @@
     padding-left: 6px;
     padding-right: 6px;
     border-radius: 8px;
-    margin: auto;
+    margin-top: 6px;
     /* Horizontal centralizing */
     margin-left: auto;
     margin-right: auto;
@@ -330,14 +330,16 @@
     align: center;
 }
 
-.AddElementBtn:hover{
+.AddElementBtn:hover {
     background-color: #557fac;
     padding-top: 4px;
     padding-bottom: 4px;
     padding-left: 7px;
     padding-right: 7px;
     border-radius: 8px;
-    margin: auto;
+    margin-top: 6px;
+    margin-left: auto;
+    margin-right: auto;
     font-size: 20px;
     color: white;
     display: block;
@@ -485,14 +487,14 @@ input[type="file"] {
 }
 
 .custom-file-upload {
+    padding-left: 6px;
     border: 1px;
     background-color: #004C70;
     font-size: 15px;
     color: white;
     padding: 5px;
     border-radius: 8px;
-    margin-top: 10px;
-    margin: auto
+    margin: auto;
 }
 
 .custom-file-upload:hover {
