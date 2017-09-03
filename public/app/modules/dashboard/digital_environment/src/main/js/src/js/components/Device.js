@@ -267,7 +267,7 @@ class Device extends Component {
             
             <img
                 id={id} onClick={this.handleClick}
-                src={`images/${this.props.type.substr(5, this.props.type.length)}.png`}
+                src={localStorage.getItem(this.props.type.substr(5, this.props.type.length))}
                 style={{ ...style, left, top }}
             />
             
