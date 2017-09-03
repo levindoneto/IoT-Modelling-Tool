@@ -257,14 +257,22 @@ function createComponent(element) {
 
 /* Read the data from the database (key: images) and update them on the local storage
  */
+const ref = firebase.database().ref('models');
 firebase.database().ref("images").orderByKey().once("value")
-.then(function(snapshot) { // after function(snapshot)
-    snapshot.forEach(function(childSnapshot) {
-        allIcons[childSnapshot.key] = childSnapshot.val();
-        //console.log("Image's id: ", allIcons[childSnapshot.key]);
-        //console.log("The key: ", childSnapshot.key);
-        localStorage.setItem(childSnapshot.key, childSnapshot.val());
-});
+.then((snapshot) => { 
+    snapshot.forEach((childSnapshot) => {
+        //console.log("Iicon Key: ", childSnapshot.key);
+        ref.on("value", (snapshot) => {
+            //console.log("The icon: ", snapshot.val());
+            for (var keyDC in snapshot.val()) {
+                //console.log("DevComp: ", snapshot.val()[keyDC]);
+                if (snapshot.val()[keyDC].imageFile === childSnapshot.key) {
+                    localStorage.setItem(snapshot.val()[keyDC].id, childSnapshot.val()); /* key: id of the device/component,
+                                                                                          * value: value of the icon in base64 */
+                }
+            }
+        });
+    });
 });
 
 
