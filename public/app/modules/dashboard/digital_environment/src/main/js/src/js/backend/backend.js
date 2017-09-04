@@ -117,6 +117,9 @@ export function fire_ajax_save(name, content) {
         name,
         type: 'json-ld',
     };
+    const ref = firebase.database().ref('savedModels/');
+    ref[params.name] = savedModelStr;
+    let auxSavedModels = {};
     const url = '/modtool/saveModel' + '?' + $.param(params);
     console.log('Id to save on the database:', params.name); //SAVE IN THE DATABASE
     console.log('Content: ', content); //SAVE IN THE DATABASE
@@ -124,6 +127,8 @@ export function fire_ajax_save(name, content) {
     let savedModelStr = JSON.stringify(content);
     console.log('New content', savedModelStr);
     console.log('Type of the new content', typeof savedModelStr);
+    auxSavedModels[params.name] = savedModelStr;
+    ref.update(auxSavedModels); // Updating the database
     
     let message = false;
 
