@@ -125,7 +125,20 @@ export default class NavigationBar extends React.Component {
     };
 
     handleOpenLoadModel = () => {
-        this.getSavedModels();
+        console.log("I clicked on load model 128");
+        const ref = firebase.database().ref('savedModels/');
+        ref.on("value", (snapshot) => {
+            const auxStrTest = (snapshot.val().savedIOT).toString(); // Load the saved model called "savedIOT"
+            console.log("auxTEST :", auxStrTest);
+            console.log('type value: ', typeof auxStrTest); // String
+            const auxObjTest = JSON.parse(auxStrTest); // String -> Object
+            console.log("OBJ:auxTEST :", auxObjTest);
+            console.log('OBJ:type value: ', typeof auxObjTest); // Object
+            DeviceStore.setModel(auxObjTest);
+        });
+        
+        //DeviceStore.setModel(JSON.parse(auxTest));
+        //this.getSavedModels();
         this.setState({ openLoadModel: true });
     };
 

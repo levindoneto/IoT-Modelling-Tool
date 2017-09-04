@@ -22,7 +22,7 @@ export function fire_ajax_export(type, content) {
         data: JSON.stringify(content),
         dataType: 'json',
         async: false
-    }).always(function(msg) {
+    }).always((msg) => {
         response = msg.responseText;
     });
 
@@ -54,7 +54,7 @@ export function fire_ajax_import(type, content) {
             url,
             data: content,
             async: false
-        }).done(function(response) {
+        }).done((response) => {
             const tempObject = {'@context': {}, '@graph': response};
             const context = clone(definitions['@context']);
             const oldResponse = JSON.stringify(response);
@@ -121,12 +121,12 @@ export function fire_ajax_save(name, content) {
     ref[params.name] = savedModelStr;
     let auxSavedModels = {};
     const url = '/modtool/saveModel' + '?' + $.param(params);
-    console.log('Id to save on the database:', params.name); //SAVE IN THE DATABASE
-    console.log('Content: ', content); //SAVE IN THE DATABASE
-    console.log('TYPE of the content: ', typeof content); // object
+    //console.log('Id to save on the database:', params.name); //SAVE IN THE DATABASE
+    console.log('Content for comparison: ', content); //SAVE IN THE DATABASE
+    //console.log('TYPE of the content: ', typeof content); // object
     let savedModelStr = JSON.stringify(content);
-    console.log('New content', savedModelStr);
-    console.log('Type of the new content', typeof savedModelStr);
+    //console.log('New content', savedModelStr);
+    //console.log('Type of the new content', typeof savedModelStr);
     auxSavedModels[params.name] = savedModelStr;
     ref.update(auxSavedModels); // Updating the database
     
@@ -139,15 +139,21 @@ export function fire_ajax_save(name, content) {
         async: false,
         data: JSON.stringify(content),
         dataType: 'json'
-    }).done(function(){
+    }).done(() => {
         message = true;
-    }).fail(function(){
+    }).fail(() => {
         message = false;
     });
     return message;
 }
 
 export function fire_ajax_load(name) {
+    const ref = firebase.database().ref('savedModels/');
+    console.log("I'm here");
+    console.log("The savedModels: ");
+    ref.on("value", (snapshot) => {
+        console.log("SNAPSHOT VALUE: ", snapashot.val());
+    });
     const params = {
         name
     };
@@ -155,8 +161,11 @@ export function fire_ajax_load(name) {
         type: 'GET',
         url: '/modtool/loadModel' + '?' + $.param(params),
         async: false
-    }).done(function (msg) {
-        DeviceStore.setModel(JSON.parse(msg));
+    }).done((msg) => {
+        console.log('params from load: ', params);
+        console.log('msg from load: ', msg);
+        DeviceStore.setModel(JSON.parse(msg)); /* Converting the saved string into 
+                                                * a object for the digital twin */
     });
 }
 
@@ -166,7 +175,7 @@ export function fire_ajax_show() {
         type: 'GET',
         url: '/modtool/showModel',
         async: false
-    }).done(function (msg){
+    }).done((msg) => {
         response = msg;
     });
     return response;
