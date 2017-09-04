@@ -220,7 +220,8 @@ export default class NavigationBar extends React.Component {
 
         if (this.state.openSaveModel) {
             document.body.addEventListener('keyup', this.handleKeysSaveModel);
-        }         else {
+        }         
+        else {
             document.body.removeEventListener('keyup', this.handleKeysSaveModel);
         }
 

@@ -244,7 +244,9 @@ class DeviceStore extends EventEmitter {
     }
 
     saveModel(title) {
-        backend.fire_ajax_save(title, this.model);
+        //backend.fire_ajax_save(title, this.model);
+        console.log("title ", title);
+        console.log("this model: ", this.model);
         this.emit('change');
     }
 

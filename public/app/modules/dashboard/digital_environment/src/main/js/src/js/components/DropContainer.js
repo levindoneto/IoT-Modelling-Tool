@@ -61,7 +61,7 @@ const boxTarget = {
                     }
                 });
 
-                if (tempLocation != null && item.id != iterDevice['@id']) {
+                if (tempLocation != null && item.id !== iterDevice['@id']) {
                     const diffX = Math.abs(tempLocation['geo:lat'] - top);
                     const diffY = Math.abs(tempLocation['geo:long'] - left);
 
@@ -75,13 +75,13 @@ const boxTarget = {
 
             if (isCloseToOtherDevice && isTargetDevice) {
                 DropActions.setProperty(item.id, 'iot-lite:isSubSystemOf', tempDevice['@id']);
-            } else if (!isCloseToOtherDevice) {
+            } 
+            else if (!isCloseToOtherDevice) {
                 component.moveDevice(item.id, left, top);
             }
         }
     }
 };
-
 
 class DropContainer extends Component {
     static propTypes = {
@@ -116,7 +116,8 @@ class DropContainer extends Component {
 
         if (DeviceStore.isSetPropertyOpen === true) {
             document.body.removeEventListener('keyup', this.handleKeysSelectedDevice);
-        } else {
+        }
+        else {
             document.body.addEventListener('keyup', this.handleKeysSelectedDevice);
         }
     }
