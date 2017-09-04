@@ -231,7 +231,7 @@ function manageGraphLocalStorage(keyAccess, keyStore, elementGraph) {
         objCurrentDefinitions['@graph'].push(elementGraph[i]); // Updating the @graph list inner the object of definitions
     }
     localStorage.setItem(keyStore, JSON.stringify(objCurrentDefinitions)); // Updating the object definitions with the 
-    console.log(' Watching: THE WHOLE DEFINITIONS: ', objCurrentDefinitions);
+    //console.log(' Watching: THE WHOLE DEFINITIONS: ', objCurrentDefinitions);
 }
 
 /*****************************************************/
@@ -356,7 +356,7 @@ firebase.database().ref('models').orderByKey().once('value')
                                 rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i) //rdfsSubClassOf: current list of elements
                             }
                             /* Now, rdfsSubClassOf is updated with the new additional property (its identification element) */
-                            console.log("Additional Property: ", property_i);
+                            //console.log("Additional Property: ", property_i);
 
                             /* Example of a changeable property element:
                             {
@@ -371,7 +371,7 @@ firebase.database().ref('models').orderByKey().once('value')
                             },
                             */
                             if(childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:DatatypeProperty') { // Changeable property
-                                console.log("It's changeable: ", property_i);
+                                //console.log("It's changeable: ", property_i);
                                 additionalChangeableProp = {}; // id, owl type, domain, range
                                 changeablePropRdfsDomain = {}; // ontology:type(device/component)
                                 changeablePropRdfsRange = {};
@@ -383,13 +383,13 @@ firebase.database().ref('models').orderByKey().once('value')
                                 changeablePropRdfsRange['@id'] = childSnapshot.val()[property_i].NewPropertyType;
                                 additionalChangeableProp['rdfs:domain'] = changeablePropRdfsDomain;
                                 additionalChangeableProp['rdfs:range'] = changeablePropRdfsRange;
-                                console.log('Complet object additional changeable prop: ', additionalChangeableProp);
+                                //console.log('Complet object additional changeable prop: ', additionalChangeableProp);
 
                                 extensionsGraph.push(additionalChangeableProp); // Updating the @graph with an additional property
                             }                                                                                    
                         
                             else { // Unchangeable property: owl:Restriction
-                                console.log("It's not changeable");
+                                //console.log("It's not changeable");
 
                                 id_element['rdfs:subClassOf'] = rdfsSubClassOf; // Updating the id element with the rdfs list
                                 auxObjAddProperty = {};
@@ -447,7 +447,7 @@ firebase.database().ref('models').orderByKey().once('value')
                             if (childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:Restriction') { // Just uncheageable properties go onto the devices' definitions
                                 rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i) //rdfsSubClassOf: current list of elements
                             }
-                            console.log("Additional Property: ", property_i);
+                            //console.log("Additional Property: ", property_i);
                         
                             if(childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:DatatypeProperty') { // Changeable property
                                 console.log("It's changeable: ", property_i);
@@ -468,7 +468,7 @@ firebase.database().ref('models').orderByKey().once('value')
                             }                                                                                    
                             
                             else { // Unchangeable property: owl:Restriction
-                                console.log("It's not changeable");
+                                //console.log("It's not changeable");
                                 id_element['rdfs:subClassOf'] = rdfsSubClassOf; // Updating the id element with the rdfs list
                                 auxObjAddProperty = {};
                                 childSnapshotVal_owlRestriction = '';
@@ -509,7 +509,7 @@ firebase.database().ref('models').orderByKey().once('value')
                             if (childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:Restriction') { // Just uncheageable properties go onto the devices' definitions
                                 rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i) //rdfsSubClassOf: current list of elements
                             }
-                            console.log("Additional Property: ", property_i);
+                            //console.log("Additional Property: ", property_i);
 
                             if(childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:DatatypeProperty') { // Changeable property
                                 console.log("It's changeable: ", property_i);
@@ -530,7 +530,7 @@ firebase.database().ref('models').orderByKey().once('value')
                             }                                                                                    
                         
                             else { // Unchangeable property: owl:Restriction
-                                console.log("It's not changeable");
+                                //console.log("It's not changeable");
                                 id_element['rdfs:subClassOf'] = rdfsSubClassOf; // Updating the id element with the rdfs list
                                 auxObjAddProperty = {};
                                 childSnapshotVal_owlRestriction = '';
@@ -571,7 +571,7 @@ firebase.database().ref('models').orderByKey().once('value')
                         if (childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:Restriction') { // Just uncheageable properties go onto the devices' definitions
                             rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i) //rdfsSubClassOf: current list of elements
                         }
-                        console.log("Additional Property: ", property_i);
+                        //console.log("Additional Property: ", property_i);
 
                         if(childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:DatatypeProperty') { // Changeable property
                             console.log("It's changeable: ", property_i);

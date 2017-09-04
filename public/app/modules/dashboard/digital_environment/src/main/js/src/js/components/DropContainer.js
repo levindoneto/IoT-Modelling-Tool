@@ -57,6 +57,7 @@ const boxTarget = {
             devices.map((iterDevice) => {
                 const tempLocation = devices.find((iterObject) => {
                     if (iterDevice['geo:location']) {
+                        console.log("LOC 01", iterDevice['geo:location']['@id']);
                         return iterDevice['geo:location']['@id'] === iterObject['@id'];
                     }
                 });
@@ -245,7 +246,9 @@ class DropContainer extends Component {
                     /*  Search for uses in isSubSystemOf, then add star */
                     let isSuperDevice = false;
                     devices.map((iterDevice) => {
-                        if (iterDevice['iot-lite:isSubSystemOf'] && iterDevice['iot-lite:isSubSystemOf']['@id'] != iterDevice['@id'] && iterDevice['iot-lite:isSubSystemOf']['@id'] === storedDevice['@id']) { isSuperDevice = true; }
+                        if (iterDevice['iot-lite:isSubSystemOf'] && iterDevice['iot-lite:isSubSystemOf']['@id'] != iterDevice['@id'] && iterDevice['iot-lite:isSubSystemOf']['@id'] === storedDevice['@id']) { 
+                            isSuperDevice = true; 
+                        }
                     });
 
                     /* Render Devices into the DropContainer */

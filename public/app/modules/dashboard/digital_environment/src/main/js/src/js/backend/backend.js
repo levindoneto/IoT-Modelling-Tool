@@ -1,5 +1,7 @@
 import DeviceStore from '../stores/DeviceStore';
 import {definitions} from '../constants/definitions';
+import fire from '../database/fire';
+import reactfire from 'reactfire';
 
 /* Transforms the object of definitions in a string */
 function clone(object) {
@@ -116,7 +118,15 @@ export function fire_ajax_save(name, content) {
         type: 'json-ld',
     };
     const url = '/modtool/saveModel' + '?' + $.param(params);
+    console.log('Id to save on the database:', params.name); //SAVE IN THE DATABASE
+    console.log('Content: ', content); //SAVE IN THE DATABASE
+    console.log('TYPE of the content: ', typeof content); // object
+    let savedModelStr = JSON.stringify(content);
+    console.log('New content', savedModelStr);
+    console.log('Type of the new content', typeof savedModelStr);
+    
     let message = false;
+
     $.ajax({
         type: 'POST',
         contentType : 'application/json',
