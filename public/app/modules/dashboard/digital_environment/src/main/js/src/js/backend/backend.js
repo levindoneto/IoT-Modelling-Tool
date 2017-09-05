@@ -118,8 +118,11 @@ export function fire_ajax_save(name, content) {
         type: 'json-ld',
     };
     const ref = firebase.database().ref('savedModels/');
+    const refInfoSaved = firebase.database().ref('infoSavedModels');
+    
     ref[params.name] = savedModelStr;
-    let auxSavedModels = {};
+    const auxSavedModels = {};
+    const auxInfoSaved = {};
     const url = '/modtool/saveModel' + '?' + $.param(params);
     //console.log('Id to save on the database:', params.name); //SAVE IN THE DATABASE
     console.log('Content for comparison: ', content); //SAVE IN THE DATABASE
@@ -129,30 +132,16 @@ export function fire_ajax_save(name, content) {
     //console.log('Type of the new content', typeof savedModelStr);
     auxSavedModels[params.name] = savedModelStr;
     ref.update(auxSavedModels); // Updating the database
-    
+    auxInfoSaved.lastSavedModel = params.name; // Save the id of the last saved model
+    refInfoSaved.update(auxInfoSaved); // Update the info of the last saved on the database
     let message = false;
-
-    $.ajax({
-        type: 'POST',
-        contentType : 'application/json',
-        url,
-        async: false,
-        data: JSON.stringify(content),
-        dataType: 'json'
-    }).done(() => {
-        message = true;
-    }).fail(() => {
-        message = false;
-    });
-    return message;
 }
 
 export function fire_ajax_load(name) {
     const ref = firebase.database().ref('savedModels/');
-    console.log("I'm here");
     console.log("The savedModels: ");
     ref.on("value", (snapshot) => {
-        console.log("SNAPSHOT VALUE: ", snapashot.val());
+        console.log('Snapshot value: ', snapashot.val());
     });
     const params = {
         name
