@@ -202,9 +202,23 @@ function verifyAdditionalProperty(elementProperty_i) {
  * @parameters: Data type
  * @return: Boolean: true->if the data is a non-negative-integer, false->another type of data
  */
-function isNonNegativeInteger(elementValue){
-    return (typeof elementValue == 'number' && elementValue%1 == 0 && elementValue > 0);
+function isNonNegativeInteger(elementValue) {
+    return (typeof elementValue === 'number' && elementValue % 1 === 0 && elementValue > 0);
 }
+
+function addDinamicException(ContextKey, NewPropertyId, NewPropertyType) {
+    //console.log(Key: ",ContextKey);
+    const ref = firebase.database().ref(`models/${ContextKey}`); // Accessing context->ContextKey on the database
+    const auxObjContext = {}; // Auxiliar to add a key:value on a specific object
+    const auxValuesObjContext = {}; /* Auxiliar with the following information:
+                                   * property_type, owl_type and value if the owl_type is Restriction */    
+    auxValuesObjContext.NewPropertyType = NewPropertyType; 
+    auxValuesObjContext.NewPropertyOwlType = 'owl:DatatypeProperty';
+    auxValuesObjContext.NewPropertyValue = " "; // It can't be null if the owl_type is Restriction
+    
+    auxObjContext[NewPropertyId] = auxValuesObjContext; // In this way just a key with an object is added, not a new object    
+    ref.update(auxObjContext); // Updating the object on the database
+};
 
 
 /*****************************************************/
@@ -237,23 +251,6 @@ function manageGraphLocalStorage(keyAccess, keyStore, elementGraph) {
 /*****************************************************/
 /************** Database's manipulation **************/
 /*****************************************************/
-
-/* Object Component
- */
-function Component(element) {
-    this.numberOfPins = element.numberOfPins;
-    this.id = element.id;
-    this.iconComponentKey = element.imageFile; // This key is used to access the correct image in the another data structure
-    this.ownerUser = element.userUid;
-}
-
-/* Function which is called for each device/component in worder to create a new
- *     object with their information
- */
-function createComponent(element) {
-    //if element.type is definied
-    return lstComponenents[element.type].push(new Component(element)); // returns a promise
-}
 
 /* Read the data from the database (key: images) and update them on the local storage
  */
@@ -303,6 +300,7 @@ firebase.database().ref('models').orderByKey().once('value')
     //var key = childSnapshot.key;
         switch (childSnapshot.val().type) {
             case 'Device':
+                //addDinamicException(childSnapshot.key, 'macAddress', 'xsd:nonNegativeInteger'); /* Add exception for the property 
                 id_element = {}; 
                 rdfsSubClassOf = [];
                 id_element['@id'] = ((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id); //prefix:id
@@ -335,7 +333,7 @@ firebase.database().ref('models').orderByKey().once('value')
                  * },
                  */ 
                 
-                rdfsSubClassOf = createRdfs (childSnapshot.val().ontology, childSnapshot.val().type);
+                rdfsSubClassOf = createRdfs(childSnapshot.val().ontology, childSnapshot.val().type);
                 /* Now, rdfsSubClassOf contains a list in this format:
                  * [
                  *     {
@@ -351,7 +349,7 @@ firebase.database().ref('models').orderByKey().once('value')
                 for (var property_i in childSnapshot.val()) {
                     if((childSnapshot.val()).hasOwnProperty(property_i)) { // This will check all properties' names on database's key
                         is_add_property = verifyAdditionalProperty(property_i);
-                        if (is_add_property == true) {
+                        if (is_add_property === true) {
                             if (childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:Restriction') { // Just uncheageable properties go onto the devices' definitions
                                 rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i) //rdfsSubClassOf: current list of elements
                             }
@@ -384,13 +382,11 @@ firebase.database().ref('models').orderByKey().once('value')
                                 additionalChangeableProp['rdfs:domain'] = changeablePropRdfsDomain;
                                 additionalChangeableProp['rdfs:range'] = changeablePropRdfsRange;
                                 //console.log('Complet object additional changeable prop: ', additionalChangeableProp);
-
                                 extensionsGraph.push(additionalChangeableProp); // Updating the @graph with an additional property
                             }                                                                                    
                         
                             else { // Unchangeable property: owl:Restriction
                                 //console.log("It's not changeable");
-
                                 id_element['rdfs:subClassOf'] = rdfsSubClassOf; // Updating the id element with the rdfs list
                                 auxObjAddProperty = {};
                                 childSnapshotVal_owlRestriction = '';
@@ -425,13 +421,8 @@ firebase.database().ref('models').orderByKey().once('value')
                  * so the element of identification can be pushed into @graph, whereas
                  * definitions will be update with the new @graph 
                  */
-                extensionsGraph.push(id_element); // Updating the @graph with an additional property
-
-                //console.log('EXTENSIONS: ', extensionsGraph);
-                // manageGraphLocalStorage('definitions', 'upDefinitions', extensionsGraph);
                 
-                createComponent(childSnapshot.val());
-                //localStorage.setItem(childSnapshot.key, childSnapshot.val().id); // Key:Id will be able to access from the whole application
+                 extensionsGraph.push(id_element); // Updating the @graph with an additional property
                 break;
 
             case 'SensingDevice':
@@ -448,7 +439,6 @@ firebase.database().ref('models').orderByKey().once('value')
                                 rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i) //rdfsSubClassOf: current list of elements
                             }
                             //console.log("Additional Property: ", property_i);
-                        
                             if(childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:DatatypeProperty') { // Changeable property
                                 console.log("It's changeable: ", property_i);
                                 additionalChangeableProp = {}; // id, owl type, domain, range
@@ -491,10 +481,7 @@ firebase.database().ref('models').orderByKey().once('value')
                         }
                     } 
                 } 
-
                 extensionsGraph.push(id_element); // Updating the @graph with an additional property
-                createComponent(childSnapshot.val());
-                //localStorage.setItem(childSnapshot.key, childSnapshot.val().id); // Key:Id will be able to access from the whole application
                 break;
             case 'ActuatingDevice':
                 id_element = {};
@@ -510,7 +497,6 @@ firebase.database().ref('models').orderByKey().once('value')
                                 rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i) //rdfsSubClassOf: current list of elements
                             }
                             //console.log("Additional Property: ", property_i);
-
                             if(childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:DatatypeProperty') { // Changeable property
                                 console.log("It's changeable: ", property_i);
                                 additionalChangeableProp = {}; // id, owl type, domain, range
@@ -553,10 +539,7 @@ firebase.database().ref('models').orderByKey().once('value')
                         }
                     } 
                 } 
-
                 extensionsGraph.push(id_element); // Updating the @graph with an additional property
-                createComponent(childSnapshot.val());
-                //localStorage.setItem(childSnapshot.key, childSnapshot.val().id); // Key:Id will be able to access from the whole application
                 break;
             default:
             id_element = {};
@@ -572,7 +555,6 @@ firebase.database().ref('models').orderByKey().once('value')
                             rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i) //rdfsSubClassOf: current list of elements
                         }
                         //console.log("Additional Property: ", property_i);
-
                         if(childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:DatatypeProperty') { // Changeable property
                             console.log("It's changeable: ", property_i);
                             additionalChangeableProp = {}; // id, owl type, domain, range
@@ -615,24 +597,10 @@ firebase.database().ref('models').orderByKey().once('value')
                     }
                 } 
             } 
-
             extensionsGraph.push(id_element); // Updating the @graph with an additional property
-            createComponent(childSnapshot.val());
         }
     });
     manageGraphLocalStorage('definitions', 'upDefinitions', extensionsGraph); // Extension graph is already done to be stored, with all components, devices and additional properties
-}).then((createComponent) => { 
-    var prefixIPVS = 'ipvs:';
-    var deviceOne = lstComponenents.Device['0'].id;
-    var sensorOne = lstComponenents.SensingDevice['0'].id;
-    var actuatorOne = lstComponenents.ActuatingDevice['0'].id;
-    localStorage.setItem('device', deviceOne);
-    localStorage.setItem('sensor', sensorOne);
-    localStorage.setItem('actuator', actuatorOne);
-
-    // Storing the object into the local storage |
-    //console.log(defObject);
-    //localStorage.setItem('defObject', JSON.stringify(defObject));
 });
 
 dashboard.controller('myaccountController', ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseArray','$firebaseAuth','$firebaseObject',
