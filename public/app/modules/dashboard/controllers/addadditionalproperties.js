@@ -65,9 +65,13 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         const auxValuesObjContext = {}; /* Auxiliar with the following information:
                                        * property_type, owl_type and value if the owl_type is Restriction */    
         auxValuesObjContext.NewPropertyType = NewPropertyType; 
-        auxValuesObjContext.NewPropertyOwlType = NewPropertyOwlType;
+        if (NewPropertyOwlType === true) { // Checkbox checked for static
+            auxValuesObjContext.NewPropertyOwlType = 'owl:Restriction';
+        }
+        else {
+            auxValuesObjContext.NewPropertyOwlType = 'owl:DatatypeProperty';
+        }
         auxValuesObjContext.NewPropertyValue = NewPropertyValue; // It can't be null if the owl_type is Restriction
-
         
         auxObjContext[NewProperty] = auxValuesObjContext; // In this way just a key with an object is added, not a new object
         

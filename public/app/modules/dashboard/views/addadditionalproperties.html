@@ -25,7 +25,7 @@
                 </option>
             </select>
 
-            <div ng-init="new_property_value=' '" ng-show="selectedModel">
+            <div ng-init="new_property_value=''" ng-show="selectedModel">
                 </br><h6 class="titleMYACC"> Add more information on the selected Device/Component </h6>
                 
                 <h6 class="Titlemyaccount"> Number of Properties to be added </h6>
@@ -55,30 +55,18 @@
                             </option>                            
                         </select>     
 
-                        <h4>Owl Type </h4>
-                        <select class="BoxInput" ng-model="new_property_owl_type" required> 
-                            <option value="owl:Restriction" > 
-                                Unhangeable Property
-                            </option>
-                            <option value="owl:DatatypeProperty" > <!-- The one which depends on values -->
-                                Changeable Property
-                            </option>                       
-                        </select>
+                        <h4>Static Property
+                            <input type="checkbox" id="StaticProp" ng-model="static" />
+                        </h4>
 
-                        <!-- if (new_property_owl_type == owl:Restriction) {
-                                 NewPropertyValue = value by the user;
-                             }
-                             else {
-                                 NewPropertyValue = "-"; // it's considered a empty value for the built backend
-                             }
-                        -->
-                        <div ng-show="new_property_owl_type==='owl:Restriction'">
-                                <input class="BoxInput" placeholder="Property's Value" type="text" ng-model="new_property_value">
+                        <div ng-show="static">
+                            <input class="BoxInput" placeholder="Property's Value" type="text" ng-model="new_property_value">
                         </div>
+                        
                         <!-- The values can be added just on Add Device/Component-->
                         <!-- <input class="BoxInput" placeholder="Property's Value" type="text" ng-model="new_property_value"> --> 
                         <!-- Updating the database with the new property:value -->
-                        <button class="AddElementBtn" type="submit" ng-click="addspecificproperty(selectedModel, new_property_key, new_property_type, new_property_owl_type, new_property_value)">
+                        <button class="AddElementBtn" type="submit" ng-click="addspecificproperty(selectedModel, new_property_key, new_property_type, static, new_property_value)">
                             <div>
                                 Add Specific Information
                             </div>

@@ -1048,3 +1048,25 @@ h5.H5Trades, h5.ReportedTrades, .Adm {
     color: black;
     transition: all 0.5s;
 }
+
+.checkbox-list__item {
+    position: relative;
+    padding: 10px 0;
+    display: block;
+    cursor: pointer;
+    margin: 0 0 0 34px;
+    border-bottom: 1px solid #b4bcc2;
+  
+    &:last-of-type {
+      border-bottom: 0;
+    }
+  }
+  
+  /* Checkbox - Add Additional Properties */
+  input[type=checkbox] {
+    transform: scale(1.8);
+    margin-left: 6px;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
