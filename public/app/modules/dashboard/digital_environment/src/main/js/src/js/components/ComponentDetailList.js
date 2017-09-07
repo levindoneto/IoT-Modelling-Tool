@@ -165,9 +165,9 @@ export default class ComponentDetailList extends React.Component {
                     <MuiThemeProvider>
                         <div>
                             <List style={styles}>
-                                <Subheader style={subHeaderStyle}>Component Details</Subheader>
+                                <Subheader style={subHeaderStyle}>Details</Subheader>
                                 <Divider />
-                                <ListItem key={1} primaryText={'Select A Device'} />
+                                <ListItem key={1} primaryText={'Select a Device or a Component'} />
                             </List>
                         </div>
                      </MuiThemeProvider>
@@ -182,7 +182,7 @@ export default class ComponentDetailList extends React.Component {
                     <div>
                         <List style={styles}>
                             <Subheader style={subHeaderStyle}>
-                                Component Details
+                                Details
                             </Subheader>
                             <Divider />
                             {Object.keys(selectedDevice).map(key => {
@@ -234,7 +234,7 @@ export default class ComponentDetailList extends React.Component {
                                                     }
                                                 }}
                                                 // show (currIndex + 1), so that index starts from 1
-                                                key={currIndex} primaryText={`${currIndex + 1  }: ${  lowerDevice}`}
+                                                key={currIndex} primaryText={`${currIndex + 1}: ${lowerDevice}`}
                                                 />);
                                             }
                                         })
@@ -249,8 +249,8 @@ export default class ComponentDetailList extends React.Component {
                                         const tempLocation = utils.getObjectFromGraphById(selectedDevice[key]['@id'], this.state.devices);
                                         return (
                                             <div>
-                                            <ListItem key={'long'} primaryText={`x: ${  tempLocation['geo:long']}`} />
-                                            <ListItem key={'lat'} primaryText={`y: ${ tempLocation['geo:lat']}`} />
+                                            <ListItem key={'long'} primaryText={`x: ${tempLocation['geo:long']}`} />
+                                            <ListItem key={'lat'} primaryText={`y: ${tempLocation['geo:lat']}`} />
                                             </div>
                                         );
                                     } 
@@ -268,23 +268,23 @@ export default class ComponentDetailList extends React.Component {
                                 // Primitive data as property value
                                 else if (typeof selectedDevice[key] === 'string') {
                                     return (<ListItem onDoubleClick={ () => {
-                                        if (key != 'geo:location') {
+                                        if (key !== 'geo:location') {
                                             const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                             this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
                                             this.handleOpenSetProperty();
                                         }
                                     }}
-                                    key={key} primaryText={`${key.replace(/(.)*:/, '')  }: ${  selectedDevice[key].replace(/(.)*:/, '')}`}
+                                    key={key} primaryText={`${key.replace(/(.)*:/, '')}: ${selectedDevice[key].replace(/(.)*:/, '')}`}
                                     />);
                                 } 
                                 return (<ListItem onDoubleClick={ () => {
-                                    if (key != 'geo:location') {
+                                    if (key !== 'geo:location') {
                                         const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                         this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
                                         this.handleOpenSetProperty();
                                     }
                                 }}
-                                key={key} primaryText={`${key.replace(/(.)*:/, '')  }: ${  selectedDevice[key]}`}
+                                key={key} primaryText={`${key.replace(/(.)*:/, '')}: ${selectedDevice[key]}`}
                                 />);
 
                             })}
@@ -319,6 +319,11 @@ export default class ComponentDetailList extends React.Component {
                                     }
                             )}
                         </Dialog>
+                        <h4>
+                            <center>
+                                <a href="dashboard.html#/app/mydevices">See more information</a>
+                            </center>
+                        </h4>
                     </div>
                 </MuiThemeProvider>
             </div>
