@@ -29,9 +29,10 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     function verifyAdditionalPropertyContext(elementProperty_i) {
         let this_is_additional_property = true; // It'll be false just if the property has be found in the default properties' list
         for (let prop = 0; prop < default_contextProps.length; prop++) {
-            if (elementProperty_i.toUpperCase() == default_contextProps[prop].toUpperCase()) { // the property is a default one
+            if (elementProperty_i.toUpperCase() === default_contextProps[prop].toUpperCase()) { // the property is a default one
                 this_is_additional_property = false; // This means property_i is in the list of default properties
-            }            else {
+            }           
+            else {
                 continue; // Don't set the variable up to one because all the list of default properties ought to be checked
             }
         }
@@ -95,7 +96,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         return additionalContextInfo; // key:value, key:property_key, value:property_value
     };
 
-    /* Function for getting additional properties on devices/components */
+    /* Function for getting additional properties on contexts */
     $scope.getAdditionalProperties = function (keySelContext) {
         let ref = firebase.database().ref(`contexts/${keySelContext}`); // Accesing the object context selected by the user
         let contextObj = $firebaseObject(ref);
