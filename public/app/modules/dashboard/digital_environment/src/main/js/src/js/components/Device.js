@@ -46,6 +46,7 @@ class Device extends Component {
      * This is what will be showed when Device is dragged from Palette */
     componentDidMount() {
         const { connectDragPreview } = this.props;
+        //console.log("Props: ", this.props);
         const parentClasses = utils.getParentClasses(this.props.type);
         if (this.props.isPaletteItem && parentClasses.includes('ssn:SensingDevice')) { // TODO: ssn -> other ontologies can be used
             //console.log("PARAMETER: ", this.props.type.substr(5, this.props.type.length));

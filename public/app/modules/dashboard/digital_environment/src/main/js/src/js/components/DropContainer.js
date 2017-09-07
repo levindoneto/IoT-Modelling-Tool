@@ -182,7 +182,8 @@ class DropContainer extends Component {
         if (devices.length != null) {
             document.body.addEventListener('keydown', this.activateHover);
             document.body.addEventListener('keyup', this.deactivateHover);
-        } else {
+        } 
+        else {
             document.body.removeEventListener('keydown', this.activateHover);
             document.body.removeEventListener('keyup', this.deactivateHover);
         }
