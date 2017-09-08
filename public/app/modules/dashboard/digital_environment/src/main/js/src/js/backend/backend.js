@@ -134,29 +134,27 @@ export function fire_ajax_save(name, content) {
     ref.update(auxSavedModels); // Updating the database
     auxInfoSaved.lastSavedModel = params.name; // Save the id of the last saved model
     refInfoSaved.update(auxInfoSaved); // Update the info of the last saved on the database
+    swal({
+        title: 'The model has been saved',
+        timer: 1500,
+        showConfirmButton: false
+    });
     let message = false;
 }
 
 export function fire_ajax_load(name) {
-    const ref = firebase.database().ref('savedModels/');
-    console.log("The savedModels: ");
-    ref.on("value", (snapshot) => {
-        console.log('Snapshot value: ', snapashot.val());
-    });
     const params = {
-        name
+        name: name
     };
     $.ajax({
-        type: 'GET',
-        url: '/modtool/loadModel' + '?' + $.param(params),
+        type: "GET",
+        url: "/modtool/loadModel" + "?" + $.param(params),
         async: false
     }).done((msg) => {
-        console.log('params from load: ', params);
-        console.log('msg from load: ', msg);
-        DeviceStore.setModel(JSON.parse(msg)); /* Converting the saved string into 
-                                                * a object for the digital twin */
+        DeviceStore.setModel(JSON.parse(msg)); //msg is the obj in a string format
     });
 }
+
 
 export function fire_ajax_show() {
     let response = '';
@@ -167,5 +165,11 @@ export function fire_ajax_show() {
     }).done((msg) => {
         response = msg;
     });
+
+
+    //response = 'cool';
+    console.log('Response: ', response);
+
+
     return response;
 }

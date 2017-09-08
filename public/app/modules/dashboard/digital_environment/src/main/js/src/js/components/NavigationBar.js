@@ -56,9 +56,7 @@ function readSingleFile(e) {
 
 function loadModel(key) {
     key = key.match(new RegExp('\.+\\.'))[0];
-
     key = key.substring(0, key.length - 1);
-
     DropActions.loadModel(key);
 }
 
@@ -109,10 +107,47 @@ export default class NavigationBar extends React.Component {
         };
     }
 
+    // Opened UI when the user clicks on the Load button
     getSavedModels = () => {
-        const tempSavedModels = backend.fire_ajax_show().split('\n');
-        const tempSavedModelsFiltered = tempSavedModels.filter((iterModel) => (iterModel != ''));
-        this.setState({ savedModels: tempSavedModelsFiltered });
+        let auxKeysSavedModels = [];
+        console.log('I am on getSavedModels');
+
+        const tempSavedModels = backend.fire_ajax_show(); // Get the response
+        
+        console.log('tempSavedModels', tempSavedModels);
+
+        //const tempSavedModelsFiltered = tempSavedModels.filter((iterModel) => (iterModel != ""));
+
+        const ref = firebase.database().ref('savedModels/');
+        ref.on("value", (snapshot) => { // The whole object savedModels with all the saved models
+            for (let saved in snapshot.val()) {
+                auxKeysSavedModels.push(saved);
+                console.log('Key: ', saved);
+                //const tempSavedModelsFiltered = ['one', 'two'];
+                //this.setState({ savedModels: tempSavedModelsFiltered });
+            }
+            this.setState({ savedModels: auxKeysSavedModels });
+        });
+
+
+    
+
+
+        /*
+        const tempSavedModels = backend.fire_ajax_show().split('\n'); // Use the response
+        const tempSavedModelsFiltered = tempSavedModels.filter((iterModel) => (iterModel !== ''));
+        const ref = firebase.database().ref('savedModels/');
+        ref.on("value", (snapshot) => { // The whole object savedModels with all the saved models
+            for (let saved in snapshot.val()) {
+                console.log('Key: ', saved);
+                this.setState({ savedModels: saved });
+                //console.log('Value', snapshot.val()[saved]);
+            }
+        });
+        */
+        
+        //Testing the object that goes to the savedModels
+        //this.setState({ savedModels: tempSavedModelsFiltered });
     };
 
         handleCloseSaveModel = () => {
@@ -125,8 +160,22 @@ export default class NavigationBar extends React.Component {
     };
 
     handleOpenLoadModel = () => {
-        /* Get the last model saved for loading */
+        this.getSavedModels();
+        this.setState({ openLoadModel: true }); // Make the pop-up with the saved models show up
         
+
+        /* 
+        const ref = firebase.database().ref('savedModels/');
+        console.log("The savedModels: ");
+        ref.on("value", (snapshot) => { // The whole object savedModels with all the saved models
+            for (let saved in snapshot.val()) {
+                console.log('Key: ', saved);
+                //console.log('Value', snapshot.val()[saved]);
+            }
+        });
+        */
+
+        /*
         const refInfoSaved = firebase.database().ref('infoSavedModels');
         refInfoSaved.on("value", (snapshot) => {
             //const lastOneSaved = snapshot;
@@ -143,11 +192,10 @@ export default class NavigationBar extends React.Component {
                 DeviceStore.setModel(auxObjTest);
             });
         });
-
+        */
         
         //DeviceStore.setModel(JSON.parse(auxTest));
-        //this.getSavedModels();
-        //this.setState({ openLoadModel: true });
+
     };
 
     handleCloseLoadModel = () => {
@@ -155,7 +203,7 @@ export default class NavigationBar extends React.Component {
     };
 
     handleOpenExport = () => {
-        this.setState({ openExport: true });
+        this.setState({ openExport: true }); // Open the box with the options
     };
 
     handleCloseExport = () => {
@@ -313,12 +361,12 @@ export default class NavigationBar extends React.Component {
 
                     <Dialog // Dialog for exporting action
                         title="Export"
-                        actions={actionsExport}
+                        actions={actionsExport} // THE OPTIONS?
                         modal={false}
                         open={this.state.openExport}
                         onRequestClose={this.handleCloseExport}
                     >
-                        Please choose a format to export the model:
+
                         <List>
                             <ListItem onClick={() => { exportModel('.rdf'); this.handleCloseExport(); }} primaryText="rdf/xml" />
                             <ListItem onClick={() => { exportModel('.jsonld'); this.handleCloseExport(); }} primaryText="json-ld" />
