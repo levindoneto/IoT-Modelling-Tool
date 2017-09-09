@@ -97,7 +97,7 @@ export default class NavigationBar extends React.Component {
         super(props);
         this.exportModel = this.exportModel.bind(this);
         this.state = {
-            openSaveModel: false,
+            openSaveModelAs: false,
             openLoadModel: false,
             openExport: false,
             openHelp: false,
@@ -124,9 +124,9 @@ export default class NavigationBar extends React.Component {
 
     };
 
-        handleCloseSaveModel = () => {
+        handleCloseSaveModelAs = () => {
         this.setState({
-            openSaveModel: false,
+            openSaveModelAs: false,
             saveButtonDisabled: true,
             errorText: null,
             modelName: ''
@@ -162,7 +162,7 @@ export default class NavigationBar extends React.Component {
         this.setState({ snackBarSaveOpen: false });
     };
 
-    handleSaveModel = () => {
+    handleSaveModelAs = () => {
         let response = false;
         if (this.state.modelName !== '') {
             response = backend.fire_ajax_save(this.state.modelName, DeviceStore.getModel());
@@ -188,8 +188,8 @@ export default class NavigationBar extends React.Component {
     };
 
 
-    handleOpenSaveModel = () => { //It should be placed after getSavedModels
-        this.setState({ openSaveModel: true });
+    handleOpenSaveModelAs = () => { //It should be placed after getSavedModels
+        this.setState({ openSaveModelAs: true });
     };
 
 
@@ -207,11 +207,11 @@ export default class NavigationBar extends React.Component {
     };
 
     render() {
-        const actionsSaveModel = [
-            <FlatButton label="Cancel" onTouchTap={this.handleCloseSaveModel} />,
+        const actionsSaveModelAs = [
+            <FlatButton label="Cancel" onTouchTap={this.handleCloseSaveModelAs} />,
             <FlatButton
-                label="Save" primary disabled={this.state.saveButtonDisabled}  // disable the button
-                onTouchTap={() => { this.handleSaveModel(); this.handleCloseSaveModel(); }}
+                label="Save As" primary disabled={this.state.saveButtonDisabled}  // disable the button
+                onTouchTap={() => { this.handleSaveModelAs(); this.handleCloseSaveModelAs(); }}
             />
         ];
 
@@ -227,11 +227,11 @@ export default class NavigationBar extends React.Component {
             <FlatButton label="Close" onTouchTap={this.handleCloseHelp} />
         ];
 
-        if (this.state.openSaveModel) {
-            document.body.addEventListener('keyup', this.handleKeysSaveModel);
+        if (this.state.openSaveModelAs) {
+            document.body.addEventListener('keyup', this.handleKeysSaveModelAs);
         }         
         else {
-            document.body.removeEventListener('keyup', this.handleKeysSaveModel);
+            document.body.removeEventListener('keyup', this.handleKeysSaveModelAs);
         }
 
         return (
@@ -240,6 +240,7 @@ export default class NavigationBar extends React.Component {
                     <Toolbar>
                         <ToolbarGroup firstChild>
                             <RaisedButton label="Save" onClick={this.handleOpenSaveModel} primary />
+                            <RaisedButton label="Save As" onClick={this.handleOpenSaveModelAs} primary />
                             <RaisedButton label="Load" onClick={this.handleOpenLoadModel} primary />
                             <RaisedButton label="Export" onClick={this.handleOpenExport} primary />
                             <RaisedButton label="Import" onClick={importModel} primary />
@@ -255,11 +256,11 @@ export default class NavigationBar extends React.Component {
 
                     <Dialog // Dialog for saving action
                         id="dialog-save-model"
-                        title="Save"
-                        actions={actionsSaveModel}
+                        title="Save As"
+                        actions={actionsSaveModelAs}
                         modal={false}
-                        open={this.state.openSaveModel}
-                        onRequestClose={this.handleCloseSaveModel}
+                        open={this.state.openSaveModelAs}
+                        onRequestClose={this.handleCloseSaveModelAs}
                     >
                         <TextField // Text field for entering model's name onto the save action
                             value={this.state.modelName}
@@ -275,8 +276,8 @@ export default class NavigationBar extends React.Component {
 
                     <Snackbar // Dialog for confation of a successful save
                         open={this.state.snackBarSaveOpen}
-                        message="Saved successfully."
-                        autoHideDuration={3000}
+                        message="The model has been saved"
+                        autoHideDuration={1500}
                         onRequestClose={this.handleCloseSnackBar}
                     />
 
@@ -326,19 +327,20 @@ export default class NavigationBar extends React.Component {
                             <Menu desktop width={512} >
                                 <Subheader style={subHeaderStyle}>Buttons</Subheader>
                                 <Divider />
-                                <MenuItem primaryText="Save" secondaryText="Save Created Model" />
-                                <MenuItem primaryText="Load" secondaryText="Load Previously Saved Model" />
-                                <MenuItem primaryText="Export" secondaryText="Export Model" />
-                                <MenuItem primaryText="Import" secondaryText="Import Model" />
-                                <MenuItem primaryText="Clear" secondaryText="Clear Drop Zone" />
-                                <Subheader style={subHeaderStyle}>Mouse Commands</Subheader>
+                                    <MenuItem primaryText="Save" secondaryText="Save the Current Model" />
+                                    <MenuItem primaryText="Save as" secondaryText="Save Created Model with a New Id" />
+                                    <MenuItem primaryText="Load" secondaryText="Load Previously Saved Model" />
+                                    <MenuItem primaryText="Export" secondaryText="Export Model" />
+                                    <MenuItem primaryText="Import" secondaryText="Import Model" />
+                                    <MenuItem primaryText="Clear" secondaryText="Clear Drop Zone" />
+                                    <Subheader style={subHeaderStyle}>Mouse Commands</Subheader>
                                 <Divider />
-                                <MenuItem primaryText="Create Device" secondaryText="Drag Device From The 'Palette' To Grid Zone" />
-                                <MenuItem primaryText="Create Subdevice" secondaryText="Drag Subdevice Onto Other Device" />
-                                <MenuItem primaryText="Select Device" secondaryText="Click On Device" />
-                                <MenuItem primaryText="Unselect Device" secondaryText="Click Outside Of Device" />
+                                    <MenuItem primaryText="Create Device" secondaryText="Drag Device From The 'Palette' To Grid Zone" />
+                                    <MenuItem primaryText="Create Subdevice" secondaryText="Drag Subdevice Onto Other Device" />
+                                    <MenuItem primaryText="Select Device" secondaryText="Click On Device" />
+                                    <MenuItem primaryText="Unselect Device" secondaryText="Click Outside Of Device" />
                                 <Divider />
-                                <Subheader style={subHeaderStyle}>Key Commands</Subheader>
+                                    <Subheader style={subHeaderStyle}>Key Commands</Subheader>
                                 <Divider />
                                 <MenuItem primaryText="Unselect Device" secondaryText="ESC" />
                                 <MenuItem primaryText="Delete Device" secondaryText="DEL" />

@@ -51,9 +51,9 @@ export function loadModel(id) {
 }
 
 /* Saves the current frontend model to the server */
-export function saveModel(title) {
+export function SaveModelAs(title) {
     dispatcher.dispatch({
-        type: 'SAVE_MODEL',
+        type: 'SAVE_MODEL_AS',
         title
     });
 }

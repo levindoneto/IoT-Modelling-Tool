@@ -243,7 +243,7 @@ class DeviceStore extends EventEmitter {
         backend.fire_ajax_load(name);
     }
 
-    saveModel(title) {
+    SaveModelAs(title) {
         //backend.fire_ajax_save(title, this.model);
         console.log("title ", title);
         console.log("this model: ", this.model);
@@ -328,8 +328,8 @@ class DeviceStore extends EventEmitter {
             case 'LOAD_MODEL': 
                 this.loadModel(action.id);
                 break;
-            case 'SAVE_MODEL': 
-                this.saveModel(action.title);
+            case 'SAVE_MODEL_AS': 
+                this.SaveModelAs(action.title);
                 break;
             case 'IMPORT_MODEL': 
                 this.importModel(action.model);
@@ -353,7 +353,7 @@ class DeviceStore extends EventEmitter {
                 this.closeSetProperty();
                 break;
             default:
-                this.saveModel(action.title);
+                this.SaveModelAs(action.title);
         }
     }
 }
