@@ -55,9 +55,12 @@ function readSingleFile(e) {
 }
 
 function loadModel(key) {
-    key = key.match(new RegExp('\.+\\.'))[0];
-    key = key.substring(0, key.length - 1);
-    DropActions.loadModel(key);
+    //console.log('Key by the user: ', key);
+    const refInfoSaved = firebase.database().ref('savedModels');
+    refInfoSaved.on("value", (snapshot) => {
+        //console.log('Value: ', snapshot.val()[key]);
+        DeviceStore.setModel(JSON.parse(snapshot.val()[key]));
+    });
 }
 
 function importModel() {
@@ -107,47 +110,18 @@ export default class NavigationBar extends React.Component {
         };
     }
 
-    // Opened UI when the user clicks on the Load button
+    /* Open UI when the user clicks on the Load button */
     getSavedModels = () => {
         let auxKeysSavedModels = [];
-        console.log('I am on getSavedModels');
-
-        const tempSavedModels = backend.fire_ajax_show(); // Get the response
-        
-        console.log('tempSavedModels', tempSavedModels);
-
-        //const tempSavedModelsFiltered = tempSavedModels.filter((iterModel) => (iterModel != ""));
-
         const ref = firebase.database().ref('savedModels/');
         ref.on("value", (snapshot) => { // The whole object savedModels with all the saved models
             for (let saved in snapshot.val()) {
                 auxKeysSavedModels.push(saved);
-                console.log('Key: ', saved);
-                //const tempSavedModelsFiltered = ['one', 'two'];
-                //this.setState({ savedModels: tempSavedModelsFiltered });
+                //console.log('Key: ', saved);
             }
             this.setState({ savedModels: auxKeysSavedModels });
         });
 
-
-    
-
-
-        /*
-        const tempSavedModels = backend.fire_ajax_show().split('\n'); // Use the response
-        const tempSavedModelsFiltered = tempSavedModels.filter((iterModel) => (iterModel !== ''));
-        const ref = firebase.database().ref('savedModels/');
-        ref.on("value", (snapshot) => { // The whole object savedModels with all the saved models
-            for (let saved in snapshot.val()) {
-                console.log('Key: ', saved);
-                this.setState({ savedModels: saved });
-                //console.log('Value', snapshot.val()[saved]);
-            }
-        });
-        */
-        
-        //Testing the object that goes to the savedModels
-        //this.setState({ savedModels: tempSavedModelsFiltered });
     };
 
         handleCloseSaveModel = () => {
@@ -162,40 +136,6 @@ export default class NavigationBar extends React.Component {
     handleOpenLoadModel = () => {
         this.getSavedModels();
         this.setState({ openLoadModel: true }); // Make the pop-up with the saved models show up
-        
-
-        /* 
-        const ref = firebase.database().ref('savedModels/');
-        console.log("The savedModels: ");
-        ref.on("value", (snapshot) => { // The whole object savedModels with all the saved models
-            for (let saved in snapshot.val()) {
-                console.log('Key: ', saved);
-                //console.log('Value', snapshot.val()[saved]);
-            }
-        });
-        */
-
-        /*
-        const refInfoSaved = firebase.database().ref('infoSavedModels');
-        refInfoSaved.on("value", (snapshot) => {
-            //const lastOneSaved = snapshot;
-            const auxLastOneSaved =  snapshot.val().lastSavedModel;
-            const ref = firebase.database().ref('savedModels/');
-            ref.on("value", (snapshot) => {
-                const auxStrTest = snapshot.val()[auxLastOneSaved].toString();
-                //const auxStrTest = (snapshot.val()).toString(); // Load the saved model called "savedIOT"
-                console.log("auxTEST :", auxStrTest);
-                console.log('type value: ', typeof auxStrTest); // String
-                const auxObjTest = JSON.parse(auxStrTest); // String -> Object
-                console.log("OBJ:auxTEST :", auxObjTest);
-                console.log('OBJ:type value: ', typeof auxObjTest); // Object
-                DeviceStore.setModel(auxObjTest);
-            });
-        });
-        */
-        
-        //DeviceStore.setModel(JSON.parse(auxTest));
-
     };
 
     handleCloseLoadModel = () => {

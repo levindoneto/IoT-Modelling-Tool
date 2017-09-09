@@ -125,7 +125,7 @@ export function fire_ajax_save(name, content) {
     const auxInfoSaved = {};
     const url = '/modtool/saveModel' + '?' + $.param(params);
     //console.log('Id to save on the database:', params.name); //SAVE IN THE DATABASE
-    console.log('Content for comparison: ', content); //SAVE IN THE DATABASE
+    //console.log('Content for comparison: ', content); //SAVE IN THE DATABASE
     //console.log('TYPE of the content: ', typeof content); // object
     let savedModelStr = JSON.stringify(content);
     //console.log('New content', savedModelStr);
@@ -166,10 +166,6 @@ export function fire_ajax_show() {
         response = msg;
     });
 
-
-    //response = 'cool';
-    console.log('Response: ', response);
-
-
+    //console.log('Response: ', response);
     return response;
 }
