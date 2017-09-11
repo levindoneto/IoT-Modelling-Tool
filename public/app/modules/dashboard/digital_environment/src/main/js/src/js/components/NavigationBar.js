@@ -56,10 +56,15 @@ function readSingleFile(e) {
 
 function loadModel(key) {
     //console.log('Key by the user: ', key);
-    const refInfoSaved = firebase.database().ref('savedModels');
-    refInfoSaved.on("value", (snapshot) => {
+    const refSavedModels = firebase.database().ref('savedModels');
+    const refInfoSaved = firebase.database().ref('infoSavedModels');
+    const auxInfoSaved = {};
+    refSavedModels.on("value", (snapshot) => {
         //console.log('Value: ', snapshot.val()[key]);
         DeviceStore.setModel(JSON.parse(snapshot.val()[key]));
+        /* Save the info of the last loaded model */
+        auxInfoSaved.lastLoadedModel = key;
+        refInfoSaved.update(auxInfoSaved);
     });
 }
 
@@ -187,11 +192,13 @@ export default class NavigationBar extends React.Component {
         exportLink.click();
     };
 
+    handleOpenSaveModel = () => { 
+        //TODO
+    };
 
     handleOpenSaveModelAs = () => { //It should be placed after getSavedModels
         this.setState({ openSaveModelAs: true });
     };
-
 
     /* Method for checking whether the input field on 'Save' is empty.
      * Also, it might disable the save button */
