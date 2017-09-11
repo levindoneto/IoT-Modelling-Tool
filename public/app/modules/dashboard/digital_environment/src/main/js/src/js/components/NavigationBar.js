@@ -193,7 +193,20 @@ export default class NavigationBar extends React.Component {
     };
 
     handleOpenSaveModel = () => { 
-        //TODO
+        const refInfoSaved = firebase.database().ref('infoSavedModels');
+        const refSavedModels = firebase.database().ref('savedModels/');
+        let auxSavedModels = {};
+        refInfoSaved.on("value", (snapshot) => {
+            console.log('Last loaded info: ', snapshot.val().lastLoadedModel);
+            auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel()); /* key:last_loaded_model, 
+                                                                                                      * value: current model on the digital twin */
+            refSavedModels.update(auxSavedModels); // Update the current model on the database
+        });
+        swal({
+            title: 'The current model has been saved',
+            timer: 1500,
+            showConfirmButton: false
+        });
     };
 
     handleOpenSaveModelAs = () => { //It should be placed after getSavedModels
