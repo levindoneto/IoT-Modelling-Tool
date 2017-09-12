@@ -55,25 +55,20 @@ Each submenu has its own controller and view. In total, there are 11 submenus on
 * Add Additional Properties
 * Search
 
+## Database
 
-Also the format of the database is as following:
+The utilized database for synchronized data on this platform is [Firebase](https://firebase.google.com/). The Firebase Real Time Database is a cloud-hosted NoSQL database that lets you store and sync data between your users in real time.
 
-![Database Format](public/img/readme/database-format.jpg)
+### Utilized Keys
 
-## How it will work (Initial idea)
-
-I) When an item is drag and dropped in the virtual environment (digital twin) an item is created in the database.
-This item has a random ID (Key in the JSON representation).
-The values assigned to each key might be:
-
-* Type (sensor, device, actuator) [String]
-* Name [String]
-* MAC Address [Integer]
-* Available connections (in case of the devices this can be sensors, actuators, etc.) [List]
-* Connections [List]
-* Location (longitudinal, latitudinal)
-
-II) When an item is drag and dropped into the trash icon it'll be removed from the virtual environment and it'll be deleted from the database.
+* IoT Lite Contexts
+* Defaults (IoT Lite Context and IoT Lite Graph)
+* IoT Lite Graphs
+* Icons (For the components and devices)
+* Saved Models' Information (Last saved and last loaded one on the digital twin)
+* Devices and Components (with id, ontology, company's prefix, etc)
+* Saved Models (By the Save and Save As buttons on the navigation bar)
+* Users (each one e-mail, password and username)
 
 ## Utilized technologies
 
