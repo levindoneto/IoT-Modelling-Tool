@@ -5,7 +5,7 @@ Iot Modelling Tool is a platform which allows users to have their own devices an
 
 __Author__
 
-[Levindo Gabriel Taschetto Neto (IPVS)](http://levindoneto.com)
+[Levindo Gabriel Taschetto Neto (IPVS)](http://levindoneto.github.io/)
 
 __Advisors__
 
@@ -16,20 +16,35 @@ __Advisors__
 [Dipl.-Inf. Pascal Hirmer (IPVS)](https://www.ipvs.uni-stuttgart.de/abteilungen/as/abteilung/mitarbeiter/Pascal.Hirmer)
 
 
-
 ## Repository Structure
 
 * [App](public/app) (contains the files assigned to organize the high-level architecture of the project)
 
+* [Firebase Hosting](public/bin) (contains the server configurations for the hosting on the firebase platform)
+
 * [CSS Files](public/css) (contains the style files for the front-end, e.g., bootstrap files)
 
-* [Images](public/img) (contains the images used in the project, e.g., devices, sensors and actuators icons)
+* [Fonts](public/fonts) (contains all the used fonts of the project's front-end)
+
+* [Platform' Images](public/images) (contains the images used in the project, e.g., devices, sensors and actuators icons)
+
+* [Front-End's Images](public/images) (contains the images used on the front-end of the project, e.g. dashboard and index)
 
 * [Javascript Files](public/js) (contains files responsible for the back-end of the project, e.g., AngularJS files)
+
+* [Less Files](public/less) (contains files responsible for CSS pre-processing)
+
+* [Node.js Modules](public/node_modules) (contains files of the Node.js' set of built-in modules)
 
 * [Plugins](public/plugins) (contains files responsible for add specifics features to the back-end of the project)
 
 * [Resources](public/resources) (contains the diagrams of the project, e.g., astah files)
+
+* [Routes](public/routes) (contains the Angular Router for navigation from one view to the next as users perform application tasks)
+
+* [SCSS Files](public/scss) (contains the files for the nested metalanguage scss, which is interpreted into CSS on this platform)
+
+* [Jade Files](public/views) (contains the files for the Jade high performance template engine)
 
 ## Relationship among the packages in a high level approach
 
