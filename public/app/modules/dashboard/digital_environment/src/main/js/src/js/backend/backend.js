@@ -119,26 +119,35 @@ export function fire_ajax_save(name, content) {
     };
     const ref = firebase.database().ref('savedModels/');
     const refInfoSaved = firebase.database().ref('infoSavedModels');
-    
+    const refDevicesWithSubsystems = firebase.database().ref('devicesWithSubsystems/');
     ref[params.name] = savedModelStr;
     const auxSavedModels = {};
     const auxInfoSaved = {};
     const url = '/modtool/saveModel' + '?' + $.param(params);
-    //console.log('Id to save on the database:', params.name); //SAVE IN THE DATABASE
+
+    //console.log('Keys of content.graph: ', content['@graph']); 
     
-    const refDevicesWithSubsystems = firebase.database().ref('devicesWithSubsystems/');
-    refDevicesWithSubsystems.on("value", (snapshot) => {
-        const keysDevicesWithSubsystems = Object.keys(snapshot.val());
-        for (let devSub in keysDevicesWithSubsystems) {
-            console.log('KEY ', devSub, ': ', keysDevicesWithSubsystems[devSub]);
-            if (keysDevicesWithSubsystems[devSub].toString() === 'ipvs:RaspberryPi-1') {
-                console.log('The device has already a subsystem');
-            }
-        }  
-    });
-\
-    console.log('Keys of content.graph: ', content['@graph']); //SAVE IN THE DATABASE
-    //console.log('TYPE of the content: ', typeof content); // object
+    
+    for (let i=1; i < Object.keys(content['@graph']).length; i += 2) { // Get the odd keys to because they have the subsystem information
+        //console.log('THE SUBSYSTEM: ', content['@graph'][i]['iot-lite:isSubSystemOf']['@id']);
+        if (content['@graph'][i]['iot-lite:isSubSystemOf']['@id'] !== '') {
+            refDevicesWithSubsystems.on("value", (snapshot) => {
+                const keysDevicesWithSubsystems = Object.keys(snapshot.val());
+                for (let devSub in keysDevicesWithSubsystems) {
+                    if (keysDevicesWithSubsystems[devSub].toString() === content['@graph'][i]['iot-lite:isSubSystemOf']['@id']) {
+                        console.log('The device has already a subsystem');
+                        //update
+                    }
+                    else {
+                        console.log('The device has not a subsystem');
+                        //create
+                        //update
+                    }
+                }  
+            });
+        }
+    }
+    
     let savedModelStr = JSON.stringify(content);
     //console.log('New content', savedModelStr);
     //console.log('Type of the new content', typeof savedModelStr);
