@@ -125,7 +125,19 @@ export function fire_ajax_save(name, content) {
     const auxInfoSaved = {};
     const url = '/modtool/saveModel' + '?' + $.param(params);
     //console.log('Id to save on the database:', params.name); //SAVE IN THE DATABASE
-    //console.log('Content for comparison: ', content); //SAVE IN THE DATABASE
+    
+    const refDevicesWithSubsystems = firebase.database().ref('devicesWithSubsystems/');
+    refDevicesWithSubsystems.on("value", (snapshot) => {
+        const keysDevicesWithSubsystems = Object.keys(snapshot.val());
+        for (let devSub in keysDevicesWithSubsystems) {
+            console.log('KEY ', devSub, ': ', keysDevicesWithSubsystems[devSub]);
+            if (keysDevicesWithSubsystems[devSub].toString() === 'ipvs:RaspberryPi-1') {
+                console.log('The device has already a subsystem');
+            }
+        }  
+    });
+\
+    console.log('Keys of content.graph: ', content['@graph']); //SAVE IN THE DATABASE
     //console.log('TYPE of the content: ', typeof content); // object
     let savedModelStr = JSON.stringify(content);
     //console.log('New content', savedModelStr);

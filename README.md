@@ -5,15 +5,15 @@ Iot Modelling Tool is a platform which allows users to have their own devices an
 
 __Author__
 
-[Levindo Gabriel Taschetto Neto (IPVS)](http://levindoneto.github.io/)
+[Levindo Gabriel Taschetto Neto](http://levindoneto.github.io/)
 
 __Advisors__
 
-[Prof. Dr.-Ing. habil. Bernhard Mitschang (IPVS)](https://www.ipvs.uni-stuttgart.de/abteilungen/as/abteilung/mitarbeiter/bernhard.mitschang)
+[Prof. Dr.-Ing. habil. Bernhard Mitschang](https://www.ipvs.uni-stuttgart.de/abteilungen/as/abteilung/mitarbeiter/bernhard.mitschang)
 
-[M.Sc. Ana Cristina Franco da Silva (IPVS)](https://www.ipvs.uni-stuttgart.de/abteilungen/as/abteilung/mitarbeiter/Ana.Franco)
+[M.Sc. Ana Cristina Franco da Silva](https://www.ipvs.uni-stuttgart.de/abteilungen/as/abteilung/mitarbeiter/Ana.Franco)
 
-[Dipl.-Inf. Pascal Hirmer (IPVS)](https://www.ipvs.uni-stuttgart.de/abteilungen/as/abteilung/mitarbeiter/Pascal.Hirmer)
+[Dipl.-Inf. Pascal Hirmer](https://www.ipvs.uni-stuttgart.de/abteilungen/as/abteilung/mitarbeiter/Pascal.Hirmer)
 
 
 ## Repository Structure
