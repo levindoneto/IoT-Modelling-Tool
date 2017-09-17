@@ -3,10 +3,13 @@
  *              Integer: currentAmountSubsystems (Used as key for the new subsystem) 
  * @return: void, the function just updates the database
  */
-function updateDevicesWithSubsystems(device, subsystem, currentAmountSubsystems) { //add current one
+function updateDevicesWithSubsystems(savedModel, device, subsystem) { //add current one
     const auxDevSub = {};
-    const refDevicesWithSubsystems = firebase.database().ref(`devicesWithSubsystems/${device}`);
-    auxDevSub[currentAmountSubsystems.toString()] = subsystem;
+    const refDevicesWithSubsystems = firebase.database().ref(`devicesWithSubsystems/${savedModel}/${device}`);
+    
+    console.log('ref: ', refDevicesWithSubsystems);
+    
+    auxDevSub[subsystem] = '';
     refDevicesWithSubsystems.update(auxDevSub);
 }
 

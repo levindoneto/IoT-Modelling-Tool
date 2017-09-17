@@ -139,18 +139,18 @@ export function fire_ajax_save(name, content) {
             refDevicesWithSubsystems.on("value", (snapshot) => {
                 const currentAmountSubsystems = Object.keys(snapshot.val()[content['@graph'][i]['iot-lite:isSubSystemOf']['@id']]).length;
                 const keysDevicesWithSubsystems = Object.keys(snapshot.val());
-                for (let devSub in keysDevicesWithSubsystems) { // Depends on the number of subsystems
+                for (let devSub in keysDevicesWithSubsystems) { // Depends on the number of subsystems (running on the database)
                     console.log('currentAmountSubsystems', currentAmountSubsystems);
                     if (keysDevicesWithSubsystems[devSub].toString() === content['@graph'][i]['iot-lite:isSubSystemOf']['@id']) {
                         console.log('The device has already a subsystem');
-                        //updateDevicesWithSubsystems(content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], currentAmountSubsystems); //(device, subsystem): device.update(component)
-                        break;
+                        updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id']); //(device, subsystem): device.update(component)
+                        //break;
                     }
                     else {
                         console.log('The device has not a subsystem');
                         //create
                         //update
-                        break;
+                        ;
                     }
                 }  
             });
