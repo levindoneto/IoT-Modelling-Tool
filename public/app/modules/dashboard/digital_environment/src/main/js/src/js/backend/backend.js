@@ -120,10 +120,15 @@ export function fire_ajax_save(name, content) {
     const ref = firebase.database().ref('savedModels/');
     const refInfoSaved = firebase.database().ref('infoSavedModels');
     const refDevicesWithSubsystems = firebase.database().ref('devicesWithSubsystems/');
-    ref[params.name] = savedModelStr;
+    const auxDevSubSecRoot = {}; // For the saved models as secondary roots
     const auxSavedModels = {};
     const auxInfoSaved = {};
     const url = '/modtool/saveModel' + '?' + $.param(params);
+    ref[params.name] = savedModelStr;
+    
+    /* Save the key_model (saved one) as secondary root on Devices With Subsystems */
+    auxDevSubSecRoot[params.name] = ''; // It'll get all devices with subsystems on this model
+    refDevicesWithSubsystems.update(auxDevSubSecRoot); // Update just works out with objects
 
     //console.log('Keys of content.graph: ', content['@graph']); 
     
@@ -132,16 +137,20 @@ export function fire_ajax_save(name, content) {
         //console.log('THE SUBSYSTEM: ', content['@graph'][i]['iot-lite:isSubSystemOf']['@id']);
         if (content['@graph'][i]['iot-lite:isSubSystemOf']['@id'] !== '') {
             refDevicesWithSubsystems.on("value", (snapshot) => {
+                const currentAmountSubsystems = Object.keys(snapshot.val()[content['@graph'][i]['iot-lite:isSubSystemOf']['@id']]).length;
                 const keysDevicesWithSubsystems = Object.keys(snapshot.val());
-                for (let devSub in keysDevicesWithSubsystems) {
+                for (let devSub in keysDevicesWithSubsystems) { // Depends on the number of subsystems
+                    console.log('currentAmountSubsystems', currentAmountSubsystems);
                     if (keysDevicesWithSubsystems[devSub].toString() === content['@graph'][i]['iot-lite:isSubSystemOf']['@id']) {
                         console.log('The device has already a subsystem');
-                        //update
+                        //updateDevicesWithSubsystems(content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], currentAmountSubsystems); //(device, subsystem): device.update(component)
+                        break;
                     }
                     else {
                         console.log('The device has not a subsystem');
                         //create
                         //update
+                        break;
                     }
                 }  
             });
