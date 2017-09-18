@@ -3,13 +3,21 @@
  *              Integer: currentAmountSubsystems (Used as key for the new subsystem) 
  * @return: void, the function just updates the database
  */
-function updateDevicesWithSubsystems(savedModel, device, subsystem) { //add current one
+function updateDevicesWithSubsystems(savedModel, device, subsystem, latitude, longitude) { //add current one
     const auxDevSub = {};
+    const auxLoc = {};
     const refDevicesWithSubsystems = firebase.database().ref(`devicesWithSubsystems/${savedModel}/${device}`);
     
     console.log('ref: ', refDevicesWithSubsystems);
-    
-    auxDevSub[subsystem] = '';
+
+    console.log('subsystem: ', subsystem);
+    console.log(latitude);
+    auxLoc.locationX = latitude;
+    console.log(auxLoc);
+    auxLoc.locationY = longitude;
+    console.log('LOCATION OBJ: ', auxLoc);
+    auxDevSub[subsystem] = auxLoc;
+    //auxDevSub[subsystem].update(auxLoc);
     refDevicesWithSubsystems.update(auxDevSub);
 }
 

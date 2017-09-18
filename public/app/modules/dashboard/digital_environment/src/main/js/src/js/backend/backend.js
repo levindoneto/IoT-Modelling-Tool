@@ -130,7 +130,7 @@ export function fire_ajax_save(name, content) {
     auxDevSubSecRoot[params.name] = ''; // It'll get all devices with subsystems on this model
     refDevicesWithSubsystems.update(auxDevSubSecRoot); // Update just works out with objects
 
-    //console.log('Keys of content.graph: ', content['@graph']); 
+    console.log('Keys of content.graph: ', content['@graph']); 
     
     
     for (let i=1; i < Object.keys(content['@graph']).length; i += 2) { // Get the odd keys to because they have the subsystem information
@@ -140,10 +140,17 @@ export function fire_ajax_save(name, content) {
                 const currentAmountSubsystems = Object.keys(snapshot.val()[content['@graph'][i]['iot-lite:isSubSystemOf']['@id']]).length;
                 const keysDevicesWithSubsystems = Object.keys(snapshot.val());
                 for (let devSub in keysDevicesWithSubsystems) { // Depends on the number of subsystems (running on the database)
+                    /* Get the location information*/
+                    const locationX = content['@graph'][i - 1]['geo:lat']; // The even key on the content has the location object
+                    const locationY = content['@graph'][i - 1]['geo:long'];
+                    
+                    console.log('Location X: ', locationX);
+                    console.log('Location Y', locationY);
+
                     console.log('currentAmountSubsystems', currentAmountSubsystems);
                     if (keysDevicesWithSubsystems[devSub].toString() === content['@graph'][i]['iot-lite:isSubSystemOf']['@id']) {
                         console.log('The device has already a subsystem');
-                        updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id']); //(device, subsystem): device.update(component)
+                        updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], locationX, locationY); //(model_key, device, subsystem): device.update(component)
                         //break;
                     }
                     else {
