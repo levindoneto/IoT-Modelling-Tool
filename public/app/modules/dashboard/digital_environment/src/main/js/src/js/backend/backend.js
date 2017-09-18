@@ -3,6 +3,21 @@ import {definitions} from '../constants/definitions';
 import fire from '../database/fire';
 import reactfire from 'reactfire';
 
+const defaultContentProps = [ // properties that won't be parsed
+    '@id',
+    'geo:location',
+    'iot-lite:isSubSystemOf'];
+
+function verifyAddProp(propertyI) {
+    let thisIsAdditionalProperty = true;
+    for (let p = 0; p < defaultContentProps.length; p++) {
+        if (propertyI.toUpperCase() === defaultContentProps[p].toUpperCase()) { // the property is a default one
+            thisIsAdditionalProperty = false; // This means property_i is in the list of default properties
+        }           
+    }
+    return thisIsAdditionalProperty;
+}
+
 /* Transforms the object of definitions in a string */
 function clone(object) {
     return JSON.parse(JSON.stringify(object));
@@ -123,6 +138,7 @@ export function fire_ajax_save(name, content) {
     const auxDevSubSecRoot = {}; // For the saved models as secondary roots
     const auxSavedModels = {};
     const auxInfoSaved = {};
+    const auxContPropsSubsystem = {};
     const url = '/modtool/saveModel' + '?' + $.param(params);
     ref[params.name] = savedModelStr;
     
@@ -130,8 +146,7 @@ export function fire_ajax_save(name, content) {
     auxDevSubSecRoot[params.name] = ''; // It'll get all devices with subsystems on this model
     refDevicesWithSubsystems.update(auxDevSubSecRoot); // Update just works out with objects
 
-    console.log('Keys of content.graph: ', content['@graph']); 
-    
+    //console.log('Keys of content.graph: ', content['@graph']); 
     
     for (let i=1; i < Object.keys(content['@graph']).length; i += 2) { // Get the odd keys to because they have the subsystem information
         //console.log('THE SUBSYSTEM: ', content['@graph'][i]['iot-lite:isSubSystemOf']['@id']);
@@ -139,6 +154,15 @@ export function fire_ajax_save(name, content) {
             refDevicesWithSubsystems.on("value", (snapshot) => {
                 const currentAmountSubsystems = Object.keys(snapshot.val()[content['@graph'][i]['iot-lite:isSubSystemOf']['@id']]).length;
                 const keysDevicesWithSubsystems = Object.keys(snapshot.val());
+                
+                for (var infoContent in content['@graph'][i]) {
+                    if (content['@graph'][i].hasOwnProperty(infoContent)) {
+                        if (verifyAddProp(infoContent)) {
+                            auxContPropsSubsystem[infoContent] = content['@graph'][i][infoContent];
+                        }
+                    }
+                }
+            
                 for (let devSub in keysDevicesWithSubsystems) { // Depends on the number of subsystems (running on the database)
                     /* Get the location information*/
                     const locationX = content['@graph'][i - 1]['geo:lat']; // The even key on the content has the location object
@@ -150,7 +174,7 @@ export function fire_ajax_save(name, content) {
                     console.log('currentAmountSubsystems', currentAmountSubsystems);
                     if (keysDevicesWithSubsystems[devSub].toString() === content['@graph'][i]['iot-lite:isSubSystemOf']['@id']) {
                         console.log('The device has already a subsystem');
-                        updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], locationX, locationY); //(model_key, device, subsystem): device.update(component)
+                        updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], locationX, locationY, auxContPropsSubsystem); //(model_key, device, subsystem): device.update(component)
                         //break;
                     }
                     else {

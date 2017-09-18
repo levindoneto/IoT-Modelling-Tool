@@ -57,7 +57,7 @@ const boxTarget = {
             devices.map((iterDevice) => {
                 const tempLocation = devices.find((iterObject) => {
                     if (iterDevice['geo:location']) {
-                        console.log("LOC 01", iterDevice['geo:location']['@id']);
+                        //console.log('Location', iterDevice['geo:location']['@id']);
                         return iterDevice['geo:location']['@id'] === iterObject['@id'];
                     }
                 });

@@ -1,23 +1,18 @@
 /* Function for updating the devices with its subsystems
- * @parameters: String: device and subsystem (both gotten from the current saved model),
- *              Integer: currentAmountSubsystems (Used as key for the new subsystem) 
+ * @parameters: String: device, subsystem (both gotten from the current saved model),
+ *                      location X, location Y
+ *              Object: Properties of the subsystem 
  * @return: void, the function just updates the database
  */
-function updateDevicesWithSubsystems(savedModel, device, subsystem, latitude, longitude) { //add current one
+function updateDevicesWithSubsystems(savedModel, device, subsystem, latitude, longitude, propertiesSubSystem) { //add current one
     const auxDevSub = {};
     const auxLoc = {};
     const refDevicesWithSubsystems = firebase.database().ref(`devicesWithSubsystems/${savedModel}/${device}`);
-    
-    console.log('ref: ', refDevicesWithSubsystems);
 
-    console.log('subsystem: ', subsystem);
-    console.log(latitude);
     auxLoc.locationX = latitude;
-    console.log(auxLoc);
     auxLoc.locationY = longitude;
-    console.log('LOCATION OBJ: ', auxLoc);
     auxDevSub[subsystem] = auxLoc;
-    //auxDevSub[subsystem].update(auxLoc);
+    Object.assign(auxDevSub[subsystem], propertiesSubSystem);
     refDevicesWithSubsystems.update(auxDevSub);
 }
 
