@@ -12,9 +12,12 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
-                    <form name="myForm" ng-submit="vm.addbelonging(vm.model,picFile)">
+                    <form name="myForm" ng-submit="vm.addbelonging(vm.prefix,vm.type,vm.model,picFile)">
+                        <h4 class="Titlemyaccount">Company </h4>
+                        <input class="BoxInput" placeholder="Company" type="text" ng-model="vm.prefix">
+
                         <h4 class="Titlemyaccount">Type </h4>
-                        <select class="BoxInput" ng-model="vm.model.type" required>
+                        <select class="BoxInput" ng-model="vm.type" required>
                             <option value="Device">
                                 Hardware Device
                             </option>
@@ -30,9 +33,6 @@
 
                         <h4 class="Titlemyaccount">RDFS Comment </h4>
                         <input class="BoxInput" placeholder="RDFS Comment" type="text" ng-model="vm.model.rdfsComment">
-
-                        <h4 class="Titlemyaccount">Company </h4>
-                        <input class="BoxInput" placeholder="Company" type="text" ng-model="vm.model.prefixCompany">
 
                         <h4 class="Titlemyaccount">Ontology </h4> <!--e.g.: iot-lite, ssn, etc -->
                         <input class="BoxInput" placeholder="Ontology" type="text" ng-model="vm.model.ontology">
@@ -56,7 +56,7 @@
                             Imagem added with success!
                         </p>
                         <button class="RmvButtonaddbelonging" ng-click="picFile = null" ng-show="picFile">
-                            Remove image of the {{vm.model.type}}
+                            Remove image of the {{vm.type}}
                         </button>
                         <span class="progress" ng-show="picFile.progress >= 0">
                             <div style="width:{{picFile.progress}}%"
@@ -70,16 +70,16 @@
                         </span>
 
                 <button class="AddElementBtn" type="submit">
-                    <div ng-if="vm.model.type != 'Device' && vm.model.type != 'SensingDevice' && vm.model.type != 'ActuatingDevice'">
+                    <div ng-if="vm.type != 'Device' && vm.type != 'SensingDevice' && vm.type != 'ActuatingDevice'">
                         Add
                     </div>
-                    <div ng-if="vm.model.type == 'Device'">
+                    <div ng-if="vm.type == 'Device'">
                         Add Device
                     </div>
-                    <div ng-if="vm.model.type == 'SensingDevice'">
+                    <div ng-if="vm.type == 'SensingDevice'">
                         Add Sensor
                     </div>
-                    <div ng-if="vm.model.type == 'ActuatingDevice'">
+                    <div ng-if="vm.type == 'ActuatingDevice'">
                         Add Actuator
                     </div>
                 </button>
