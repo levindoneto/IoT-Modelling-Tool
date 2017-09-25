@@ -12,7 +12,6 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
             const auxType = {};
             const modelKeys = model;
             var auxPrefix = {};
-            //const auxType = {};
             imageList.$loaded().then(() => {
                 imageList.$add(base64Url).then((imref) => {
                     //console.log("imref");
@@ -33,23 +32,22 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                                 return;
                             }
                             else {
-                                console.log('CREATE TYPE');
+                                //console.log('CREATE TYPE');
                                 auxPrefix = snapshot.val();
-                                auxPrefix[prefix][type] = '';
+                                auxPrefix[prefix][type] = model;
                                 refDevComp.update(auxPrefix);
                                 return;
                             }
                         }
                         else {
-                            console.log('CREATE PREFIX');
-                            auxPrefix[prefix] = '';
+                            //console.log('CREATE PREFIX');
+                            auxType[type] = model;
+                            auxPrefix[prefix] = auxType;
                             refDevComp.update(auxPrefix);
+                            
                             return;
                         }
-                        // UPDATE ELEMENT
-                        
                     });
-                    
                     
                     //const devCompList = $firebaseArray(refDevComp);
                     modelKeys.prefixCompany = prefix;
