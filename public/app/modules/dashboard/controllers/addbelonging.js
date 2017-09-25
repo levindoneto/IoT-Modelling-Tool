@@ -27,7 +27,10 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                         console.log('snapshot.val(): ', snapshot.val());
                         if (prefix.toUpperCase() in snapshot.val()) {
                             if (type in snapshot.val()[prefix]) {
-                                console.log('ADD INFO');
+                                auxPrefix = snapshot.val();
+                                auxPrefix[prefix][type] = model;
+                                refDevComp.update(auxPrefix);
+                                return;
                             }
                             else {
                                 console.log('CREATE TYPE');
