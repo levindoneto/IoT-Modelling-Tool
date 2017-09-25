@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
-                    <form name="myForm" ng-submit="vm.addbelonging(vm.prefix,vm.type,vm.model,picFile)">
+                    <form name="myForm" ng-submit="vm.addbelonging(vm.prefix.toUpperCase(),vm.type,vm.model,picFile)">
                         <h4 class="Titlemyaccount">Company </h4>
                         <input class="BoxInput" placeholder="Company" type="text" ng-model="vm.prefix">
 
@@ -48,15 +48,15 @@
                         </label>
                         <i ng-show="myForm.file.$error.required"></br>*Needed</i><br>
                         <i ng-show="myForm.file.$error.maxSize">
-                            The files is too big!
+                            The file is too big!
                             {{errorFile.size / 1000000|number:1}}Mb and maximum allowed is 2 Mb
                         </i>
                         <img ng-show="myForm.file.$valid" > </br>
                         <p ng-click="picFile = null" ng-show="picFile">
-                            Imagem added with success!
+                            Icon added with success!
                         </p>
                         <button class="RmvButtonaddbelonging" ng-click="picFile = null" ng-show="picFile">
-                            Remove image of the {{vm.type}}
+                            Remove icon
                         </button>
                         <span class="progress" ng-show="picFile.progress >= 0">
                             <div style="width:{{picFile.progress}}%"

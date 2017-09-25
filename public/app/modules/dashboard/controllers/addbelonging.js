@@ -20,7 +20,26 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                     const ref = firebase.database().ref('models/');
                     const refDevComp = firebase.database().ref('devComp/');
                     const modelList = $firebaseArray(ref);
-                    const devCompList = $firebaseArray(refDevComp);
+                    
+                    refDevComp.on("value", (snapshot) => { // The whole object savedModels with all the saved models
+                        console.log('prefix.toUpperCase(): ', prefix.toUpperCase());
+                        console.log('snapshot.val(): ', snapshot.val());
+                        if (prefix.toUpperCase() in snapshot.val()) {
+                            if (type in snapshot.val()[prefix]) {
+                                console.log('ADD INFO');
+                            }
+                            else {
+                                console.log('CREATE TYPE');
+                            }
+                        }
+                        else {
+                            console.log('CREATE PREFIX');
+                        }
+                        // UPDATE ELEMENT
+                    });
+                    
+                    
+                    //const devCompList = $firebaseArray(refDevComp);
                     modelKeys.prefixCompany = prefix;
                     modelKeys.type = type;
                     
@@ -32,10 +51,8 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                         console.log('MODEL: ', model);
                         auxType[type] = model;
                         auxModel[prefix] = auxType; // [prefix][type] can't be accessed on the fly
-                        delete auxModel[prefix][type].type;
-                        delete auxModel[prefix][type].prefixCompany;
                         
-                       // console.log('AUX MODEL: ', auxModel);
+                        console.log('AUX MODEL: ', auxModel);
                         /* $add function:
                          * Creates a new record in the database and adds the record to our 
                          * local synchronized array.
@@ -48,7 +65,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                             timer: 1700,
                             showConfirmButton: false
                         });
-                        //console.log('im here');
+                        console.log('im here');
                         modelList.$add(modelKeys).then((ref) => {
                         });
                     });
@@ -56,7 +73,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                     devCompList.$loaded().then(() => {
                         devCompList.$add(auxModel).then((refDevComp) => {
                         });
-                    });   
+                    });
                 });
             });
         });
