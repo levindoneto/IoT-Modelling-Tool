@@ -32,8 +32,10 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                         console.log('MODEL: ', model);
                         auxType[type] = model;
                         auxModel[prefix] = auxType; // [prefix][type] can't be accessed on the fly
+                        delete auxModel[prefix][type].type;
+                        delete auxModel[prefix][type].prefixCompany;
                         
-                        console.log('AUX MODEL: ', auxModel);
+                       // console.log('AUX MODEL: ', auxModel);
                         /* $add function:
                          * Creates a new record in the database and adds the record to our 
                          * local synchronized array.
@@ -46,7 +48,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                             timer: 1700,
                             showConfirmButton: false
                         });
-                        console.log('im here');
+                        //console.log('im here');
                         modelList.$add(modelKeys).then((ref) => {
                         });
                     });
@@ -54,8 +56,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                     devCompList.$loaded().then(() => {
                         devCompList.$add(auxModel).then((refDevComp) => {
                         });
-                    });
-                    
+                    });   
                 });
             });
         });
