@@ -11,7 +11,8 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
             const auxModel = {};
             const auxType = {};
             const modelKeys = model;
-
+            var auxPrefix = {};
+            //const auxType = {};
             imageList.$loaded().then(() => {
                 imageList.$add(base64Url).then((imref) => {
                     //console.log("imref");
@@ -30,12 +31,20 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                             }
                             else {
                                 console.log('CREATE TYPE');
+                                auxPrefix = snapshot.val();
+                                auxPrefix[prefix][type] = '';
+                                refDevComp.update(auxPrefix);
+                                return;
                             }
                         }
                         else {
                             console.log('CREATE PREFIX');
+                            auxPrefix[prefix] = '';
+                            refDevComp.update(auxPrefix);
+                            return;
                         }
                         // UPDATE ELEMENT
+                        
                     });
                     
                     

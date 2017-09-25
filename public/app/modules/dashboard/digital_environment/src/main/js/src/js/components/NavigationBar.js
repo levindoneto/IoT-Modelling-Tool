@@ -126,7 +126,6 @@ export default class NavigationBar extends React.Component {
             }
             this.setState({ savedModels: auxKeysSavedModels });
         });
-
     };
 
         handleCloseSaveModelAs = () => {
@@ -197,7 +196,7 @@ export default class NavigationBar extends React.Component {
         const refSavedModels = firebase.database().ref('savedModels/');
         let auxSavedModels = {};
         refInfoSaved.on("value", (snapshot) => {
-            console.log('Last loaded info: ', snapshot.val().lastLoadedModel);
+            //console.log('Last loaded info: ', snapshot.val().lastLoadedModel);
             auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel()); /* key:last_loaded_model, 
                                                                                                       * value: current model on the digital twin */
             refSavedModels.update(auxSavedModels); // Update the current model on the database
