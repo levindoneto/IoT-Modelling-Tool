@@ -2,20 +2,19 @@
 dashboard.controller("addbelongingController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash','$firebaseObject','$firebaseArray','Upload','$timeout','notification',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray, Upload, $timeout, notification) {
     const vm = this;
-    function getOut() {
-        console.log('Getting out...');
-        return -1;
-    }
     vm.addbelonging = function (prefix, type, model, file) { // prefix->type->model
         Upload.base64DataUrl(file).then((base64Url) => {
             model.userUid = $rootScope.userDB.uid;
+            var add = false;
             const refImages = firebase.database().ref('images/');
             const imageList = $firebaseArray(refImages);
             const auxModel = {};
             const auxType = {};
             const modelKeys = model;
             const auxInfo = {};
-            var auxBind = {};
+            var auxBind = {}; // devComp->prefix->type
+            var auxBindPrefix = {}; // devComp->prefix
+            var auxBindDevComp = {}; // devComp
             var auxPrefix = {};
             imageList.$loaded().then(() => {
                 imageList.$add(base64Url).then((imref) => {
@@ -33,20 +32,54 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                         if (prefix.toUpperCase() in snapshot.val()) {
                             if (type in snapshot.val()[prefix]) {
                                 auxInfo[(Object.keys(snapshot.val()[prefix][type]).length).toString()] = model;
-                                auxType[type] = '';
-                                auxBind[prefix] = auxType;
-                                auxBind[prefix][type] = Object.assign(auxInfo, snapshot.val()[prefix][type]);              
-                                //auxPrefix = snapshot.val();
-                                //auxPrefix[prefix][type] = auxInfo;
-                                refDevComp.update(auxBind[prefix][type]);
+                                auxBind = Object.assign(snapshot.val()[prefix][type], auxInfo);
+                                auxPrefix[type] = auxBind;
+                                auxBindPrefix[prefix] = Object.assign(snapshot.val()[prefix], auxPrefix);
+                                auxBindDevComp = Object.assign(snapshot.val(), auxBindPrefix);
+                                console.log('auxBindDevComp: ', auxBindDevComp);
+                                
+                                if (add === false) {
+                                    add = true;
+                                    refDevComp.update(auxBindDevComp);
+                                    console.log('type add: ', typeof add);
+                                    console.log('type add: ', add);
+                                }
+
+                                /* Delete aux objects */
+                                for (const prop of Object.getOwnPropertyNames(auxInfo)) {
+                                    delete auxInfo[prop];
+                                }
+                                for (const prop of Object.getOwnPropertyNames(auxType)) {
+                                    delete auxType[prop];
+                                }
+                                for (const prop of Object.getOwnPropertyNames(auxBind)) {
+                                    delete auxPrefix[prop];
+                                }                                
+                                for (const prop of Object.getOwnPropertyNames(auxPrefix)) {
+                                    delete auxPrefix[prop];
+                                }
+                                for (const prop of Object.getOwnPropertyNames(auxBindPrefix)) {
+                                    delete auxBindPrefix[prop];
+                                }
+                                debug += 1;
                                 return;
                             }
-                            else {
+                            else { //ok
                                 console.log('CREATE TYPE');
                                 auxInfo['0'] = model; // First model of the just created type
                                 auxType[type] = auxInfo;
                                 auxPrefix[prefix] = Object.assign(snapshot.val()[prefix], auxType);
                                 refDevComp.update(auxPrefix);
+                                /* Delete aux objects */
+                                for (const prop of Object.getOwnPropertyNames(auxInfo)) {
+                                    delete auxInfo[prop];
+                                }
+                                for (const prop of Object.getOwnPropertyNames(auxType)) {
+                                    delete auxType[prop];
+                                }
+                                for (const prop of Object.getOwnPropertyNames(auxPrefix)) {
+                                    delete auxPrefix[prop];
+                                }
                                 return;
                             }
                         }
@@ -57,11 +90,16 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                             auxType[type] = model;
                             auxPrefix[prefix] = auxType;
                             refDevComp.update(auxPrefix);  
-                            getOut(); 
+                            for (const prop of Object.getOwnPropertyNames(auxType)) {
+                                delete auxInfo[prop];
+                            }
+                            for (const prop of Object.getOwnPropertyNames(auxPrefix)) {
+                                delete auxType[prop];
+                            }
                             return; 
-                        }
+                        } 
                     });
-                    
+                    console.log('Outside if auxBindDevComp: ', auxBindDevComp);
                     //const devCompList = $firebaseArray(refDevComp);
                     modelKeys.prefixCompany = prefix;
                     modelKeys.type = type;
@@ -93,10 +131,10 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                         });
                     });
                     
-                    devCompList.$loaded().then(() => {
-                        devCompList.$add(auxModel).then((refDevComp) => {
-                        });
-                    });
+                    //devCompList.$loaded().then(() => {
+                    //    devCompList.$add(auxModel).then((refDevComp) => {
+                    //    });
+                    //});
                 });
             });
         });
