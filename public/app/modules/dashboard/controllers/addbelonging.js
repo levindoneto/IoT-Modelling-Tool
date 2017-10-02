@@ -1,6 +1,6 @@
 
-dashboard.controller("addbelongingController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash','$firebaseObject','$firebaseArray','Upload','$timeout','notification',
-function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray, Upload, $timeout, notification) {
+dashboard.controller("addbelongingController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseObject', '$firebaseArray', 'Upload', '$timeout', 'notification',
+function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray, Upload) {
     const vm = this;
     function DatabaseException(message) {
         this.message = message;
@@ -22,39 +22,26 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
             var auxPrefix = {};
             imageList.$loaded().then(() => {
                 imageList.$add(base64Url).then((imref) => {
-                    //console.log("imref");
-                    //console.log(imref)
                     model.imageFile = imref.key;
                     const ref = firebase.database().ref('models/');
                     const refDevComp = firebase.database().ref('devComp/');
                     const modelList = $firebaseArray(ref);
-                    let debug = 0;
                     refDevComp.on("value", (snapshot) => { // The whole object savedModels with all the saved models
-                        //console.log('DEBUG (0): ', debug);
-                        //console.log('prefix.toUpperCase(): ', prefix.toUpperCase());
-                        //console.log('snapshot.val(): ', snapshot.val());
-                        //if ()
-                        //console.log('null: ', snapshot.val() == null);
-                        console.log('ADD FLAG: ', add);
                         if (snapshot.val() != null) {
                             if (prefix in snapshot.val() && add === false) {
                                 if (type in snapshot.val()[prefix]) {
-                                    console.log('IM HERE.... with ', model.id);
+                                    //console.log('There is already a type');
                                     auxInfo[(Object.keys(snapshot.val()[prefix][type]).length).toString()] = model;
                                     auxBind = Object.assign(snapshot.val()[prefix][type], auxInfo);
                                     auxPrefix[type] = auxBind;
                                     auxBindPrefix[prefix] = Object.assign(snapshot.val()[prefix], auxPrefix);
                                     auxBindDevComp = Object.assign(snapshot.val(), auxBindPrefix);
                                     //console.log('auxBindDevComp: ', auxBindDevComp);
-                                    
-                                    if (add === false && snapshot.val()[prefix][type]['0'].id !== model.id) {
-                                        //console.log('snapshot.val()[prefix][type].id: ', snapshot.val()[prefix][type].id);
-                                        //console.log('model.id: ', model.id);
-                                        //console.log('is it true: ', snapshot.val()[prefix][type]['0'].id === model.id);
-                                        add = true;
+                                    if (add === false && snapshot.val()[prefix][type][(Object.keys(snapshot.val()[prefix][type]).length - 1).toString()].id !== model.id) {
+                                        console.log('Inside: auxBindDevComp: ', auxBindDevComp);
                                         refDevComp.update(auxBindDevComp);
-                                        //console.log('type add: ', typeof add);
-                                        //console.log('type add: ', add);
+                                        add = true;
+                                        return;
                                     }
 
                                     /* Delete aux objects */
@@ -73,11 +60,11 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                                     for (const prop of Object.getOwnPropertyNames(auxBindPrefix)) {
                                         delete auxBindPrefix[prop];
                                     }
-                                    debug += 1;
                                     add = true;
                                     return;
                                 }
                                 else { //ok
+                                    //console.log('CREATE TYPE');
                                     auxInfo['0'] = model; // First model of the just created type
                                     auxType[type] = auxInfo;
                                     auxPrefix[prefix] = Object.assign(snapshot.val()[prefix], auxType);
@@ -97,24 +84,13 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                                     return;
                                 }
                             }
-                            else {
-                                console.log('CREATE PREFIX');
-                                
+                            else { //ok
+                                //console.log('CREATE PREFIX');
                                 auxInfo['0'] = model; // First model of the just created type
                                 auxType[type] = auxInfo;
                                 auxPrefix[prefix] = auxType;
-
-                                //auxBindDevComp = Object.assign(snapshot.val(), auxPrefix);
-
-                                //console.log('else create prefix: ', auxBindDevComp);
-
                                 refDevComp.update(auxPrefix);
                                 add = true;  
-                                /*
-                                setTimeout(() => {
-                                    add = true; 
-                                }, 1000);
-                                */
                                 for (const prop of Object.getOwnPropertyNames(auxType)) {
                                     delete auxInfo[prop];
                                 }
@@ -128,8 +104,6 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                             throw new DatabaseException('Null Snapshot');
                         }
                     });
-                    console.log('Outside if auxBindDevComp: ', auxBindDevComp);
-                    //const devCompList = $firebaseArray(refDevComp);
                     modelKeys.prefixCompany = prefix;
                     modelKeys.type = type;
                     
@@ -138,11 +112,9 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                      * downloaded from the database. The promise resolves to the $firebaseObject itself.
                      */
                     modelList.$loaded().then(() => {
-                        //console.log('MODEL: ', model);
                         auxType[type] = model;
                         auxModel[prefix] = auxType; // [prefix][type] can't be accessed on the fly
-                        
-                        //console.log('AUX MODEL: ', auxModel);
+
                         /* $add function:
                          * Creates a new record in the database and adds the record to our 
                          * local synchronized array.
@@ -159,11 +131,6 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                         modelList.$add(modelKeys).then((ref) => {
                         });
                     });
-                    
-                    //devCompList.$loaded().then(() => {
-                    //    devCompList.$add(auxModel).then((refDevComp) => {
-                    //    });
-                    //});
                 });
             });
         });
