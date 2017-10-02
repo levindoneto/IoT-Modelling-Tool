@@ -2,6 +2,10 @@
 dashboard.controller("addbelongingController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash','$firebaseObject','$firebaseArray','Upload','$timeout','notification',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray, Upload, $timeout, notification) {
     const vm = this;
+    function DatabaseException(message) {
+        this.message = message;
+        this.name = 'dbException';
+     }
     vm.addbelonging = function (prefix, type, model, file) { // prefix->type->model
         Upload.base64DataUrl(file).then((base64Url) => {
             model.userUid = $rootScope.userDB.uid;
@@ -29,75 +33,81 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                         console.log('DEBUG (0): ', debug);
                         //console.log('prefix.toUpperCase(): ', prefix.toUpperCase());
                         //console.log('snapshot.val(): ', snapshot.val());
-                        if (prefix.toUpperCase() in snapshot.val()) {
-                            if (type in snapshot.val()[prefix]) {
-                                auxInfo[(Object.keys(snapshot.val()[prefix][type]).length).toString()] = model;
-                                auxBind = Object.assign(snapshot.val()[prefix][type], auxInfo);
-                                auxPrefix[type] = auxBind;
-                                auxBindPrefix[prefix] = Object.assign(snapshot.val()[prefix], auxPrefix);
-                                auxBindDevComp = Object.assign(snapshot.val(), auxBindPrefix);
-                                console.log('auxBindDevComp: ', auxBindDevComp);
-                                
-                                if (add === false) {
-                                    add = true;
-                                    refDevComp.update(auxBindDevComp);
-                                    console.log('type add: ', typeof add);
-                                    console.log('type add: ', add);
-                                }
+                        //if ()
+                        console.log('null: ', snapshot.val() == null);
+                        if (snapshot.val() != null) {
+                            if (prefix.toUpperCase() in snapshot.val()) {
+                                if (type in snapshot.val()[prefix]) {
+                                    auxInfo[(Object.keys(snapshot.val()[prefix][type]).length).toString()] = model;
+                                    auxBind = Object.assign(snapshot.val()[prefix][type], auxInfo);
+                                    auxPrefix[type] = auxBind;
+                                    auxBindPrefix[prefix] = Object.assign(snapshot.val()[prefix], auxPrefix);
+                                    auxBindDevComp = Object.assign(snapshot.val(), auxBindPrefix);
+                                    console.log('auxBindDevComp: ', auxBindDevComp);
+                                    
+                                    if (add === false) {
+                                        add = true;
+                                        refDevComp.update(auxBindDevComp);
+                                        console.log('type add: ', typeof add);
+                                        console.log('type add: ', add);
+                                    }
 
-                                /* Delete aux objects */
-                                for (const prop of Object.getOwnPropertyNames(auxInfo)) {
+                                    /* Delete aux objects */
+                                    for (const prop of Object.getOwnPropertyNames(auxInfo)) {
+                                        delete auxInfo[prop];
+                                    }
+                                    for (const prop of Object.getOwnPropertyNames(auxType)) {
+                                        delete auxType[prop];
+                                    }
+                                    for (const prop of Object.getOwnPropertyNames(auxBind)) {
+                                        delete auxPrefix[prop];
+                                    }                                
+                                    for (const prop of Object.getOwnPropertyNames(auxPrefix)) {
+                                        delete auxPrefix[prop];
+                                    }
+                                    for (const prop of Object.getOwnPropertyNames(auxBindPrefix)) {
+                                        delete auxBindPrefix[prop];
+                                    }
+                                    debug += 1;
+                                    return;
+                                }
+                                else { //ok
+                                    console.log('CREATE TYPE');
+                                    auxInfo['0'] = model; // First model of the just created type
+                                    auxType[type] = auxInfo;
+                                    auxPrefix[prefix] = Object.assign(snapshot.val()[prefix], auxType);
+                                    refDevComp.update(auxPrefix);
+                                    /* Delete aux objects */
+                                    for (const prop of Object.getOwnPropertyNames(auxInfo)) {
+                                        delete auxInfo[prop];
+                                    }
+                                    for (const prop of Object.getOwnPropertyNames(auxType)) {
+                                        delete auxType[prop];
+                                    }
+                                    for (const prop of Object.getOwnPropertyNames(auxPrefix)) {
+                                        delete auxPrefix[prop];
+                                    }
+                                    return;
+                                }
+                            }
+                            else {
+                                console.log('CREATE PREFIX');
+                                auxType[type] = model;
+                                auxPrefix[prefix] = auxType;
+                                //refDevComp.update(auxPrefix);  
+
+                                for (const prop of Object.getOwnPropertyNames(auxType)) {
                                     delete auxInfo[prop];
                                 }
-                                for (const prop of Object.getOwnPropertyNames(auxType)) {
+                                for (const prop of Object.getOwnPropertyNames(auxPrefix)) {
                                     delete auxType[prop];
                                 }
-                                for (const prop of Object.getOwnPropertyNames(auxBind)) {
-                                    delete auxPrefix[prop];
-                                }                                
-                                for (const prop of Object.getOwnPropertyNames(auxPrefix)) {
-                                    delete auxPrefix[prop];
-                                }
-                                for (const prop of Object.getOwnPropertyNames(auxBindPrefix)) {
-                                    delete auxBindPrefix[prop];
-                                }
-                                debug += 1;
-                                return;
-                            }
-                            else { //ok
-                                console.log('CREATE TYPE');
-                                auxInfo['0'] = model; // First model of the just created type
-                                auxType[type] = auxInfo;
-                                auxPrefix[prefix] = Object.assign(snapshot.val()[prefix], auxType);
-                                refDevComp.update(auxPrefix);
-                                /* Delete aux objects */
-                                for (const prop of Object.getOwnPropertyNames(auxInfo)) {
-                                    delete auxInfo[prop];
-                                }
-                                for (const prop of Object.getOwnPropertyNames(auxType)) {
-                                    delete auxType[prop];
-                                }
-                                for (const prop of Object.getOwnPropertyNames(auxPrefix)) {
-                                    delete auxPrefix[prop];
-                                }
-                                return;
-                            }
+                                return; 
+                            } 
                         }
                         else {
-                            console.log('CREATE PREFIX');
-                            debug += 1;
-                            console.log('DEBUG ELSE (1): ', debug);
-                            auxType[type] = model;
-                            auxPrefix[prefix] = auxType;
-                            refDevComp.update(auxPrefix);  
-                            for (const prop of Object.getOwnPropertyNames(auxType)) {
-                                delete auxInfo[prop];
-                            }
-                            for (const prop of Object.getOwnPropertyNames(auxPrefix)) {
-                                delete auxType[prop];
-                            }
-                            return; 
-                        } 
+                            throw new DatabaseException('Null Snapshot');
+                        }
                     });
                     console.log('Outside if auxBindDevComp: ', auxBindDevComp);
                     //const devCompList = $firebaseArray(refDevComp);
