@@ -30,26 +30,31 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                     const modelList = $firebaseArray(ref);
                     let debug = 0;
                     refDevComp.on("value", (snapshot) => { // The whole object savedModels with all the saved models
-                        console.log('DEBUG (0): ', debug);
+                        //console.log('DEBUG (0): ', debug);
                         //console.log('prefix.toUpperCase(): ', prefix.toUpperCase());
                         //console.log('snapshot.val(): ', snapshot.val());
                         //if ()
-                        console.log('null: ', snapshot.val() == null);
+                        //console.log('null: ', snapshot.val() == null);
+                        console.log('ADD FLAG: ', add);
                         if (snapshot.val() != null) {
-                            if (prefix.toUpperCase() in snapshot.val()) {
+                            if (prefix in snapshot.val() && add === false) {
                                 if (type in snapshot.val()[prefix]) {
+                                    console.log('IM HERE.... with ', model.id);
                                     auxInfo[(Object.keys(snapshot.val()[prefix][type]).length).toString()] = model;
                                     auxBind = Object.assign(snapshot.val()[prefix][type], auxInfo);
                                     auxPrefix[type] = auxBind;
                                     auxBindPrefix[prefix] = Object.assign(snapshot.val()[prefix], auxPrefix);
                                     auxBindDevComp = Object.assign(snapshot.val(), auxBindPrefix);
-                                    console.log('auxBindDevComp: ', auxBindDevComp);
+                                    //console.log('auxBindDevComp: ', auxBindDevComp);
                                     
-                                    if (add === false) {
+                                    if (add === false && snapshot.val()[prefix][type]['0'].id !== model.id) {
+                                        //console.log('snapshot.val()[prefix][type].id: ', snapshot.val()[prefix][type].id);
+                                        //console.log('model.id: ', model.id);
+                                        //console.log('is it true: ', snapshot.val()[prefix][type]['0'].id === model.id);
                                         add = true;
                                         refDevComp.update(auxBindDevComp);
-                                        console.log('type add: ', typeof add);
-                                        console.log('type add: ', add);
+                                        //console.log('type add: ', typeof add);
+                                        //console.log('type add: ', add);
                                     }
 
                                     /* Delete aux objects */
@@ -69,14 +74,15 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                                         delete auxBindPrefix[prop];
                                     }
                                     debug += 1;
+                                    add = true;
                                     return;
                                 }
                                 else { //ok
-                                    console.log('CREATE TYPE');
                                     auxInfo['0'] = model; // First model of the just created type
                                     auxType[type] = auxInfo;
                                     auxPrefix[prefix] = Object.assign(snapshot.val()[prefix], auxType);
                                     refDevComp.update(auxPrefix);
+                                    add = true;
                                     /* Delete aux objects */
                                     for (const prop of Object.getOwnPropertyNames(auxInfo)) {
                                         delete auxInfo[prop];
@@ -87,15 +93,28 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                                     for (const prop of Object.getOwnPropertyNames(auxPrefix)) {
                                         delete auxPrefix[prop];
                                     }
+                                    add = true;
                                     return;
                                 }
                             }
                             else {
                                 console.log('CREATE PREFIX');
-                                auxType[type] = model;
+                                
+                                auxInfo['0'] = model; // First model of the just created type
+                                auxType[type] = auxInfo;
                                 auxPrefix[prefix] = auxType;
-                                //refDevComp.update(auxPrefix);  
 
+                                //auxBindDevComp = Object.assign(snapshot.val(), auxPrefix);
+
+                                //console.log('else create prefix: ', auxBindDevComp);
+
+                                refDevComp.update(auxPrefix);
+                                add = true;  
+                                /*
+                                setTimeout(() => {
+                                    add = true; 
+                                }, 1000);
+                                */
                                 for (const prop of Object.getOwnPropertyNames(auxType)) {
                                     delete auxInfo[prop];
                                 }
