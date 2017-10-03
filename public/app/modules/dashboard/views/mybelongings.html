@@ -8,6 +8,20 @@
 
 <!-- Main content -->
 <section class="content">
+
+    <ul>
+        <li ng-repeat="item in devComps">
+            {{item.$id}}
+            <ul>
+                <li ng-repeat="(id, child) in item">
+                    {{id}}
+                    <ul>
+                        <li ng-repeat="(id, keyModel) in child">{{keyModel.imageFile}}</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
     <div class="box-content">
         <div class="panel panel-default">
             <ul style="list-style-type: none;">

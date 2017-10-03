@@ -16,9 +16,11 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
         var devCompList = $firebaseArray(refDC);
         modelList.$loaded().then(() => {
             $scope.models = modelList; // Information of devices and components
+            //console.log('refDC: ', refDC.$id);
         });
         devCompList.$loaded().then(() => {
             $scope.devComps = devCompList; // Nested elements prefix->type->key_models
+            //console.log('devComplist: ', devCompList);
         });
         
         function verifyAdditionalPropertyCompDev(elementPropertyI) {
