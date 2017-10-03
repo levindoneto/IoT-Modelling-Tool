@@ -11,18 +11,10 @@
     <div class="box-content">
         <div class="panel panel-default">
             <ul style="list-style-type: none;">
-                <div *ngFor="let model of models">
-                    <div *ngFor="let model of models.sensor">
-                       {{ model }}
-                    </div>
-                </div>
-
-
-
-                <li ng-repeat=" model in models | filter:{ userUid: userDB.uid }" > <!-- models is a list  provided by the controller-->
-                     
+                <li ng-repeat=" prefix in devComps " > <!-- models is a list  provided by the controller-->
                     <h3>
-                        <b>{{model.prefixCompany}}:</b>{{model.id}} <button type="button" data-toggle="modal" ng-click="modal(model);getAdditionalProperties(model.$id)"  data-target="#popUp" class="fa fa-info-circle Btnmybelongings"></button> <button ng-click="remove(model)" type="button" class="fa fa-trash Btnmybelongings"> </button> <!-- $id=key -->
+                        <!-- <button type="button" data-toggle="modal" ng-click="modal(model);getAdditionalProperties(model.$id)"  data-target="#popUp" class="fa fa-info-circle Btnmybelongings"></button> <button ng-click="remove(model)" type="button" class="fa fa-trash Btnmybelongings"> </button> <!-- $id=key -->
+                        <b>{{(prefix.$id).toString()}}</b> 
                     </h3>
 
                     <div id="popUp" class="modal fade" role="dialog">

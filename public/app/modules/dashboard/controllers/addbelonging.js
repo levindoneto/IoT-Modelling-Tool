@@ -12,7 +12,6 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
             var add = false;
             const refImages = firebase.database().ref('images/');
             const imageList = $firebaseArray(refImages);
-            const auxModel = {};
             const auxType = {};
             const modelKeys = model;
             const auxInfo = {};
@@ -31,6 +30,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                             if (prefix in snapshot.val() && add === false) {
                                 if (type in snapshot.val()[prefix]) {
                                     //console.log('There is already a type');
+                                    //console.log('model: ', model.imageFile);
                                     auxInfo[(Object.keys(snapshot.val()[prefix][type]).length).toString()] = model;
                                     auxBind = Object.assign(snapshot.val()[prefix][type], auxInfo);
                                     auxPrefix[type] = auxBind;
@@ -38,7 +38,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                                     auxBindDevComp = Object.assign(snapshot.val(), auxBindPrefix);
                                     //console.log('auxBindDevComp: ', auxBindDevComp);
                                     if (add === false && snapshot.val()[prefix][type][(Object.keys(snapshot.val()[prefix][type]).length - 1).toString()].id !== model.id) {
-                                        console.log('Inside: auxBindDevComp: ', auxBindDevComp);
+                                        //console.log('Inside: auxBindDevComp: ', auxBindDevComp);
                                         refDevComp.update(auxBindDevComp);
                                         add = true;
                                         return;
@@ -86,7 +86,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                             }
                             else { //ok
                                 //console.log('CREATE PREFIX');
-                                auxInfo['0'] = model; // First model of the just created type
+                                auxInfo['0'] = model;// First model of the just created type
                                 auxType[type] = auxInfo;
                                 auxPrefix[prefix] = auxType;
                                 refDevComp.update(auxPrefix);
@@ -112,9 +112,6 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                      * downloaded from the database. The promise resolves to the $firebaseObject itself.
                      */
                     modelList.$loaded().then(() => {
-                        auxType[type] = model;
-                        auxModel[prefix] = auxType; // [prefix][type] can't be accessed on the fly
-
                         /* $add function:
                          * Creates a new record in the database and adds the record to our 
                          * local synchronized array.
