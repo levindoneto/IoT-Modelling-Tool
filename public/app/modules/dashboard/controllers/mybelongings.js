@@ -13,14 +13,13 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
         var ref = firebase.database().ref('models/');
         var refDC = firebase.database().ref('devComp/');
         var modelList = $firebaseArray(ref);
+        var modelObj = $firebaseObject(ref);
         var devCompList = $firebaseArray(refDC);
         modelList.$loaded().then(() => {
             $scope.models = modelList; // Information of devices and components
-            //console.log('refDC: ', refDC.$id);
         });
         devCompList.$loaded().then(() => {
             $scope.devComps = devCompList; // Nested elements prefix->type->key_models
-            //console.log('devComplist: ', devCompList);
         });
         
         function verifyAdditionalPropertyCompDev(elementPropertyI) {
@@ -107,5 +106,26 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
                 console.log('objAddPropsCompDev', objAddPropsCompDev);
                 $scope.objAddionalPropsCompDev = objAddPropsCompDev; 
             }, 0);
+        };
+
+        /* Function for getting all device/components' information with the access key from the element on devComp
+         * @parameters: String: Access key
+         * @return: Object element: information of the device or component
+         */
+        $scope.getInfo = function (keyI) {
+            const elementInfo = {};
+            console.log('TEST: ', keyI);
+            //console.log('This is the key: ', keyI);
+            //console.log('model list: ', modelList);
+
+            /*
+            for (var i in modelObj) {
+                if (i.startsWith('-') && keyI.toString() === (modelObj[i].imageFile).toString()) { // Just keys start with '-'
+                    $scope.foo = modelObj[i].id;
+                    return;
+                }
+            }
+            */
+            //return a;
         };
     }]);

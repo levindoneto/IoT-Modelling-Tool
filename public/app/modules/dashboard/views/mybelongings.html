@@ -16,7 +16,7 @@
                 <li ng-repeat="(id, child) in item">
                     {{id}}
                     <ul>
-                        <li ng-repeat="(id, keyModel) in child">{{keyModel.imageFile}}</li>
+                        <li ng-repeat="(id, keyModel) in child" ng-model="getInfo(child[id].id)">{{child[id].id}}</li>
                     </ul>
                 </li>
             </ul>
