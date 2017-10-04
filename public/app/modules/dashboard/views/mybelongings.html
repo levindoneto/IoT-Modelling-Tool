@@ -19,7 +19,7 @@
                         <li ng-repeat="(id, child) in item">
                             <h4>{{id}}</h4>
                             <ul style="list-style-type: none;">
-                                <li ng-repeat="(id, keyModel) in child" ng-model="getInfo(child[id].id)"><h5>{{child[id].id}} <button type="button" data-toggle="modal" ng-click="modal(model);getAdditionalProperties(model.$id)"
+                                <li ng-repeat="(id, keyModel) in child" ng-model="getInfo(child[id].id)"><h5>{{child[id].id}} <button type="button" data-toggle="modal" ng-click="modal(child[id]);getAdditionalProperties(model.$id)"
                                         data-target="#popUp" class="fa fa-info-circle Btnmybelongings"></button> <button ng-click="remove(model)"
                                         type="button" class="fa fa-trash Btnmybelongings"> </button> </h5>
                                 <div id="popUp" class="modal fade" role="dialog"> <!-- Box with all information -->
@@ -32,9 +32,11 @@
                                             </div>
                                             <div class="modal-body">
                                                 <h3 align="center">
-                                                    <span class="MyInfo">Icon:</span><br>
-                                                    <img class="Imgmybelongings" src="{{imagemodel}}" height=100% width=auto /><br>
-                                                    <span class="MyInfo"> Id: </span> <span class="MyInfoP"> {{modalmodel.id}} </span></br>
+                                                    <span class="MyInfo">Icon</span><br>
+                                                    <img class="Imgmybelongings" src="{{imagemodel}}" height=100% width=auto /></br>
+                                                    <span class="MyInfo"> Id: </span> <span class="MyInfoP"> {{child[id].id}} </span></br>
+
+                                                    <!--
                                                     <span class="MyInfo"> Type: </span>
                                                     <span ng-if="modalmodel.type == 'Device'" class="MyInfoP">
                                                                 Device
@@ -47,10 +49,12 @@
                                                             </span>
                                                     <span ng-if="modalmodel.type != 'Device' && modalmodel.type != 'SensingDevice' && modalmodel.type != 'ActuatingDevice'" class="MyInfoP">
                                                                 {{modalmodel.type}}
-                                                            </span></br>
-                                                    <span class="MyInfo"> Company: </span> <span class="MyInfoP"> {{modalmodel.prefixCompany.toUpperCase()}} </span></br>
-                                                    <span class="MyInfo"> RDFS Comment: </span> <span class="MyInfoP"> {{modalmodel.rdfsComment}} </span></br>
-                                                    <span class="MyInfo"> Ontology: </span> <span class="MyInfoP"> {{modalmodel.ontology.toUpperCase()}} </span></br>
+                                                    </span></br>
+                                                    -->
+                                                    
+                                                    <!--<span class="MyInfo"> Company: </span> <span class="MyInfoP"> {{modalmodel.prefixCompany.toUpperCase()}} </span></br>-->
+                                                    <span class="MyInfo"> RDFS Comment: </span> <span class="MyInfoP"> {{child[id].rdfsComment}} </span></br>
+                                                    <span class="MyInfo"> Ontology: </span> <span class="MyInfoP"> {{child[id].ontology.toUpperCase()}} </span></br>
                                                     <div ng-repeat="(key, value) in objAddionalPropsCompDev">
                                                         <span ng-if="value.NewPropertyValue.toString() != '' && key.toString() != 'numberOfPins' && key.toString() != 'pinConfiguration"
                                                             class="MyInfo">{{key.toString()}}:</span>
@@ -81,7 +85,7 @@
                 <li ng-repeat=" prefix in devComps ">
                     <!-- models is a list  provided by the controller-->
                     <h3>
-                        <button type="button" data-toggle="modal" ng-click="modal(model);getAdditionalProperties(model.$id)" data-target="#popUp"
+                        <button type="button" data-toggle="modal" ng-click="modal(child[id]);getAdditionalProperties(model.$id)" data-target="#popUp"
                             class="fa fa-info-circle Btnmybelongings"></button> <button ng-click="remove(model)"
                             type="button" class="fa fa-trash Btnmybelongings"> </button>
                         <!-- $id=key -->
