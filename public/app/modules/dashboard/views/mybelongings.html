@@ -13,11 +13,19 @@
     <div class="box-content">
         <div class="panel panel-default">
             <ul style="list-style-type: none;">
-                <li ng-repeat="item in devComps">
+                <li ng-repeat="item in devComps"> <!-- Prefix -->
                     <h4><b>{{item.$id}}</b></h4>
                     <ul style="list-style-type: none;">
-                        <li ng-repeat="(id, child) in item">
-                            <h4>{{id}}</h4>
+                        <li ng-repeat="(id, child) in item"> <!-- Type -->
+                            <h4 ng-if="id == 'Device'">
+                                    Device(s)
+                            </h4>
+                            <h4 ng-if="id == 'SensingDevice'">
+                                    Sensor(s)
+                            </h4>                            
+                            <h4 ng-if="id == 'ActuatingDevice'">
+                                    Actuator(s)
+                            </h4>   
                             <ul style="list-style-type: none;">
                                 <li ng-repeat="(id, keyModel) in child" ng-model="getInfo(child[id].id)"><h5>{{child[id].id}} <button type="button" data-toggle="modal" ng-click="modal(child[id]);getAdditionalProperties(model.$id)"
                                         data-target="#popUp" class="fa fa-info-circle Btnmybelongings"></button> <button ng-click="remove(model)"
@@ -40,7 +48,7 @@
                                                     <span class="MyInfo"> Type: </span>
                                                     <span ng-if="modalmodel.type == 'Device'" class="MyInfoP">
                                                                 Device
-                                                            </span>
+                                                    </span>
                                                     <span ng-if="modalmodel.type == 'SensingDevice'" class="MyInfoP">
                                                                 Sensor
                                                             </span>
