@@ -755,3 +755,7 @@ h5.H5Trades, h5.ReportedTrades, .Adm {
     margin-top: auto;
     margin-bottom: auto;
   }
+
+  .NestedType {
+      color:#3f535a;
+  }

@@ -14,6 +14,7 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
         var refDC = firebase.database().ref('devComp/');
         var modelList = $firebaseArray(ref);
         var modelObj = $firebaseObject(ref);
+        
         var devCompList = $firebaseArray(refDC);
         modelList.$loaded().then(() => {
             $scope.models = modelList; // Information of devices and components
@@ -89,43 +90,32 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
                     }
                 });
         };
-        /* Function for getting additional properties on components/devices */
-        $scope.getAdditionalProperties = function (keyCompDev) {
-            let ref = firebase.database().ref(`models/${keyCompDev}`); // Accesing the object context selected by the user
-            let compDevObj = $firebaseObject(ref);
-            const objAddPropsCompDev = {};
-            setTimeout(() => {
-                for (const compDevPropI in compDevObj) { // Ranging on the object @context->key
-                    if (compDevObj.hasOwnProperty(compDevPropI)) { // This will check all properties' names on database's key
-                        const isAddCompDevProperty = verifyAdditionalPropertyCompDev(compDevPropI);
-                        if (isAddCompDevProperty === true) { // Additional info has been found
-                            objAddPropsCompDev[compDevPropI] = compDevObj[compDevPropI]; // Updating the object with a new pair key:value
-                        }
-                    }
-                }
-                console.log('objAddPropsCompDev', objAddPropsCompDev);
-                $scope.objAddionalPropsCompDev = objAddPropsCompDev; 
-            }, 0);
-        };
-
+        
         /* Function for getting all device/components' information with the access key from the element on devComp
          * @parameters: String: Access key
          * @return: Object element: information of the device or component
          */
         $scope.getInfo = function (keyI) {
-            const elementInfo = {};
-            console.log('TEST: ', keyI);
-            //console.log('This is the key: ', keyI);
-            //console.log('model list: ', modelList);
-
-            /*
+            //console.log('Key I: ', keyI);
+            //console.log('model Obj: ', modelObj);
             for (var i in modelObj) {
-                if (i.startsWith('-') && keyI.toString() === (modelObj[i].imageFile).toString()) { // Just keys start with '-'
-                    $scope.foo = modelObj[i].id;
-                    return;
+                if (i.startsWith('-') && keyI === modelObj[i].imageFile) {
+                    let ref = firebase.database().ref(`models/${i}`); // Accesing the object context selected by the user
+                    let compDevObj = $firebaseObject(ref);
+                    const objAddPropsCompDev = {};
+                    setTimeout(() => {
+                        for (const compDevPropI in compDevObj) { // Ranging on the object @context->key
+                            if (compDevObj.hasOwnProperty(compDevPropI)) { // This will check all properties' names on database's key
+                                const isAddCompDevProperty = verifyAdditionalPropertyCompDev(compDevPropI);
+                                if (isAddCompDevProperty === true) { // Additional info has been found
+                                    objAddPropsCompDev[compDevPropI] = compDevObj[compDevPropI]; // Updating the object with a new pair key:value
+                                }
+                            }
+                        }
+                        //console.log('objAddPropsCompDev', objAddPropsCompDev);
+                        $scope.objAddionalPropsCompDev = objAddPropsCompDev; 
+                    }, 0);
                 }
             }
-            */
-            //return a;
         };
     }]);

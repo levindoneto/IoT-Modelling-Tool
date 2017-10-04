@@ -17,19 +17,33 @@
                     <h4><b>{{item.$id}}</b></h4>
                     <ul style="list-style-type: none;">
                         <li ng-repeat="(id, child) in item"> <!-- Type -->
-                            <h4 ng-if="id == 'Device'">
-                                    Device(s)
+                            <h4 ng-if="id == 'Device'" class="NestedType">
+                                <b> Device(s) </b>
                             </h4>
-                            <h4 ng-if="id == 'SensingDevice'">
-                                    Sensor(s)
+                            <h4 ng-if="id == 'SensingDevice'" class="NestedType">
+                                <b> Sensor(s) </b>
                             </h4>                            
-                            <h4 ng-if="id == 'ActuatingDevice'">
-                                    Actuator(s)
+                            <h4 ng-if="id == 'ActuatingDevice'" class="NestedType">
+                                <b> Actuator(s) </b>
                             </h4>   
+                            <h4 ng-if="id != 'Device' && id != 'SensingDevice' && id != 'ActuatingDevice'" class="NestedType">
+                                    {{id}}
+                            </h4>
                             <ul style="list-style-type: none;">
-                                <li ng-repeat="(id, keyModel) in child" ng-model="getInfo(child[id].id)"><h5>{{child[id].id}} <button type="button" data-toggle="modal" ng-click="modal(child[id]);getAdditionalProperties(model.$id)"
-                                        data-target="#popUp" class="fa fa-info-circle Btnmybelongings"></button> <button ng-click="remove(model)"
-                                        type="button" class="fa fa-trash Btnmybelongings"> </button> </h5>
+                                <li ng-repeat="(id, keyModel) in child">
+                                    <h4>{{child[id].id}} 
+                                        <button 
+                                            type="button" 
+                                            data-toggle="modal" 
+                                            ng-click="modal(child[id]);getInfo(child[id].imageFile)" 
+                                            data-target="#popUp" 
+                                            class="fa fa-info-circle Btnmybelongings">
+                                        </button> 
+                                        <button 
+                                            ng-click="remove(model)"
+                                            type="button" class="fa fa-trash Btnmybelongings"> 
+                                        </button> 
+                                    </h4>
                                 <div id="popUp" class="modal fade" role="dialog"> <!-- Box with all information -->
                                     <div class="modal-dialog">
                                         <!-- Modal content-->
@@ -43,34 +57,17 @@
                                                     <span class="MyInfo">Icon</span><br>
                                                     <img class="Imgmybelongings" src="{{imagemodel}}" height=100% width=auto /></br>
                                                     <span class="MyInfo"> Id: </span> <span class="MyInfoP"> {{child[id].id}} </span></br>
-
-                                                    <!--
-                                                    <span class="MyInfo"> Type: </span>
-                                                    <span ng-if="modalmodel.type == 'Device'" class="MyInfoP">
-                                                                Device
-                                                    </span>
-                                                    <span ng-if="modalmodel.type == 'SensingDevice'" class="MyInfoP">
-                                                                Sensor
-                                                            </span>
-                                                    <span ng-if="modalmodel.type == 'ActuatingDevice'" class="MyInfoP">
-                                                                Actuator
-                                                            </span>
-                                                    <span ng-if="modalmodel.type != 'Device' && modalmodel.type != 'SensingDevice' && modalmodel.type != 'ActuatingDevice'" class="MyInfoP">
-                                                                {{modalmodel.type}}
-                                                    </span></br>
-                                                    -->
                                                     
                                                     <!--<span class="MyInfo"> Company: </span> <span class="MyInfoP"> {{modalmodel.prefixCompany.toUpperCase()}} </span></br>-->
                                                     <span class="MyInfo"> RDFS Comment: </span> <span class="MyInfoP"> {{child[id].rdfsComment}} </span></br>
                                                     <span class="MyInfo"> Ontology: </span> <span class="MyInfoP"> {{child[id].ontology.toUpperCase()}} </span></br>
                                                     <div ng-repeat="(key, value) in objAddionalPropsCompDev">
-                                                        <span ng-if="value.NewPropertyValue.toString() != '' && key.toString() != 'numberOfPins' && key.toString() != 'pinConfiguration"
-                                                            class="MyInfo">{{key.toString()}}:</span>
-                                                        <span ng-if="value.NewPropertyValue.toString() == ''" class="MyInfo">{{key.toString()}}</span>
+                                                        <span ng-if="value.NewPropertyOwlType.toString() == 'owl:DatatypeProperty'" class="MyInfo">{{key.toString()}}</span>
                                                         <span ng-if="key.toString() == 'numberOfPins' || key.toString() == 'pinConfiguration'" class="MyInfo">Number of Pins:</span>
-                                                        <span class="MyInfoP"> {{value.NewPropertyValue.toString()}} </span>                                                        </br>
+                                                        <span class="MyInfo" ng-if="value.NewPropertyOwlType.toString() != 'owl:DatatypeProperty'"> {{key}}: </span>
+                                                        <span class="MyInfoP"> {{value.NewPropertyValue}} </span>                                                        
+                                                    </br>
                                                     </div>
-
                                                 </h3>
                                             </div>
                                             <div class="modal-footer">
@@ -86,23 +83,5 @@
             </ul>
         </div>
     </div>
-
-    <!--
-    <div class="box-content">
-        <div class="panel panel-default">
-            <ul style="list-style-type: none;">
-                <li ng-repeat=" prefix in devComps ">
-                    <h3>
-                        <button type="button" data-toggle="modal" ng-click="modal(child[id]);getAdditionalProperties(model.$id)" data-target="#popUp"
-                            class="fa fa-info-circle Btnmybelongings"></button> <button ng-click="remove(model)"
-                            type="button" class="fa fa-trash Btnmybelongings"> </button>
-                        <b>{{(prefix.$id).toString()}}</b>
-                    </h3>
-                </li>
-            </ul>
-        </div>
-    </div>
-    -->
-
 </section>
 <!-- /.content -->
