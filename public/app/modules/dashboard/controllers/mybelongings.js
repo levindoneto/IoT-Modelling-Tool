@@ -14,7 +14,6 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
         var refDC = firebase.database().ref('devComp/');
         var modelList = $firebaseArray(ref);
         var modelObj = $firebaseObject(ref);
-        
         var devCompList = $firebaseArray(refDC);
         modelList.$loaded().then(() => {
             $scope.models = modelList; // Information of devices and components
@@ -41,54 +40,66 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
             var ref = firebase.database().ref('images/' + model.imageFile);
             var imageObj = $firebaseObject(ref);
             imageObj.$loaded().then(() => {
-                //console.log("image");
-                //console.log(imageObj)
                 $scope.imagemodel = imageObj.$value;
                 $scope.modalmodel = model;
-                //console.log("ONE IMAGE FROM THE DATABASE::: ", $scope.imagemodel);
             });
         };
 
-        $scope.remove = function (model) {
-            //console.log("Deleting...");
-            var modelID = model.$id;
-            //console.log(modelID);
-            var ref = firebase.database().ref('models/' + model.$id);
-            var modelObject = $firebaseObject(ref);
-
-            swal({
-                title: 'Are you sure you wanna delet this device/component?',
-                text: "You can't change this after!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#DD6B55',
-                confirmButtonText: "Yes, I'm sure!",
-                cancelButtonText: 'No, cancel!',
-                closeOnConfirm: false,
-                closeOnCancel: false
-            },
-                (isConfirm) => {
-                    if (isConfirm) {
-                        modelObject.$loaded().then(() => {
-                            modelObject.$remove().then(() => {
-                                swal({
-                                    title: 'The device has been deleted with success!',
-                                    timer: 1500,
-                                    showConfirmButton: false
-                                });
-                            },
+        $scope.remove = function (accessKey, prefix, type, position) {
+            console.log('prefix: ', prefix);
+            console.log('type: ', type);
+            console.log('position: ', position);
+            console.log("Deleting...");
+            for (var keyM in modelObj) {
+                if (keyM.startsWith('-') && accessKey === modelObj[keyM].imageFile) {
+                    var refM = firebase.database().ref(`models/${keyM}`);
+                    var refDefComp = firebase.database().ref(`devComp/${prefix}/${type}/${position}`);
+                    var modelObject = $firebaseObject(refM);
+                    var dcObject = $firebaseObject(refDefComp);
+                    console.log('dcObject ', dcObject);
+                    swal({
+                        title: 'Are you sure you wanna delet this device/component?',
+                        text: "You can't change this after!",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#DD6B55',
+                        confirmButtonText: "Yes, I'm sure!",
+                        cancelButtonText: 'No, cancel!',
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                    (isConfirm) => {
+                        if (isConfirm) {
+                            modelObject.$loaded().then(() => {
+                                modelObject.$remove().then(() => {
+                                    swal({
+                                        title: 'The device has been deleted with success!',
+                                        timer: 1500,
+                                        showConfirmButton: false
+                                    });
+                                },
                                 (error) => {
                                     console.log('Error:', error);
                                 });
-                        });
-                    } else {
-                        swal({
-                            title: "Your device hasn't been deleted!",
-                            timer: 1500,
-                            showConfirmButton: false
-                        });
-                    }
-                });
+                            });
+                            dcObject.$loaded().then(() => {
+                                dcObject.$remove().then(() => {
+                                },
+                                (error) => {
+                                    console.log('Error:', error);
+                                });
+                            });
+                        } 
+                        else {
+                            swal({
+                                title: "Your device hasn't been deleted!",
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                }
+            }
         };
         
         /* Function for getting all device/components' information with the access key from the element on devComp
