@@ -440,7 +440,7 @@ firebase.database().ref('models').orderByKey().once('value')
                             }
                             //console.log("Additional Property: ", property_i);
                             if(childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:DatatypeProperty') { // Changeable property
-                                console.log("It's changeable: ", property_i);
+                                //console.log("It's changeable: ", property_i);
                                 additionalChangeableProp = {}; // id, owl type, domain, range
                                 changeablePropRdfsDomain = {}; // ontology:type(device/component)
                                 changeablePropRdfsRange = {};
@@ -452,8 +452,7 @@ firebase.database().ref('models').orderByKey().once('value')
                                 changeablePropRdfsRange['@id'] = childSnapshot.val()[property_i].NewPropertyType;
                                 additionalChangeableProp['rdfs:domain'] = changeablePropRdfsDomain;
                                 additionalChangeableProp['rdfs:range'] = changeablePropRdfsRange;
-                                console.log('Complet object additional changeable prop: ', additionalChangeableProp);
-
+                                //console.log('Complet object additional changeable prop: ', additionalChangeableProp);
                                 extensionsGraph.push(additionalChangeableProp); // Updating the @graph with an additional property
                             }                                                                                    
                             
@@ -498,7 +497,7 @@ firebase.database().ref('models').orderByKey().once('value')
                             }
                             //console.log("Additional Property: ", property_i);
                             if(childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:DatatypeProperty') { // Changeable property
-                                console.log("It's changeable: ", property_i);
+                                //console.log("It's changeable: ", property_i);
                                 additionalChangeableProp = {}; // id, owl type, domain, range
                                 changeablePropRdfsDomain = {}; // ontology:type(device/component)
                                 changeablePropRdfsRange = {};
@@ -510,7 +509,7 @@ firebase.database().ref('models').orderByKey().once('value')
                                 changeablePropRdfsRange['@id'] = childSnapshot.val()[property_i].NewPropertyType;
                                 additionalChangeableProp['rdfs:domain'] = changeablePropRdfsDomain;
                                 additionalChangeableProp['rdfs:range'] = changeablePropRdfsRange;
-                                console.log('Complet object additional changeable prop: ', additionalChangeableProp);
+                                //console.log('Complet object additional changeable prop: ', additionalChangeableProp);
 
                                 extensionsGraph.push(additionalChangeableProp); // Updating the @graph with an additional property
                             }                                                                                    
@@ -556,7 +555,7 @@ firebase.database().ref('models').orderByKey().once('value')
                         }
                         //console.log("Additional Property: ", property_i);
                         if(childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:DatatypeProperty') { // Changeable property
-                            console.log("It's changeable: ", property_i);
+                            //console.log("It's changeable: ", property_i);
                             additionalChangeableProp = {}; // id, owl type, domain, range
                             changeablePropRdfsDomain = {}; // ontology:type(device/component)
                             changeablePropRdfsRange = {};
@@ -568,13 +567,12 @@ firebase.database().ref('models').orderByKey().once('value')
                             changeablePropRdfsRange['@id'] = childSnapshot.val()[property_i].NewPropertyType;
                             additionalChangeableProp['rdfs:domain'] = changeablePropRdfsDomain;
                             additionalChangeableProp['rdfs:range'] = changeablePropRdfsRange;
-                            console.log('Complet object additional changeable prop: ', additionalChangeableProp);
-
+                            //console.log('Complet object additional changeable prop: ', additionalChangeableProp);
                             extensionsGraph.push(additionalChangeableProp); // Updating the @graph with an additional property
                         }                                                                                    
                     
                         else { // Unchangeable property: owl:Restriction
-                            console.log("It's not changeable");
+                            //console.log("It's not changeable");
                             id_element['rdfs:subClassOf'] = rdfsSubClassOf; // Updating the id element with the rdfs list
                             auxObjAddProperty = {};
                             childSnapshotVal_owlRestriction = '';

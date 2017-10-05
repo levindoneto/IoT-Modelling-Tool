@@ -62,9 +62,10 @@
                                                     <span class="MyInfo"> RDFS Comment: </span> <span class="MyInfoP"> {{child[id].rdfsComment}} </span></br>
                                                     <span class="MyInfo"> Ontology: </span> <span class="MyInfoP"> {{child[id].ontology.toUpperCase()}} </span></br>
                                                     <div ng-repeat="(key, value) in objAddionalPropsCompDev">
-                                                        <span ng-if="value.NewPropertyOwlType.toString() == 'owl:DatatypeProperty'" class="MyInfo">{{key.toString()}}</span>
+                                                        <span ng-if="value.NewPropertyOwlType.toString() == 'owl:DatatypeProperty' && key.toString() != 'value'" class="MyInfo">{{key.toString()}}</span>
                                                         <span ng-if="key.toString() == 'numberOfPins' || key.toString() == 'pinConfiguration'" class="MyInfo">Number of Pins:</span>
-                                                        <span class="MyInfo" ng-if="value.NewPropertyOwlType.toString() != 'owl:DatatypeProperty'"> {{key}}: </span>
+                                                        <span ng-if="key.toString() == 'value'" class="MyInfo">Value</span>
+                                                        <span class="MyInfo" ng-if="value.NewPropertyOwlType.toString() != 'owl:DatatypeProperty' && key.toString() != 'numberOfPins' && key.toString() != 'pinConfiguration'"> {{key}}: </span>
                                                         <span class="MyInfoP"> {{value.NewPropertyValue}} </span>                                                        
                                                     </br>
                                                     </div>
