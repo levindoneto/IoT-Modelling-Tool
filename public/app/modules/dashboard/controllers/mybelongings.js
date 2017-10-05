@@ -46,17 +46,17 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
         };
 
         $scope.remove = function (accessKey, prefix, type, position) {
-            console.log('prefix: ', prefix);
-            console.log('type: ', type);
-            console.log('position: ', position);
-            console.log("Deleting...");
+            //console.log('prefix: ', prefix);
+            //console.log('type: ', type);
+            //console.log('position: ', position);
+            //console.log("Deleting...");
             for (var keyM in modelObj) {
                 if (keyM.startsWith('-') && accessKey === modelObj[keyM].imageFile) {
                     var refM = firebase.database().ref(`models/${keyM}`);
                     var refDefComp = firebase.database().ref(`devComp/${prefix}/${type}/${position}`);
                     var modelObject = $firebaseObject(refM);
                     var dcObject = $firebaseObject(refDefComp);
-                    console.log('dcObject ', dcObject);
+                    //console.log('dcObject ', dcObject);
                     swal({
                         title: 'Are you sure you wanna delet this device/component?',
                         text: "You can't change this after!",

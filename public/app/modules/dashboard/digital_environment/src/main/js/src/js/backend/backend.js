@@ -1,5 +1,5 @@
 import DeviceStore from '../stores/DeviceStore';
-import {definitions} from '../constants/definitions';
+import { definitions } from '../constants/definitions';
 import fire from '../database/fire';
 import reactfire from 'reactfire';
 
@@ -43,7 +43,6 @@ export function fire_ajax_export(type, content) {
 
     return response;
 }
-
 
 export function fire_ajax_import(type, content) {
     const params = {
@@ -142,14 +141,13 @@ export function fire_ajax_save(name, content) {
     const url = '/modtool/saveModel' + '?' + $.param(params);
     ref[params.name] = savedModelStr;
     
-    //console.log('IM FUCKED UP');
     /* Save the key_model (saved one) as secondary root on Devices With Subsystems */
     auxDevSubSecRoot[params.name] = 'something'; // It'll get all devices with subsystems on this model
     refDevicesWithSubsystems.update(auxDevSubSecRoot); // Update just works out with objects
 
     //console.log('Keys of content.graph: ', content['@graph']); 
     
-    for (let i=1; i < Object.keys(content['@graph']).length; i += 2) { // Get the odd keys to because they have the subsystem information
+    for (let i = 1; i < Object.keys(content['@graph']).length; i += 2) { // Get the odd keys to because they have the subsystem information
         //console.log('THE SUBSYSTEM: ', content['@graph'][i]['iot-lite:isSubSystemOf']['@id']);
         if (content['@graph'][i]['iot-lite:isSubSystemOf']['@id'] !== '') { // The content->subsystem is connected to a device
             refDevicesWithSubsystems.on("value", (snapshot) => {
@@ -161,7 +159,7 @@ export function fire_ajax_save(name, content) {
                         if (verifyAddProp(infoContent)) {
                             auxContPropsSubsystem[infoContent] = content['@graph'][i][infoContent];
                         }
-                        console.log('AUX CONT: ', auxContPropsSubsystem);
+                        //console.log('AUX CONT: ', auxContPropsSubsystem);
                     }
                 }
                 

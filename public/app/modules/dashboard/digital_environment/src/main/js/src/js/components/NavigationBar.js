@@ -128,7 +128,7 @@ export default class NavigationBar extends React.Component {
         });
     };
 
-        handleCloseSaveModelAs = () => {
+    handleCloseSaveModelAs = () => {
         this.setState({
             openSaveModelAs: false,
             saveButtonDisabled: true,
@@ -200,6 +200,8 @@ export default class NavigationBar extends React.Component {
             auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel()); /* key:last_loaded_model, 
                                                                                                       * value: current model on the digital twin */
             refSavedModels.update(auxSavedModels); // Update the current model on the database
+            backend.fire_ajax_save(snapshot.val().lastLoadedModel, DeviceStore.getModel()); /* The DevicesWithSubsystems.lastLoadedModel is overwritten
+                                                                                            *  with the current information on the digital twin */
         });
         swal({
             title: 'The current model has been saved',
