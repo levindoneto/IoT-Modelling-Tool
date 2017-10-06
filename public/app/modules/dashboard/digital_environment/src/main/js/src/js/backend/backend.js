@@ -142,7 +142,7 @@ export function fire_ajax_save(name, content) {
     ref[params.name] = savedModelStr;
     
     /* Save the key_model (saved one) as secondary root on Devices With Subsystems */
-    auxDevSubSecRoot[params.name] = 'something'; // It'll get all devices with subsystems on this model
+    auxDevSubSecRoot[params.name] = 'noConnections'; // It'll get all devices with subsystems on this model
     refDevicesWithSubsystems.update(auxDevSubSecRoot); // Update just works out with objects
 
     //console.log('Keys of content.graph: ', content['@graph']); 

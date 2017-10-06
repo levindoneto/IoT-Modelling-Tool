@@ -81,15 +81,16 @@ class DeviceStore extends EventEmitter {
             createdDevice['ipvs:pinConfiguration'] = [];
             if (restrictionId.length > 0) {
                 const restriction = restrictions.find((findRestriction) => (findRestriction['@id'] === restrictionId));
-
+                createdDevice['ipvs:value'] = '';
                 if (restriction != null) {
                     const index = parseInt(restriction['owl:cardinality']['@value']);
-
+                    //createdDevice['ipvs:value'] = '20'; // see wheater it's going to all sensors
                     /* Set pins with an identical number, so list's problems aren't gotten */
                     for (let i = 1; i <= index; i++) {
                         createdDevice['ipvs:pinConfiguration'].push(i); //TODO: Modify company's prefix
                     }
                 }
+                console.log('created device: ', createdDevice);
             }
         }
 
