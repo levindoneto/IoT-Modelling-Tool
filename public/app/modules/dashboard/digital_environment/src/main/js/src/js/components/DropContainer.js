@@ -76,7 +76,7 @@ const boxTarget = {
 
             if (isCloseToOtherDevice && isTargetDevice) {
                 DropActions.setProperty(item.id, 'iot-lite:isSubSystemOf', tempDevice['@id']);
-                console.log(item.id, ' --linked to-- ', tempDevice);
+                //console.log(item.id, ' --linked to-- ', tempDevice);
             } 
             else if (!isCloseToOtherDevice) {
                 component.moveDevice(item.id, left, top);
