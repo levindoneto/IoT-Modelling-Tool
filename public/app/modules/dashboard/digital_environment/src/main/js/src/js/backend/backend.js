@@ -6,7 +6,8 @@ import reactfire from 'reactfire';
 const defaultContentProps = [ // properties that won't be parsed
     '@id',
     'geo:location',
-    'iot-lite:isSubSystemOf'];
+    'iot-lite:isSubSystemOf',
+    'ipvs:value'];
 
 function verifyAddProp(propertyI) {
     let thisIsAdditionalProperty = true;
@@ -152,9 +153,10 @@ export function fire_ajax_save(name, content) {
         if (content['@graph'][i]['iot-lite:isSubSystemOf']['@id'] !== '') { // The content->subsystem is connected to a device
             refDevicesWithSubsystems.on("value", (snapshot) => {
                 const keysModelsDevicesWithSubsystems = Object.keys(snapshot.val());
-                
+                const value = content['@graph'][i]['ipvs:value'];
                 /* Get the additional properties on the content->subsytem */
                 for (var infoContent in content['@graph'][i]) {
+                    
                     if (content['@graph'][i].hasOwnProperty(infoContent)) {
                         if (verifyAddProp(infoContent)) {
                             auxContPropsSubsystem[infoContent] = content['@graph'][i][infoContent];
@@ -178,14 +180,14 @@ export function fire_ajax_save(name, content) {
                     
                     if (snapshot.val()[params.name].toString() === content['@graph'][i]['iot-lite:isSubSystemOf']['@id']) {
                         //console.log('The device has already a subsystem');
-                        updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], locationX, locationY, auxContPropsSubsystem); //(model_key, device, subsystem): device.update(component)
+                        updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], locationX, locationY, auxContPropsSubsystem, value); //(model_key, device, subsystem): device.update(component)
                     }
                     else {
                         //console.log('The device has not a subsystem');
                         const auxNewDev = {};
                         auxNewDev[content['@graph'][i]['iot-lite:isSubSystemOf']['@id']] = '';
                         refDevicesWithSubsystems.update(auxNewDev);
-                        updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], locationX, locationY, auxContPropsSubsystem); //(model_key, device, subsystem): device.update(component)
+                        updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], locationX, locationY, auxContPropsSubsystem, value); //(model_key, device, subsystem): device.update(component)
                     }
                 }  
             });
