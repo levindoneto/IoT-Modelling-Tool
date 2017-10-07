@@ -74,7 +74,7 @@ export function cleanOutAttributes(unwantedAttributes, object) {
 }
 
 export function isPrimitiveProperty(property) {
-    console.log('property in utils: ', property);
+    //console.log('property in utils: ', property);
     if (property == null || property === '@id' || property === '' || property === 'ipvs:value') {
         return true;
     }

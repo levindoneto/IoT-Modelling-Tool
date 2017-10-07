@@ -39,7 +39,6 @@ class DeviceStore extends EventEmitter {
     /* Manipulate the frontend Model.
      * Create a new device into the model with the properties given contained by the parameter */
     createDevice(device) {
-        console.log('type for the if: ', device);
         const id = this.createId(device.type);
         /* Create device, id and type */
         const createdDevice = {};
@@ -249,8 +248,8 @@ class DeviceStore extends EventEmitter {
 
     SaveModelAs(title) {
         //backend.fire_ajax_save(title, this.model);
-        console.log("title ", title);
-        console.log("this model: ", this.model);
+        //console.log("title ", title);
+        //console.log("this model: ", this.model);
         this.emit('change');
     }
 
