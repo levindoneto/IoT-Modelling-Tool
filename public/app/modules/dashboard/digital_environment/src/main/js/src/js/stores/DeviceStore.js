@@ -39,6 +39,7 @@ class DeviceStore extends EventEmitter {
     /* Manipulate the frontend Model.
      * Create a new device into the model with the properties given contained by the parameter */
     createDevice(device) {
+        console.log('type for the if: ', device);
         const id = this.createId(device.type);
         /* Create device, id and type */
         const createdDevice = {};
@@ -63,13 +64,12 @@ class DeviceStore extends EventEmitter {
 
         /* It shall be an array of one element always */
         const restrictionId = utils.intersection(restrictionNames, parentClasses)[0];
-
         if (!parentClasses.includes('iot-lite:ActuatingDevice') && !parentClasses.includes('ssn:SensingDevice')) {
             createdDevice['ipvs:macAddress'] = '';
             if (restrictionId.length > 0) {
                 const restriction = restrictions.find((findRestriction) => (findRestriction['@id'] === restrictionId));
                 if (restriction != null) {
-                    console.log("Dropped device on the environment"); 
+                    //console.log('Dropped device on the environment'); 
                     createdDevice['ipvs:numberOfPins'] = parseInt(restriction['owl:cardinality']['@value']); 
                 }
             }
@@ -78,10 +78,13 @@ class DeviceStore extends EventEmitter {
         /* Device is a "primitive" (i.e. has no mac address) - a sensor or an actuator */
         /* Sensors and Actuators might have the pinConfiguration property */
         else {
+            //console.log('parentClasses[1]: ', parentClasses['1']);
+            if (parentClasses['1'] === 'ssn:SensingDevice') { // Just sensors have values
+                createdDevice.value = ' ';
+            }
             createdDevice['ipvs:pinConfiguration'] = [];
             if (restrictionId.length > 0) {
                 const restriction = restrictions.find((findRestriction) => (findRestriction['@id'] === restrictionId));
-                createdDevice['ipvs:value'] = '';
                 if (restriction != null) {
                     const index = parseInt(restriction['owl:cardinality']['@value']);
                     //createdDevice['ipvs:value'] = '20'; // see wheater it's going to all sensors
@@ -90,12 +93,12 @@ class DeviceStore extends EventEmitter {
                         createdDevice['ipvs:pinConfiguration'].push(i); //TODO: Modify company's prefix
                     }
                 }
-                console.log('created device: ', createdDevice);
+                //console.log('created device: ', createdDevice);
             }
         }
 
-        if (device.type === 'ipvs:RaspberryPi') {  // TODO: Get this info from the database
-            createdDevice['ipvs:gpioMode'] = ''; //TODO: ADD gpioMode property into the devices
+        if (device.type === 'ipvs:RaspberryPi') {  //modify
+            createdDevice['ipvs:gpioMode'] = ''; 
         }
         createdDevice['iot-lite:isSubSystemOf'] = {
             '@id': ''

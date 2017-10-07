@@ -41,8 +41,8 @@ const boxTarget = {
                 left = Math.min(Math.round(listElementLeft + delta.x - paletteContainerWidth), dropContainerElement.offsetWidth - 50);
                 top = Math.min(Math.round(listElementTop + delta.y), dropContainerElement.offsetHeight - 50);
             }
-            const newItem = { top, left, type };
-            DropActions.createDevice(newItem);
+            const newItem = { top, left, type }; // type: 'prefix:id'
+            DropActions.createDevice(newItem); 
         }
         /* Drag and drop inside the DropContainer */
         else {
@@ -76,6 +76,7 @@ const boxTarget = {
 
             if (isCloseToOtherDevice && isTargetDevice) {
                 DropActions.setProperty(item.id, 'iot-lite:isSubSystemOf', tempDevice['@id']);
+                console.log(item.id, ' --linked to-- ', tempDevice);
             } 
             else if (!isCloseToOtherDevice) {
                 component.moveDevice(item.id, left, top);
