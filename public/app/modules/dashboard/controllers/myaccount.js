@@ -350,8 +350,9 @@ firebase.database().ref('models').orderByKey().once('value')
                     if((childSnapshot.val()).hasOwnProperty(property_i)) { // This will check all properties' names on database's key
                         is_add_property = verifyAdditionalProperty(property_i);
                         if (is_add_property === true) {
-                            if (childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:Restriction') { // Just uncheageable properties go onto the devices' definitions
-                                rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i) //rdfsSubClassOf: current list of elements
+                            if (childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:Restriction') { // Just uncheageable properties go onto the devices' definitions and value for sensors
+                                rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i); //rdfsSubClassOf: current list of elements
+                                console.log('rdfsSubClassOf: ', rdfsSubClassOf);
                             }
                             /* Now, rdfsSubClassOf is updated with the new additional property (its identification element) */
                             //console.log("Additional Property: ", property_i);
@@ -435,8 +436,10 @@ firebase.database().ref('models').orderByKey().once('value')
                     if((childSnapshot.val()).hasOwnProperty(property_i)) {
                         is_add_property = verifyAdditionalProperty(property_i);
                         if (is_add_property == true) {
-                            if (childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:Restriction') { // Just uncheageable properties go onto the devices' definitions
+                            if (childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:Restriction' || property_i === 'value') { // Just uncheageable properties go onto the devices' definitions
+                                console.log('proper: ', property_i);
                                 rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i) //rdfsSubClassOf: current list of elements
+                                console.log('rdfsSubClassOf: ', rdfsSubClassOf);
                             }
                             //console.log("Additional Property: ", property_i);
                             if(childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:DatatypeProperty') { // Changeable property

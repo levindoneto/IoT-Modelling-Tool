@@ -80,7 +80,7 @@ class DeviceStore extends EventEmitter {
         else {
             //console.log('parentClasses[1]: ', parentClasses['1']);
             if (parentClasses['1'] === 'ssn:SensingDevice') { // Just sensors have values
-                createdDevice.value = ' ';
+                createdDevice['ipvs:value'] = ' ';
             }
             createdDevice['ipvs:pinConfiguration'] = [];
             if (restrictionId.length > 0) {
