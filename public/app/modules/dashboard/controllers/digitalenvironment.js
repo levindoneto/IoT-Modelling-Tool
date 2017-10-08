@@ -1,3 +1,9 @@
+console.log('Triggering ...');
+const refTrig = firebase.database().ref('devicesWithSubsystems/');
+refTrig.on("child_changed", (snapshot) => {
+   console.log('Something has changed on the saved model: ', snapshot.key); // key() for older firebase versions 
+});
+
 /* Function for updating the devices with its subsystems
  * @parameters: String: device, subsystem (both gotten from the current saved model),
  *                      location X, location Y
