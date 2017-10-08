@@ -15,9 +15,10 @@ refTrig.on("child_changed", (snapshot) => {
 function updateDevicesWithSubsystems(savedModel, device, subsystem, latitude, longitude, propertiesSubSystem, sensorValue, typeId, elementIndex) { //add current one
     const auxDevSub = {};
     const auxLoc = {};
+    const auxIndex = {};
     const refDevicesWithSubsystems = firebase.database().ref(`devicesWithSubsystems/${savedModel}/${device}`);
-    if (typeof sensorValue !== 'undefined') {
-        auxLoc.value = sensorValue; // DON'T PUT THIS FOR ACTUATORS...
+    if (typeof sensorValue !== 'undefined') { // device or actuator
+        auxLoc.value = sensorValue;
     }
     auxLoc.index = elementIndex;
     auxLoc['@type'] = typeId;
@@ -25,7 +26,8 @@ function updateDevicesWithSubsystems(savedModel, device, subsystem, latitude, lo
     auxLoc.locationY = longitude;
     auxDevSub[subsystem] = auxLoc;
     Object.assign(auxDevSub[subsystem], propertiesSubSystem);
-    refDevicesWithSubsystems.update(auxDevSub);
+    auxIndex[elementIndex] = auxDevSub;
+    refDevicesWithSubsystems.update(auxIndex);
 }
 
 dashboard.controller("digitalenvironmentController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash','$firebaseArray','$firebaseObject','notification',
