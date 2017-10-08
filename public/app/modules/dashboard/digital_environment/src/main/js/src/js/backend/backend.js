@@ -129,6 +129,8 @@ export function fire_ajax_import(type, content) {
 }
 
 export function fire_ajax_save(name, content) {
+    //console.log('the name: ', name);
+    //console.log('the content: ', content['@graph']);
     const params = {
         name,
         type: 'json-ld',
@@ -151,6 +153,7 @@ export function fire_ajax_save(name, content) {
     
     for (let i = 1; i < Object.keys(content['@graph']).length; i += 2) { // Get the odd keys to because they have the subsystem information
         //console.log('THE SUBSYSTEM: ', content['@graph'][i]['iot-lite:isSubSystemOf']['@id']);
+        console.log('i=', i, 'for the device: ', content['@graph'][i]['@id']);
         if (content['@graph'][i]['iot-lite:isSubSystemOf']['@id'] !== '') { // The content->subsystem is connected to a device
             refDevicesWithSubsystems.on("value", (snapshot) => {
                 const keysModelsDevicesWithSubsystems = Object.keys(snapshot.val());
@@ -158,7 +161,6 @@ export function fire_ajax_save(name, content) {
                 const typeId = content['@graph'][i]['@type'];
                 /* Get the additional properties on the content->subsytem */
                 for (var infoContent in content['@graph'][i]) {
-                    
                     if (content['@graph'][i].hasOwnProperty(infoContent)) {
                         if (verifyAddProp(infoContent)) {
                             auxContPropsSubsystem[infoContent] = content['@graph'][i][infoContent];
@@ -182,14 +184,14 @@ export function fire_ajax_save(name, content) {
                     
                     if (snapshot.val()[params.name].toString() === content['@graph'][i]['iot-lite:isSubSystemOf']['@id']) {
                         //console.log('The device has already a subsystem');
-                        updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], locationX, locationY, auxContPropsSubsystem, value, typeId); //(model_key, device, subsystem): device.update(component)
+                        updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], locationX, locationY, auxContPropsSubsystem, value, typeId, i); //(model_key, device, subsystem): device.update(component)
                     }
                     else {
                         //console.log('The device has not a subsystem');
                         const auxNewDev = {};
                         auxNewDev[content['@graph'][i]['iot-lite:isSubSystemOf']['@id']] = '';
                         refDevicesWithSubsystems.update(auxNewDev);
-                        updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], locationX, locationY, auxContPropsSubsystem, value, typeId); //(model_key, device, subsystem): device.update(component)
+                        updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], locationX, locationY, auxContPropsSubsystem, value, typeId, i); //(model_key, device, subsystem): device.update(component)
                     }
                 }  
             });
@@ -197,7 +199,8 @@ export function fire_ajax_save(name, content) {
     }
     
     let savedModelStr = JSON.stringify(content);
-    //console.log('New content', savedModelStr);
+    //console.log('String Content', savedModelStr);
+    //console.log('Object Content: ', JSON.parse(savedModelStr));
     //console.log('Type of the new content', typeof savedModelStr);
     auxSavedModels[params.name] = savedModelStr;
     ref.update(auxSavedModels); // Updating the database
