@@ -1,10 +1,3 @@
-console.log('Triggering ...');
-const refTrig = firebase.database().ref('devicesWithSubsystems/');
-refTrig.on("child_changed", (snapshot) => {
-    console.log('Something has changed on the saved model: ', snapshot.key); // key() for older firebase versions 
-    console.log('The changed element: ', snapshot.val());
-
-});
 
 /* Function for updating the devices with its subsystems
  * @parameters: String: device, subsystem (both gotten from the current saved model),
@@ -20,7 +13,6 @@ function updateDevicesWithSubsystems(savedModel, device, subsystem, latitude, lo
     if (typeof sensorValue !== 'undefined') { // device or actuator
         auxLoc.value = sensorValue;
     }
-    auxLoc.index = elementIndex;
     auxLoc['@type'] = typeId;
     auxLoc.locationX = latitude;
     auxLoc.locationY = longitude;

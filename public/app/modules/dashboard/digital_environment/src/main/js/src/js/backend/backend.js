@@ -3,6 +3,37 @@ import { definitions } from '../constants/definitions';
 import fire from '../database/fire';
 import reactfire from 'reactfire';
 
+//console.log('Triggering ...');
+const auxSavedModels = {};
+var accessedModel = {}
+const refTrig = firebase.database().ref('devicesWithSubsystems/');
+const refSavedModels = firebase.database().ref('savedModels/');
+refTrig.on("child_changed", (snapshot) => {
+    //console.log('Something has changed on the saved model: ', snapshot.key); // key() for older firebase versions 
+    //console.log('The changed element: ', snapshot.val());
+    refSavedModels.on("value", (savedM) => {
+        accessedModel = JSON.parse(savedM.val()[snapshot.key]);
+        for (let i = 0; i < (Object.keys(accessedModel[['@graph']])).length; i++) {
+            //console.log('i: ', i);
+            for (let j in snapshot.val()) {
+                //console.log('snapshot val: ', snapshot.val()[j]);
+                //console.log('j: ', j);
+                for (let k in snapshot.val()[j]) {
+                    if (i.toString() === k.toString()) {
+                        accessedModel['@graph'][i]['ipvs:value'] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].value; // j:device, k:the subsystem index, 0:just one subsystem per index
+                    }
+                }
+            }
+        }
+        //console.log('accessedModel: ', accessedModel);
+    });
+    //console.log('accessedModel: ', accessedModel);
+    const updatedModelStr = JSON.stringify(accessedModel);
+    auxSavedModels[snapshot.key] = updatedModelStr;
+    refSavedModels.update(auxSavedModels); // Update the database
+    DeviceStore.setModel(accessedModel); // Update the digital twin
+});
+
 const defaultContentProps = [ // properties that won't be parsed
     'geo:location',
     '@id',
@@ -129,7 +160,7 @@ export function fire_ajax_import(type, content) {
 }
 
 export function fire_ajax_save(name, content) {
-    //console.log('the name: ', name);
+    console.log('the name: ', name);
     //console.log('the content: ', content['@graph']);
     const params = {
         name,
