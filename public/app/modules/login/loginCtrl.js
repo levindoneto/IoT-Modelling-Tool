@@ -1,9 +1,7 @@
 
-
 login.controller("loginCtrl", ['$rootScope', '$scope', '$state', '$location', 'loginService', 'Flash','apiService','$firebaseAuth','$firebaseObject','$firebaseArray',
 function ($rootScope, $scope, $state, $location, loginService, Flash, apiService, $firebaseAuth, $firebaseObject, $firebaseArray) {
     var vm = this;
-
     vm.getUser = {};
     vm.setUser = {};
     vm.signIn = true;
@@ -11,12 +9,10 @@ function ($rootScope, $scope, $state, $location, loginService, Flash, apiService
     //access login
     vm.login = function (data) {
         console.log(data)
-        auth.$signInWithEmailAndPassword(data.Email, data.Password).then(function(firebaseUser) {
-            console.log("Signed in as:", firebaseUser.uid);
-
-        }).catch(function(error) {
-            Flash.create('Danger', 'Fail in the autentication->' + error, 'large-text');
-
+        auth.$signInWithEmailAndPassword(data.Email, data.Password).then((firebaseUser) => {
+            //console.log('Signed in as:', firebaseUser.uid);
+        }).catch((error) => {
+            Flash.create('Danger: Fail in the autentication->' + error, 'large-text');
         });
 
     };
@@ -27,8 +23,7 @@ function ($rootScope, $scope, $state, $location, loginService, Flash, apiService
             var userList = $firebaseArray(refUsers);
             var alreadyExist = false;
 
-            userList.$loaded().then(function(){
-
+            userList.$loaded().then(() => {
                 if(!alreadyExist)
                 auth.$createUserWithEmailAndPassword(vm.setUser.Email, vm.setUser.Password)
                 .then(function(firebaseUser) {
@@ -40,28 +35,20 @@ function ($rootScope, $scope, $state, $location, loginService, Flash, apiService
                         console.log($rootScope.user);
                         $rootScope.user = vm.setUser;
                     });
-
-                }).catch(function(error) {
-                    Flash.create('danger', 'Error with the register ->' + error, 'large-text');
-
-
-
+                }).catch((error) => {
+                    Flash.create('Danger: Error with the register ->' + error, 'large-text');
                 });
             }
         );
 
     };
 
-
-
-    auth.$onAuthStateChanged(function(firebaseUser) {
+    auth.$onAuthStateChanged((firebaseUser) => {
         if (firebaseUser) {
-            $state.go('app.myaccount');
-            console.log("User " + firebaseUser.uid + " created successfully!");
+            $state.go('app.myaccount'); // Go to my account when the user is allowed to access the platform
+            //console.log('User ' + firebaseUser.uid + ' created successfully!');
         } else {
-            console.log("Signed out");
+            //console.log('Signed out');
         }
     });
-
-
 }]);

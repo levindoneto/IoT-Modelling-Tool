@@ -58,7 +58,7 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
                     var dcObject = $firebaseObject(refDefComp);
                     //console.log('dcObject ', dcObject);
                     swal({
-                        title: 'Are you sure you wanna delet this device/component?',
+                        title: 'Are you sure you wanna delete this device/component?',
                         text: "You can't change this after!",
                         type: 'warning',
                         showCancelButton: true,
