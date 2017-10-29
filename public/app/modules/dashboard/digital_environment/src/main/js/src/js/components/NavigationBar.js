@@ -265,6 +265,7 @@ export default class NavigationBar extends React.Component {
                             <RaisedButton label="Load" onClick={this.handleOpenLoadModel} primary />
                             <RaisedButton label="Export" onClick={this.handleOpenExport} primary />
                             <RaisedButton label="Import" onClick={importModel} primary />
+                            <RaisedButton label="Bind" onClick={this.bind} primary />
                             <RaisedButton label="Clear" onClick={DropActions.clearDevices} secondary />
                         </ToolbarGroup>
 
@@ -353,6 +354,7 @@ export default class NavigationBar extends React.Component {
                                     <MenuItem primaryText="Load" secondaryText="Load Previously Saved Model" />
                                     <MenuItem primaryText="Export" secondaryText="Export Model" />
                                     <MenuItem primaryText="Import" secondaryText="Import Model" />
+                                    <MenuItem primaryText="Bind" secondaryText="Bind Model" />
                                     <MenuItem primaryText="Clear" secondaryText="Clear Drop Zone" />
                                     <Subheader style={subHeaderStyle}>Mouse Commands</Subheader>
                                 <Divider />
