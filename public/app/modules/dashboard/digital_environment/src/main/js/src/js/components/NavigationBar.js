@@ -154,6 +154,23 @@ export default class NavigationBar extends React.Component {
         this.setState({ openExport: false });
     };
 
+    bind = () => {
+        const refSavedModels = firebase.database().ref('savedModels/');
+        const refInfoSaved = firebase.database().ref('infoSavedModels'); // For getting the current loaded model
+        let auxSavedModels = {};
+        refInfoSaved.on("value", (snapshot) => {
+            auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel());
+            refSavedModels.update(auxSavedModels);
+            backend.fire_ajax_save(snapshot.val().lastLoadedModel, DeviceStore.getModel());
+        });
+        // ToDo: Binding (POST methods)
+        swal({
+            title: 'The model has been saved and bound successfully',
+            timer: 1500,
+            showConfirmButton: false
+        });
+    };
+
     handleOpenHelp = () => {
         this.setState({ openHelp: true });
     };
