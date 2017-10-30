@@ -160,7 +160,7 @@ export function fire_ajax_import(type, content) {
 }
 
 export function fire_ajax_save(name, content) {
-    console.log('the name: ', name);
+    //console.log('the name: ', name);
     //console.log('the content: ', content['@graph']);
     const params = {
         name,
@@ -184,7 +184,7 @@ export function fire_ajax_save(name, content) {
     
     for (let i = 1; i < Object.keys(content['@graph']).length; i += 2) { // Get the odd keys to because they have the subsystem information
         //console.log('THE SUBSYSTEM: ', content['@graph'][i]['iot-lite:isSubSystemOf']['@id']);
-        console.log('i=', i, 'for the device: ', content['@graph'][i]['@id']);
+        //console.log('i=', i, 'for the device: ', content['@graph'][i]['@id']);
         if (content['@graph'][i]['iot-lite:isSubSystemOf']['@id'] !== '') { // The content->subsystem is connected to a device
             refDevicesWithSubsystems.on("value", (snapshot) => {
                 const keysModelsDevicesWithSubsystems = Object.keys(snapshot.val());

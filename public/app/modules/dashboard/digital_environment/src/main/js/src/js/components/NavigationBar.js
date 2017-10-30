@@ -157,13 +157,23 @@ export default class NavigationBar extends React.Component {
     bind = () => {
         const refSavedModels = firebase.database().ref('savedModels/');
         const refInfoSaved = firebase.database().ref('infoSavedModels'); // For getting the current loaded model
+        const refDevsWithSubsystems = firebase.database().ref('devicesWithSubsystems');
         let auxSavedModels = {};
         refInfoSaved.on("value", (snapshot) => {
             auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel());
             refSavedModels.update(auxSavedModels);
             backend.fire_ajax_save(snapshot.val().lastLoadedModel, DeviceStore.getModel());
+
+            /* Register the devices on MBD ::: TEST */
+            refDevsWithSubsystems.on("value", (snapdev) => { // Listener on devices with sensors/actuators (whole element)
+                for (var i in snapdev.val()[snapshot.val().lastLoadedModel]) { // Access devices from the current loaded model
+                    console.log('Register the device <', i, '>'); //POST /api/devices/ HTTP/1.1
+                    for (var j in snapdev.val()[snapshot.val().lastLoadedModel][i]) {
+                        console.log('Register the componenent <', Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0], '> as subsystem of the device <', i, '>'); //POST /api/types/ HTTP/1.1
+                    }
+                }
+            });
         });
-        // ToDo: Binding (POST methods)
         swal({
             title: 'The model has been saved and bound successfully',
             timer: 1500,
