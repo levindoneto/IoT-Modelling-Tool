@@ -155,23 +155,63 @@ export default class NavigationBar extends React.Component {
     };
 
     bind = () => {
+        //Add sensor
+
+
+        /*
+        //Add adapter
+        var jsonData = {
+            "name": "dummyAdapter",
+            "description": "An adapter for tests",
+            "service": {
+              "name": "service-stub.conf",
+              "content": "stub conf"
+            },
+            "routines": [{
+              "name": "service-stub.py",
+              "content": "service code"
+            }]
+          };
+        $.ajax({
+            type: "POST",
+            url: "http://192.168.209.176:8080/MBP/api/types/ ",
+            contentType: 'application/json;charset=UTF-8',
+            data: JSON.stringify(jsonData)
+        }).done((msg) => {
+           console.log('The type has been posted');
+        });
+        */
+
         const refSavedModels = firebase.database().ref('savedModels/');
         const refInfoSaved = firebase.database().ref('infoSavedModels'); // For getting the current loaded model
         const refDevsWithSubsystems = firebase.database().ref('devicesWithSubsystems');
-        let auxSavedModels = {};
+        const refMapTypeComponents = firebase.database().ref('mapTypeComponents');
+        const auxSavedModels = {};
+        let idSplit;
+        let idComp;
+        var componentType;
         refInfoSaved.on("value", (snapshot) => {
+            /* Get the type from the map component:specificType */
             auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel());
             refSavedModels.update(auxSavedModels);
             backend.fire_ajax_save(snapshot.val().lastLoadedModel, DeviceStore.getModel());
 
-            /* Register the devices on MBD ::: TEST */
+            // Register the devices on MBD ::: TEST 
             refDevsWithSubsystems.on("value", (snapdev) => { // Listener on devices with sensors/actuators (whole element)
                 for (var i in snapdev.val()[snapshot.val().lastLoadedModel]) { // Access devices from the current loaded model
-                    console.log('Register the device <', i, '>'); //POST /api/devices/ HTTP/1.1
+                    console.log('Register the device <', i, '>');
                     for (var j in snapdev.val()[snapshot.val().lastLoadedModel][i]) {
-                        console.log('Register the componenent <', Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0], '> as subsystem of the device <', i, '>'); //POST /api/types/ HTTP/1.1
+                        idSplit = (snapdev.val()[snapshot.val().lastLoadedModel][i][j][Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0]]['@type']).split(':'); // Get the id of the component without the prefix
+                        refMapTypeComponents.on("value", (compType) => { 
+                            componentType = compType.val()[idSplit[1].toString()]; // The the type of the component by the id
+                        });
+                        setTimeout(() => {
+                            backend.bindComponent(Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0], componentType, '5a0f2a8b4f0c7363179e58e5','5a0f17a64f0c7363179e58da', 'http://192.168.209.176:8080/MBP'); // Post component into the MBD platform
+                        }, 2500);
+                        console.log('Register the componenent <', snapdev.val()[snapshot.val().lastLoadedModel][i][j][Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0]]['@type'], '> as subsystem of the device <', i, '>'); //POST /api/types/ HTTP/1.1
                     }
                 }
+                //keycomp: 
             });
         });
         swal({
@@ -179,6 +219,7 @@ export default class NavigationBar extends React.Component {
             timer: 1500,
             showConfirmButton: false
         });
+        
     };
 
     handleOpenHelp = () => {

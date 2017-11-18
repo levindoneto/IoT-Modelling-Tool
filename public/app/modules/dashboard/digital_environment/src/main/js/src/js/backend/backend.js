@@ -258,7 +258,6 @@ export function fire_ajax_load(name) {
     });
 }
 
-
 export function fire_ajax_show() {
     let response = '';
     $.ajax({
@@ -271,4 +270,22 @@ export function fire_ajax_show() {
 
     //console.log('Response: ', response);
     return response;
+}
+
+export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, apiAddress) {
+    const urlAddress = (((apiAddress.concat('/api')).concat('/')).concat(componentType)).concat('/');
+    console.log('urlAddress: ', urlAddress);
+    var jsonData = {
+        "name": idComp,
+        "type": (apiAddress.concat("/api/types/")).concat(idTypeBind),
+        "device": (apiAddress.concat("/api/devices/")).concat(idDeviceBind),
+      };
+    $.ajax({
+        type: "POST",
+        url: urlAddress,
+        contentType: 'application/json',
+        data: JSON.stringify(jsonData)
+    }).done((msg) => {
+       console.log('The sensor has been posted');
+    });
 }
