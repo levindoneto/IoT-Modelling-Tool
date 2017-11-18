@@ -7,6 +7,19 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         this.name = 'dbException';
      }
     vm.addbelonging = function (prefix, type, model, file) { // prefix->type->model
+        /* Update Map (component:specificType) */
+        const mapTypeComponents = firebase.database().ref('mapTypeComponents/');
+        let compType = {};
+        if (type == 'ActuatingDevice') {
+            compType[model.id] = 'actuators';
+        }
+        else if (type == 'SensingDevice') {
+            compType[model.id] = 'sensors';
+        }
+        else {
+            compType[model.id] = 'devices';
+        }
+        mapTypeComponents.update(compType);
         Upload.base64DataUrl(file).then((base64Url) => {
             model.userUid = $rootScope.userDB.uid;
             var add = false;
