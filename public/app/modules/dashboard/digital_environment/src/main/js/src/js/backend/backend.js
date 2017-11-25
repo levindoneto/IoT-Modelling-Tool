@@ -8,10 +8,10 @@ const auxSavedModels = {};
 var accessedModel = {}
 const refTrig = firebase.database().ref('devicesWithSubsystems/');
 const refSavedModels = firebase.database().ref('savedModels/');
-refTrig.on("child_changed", (snapshot) => {
+refTrig.on('child_changed', (snapshot) => {
     //console.log('Something has changed on the saved model: ', snapshot.key); // key() for older firebase versions 
     //console.log('The changed element: ', snapshot.val());
-    refSavedModels.on("value", (savedM) => {
+    refSavedModels.on('value', (savedM) => {
         accessedModel = JSON.parse(savedM.val()[snapshot.key]);
         for (let i = 0; i < (Object.keys(accessedModel[['@graph']])).length; i++) {
             //console.log('i: ', i);
@@ -186,7 +186,7 @@ export function fire_ajax_save(name, content) {
         //console.log('THE SUBSYSTEM: ', content['@graph'][i]['iot-lite:isSubSystemOf']['@id']);
         //console.log('i=', i, 'for the device: ', content['@graph'][i]['@id']);
         if (content['@graph'][i]['iot-lite:isSubSystemOf']['@id'] !== '') { // The content->subsystem is connected to a device
-            refDevicesWithSubsystems.on("value", (snapshot) => {
+            refDevicesWithSubsystems.on('value', (snapshot) => {
                 const keysModelsDevicesWithSubsystems = Object.keys(snapshot.val());
                 const value = content['@graph'][i]['ipvs:value'];
                 const typeId = content['@graph'][i]['@type'];
@@ -250,8 +250,8 @@ export function fire_ajax_load(name) {
         name: name
     };
     $.ajax({
-        type: "GET",
-        url: "/modtool/loadModel" + "?" + $.param(params),
+        type: 'GET',
+        url: '/modtool/loadModel' + '?' + $.param(params),
         async: false
     }).done((msg) => {
         DeviceStore.setModel(JSON.parse(msg)); //msg is the obj in a string format
@@ -275,17 +275,40 @@ export function fire_ajax_show() {
 export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, apiAddress) {
     const urlAddress = (((apiAddress.concat('/api')).concat('/')).concat(componentType)).concat('/');
     console.log('urlAddress: ', urlAddress);
-    var jsonData = {
-        "name": idComp,
-        "type": (apiAddress.concat("/api/types/")).concat(idTypeBind),
-        "device": (apiAddress.concat("/api/devices/")).concat(idDeviceBind),
+    const jsonData = {
+        name: idComp,
+        type: (apiAddress.concat('/api/types/')).concat(idTypeBind),
+        device: (apiAddress.concat('/api/devices/')).concat(idDeviceBind),
       };
     $.ajax({
-        type: "POST",
+        type: 'POST',
         url: urlAddress,
         contentType: 'application/json',
+        accept: 'application/json', // In order to get the registered of the component back from the MBP platform
         data: JSON.stringify(jsonData)
     }).done((msg) => {
-       console.log('The sensor has been posted');
+       console.log('The component has been posted successfully\n', msg.id);
     });
+}
+
+export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddressDev, apiAddress) {
+    const urlAddress = ((apiAddress.concat('/api')).concat('/')).concat('devices/');
+    const jsonData = {
+        name: idDev,
+        macAddress: macAddressDev,
+        ipAddress: ipAddressDev,
+        formattedMacAddress: formattedMacAddressDev
+    };
+    $.ajax({
+        type: 'POST',
+        url: urlAddress,
+        contentType: 'application/json',
+        accept: 'application/json', // In order to get the registered id of the device back from the MBP platform
+        data: JSON.stringify(jsonData)
+    }).done((msg) => {
+        console.log('The device has been posted successfully\nId of the device: ', msg.id);
+    });
+
+    // Get id from the device in order to return it
+    return 'id'; //ToDo: Change it
 }

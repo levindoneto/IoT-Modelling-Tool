@@ -172,13 +172,16 @@ export default class NavigationBar extends React.Component {
                 auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel());
                 refSavedModels.update(auxSavedModels);
                 backend.fire_ajax_save(snapshot.val().lastLoadedModel, DeviceStore.getModel());
+                var i; // Devices' iteractions
+                var j; // Components' iteractions
                 refDevsWithSubsystems.on("value", (snapdev) => { // Listener on devices with sensors/actuators (whole element)
-                    for (var i in snapdev.val()[snapshot.val().lastLoadedModel]) { // Access devices from the current loaded model
-                        //console.log('Register the device <', i, '>');
-                        for (var j in snapdev.val()[snapshot.val().lastLoadedModel][i]) {
+                    for (i in snapdev.val()[snapshot.val().lastLoadedModel]) { // Access devices from the current loaded model
+                        console.log('Register the device <', i.concat('test'), '>');
+                        const idBoundDevice = backend.bindDevice(i, '123456789067', '192.168.0.34', '12-34-56-78-90-67', 'http://192.168.209.176:8080/MBP');
+                        for (j in snapdev.val()[snapshot.val().lastLoadedModel][i]) {
                             idSplit = (snapdev.val()[snapshot.val().lastLoadedModel][i][j][Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0]]['@type']).split(':'); // Get the id of the component without the prefix (0: prefix, 1:id)                    
                             backend.bindComponent(Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0], mapTypeComp[idSplit[1]], '5a0f2a8b4f0c7363179e58e5','5a0f17a64f0c7363179e58da', 'http://192.168.209.176:8080/MBP'); // Post component into the MBD platform
-                            //console.log('Register the componenent <', snapdev.val()[snapshot.val().lastLoadedModel][i][j][Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0]]['@type'], '> as subsystem of the device <', i, '>'); //POST /api/types/ HTTP/1.1
+                            console.log('Register the componenent <', snapdev.val()[snapshot.val().lastLoadedModel][i][j][Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0]]['@type'], '> as subsystem of the device <', i, '>'); //POST /api/types/ HTTP/1.1
                         }
                     }
                 });
