@@ -162,16 +162,19 @@ export default class NavigationBar extends React.Component {
         const auxSavedModels = {};
         let idSplit;
         let mapTypeComp;
+        const isBinding = true; // Flag used in order to not alert that the user had the model saved and bound twice
 
         // Get the map between components and types
         refMapTypeComponents.on("value", (map) => {
             mapTypeComp = map.val();
         });
+
+        /* Bind devices/components from the database */
         setTimeout(() => {
             refInfoSaved.on("value", (snapshot) => {
                 auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel());
                 refSavedModels.update(auxSavedModels);
-                backend.fire_ajax_save(snapshot.val().lastLoadedModel, DeviceStore.getModel());
+                backend.fire_ajax_save(snapshot.val().lastLoadedModel, DeviceStore.getModel(), isBinding);
                 var i; // Devices' iteractions
                 var j; // Components' iteractions
                 refDevsWithSubsystems.on("value", (snapdev) => { // Listener on devices with sensors/actuators (whole element)
@@ -187,8 +190,9 @@ export default class NavigationBar extends React.Component {
                 });
             });
         }, 2000);
+
         swal({
-            title: 'The model has been saved and bound successfully',
+            title: 'The model has been bound successfully',
             timer: 1500,
             showConfirmButton: false
         });     

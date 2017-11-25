@@ -159,9 +159,10 @@ export function fire_ajax_import(type, content) {
     });
 }
 
-export function fire_ajax_save(name, content) {
+export function fire_ajax_save(name, content, isBinding) {
     //console.log('the name: ', name);
     //console.log('the content: ', content['@graph']);
+    const thisIsBinding = isBinding | false; // If the user hasn't clicked <Bind> isBinding is undefined
     const params = {
         name,
         type: 'json-ld',
@@ -237,12 +238,14 @@ export function fire_ajax_save(name, content) {
     ref.update(auxSavedModels); // Updating the database
     auxInfoSaved.lastSavedModel = params.name; // Save the id of the last saved model
     refInfoSaved.update(auxInfoSaved); // Update the info of the last saved on the database
-    swal({
-        title: 'The model has been saved',
-        timer: 1500,
-        showConfirmButton: false
-    });
-    let message = false;
+
+    if (!thisIsBinding) {
+        swal({
+            title: 'The model has been saved successfully',
+            timer: 1500,
+            showConfirmButton: false
+        });
+    }
 }
 
 export function fire_ajax_load(name) {
@@ -286,13 +289,15 @@ export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, a
         contentType: 'application/json',
         accept: 'application/json', // In order to get the registered of the component back from the MBP platform
         data: JSON.stringify(jsonData)
-    }).done((msg) => {
-       console.log('The component has been posted successfully\n', msg.id);
+    }).done((component) => {
+       console.log('The component has been posted successfully\n', component.id);
     });
 }
 
 export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddressDev, apiAddress) {
     const urlAddress = ((apiAddress.concat('/api')).concat('/')).concat('devices/');
+    var idRegDev;
+    var c; // Iterate in all the components in the device
     const jsonData = {
         name: idDev,
         macAddress: macAddressDev,
@@ -305,10 +310,21 @@ export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddre
         contentType: 'application/json',
         accept: 'application/json', // In order to get the registered id of the device back from the MBP platform
         data: JSON.stringify(jsonData)
-    }).done((msg) => {
-        console.log('The device has been posted successfully\nId of the device: ', msg.id);
+    }).done((device) => {
+        idRegDev = device.id;
+        console.log('The device has been posted successfully\nId of the device: ', device.id);
+        /* ToDo
+        for (c in componentsDev)
+        */
+        //bindAllComponents...
     });
 
     // Get id from the device in order to return it
-    return 'id'; //ToDo: Change it
+    setTimeout(() => {
+        console.log('OUTSIDE ID: ', idRegDev);
+       
+    }, 1500);
+
+    return idRegDev; //ToDo: Change it
+    
 }
