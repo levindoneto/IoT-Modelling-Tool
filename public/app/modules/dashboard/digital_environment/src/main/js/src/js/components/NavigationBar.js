@@ -17,6 +17,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import * as backend from '../backend/backend';
 import { setTimeout } from 'timers';
 
+const refInfoSaved = firebase.database().ref('infoSavedModels');
 const style = {
     display: 'inline-block',
     float: 'left',
@@ -26,6 +27,14 @@ const subHeaderStyle = {
     fontSize: '20px',
     color: 'black'
 };
+
+/* Just load the current model if the user has saved it right before */
+if (localStorage.getItem('loadLastModel') === 'true') {
+    localStorage.setItem('loadLastModel', 'false');
+    refInfoSaved.on('value', (snapshot) => {           
+        loadModel(snapshot.val().lastSavedModel);
+    });  
+}
 
 /* Times' levels for hierarchical execution (ms) */
 const LEVEL = {
@@ -63,7 +72,6 @@ function readSingleFile(e) {
 function loadModel(key) {
     //console.log('Key by the user: ', key);
     const refSavedModels = firebase.database().ref('savedModels');
-    const refInfoSaved = firebase.database().ref('infoSavedModels');
     const auxInfoSaved = {};
     refSavedModels.on('value', (snapshot) => {
         //console.log('Value: ', snapshot.val()[key]);
@@ -224,7 +232,10 @@ export default class NavigationBar extends React.Component {
     handleSaveModelAs = () => {
         let response = false;
         if (this.state.modelName !== '') {
-            response = backend.fireAjaxSave(this.state.modelName, DeviceStore.getModel());
+            response = backend.fireAjaxSave(this.state.modelName, DeviceStore.getModel());   
+            setTimeout(() => {
+                backend.syncLastSavedAsModel('glories', backend.loadLastSavedModel);
+            }, LEVEL.THERE); // 0.5s after the alert
         }
         if (response === true) {
             this.setState({ snackBarSaveOpen: true });
