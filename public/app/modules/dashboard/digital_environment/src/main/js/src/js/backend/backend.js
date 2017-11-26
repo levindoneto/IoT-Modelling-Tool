@@ -3,9 +3,15 @@ import { definitions } from '../constants/definitions';
 import fire from '../database/fire';
 import reactfire from 'reactfire';
 
+/* Times' levels for hierarchical execution (ms) */
+const LEVEL = {
+    ONE: 1000,
+    TWO: 1500,
+    THERE: 3000
+};
 //console.log('Triggering ...');
 const auxSavedModels = {};
-var accessedModel = {}
+let accessedModel = {};
 const refTrig = firebase.database().ref('devicesWithSubsystems/');
 const refSavedModels = firebase.database().ref('savedModels/');
 refTrig.on('child_changed', (snapshot) => {
@@ -25,9 +31,7 @@ refTrig.on('child_changed', (snapshot) => {
                 }
             }
         }
-        //console.log('accessedModel: ', accessedModel);
     });
-    //console.log('accessedModel: ', accessedModel);
     const updatedModelStr = JSON.stringify(accessedModel);
     auxSavedModels[snapshot.key] = updatedModelStr;
     refSavedModels.update(auxSavedModels); // Update the database
@@ -56,7 +60,7 @@ function clone(object) {
     return JSON.parse(JSON.stringify(object));
 }
 
-export function fire_ajax_export(type, content) {
+export function fireAjaxExport(type, content) {
     const params = {
         type
     };
@@ -77,7 +81,7 @@ export function fire_ajax_export(type, content) {
     return response;
 }
 
-export function fire_ajax_import(type, content) {
+export function fireAjaxImport(type, content) {
     const params = {
         type
     };
@@ -159,9 +163,7 @@ export function fire_ajax_import(type, content) {
     });
 }
 
-export function fire_ajax_save(name, content, isBinding) {
-    //console.log('the name: ', name);
-    //console.log('the content: ', content['@graph']);
+export function fireAjaxSave(name, content, isBinding) {
     const thisIsBinding = isBinding | false; // If the user hasn't clicked <Bind> isBinding is undefined
     const params = {
         name,
@@ -180,8 +182,6 @@ export function fire_ajax_save(name, content, isBinding) {
     /* Save the key_model (saved one) as secondary root on Devices With Subsystems */
     auxDevSubSecRoot[params.name] = 'noConnections'; // It'll get all devices with subsystems on this model
     refDevicesWithSubsystems.update(auxDevSubSecRoot); // Update just works out with objects
-
-    //console.log('Keys of content.graph: ', content['@graph']); 
     
     for (let i = 1; i < Object.keys(content['@graph']).length; i += 2) { // Get the odd keys to because they have the subsystem information
         //console.log('THE SUBSYSTEM: ', content['@graph'][i]['iot-lite:isSubSystemOf']['@id']);
@@ -197,22 +197,12 @@ export function fire_ajax_save(name, content, isBinding) {
                         if (verifyAddProp(infoContent)) {
                             auxContPropsSubsystem[infoContent] = content['@graph'][i][infoContent];
                         }
-                        //console.log('AUX CONT: ', auxContPropsSubsystem);
                     }
                 }
-                
-                //console.log('keysModelsDevicesWithSubsystems: ', keysModelsDevicesWithSubsystems);
-                
+
                 for (let modelWithDevs in keysModelsDevicesWithSubsystems) { // Depends on the number of subsystems (running on the database)
-                    //console.log('modelWithdev: ', modelWithDevs); // 1,2,3,...
-                    // Get the location information
-                    
                     const locationX = content['@graph'][i - 1]['geo:lat']; // The even key on the content has the location object
                     const locationY = content['@graph'][i - 1]['geo:long'];
-                    
-                    //console.log('Location X: ', locationX);
-                    //console.log('Location Y', locationY);                  
-                    //console.log('in the if', snapshot.val()[params.name]);
                     
                     if (snapshot.val()[params.name].toString() === content['@graph'][i]['iot-lite:isSubSystemOf']['@id']) {
                         //console.log('The device has already a subsystem');
@@ -231,9 +221,6 @@ export function fire_ajax_save(name, content, isBinding) {
     }
     
     let savedModelStr = JSON.stringify(content);
-    //console.log('String Content', savedModelStr);
-    //console.log('Object Content: ', JSON.parse(savedModelStr));
-    //console.log('Type of the new content', typeof savedModelStr);
     auxSavedModels[params.name] = savedModelStr;
     ref.update(auxSavedModels); // Updating the database
     auxInfoSaved.lastSavedModel = params.name; // Save the id of the last saved model
@@ -242,15 +229,15 @@ export function fire_ajax_save(name, content, isBinding) {
     if (!thisIsBinding) {
         swal({
             title: 'The model has been saved successfully',
-            timer: 1500,
+            timer: LEVEL.TWO,
             showConfirmButton: false
         });
     }
 }
 
-export function fire_ajax_load(name) {
+export function fireAjaxLoad(name) {
     const params = {
-        name: name
+        name // Shorthand object
     };
     $.ajax({
         type: 'GET',
@@ -261,7 +248,7 @@ export function fire_ajax_load(name) {
     });
 }
 
-export function fire_ajax_show() {
+export function fireAjaxShow() {
     let response = '';
     $.ajax({
         type: 'GET',
@@ -294,8 +281,10 @@ export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, a
     });
 }
 
-export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddressDev, apiAddress) {
+export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddressDev, apiAddress, subsystems, countTest) {
     const urlAddress = ((apiAddress.concat('/api')).concat('/')).concat('devices/');
+    //console.log('subsystems: ', subsystems);
+    console.log('countTest: ', countTest);
     var idRegDev;
     var c; // Iterate in all the components in the device
     const jsonData = {
@@ -314,8 +303,13 @@ export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddre
         idRegDev = device.id;
         console.log('The device has been posted successfully\nId of the device: ', device.id);
         /* ToDo
-        for (c in componentsDev)
+        for (j in snapdev.val()[snapshot.val().lastLoadedModel][i]) {
+            idSplit = (snapdev.val()[snapshot.val().lastLoadedModel][i][j][Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0]]['@type']).split(':'); // Get the id of the component without the prefix (0: prefix, 1:id)                    
+            backend.bindComponent(Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0], mapTypeComp[idSplit[1]], '5a0f2a8b4f0c7363179e58e5','5a0f17a64f0c7363179e58da', 'http://192.168.209.176:8080/MBP'); // Post component into the MBD platform
+            console.log('Register the componenent <', snapdev.val()[snapshot.val().lastLoadedModel][i][j][Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0]]['@type'], '> as subsystem of the device <', i, '>'); //POST /api/types/ HTTP/1.1
+       }
         */
+
         //bindAllComponents...
     });
 

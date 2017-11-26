@@ -615,19 +615,16 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     var allGraphs = $firebaseObject(refGraphs);
     var graphDefaultObj = $firebaseObject(refg); // Acessing the default @graph key
 
+
     setTimeout(() => { // It works as a promise without using any function as parameter
             let current_key = contextDefaultObj.$value.toString();
-            // id_default_context = contexts->current_key->idcontext;
-            //console.log("KEY (DEFAULT): ", current_key);
             $scope.currentDefaultContext = allContexts[current_key.toString()].idcontext.toString();
-        }, 1500);
+        }, 2000);
 
     setTimeout(() => { // setTimeout(function() { 
             let current_key_graph = graphDefaultObj.$value.toString();
-            // id_default_graph = graphs->current_key_graph->idgraph;
-            //console.log("KEY (DEFAULT GRAPH): ", current_key_graph);
             $scope.currentDefaultGraph = allGraphs[current_key_graph.toString()].idgraph.toString();
-        }, 1600);
+        }, 2000);
     
 
     $scope.showAccountinfo = function (user) {

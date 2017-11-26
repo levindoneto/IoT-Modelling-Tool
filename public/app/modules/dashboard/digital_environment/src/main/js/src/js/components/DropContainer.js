@@ -178,9 +178,7 @@ class DropContainer extends Component {
             backgroundImage: 'linear-gradient(to right, grey 0.5px, transparent 0.6px), linear-gradient(to bottom, grey 0.5px, transparent 0.6px)'
         };
 
-
-        // add EventListener for showing Device's id
-        if (devices.length != null) {
+        if (typeof devices !== 'undefined') {
             document.body.addEventListener('keydown', this.activateHover);
             document.body.addEventListener('keyup', this.deactivateHover);
         } 
@@ -214,7 +212,6 @@ class DropContainer extends Component {
                     // get location and draw arrow
                     if (storedDevice['geo:location']) {
                         const storedDeviceLocation = utils.getObjectFromGraphById(storedDevice['geo:location']['@id'], devices);
-
                         tempLeft = parseInt(storedDeviceLocation['geo:long']);
                         tempTop = parseInt(storedDeviceLocation['geo:lat']);
 

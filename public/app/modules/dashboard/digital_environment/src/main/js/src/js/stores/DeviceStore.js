@@ -243,11 +243,11 @@ class DeviceStore extends EventEmitter {
     /* Save and load Models */
     /* Receive the model from the server and set it to frontend model */
     loadModel(name) { 
-        backend.fire_ajax_load(name);
+        backend.fireAjaxLoad(name);
     }
 
     SaveModelAs(title) {
-        //backend.fire_ajax_save(title, this.model);
+        //backend.fireAjaxSave(title, this.model);
         //console.log("title ", title);
         //console.log("this model: ", this.model);
         this.emit('change');
@@ -259,7 +259,7 @@ class DeviceStore extends EventEmitter {
     }
 
     exportModel(format) {
-        backend.fire_ajax_export(format, this.getModel());
+        backend.fireAjaxExport(format, this.getModel());
     }
 
     /* Help Methods */

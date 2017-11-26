@@ -15,6 +15,7 @@ import Subheader from 'material-ui/Subheader';
 import { Toolbar, ToolbarGroup, ToolbarSeparator } from 'material-ui/Toolbar';
 import RaisedButton from 'material-ui/RaisedButton';
 import * as backend from '../backend/backend';
+import { setTimeout } from 'timers';
 
 const style = {
     display: 'inline-block',
@@ -24,6 +25,13 @@ const style = {
 const subHeaderStyle = {
     fontSize: '20px',
     color: 'black'
+};
+
+/* Times' levels for hierarchical execution (ms) */
+const LEVEL = {
+    ONE: 1000,
+    TWO: 1500,
+    THERE: 3000
 };
 
 /* Help menu */
@@ -40,13 +48,11 @@ function readSingleFile(e) {
 
         switch (fileEnding) {
             case '.rdf':
-                backend.fire_ajax_import('rdfxml', contents);
+                backend.fireAjaxImport('rdfxml', contents);
                 break;
-
             case '.ttl':
-                backend.fire_ajax_import('turtle', contents);
+                backend.fireAjaxImport('turtle', contents);
                 break;
-
             default:
                 DropActions.importModel(JSON.parse(contents));
         }
@@ -59,7 +65,7 @@ function loadModel(key) {
     const refSavedModels = firebase.database().ref('savedModels');
     const refInfoSaved = firebase.database().ref('infoSavedModels');
     const auxInfoSaved = {};
-    refSavedModels.on("value", (snapshot) => {
+    refSavedModels.on('value', (snapshot) => {
         //console.log('Value: ', snapshot.val()[key]);
         DeviceStore.setModel(JSON.parse(snapshot.val()[key]));
         /* Save the info of the last loaded model */
@@ -74,26 +80,21 @@ function importModel() {
 
 function exportModel(exportType) {
     let response = '';
-
     switch (exportType) {
         case '.ttl':
-            response = backend.fire_ajax_export('turtle', DeviceStore.getModel());
+            response = backend.fireAjaxExport('turtle', DeviceStore.getModel());
             break;
-
         case '.rdf':
-            response = backend.fire_ajax_export('rdfxml', DeviceStore.getModel());
+            response = backend.fireAjaxExport('rdfxml', DeviceStore.getModel());
             break;
-
         default:
             response = JSON.stringify(DeviceStore.getModel());
     }
-
-
     const tempDate = new Date();
     const file = new Blob([response]);
     const exportLink = document.getElementById('export-model');
     exportLink.href = URL.createObjectURL(file);
-    exportLink.download = `iot_model_${  tempDate.getTime()  }${exportType}`;
+    exportLink.download = `iot_model_${tempDate.getTime()}${exportType}`;
     exportLink.click();
 }
 
@@ -119,7 +120,7 @@ export default class NavigationBar extends React.Component {
     getSavedModels = () => {
         let auxKeysSavedModels = [];
         const ref = firebase.database().ref('savedModels/');
-        ref.on("value", (snapshot) => { // The whole object savedModels with all the saved models
+        ref.on('value', (snapshot) => { // The whole object savedModels with all the saved models
             for (let saved in snapshot.val()) {
                 auxKeysSavedModels.push(saved);
                 //console.log('Key: ', saved);
@@ -162,38 +163,48 @@ export default class NavigationBar extends React.Component {
         const auxSavedModels = {};
         let idSplit;
         let mapTypeComp;
+        let devicesWithSubsystems; // Nested object with devices and components
         const isBinding = true; // Flag used in order to not alert that the user had the model saved and bound twice
 
-        // Get the map between components and types
-        refMapTypeComponents.on("value", (map) => {
+        /* Get the map between components and types */
+        refMapTypeComponents.on('value', (map) => {
             mapTypeComp = map.val();
         });
 
+        /* Get devices with subsystems */
+        setTimeout(() => {
+            refInfoSaved.on('value', (snapshot) => {           
+                refDevsWithSubsystems.on('value', (devs) => {
+                    devicesWithSubsystems = devs.val()[snapshot.val().lastLoadedModel];
+                });
+            });
+        }, LEVEL.TWO);
+
         /* Bind devices/components from the database */
         setTimeout(() => {
-            refInfoSaved.on("value", (snapshot) => {
+            //console.log('devicesWithSubsystems: ', devicesWithSubsystems);
+            refInfoSaved.on('value', (snapshot) => {
                 auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel());
                 refSavedModels.update(auxSavedModels);
-                backend.fire_ajax_save(snapshot.val().lastLoadedModel, DeviceStore.getModel(), isBinding);
+                backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel(), isBinding);
                 var i; // Devices' iteractions
                 var j; // Components' iteractions
-                refDevsWithSubsystems.on("value", (snapdev) => { // Listener on devices with sensors/actuators (whole element)
+                refDevsWithSubsystems.on('value', (snapdev) => { // Listener on devices with sensors/actuators (whole element)
+                    var countTest = 0;
                     for (i in snapdev.val()[snapshot.val().lastLoadedModel]) { // Access devices from the current loaded model
-                        console.log('Register the device <', i.concat('test'), '>');
-                        const idBoundDevice = backend.bindDevice(i, '123456789067', '192.168.0.34', '12-34-56-78-90-67', 'http://192.168.209.176:8080/MBP');
-                        for (j in snapdev.val()[snapshot.val().lastLoadedModel][i]) {
-                            idSplit = (snapdev.val()[snapshot.val().lastLoadedModel][i][j][Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0]]['@type']).split(':'); // Get the id of the component without the prefix (0: prefix, 1:id)                    
-                            backend.bindComponent(Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0], mapTypeComp[idSplit[1]], '5a0f2a8b4f0c7363179e58e5','5a0f17a64f0c7363179e58da', 'http://192.168.209.176:8080/MBP'); // Post component into the MBD platform
-                            console.log('Register the componenent <', snapdev.val()[snapshot.val().lastLoadedModel][i][j][Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0]]['@type'], '> as subsystem of the device <', i, '>'); //POST /api/types/ HTTP/1.1
-                        }
+                        console.log('Register the device <', i, '>');
+                        setTimeout(() => {
+                            backend.bindDevice(i, '123456789067', '192.168.0.34', '12-34-56-78-90-67', 'http://192.168.209.176:8080/MBP', devicesWithSubsystems[i], countTest);
+                            countTest += 1;
+                        }, LEVEL.ONE);
                     }
                 });
             });
-        }, 2000);
+        }, LEVEL.THREE); // After getting the mapping and the subsystems
 
         swal({
-            title: 'The model has been bound successfully',
-            timer: 1500,
+            title: 'The model has been saved and bound successfully',
+            timer: LEVEL.TWO,
             showConfirmButton: false
         });     
     };
@@ -213,7 +224,7 @@ export default class NavigationBar extends React.Component {
     handleSaveModelAs = () => {
         let response = false;
         if (this.state.modelName !== '') {
-            response = backend.fire_ajax_save(this.state.modelName, DeviceStore.getModel());
+            response = backend.fireAjaxSave(this.state.modelName, DeviceStore.getModel());
         }
         if (response === true) {
             this.setState({ snackBarSaveOpen: true });
@@ -239,17 +250,17 @@ export default class NavigationBar extends React.Component {
         const refInfoSaved = firebase.database().ref('infoSavedModels');
         const refSavedModels = firebase.database().ref('savedModels/');
         let auxSavedModels = {};
-        refInfoSaved.on("value", (snapshot) => {
+        refInfoSaved.on('value', (snapshot) => {
             //console.log('Last loaded info: ', snapshot.val().lastLoadedModel);
             auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel()); /* key:last_loaded_model, 
                                                                                                       * value: current model on the digital twin */
             refSavedModels.update(auxSavedModels); // Update the current model on the database
-            backend.fire_ajax_save(snapshot.val().lastLoadedModel, DeviceStore.getModel()); /* The DevicesWithSubsystems.lastLoadedModel is overwritten
+            backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel()); /* The DevicesWithSubsystems.lastLoadedModel is overwritten
                                                                                             *  with the current information on the digital twin */
         });
         swal({
             title: 'The current model has been saved',
-            timer: 1500,
+            timer: LEVEL.TWO,
             showConfirmButton: false
         });
     };
