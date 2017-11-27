@@ -3,6 +3,9 @@ import { definitions } from '../constants/definitions';
 import fire from '../database/fire';
 import reactfire from 'reactfire';
 
+const RESTAPIADDRESS = 'http://192.168.209.176:8080/MBP';
+const TYPEADAPTER = '5a0f2a8b4f0c7363179e58e5'; // For tests
+
 /* Times' levels for hierarchical execution (ms) */
 const LEVEL = {
     ONE: 1000,
@@ -11,21 +14,18 @@ const LEVEL = {
     FOUR: 4000,
     FIVE: 5000
 };
+
 //console.log('Triggering ...');
 const auxSavedModels = {};
 let accessedModel = {};
 const refTrig = firebase.database().ref('devicesWithSubsystems/');
 const refSavedModels = firebase.database().ref('savedModels/');
+
 refTrig.on('child_changed', (snapshot) => {
-    //console.log('Something has changed on the saved model: ', snapshot.key); // key() for older firebase versions 
-    //console.log('The changed element: ', snapshot.val());
     refSavedModels.on('value', (savedM) => {
         accessedModel = JSON.parse(savedM.val()[snapshot.key]);
         for (let i = 0; i < (Object.keys(accessedModel[['@graph']])).length; i++) {
-            //console.log('i: ', i);
             for (let j in snapshot.val()) {
-                //console.log('snapshot val: ', snapshot.val()[j]);
-                //console.log('j: ', j);
                 for (let k in snapshot.val()[j]) {
                     if (i.toString() === k.toString()) {
                         accessedModel['@graph'][i]['ipvs:value'] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].value; // j:device, k:the subsystem index, 0:just one subsystem per index
@@ -186,8 +186,6 @@ export function fireAjaxSave(name, content, isBinding) {
     refDevicesWithSubsystems.update(auxDevSubSecRoot); // Update just works out with objects
     
     for (let i = 1; i < Object.keys(content['@graph']).length; i += 2) { // Get the odd keys to because they have the subsystem information
-        //console.log('THE SUBSYSTEM: ', content['@graph'][i]['iot-lite:isSubSystemOf']['@id']);
-        //console.log('i=', i, 'for the device: ', content['@graph'][i]['@id']);
         if (content['@graph'][i]['iot-lite:isSubSystemOf']['@id'] !== '') { // The content->subsystem is connected to a device
             refDevicesWithSubsystems.on('value', (snapshot) => {
                 const keysModelsDevicesWithSubsystems = Object.keys(snapshot.val());
@@ -206,12 +204,11 @@ export function fireAjaxSave(name, content, isBinding) {
                     const locationX = content['@graph'][i - 1]['geo:lat']; // The even key on the content has the location object
                     const locationY = content['@graph'][i - 1]['geo:long'];
                     
+                    /* The device has already a subsystem */
                     if (snapshot.val()[params.name].toString() === content['@graph'][i]['iot-lite:isSubSystemOf']['@id']) {
-                        //console.log('The device has already a subsystem');
                         updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], locationX, locationY, auxContPropsSubsystem, value, typeId, i); //(model_key, device, subsystem): device.update(component)
                     }
-                    else {
-                        //console.log('The device has not a subsystem');
+                    else { // The device does not have a subsystem
                         const auxNewDev = {};
                         auxNewDev[content['@graph'][i]['iot-lite:isSubSystemOf']['@id']] = '';
                         refDevicesWithSubsystems.update(auxNewDev);
@@ -259,14 +256,11 @@ export function fireAjaxShow() {
     }).done((msg) => {
         response = msg;
     });
-
-    //console.log('Response: ', response);
     return response;
 }
 
 export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, apiAddress) {
     const urlAddress = (((apiAddress.concat('/api')).concat('/')).concat(componentType)).concat('/');
-    console.log('urlAddress: ', urlAddress);
     const jsonData = {
         name: idComp,
         type: (apiAddress.concat('/api/types/')).concat(idTypeBind),
@@ -279,13 +273,13 @@ export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, a
         accept: 'application/json', // In order to get the registered of the component back from the MBP platform
         data: JSON.stringify(jsonData)
     }).done((component) => {
-       console.log('The component has been posted successfully\n', component.id);
+       console.log('The component has been posted successfully\nId on the MBP Platform: ', component.id);
     });
 }
 
-export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddressDev, apiAddress, subsystems) {
+export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddressDev, apiAddress, subsystems, mapTypeComp) {
+    /* Get the map between components and types */
     const urlAddress = ((apiAddress.concat('/api')).concat('/')).concat('devices/');
-    console.log('subsystems: ', subsystems);
     var idRegDev;
     const jsonData = {
         name: idDev,
@@ -300,26 +294,11 @@ export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddre
         accept: 'application/json', // In order to get the registered id of the device back from the MBP platform
         data: JSON.stringify(jsonData)
     }).done((device) => {
-        idRegDev = device.id;
-        console.log('The device has been posted successfully\nId of the device: ', device.id);
-        var c; // Iterate in all the components in the device
-        for (c in subsystems) {
-            //let idSplit = idDev.split(':'); // Get the id of the component without the prefix (0: prefix, 1:id)                    
-            //backend.bindComponent(Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0], mapTypeComp[idSplit[1]], '5a0f2a8b4f0c7363179e58e5','5a0f17a64f0c7363179e58da', 'http://192.168.209.176:8080/MBP'); // Post component into the MBD platform
-            console.log('Register the componenent <', Object.keys(subsystems[Object.keys(subsystems)[0]])[0], 'as subsystem of the device <', idDev, '>'); //POST /api/types/ HTTP/1.1
-            //key to get the type: Object.keys(subsystems[Object.keys(subsystems)[0]])[0]
+        console.log('The device has been posted successfully\nId on the MBP Platform: : ', device.id);
+        for (var c in subsystems) { // Iterate in all the components in the device
+            bindComponent(Object.keys(subsystems[c])[0], mapTypeComp[subsystems[c][Object.keys(subsystems[c])[0]]['@type'].split(':')[1]], TYPEADAPTER, device.id, RESTAPIADDRESS);
         }
-        //bindAllComponents...
     });
-
-    // Get id from the device in order to return it
-    setTimeout(() => {
-        console.log('OUTSIDE ID: ', idRegDev);
-       
-    }, 1500);
-
-    return idRegDev; //ToDo: Change it
-    
 }
 
 export function syncLastSavedAsModel() {

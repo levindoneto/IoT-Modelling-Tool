@@ -17,7 +17,10 @@ import RaisedButton from 'material-ui/RaisedButton';
 import * as backend from '../backend/backend';
 import { setTimeout } from 'timers';
 
+const refMapTypeComponents = firebase.database().ref('mapTypeComponents');
 const refInfoSaved = firebase.database().ref('infoSavedModels');
+const RESTAPIADDRESS = 'http://192.168.209.176:8080/MBP';
+
 const style = {
     display: 'inline-block',
     float: 'left',
@@ -72,11 +75,9 @@ function readSingleFile(e) {
 }
 
 function loadModel(key) {
-    //console.log('Key by the user: ', key);
     const refSavedModels = firebase.database().ref('savedModels');
     const auxInfoSaved = {};
     refSavedModels.on('value', (snapshot) => {
-        //console.log('Value: ', snapshot.val()[key]);
         DeviceStore.setModel(JSON.parse(snapshot.val()[key]));
         /* Save the info of the last loaded model */
         auxInfoSaved.lastLoadedModel = key;
@@ -133,7 +134,6 @@ export default class NavigationBar extends React.Component {
         ref.on('value', (snapshot) => { // The whole object savedModels with all the saved models
             for (let saved in snapshot.val()) {
                 auxKeysSavedModels.push(saved);
-                //console.log('Key: ', saved);
             }
             this.setState({ savedModels: auxKeysSavedModels });
         });
@@ -167,46 +167,36 @@ export default class NavigationBar extends React.Component {
 
     bind = () => {
         const refSavedModels = firebase.database().ref('savedModels/');
-        const refInfoSaved = firebase.database().ref('infoSavedModels'); // For getting the current loaded model
         const refDevsWithSubsystems = firebase.database().ref('devicesWithSubsystems');
         const refMapTypeComponents = firebase.database().ref('mapTypeComponents');
         const auxSavedModels = {};
-        let idSplit;
+        let devicesWithSubsystems;
         let mapTypeComp;
-        var devicesWithSubsystems;
-        //const devicesWithSubsystems; // Nested object with devices and components
         const isBinding = true; // Flag used in order to not alert that the user had the model saved and bound twice
 
-        /* Get the map between components and types */
-        refMapTypeComponents.on('value', (map) => {
-            mapTypeComp = map.val();
+        /* Get devices with subsystems */
+        refInfoSaved.on('value', (snapshot) => {           
+            refDevsWithSubsystems.on('value', (devs) => {
+                devicesWithSubsystems = devs.val()[snapshot.val().lastLoadedModel];
+            });
         });
 
-        /* Get devices with subsystems */
- 
-            refInfoSaved.on('value', (snapshot) => {           
-                refDevsWithSubsystems.on('value', (devs) => {
-                    devicesWithSubsystems = devs.val()[snapshot.val().lastLoadedModel];
-                    console.log('devicesWithSubsystems: 1', devicesWithSubsystems); //undef
-                });
-            });
-
-
+        refMapTypeComponents.once('value', (map) => {
+            mapTypeComp = map.val();
+        });
+        
         /* Bind devices/components from the database */
         setTimeout(() => {
-            console.log('devicesWithSubsystems: 2', devicesWithSubsystems); //undef
-            refInfoSaved.once('value', (snapshot) => { // I CAN GET THIS BEFORE
-                console.log('SAVED ON');
+            refInfoSaved.once('value', (snapshot) => {
                 auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel());
                 refSavedModels.update(auxSavedModels);
                 backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel(), isBinding);
                 var i; // Devices' iteractions
                 refDevsWithSubsystems.once('value', (snapdev) => { // Listener on devices with sensors/actuators (whole element)
-                    console.log('DEVS ON'); //I have already the subsystems here tho...
                     for (i in snapdev.val()[snapshot.val().lastLoadedModel]) { // Access devices from the current loaded model
-                        console.log('Register the device <', i, '>');
+                        //console.log('Register the device <', i, '>');
                         setTimeout(() => {
-                            backend.bindDevice(i, '123456789067', '192.168.0.34', '12-34-56-78-90-67', 'http://192.168.209.176:8080/MBP', devicesWithSubsystems[i]);
+                            backend.bindDevice(i, '123456789067', '192.168.0.34', '12-34-56-78-90-67', RESTAPIADDRESS, devicesWithSubsystems[i], mapTypeComp);
                         }, LEVEL.ONE);
                     }
                 });
@@ -265,7 +255,6 @@ export default class NavigationBar extends React.Component {
         const refSavedModels = firebase.database().ref('savedModels/');
         let auxSavedModels = {};
         refInfoSaved.on('value', (snapshot) => {
-            //console.log('Last loaded info: ', snapshot.val().lastLoadedModel);
             auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel()); /* key:last_loaded_model, 
                                                                                                       * value: current model on the digital twin */
             refSavedModels.update(auxSavedModels); // Update the current model on the database
