@@ -7,7 +7,9 @@ import reactfire from 'reactfire';
 const LEVEL = {
     ONE: 1000,
     TWO: 1500,
-    THERE: 3000
+    THERE: 3000,
+    FOUR: 4000,
+    FIVE: 5000
 };
 //console.log('Triggering ...');
 const auxSavedModels = {};
@@ -229,7 +231,7 @@ export function fireAjaxSave(name, content, isBinding) {
     if (!thisIsBinding) {
         swal({
             title: 'The model has been saved successfully',
-            timer: 5000,
+            timer: LEVEL.FIVE,
             showConfirmButton: false
         });
     }
@@ -281,12 +283,10 @@ export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, a
     });
 }
 
-export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddressDev, apiAddress, subsystems, countTest) {
+export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddressDev, apiAddress, subsystems) {
     const urlAddress = ((apiAddress.concat('/api')).concat('/')).concat('devices/');
-    //console.log('subsystems: ', subsystems);
-    console.log('countTest: ', countTest);
+    console.log('subsystems: ', subsystems);
     var idRegDev;
-    var c; // Iterate in all the components in the device
     const jsonData = {
         name: idDev,
         macAddress: macAddressDev,
@@ -302,14 +302,13 @@ export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddre
     }).done((device) => {
         idRegDev = device.id;
         console.log('The device has been posted successfully\nId of the device: ', device.id);
-        /* ToDo
-        for (j in snapdev.val()[snapshot.val().lastLoadedModel][i]) {
-            idSplit = (snapdev.val()[snapshot.val().lastLoadedModel][i][j][Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0]]['@type']).split(':'); // Get the id of the component without the prefix (0: prefix, 1:id)                    
-            backend.bindComponent(Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0], mapTypeComp[idSplit[1]], '5a0f2a8b4f0c7363179e58e5','5a0f17a64f0c7363179e58da', 'http://192.168.209.176:8080/MBP'); // Post component into the MBD platform
-            console.log('Register the componenent <', snapdev.val()[snapshot.val().lastLoadedModel][i][j][Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0]]['@type'], '> as subsystem of the device <', i, '>'); //POST /api/types/ HTTP/1.1
-       }
-        */
-
+        var c; // Iterate in all the components in the device
+        for (c in subsystems) {
+            //let idSplit = idDev.split(':'); // Get the id of the component without the prefix (0: prefix, 1:id)                    
+            //backend.bindComponent(Object.keys(snapdev.val()[snapshot.val().lastLoadedModel][i][j])[0], mapTypeComp[idSplit[1]], '5a0f2a8b4f0c7363179e58e5','5a0f17a64f0c7363179e58da', 'http://192.168.209.176:8080/MBP'); // Post component into the MBD platform
+            console.log('Register the componenent <', Object.keys(subsystems[Object.keys(subsystems)[0]])[0], 'as subsystem of the device <', idDev, '>'); //POST /api/types/ HTTP/1.1
+            //key to get the type: Object.keys(subsystems[Object.keys(subsystems)[0]])[0]
+        }
         //bindAllComponents...
     });
 

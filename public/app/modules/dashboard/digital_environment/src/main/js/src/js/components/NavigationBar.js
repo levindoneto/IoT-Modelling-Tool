@@ -40,7 +40,9 @@ if (localStorage.getItem('loadLastModel') === 'true') {
 const LEVEL = {
     ONE: 1000,
     TWO: 1500,
-    THERE: 3000
+    THERE: 3000,
+    FOUR: 4000,
+    FIVE: 5000
 };
 
 /* Help menu */
@@ -171,7 +173,8 @@ export default class NavigationBar extends React.Component {
         const auxSavedModels = {};
         let idSplit;
         let mapTypeComp;
-        let devicesWithSubsystems; // Nested object with devices and components
+        var devicesWithSubsystems;
+        //const devicesWithSubsystems; // Nested object with devices and components
         const isBinding = true; // Flag used in order to not alert that the user had the model saved and bound twice
 
         /* Get the map between components and types */
@@ -180,35 +183,35 @@ export default class NavigationBar extends React.Component {
         });
 
         /* Get devices with subsystems */
-        setTimeout(() => {
+ 
             refInfoSaved.on('value', (snapshot) => {           
                 refDevsWithSubsystems.on('value', (devs) => {
                     devicesWithSubsystems = devs.val()[snapshot.val().lastLoadedModel];
+                    console.log('devicesWithSubsystems: 1', devicesWithSubsystems); //undef
                 });
             });
-        }, LEVEL.TWO);
+
 
         /* Bind devices/components from the database */
         setTimeout(() => {
-            //console.log('devicesWithSubsystems: ', devicesWithSubsystems);
-            refInfoSaved.on('value', (snapshot) => {
+            console.log('devicesWithSubsystems: 2', devicesWithSubsystems); //undef
+            refInfoSaved.once('value', (snapshot) => { // I CAN GET THIS BEFORE
+                console.log('SAVED ON');
                 auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel());
                 refSavedModels.update(auxSavedModels);
                 backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel(), isBinding);
                 var i; // Devices' iteractions
-                var j; // Components' iteractions
-                refDevsWithSubsystems.on('value', (snapdev) => { // Listener on devices with sensors/actuators (whole element)
-                    var countTest = 0;
+                refDevsWithSubsystems.once('value', (snapdev) => { // Listener on devices with sensors/actuators (whole element)
+                    console.log('DEVS ON'); //I have already the subsystems here tho...
                     for (i in snapdev.val()[snapshot.val().lastLoadedModel]) { // Access devices from the current loaded model
                         console.log('Register the device <', i, '>');
                         setTimeout(() => {
-                            backend.bindDevice(i, '123456789067', '192.168.0.34', '12-34-56-78-90-67', 'http://192.168.209.176:8080/MBP', devicesWithSubsystems[i], countTest);
-                            countTest += 1;
+                            backend.bindDevice(i, '123456789067', '192.168.0.34', '12-34-56-78-90-67', 'http://192.168.209.176:8080/MBP', devicesWithSubsystems[i]);
                         }, LEVEL.ONE);
                     }
                 });
             });
-        }, LEVEL.THREE); // After getting the mapping and the subsystems
+        }, LEVEL.TWO); // After getting the mapping and the subsystems
 
         swal({
             title: 'The model has been saved and bound successfully',
