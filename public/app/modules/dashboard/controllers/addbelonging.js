@@ -10,14 +10,14 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         /* Update Map (component:specificType) */
         const mapTypeComponents = firebase.database().ref('mapTypeComponents/');
         let compType = {};
-        if (type == 'ActuatingDevice') {
-            compType[model.id] = 'actuators';
+        if (type === 'ActuatingDevice') {
+            compType[model.id] = 'actuator';
         }
-        else if (type == 'SensingDevice') {
-            compType[model.id] = 'sensors';
+        else if (type === 'SensingDevice') {
+            compType[model.id] = 'sensor';
         }
         else {
-            compType[model.id] = 'devices';
+            compType[model.id] = 'device';
         }
         mapTypeComponents.update(compType);
         Upload.base64DataUrl(file).then((base64Url) => {

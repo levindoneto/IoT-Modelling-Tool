@@ -260,7 +260,8 @@ export function fireAjaxShow() {
 }
 
 export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, apiAddress) {
-    const urlAddress = (((apiAddress.concat('/api')).concat('/')).concat(componentType)).concat('/');
+    const urlAddress = (((apiAddress.concat('/api')).concat('/')).concat(componentType)).concat('s/');
+    const urlAddressDeploy = ((apiAddress.concat('/api/deploy/')).concat(componentType)).concat('/');
     const jsonData = {
         name: idComp,
         type: (apiAddress.concat('/api/types/')).concat(idTypeBind),
@@ -273,7 +274,14 @@ export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, a
         accept: 'application/json', // In order to get the registered of the component back from the MBP platform
         data: JSON.stringify(jsonData)
     }).done((component) => {
-       console.log('The component has been posted successfully\nId on the MBP Platform: ', component.id);
+        console.log('The ', componentType, ' has been posted successfully\nId on the MBP Platform: ', component.id); // /deploy/id...
+        $.ajax({
+            type: 'POST',
+            url: urlAddressDeploy.concat(component.id),
+            contentType: 'application/json'
+        }).done((response) => {
+            console.log('The ', componentType, ' has been successfully deployed!\n', response);
+        });
     });
 }
 
