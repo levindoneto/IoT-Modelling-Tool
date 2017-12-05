@@ -285,10 +285,9 @@ export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, a
     });
 }
 
-export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddressDev, apiAddress, subsystems, mapTypeComp) {
+export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddressDev, apiAddress, subsystems, mapTypeComp, callback) {
     /* Get the map between components and types */
     const urlAddress = ((apiAddress.concat('/api')).concat('/')).concat('devices/');
-    var idRegDev;
     const jsonData = {
         name: idDev,
         macAddress: macAddressDev,
@@ -303,9 +302,11 @@ export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddre
         data: JSON.stringify(jsonData)
     }).done((device) => {
         console.log('The device has been posted successfully\nId on the MBP Platform: : ', device.id);
-        for (var c in subsystems) { // Iterate in all the components in the device
-            bindComponent(Object.keys(subsystems[c])[0], mapTypeComp[subsystems[c][Object.keys(subsystems[c])[0]]['@type'].split(':')[1]], TYPEADAPTER, device.id, RESTAPIADDRESS);
-        }
+            for (var c in subsystems) { // Iterate in all the components in the device
+                //console.log('c: ', c);
+                bindComponent(Object.keys(subsystems[c])[0], mapTypeComp[subsystems[c][Object.keys(subsystems[c])[0]]['@type'].split(':')[1]], TYPEADAPTER, device.id, RESTAPIADDRESS);
+            }
+        return callback(); // Bind the next device, if there are more than one device on the digital twin
     });
 }
 

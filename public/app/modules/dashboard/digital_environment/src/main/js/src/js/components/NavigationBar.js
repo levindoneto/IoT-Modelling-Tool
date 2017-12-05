@@ -195,9 +195,8 @@ export default class NavigationBar extends React.Component {
                 refDevsWithSubsystems.once('value', (snapdev) => { // Listener on devices with sensors/actuators (whole element)
                     for (i in snapdev.val()[snapshot.val().lastLoadedModel]) { // Access devices from the current loaded model
                         //console.log('Register the device <', i, '>');
-                        setTimeout(() => {
-                            backend.bindDevice(i, '123456789067', '192.168.0.34', '12-34-56-78-90-67', RESTAPIADDRESS, devicesWithSubsystems[i], mapTypeComp);
-                        }, LEVEL.ONE);
+                        //console.log('i: ', i);
+                        backend.bindDevice(i, '123456789067', '192.168.0.34', '12-34-56-78-90-67', RESTAPIADDRESS, devicesWithSubsystems[i], mapTypeComp, backend.bindDevice);
                     }
                 });
             });

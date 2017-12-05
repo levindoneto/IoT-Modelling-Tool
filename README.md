@@ -1,6 +1,6 @@
 # IoT - Modeling Tool
 
-Iot Modelling Tool is a platform which allows users to have their own devices and components modeled in order to represent a physical environment.
+Iot Modelling Tool is a platform, which allows users to have their own devices and components modeled in order to represent a physical environment.
 
 
 __Author__
@@ -67,6 +67,7 @@ The utilized database for synchronized data on this platform is [Firebase](https
 * Icons (For the components and devices)
 * Saved Models' Information (Last saved and last loaded one on the digital twin)
 * Devices and Components (with id, ontology, company's prefix, etc)
+* Map between specific types and components' ids
 * Saved Models (By the Save and Save As buttons on the navigation bar)
 * Users (each one e-mail, password and username)
 
