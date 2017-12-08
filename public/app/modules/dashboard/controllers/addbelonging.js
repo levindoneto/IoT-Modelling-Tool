@@ -1,5 +1,5 @@
 
-dashboard.controller("addbelongingController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseObject', '$firebaseArray', 'Upload', '$timeout', 'notification',
+dashboard.controller('addbelongingController', ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseObject', '$firebaseArray', 'Upload', '$timeout', 'notification',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray, Upload) {
     const vm = this;
     function DatabaseException(message) {
@@ -38,7 +38,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                     const ref = firebase.database().ref('models/');
                     const refDevComp = firebase.database().ref('devComp/');
                     const modelList = $firebaseArray(ref);
-                    refDevComp.on("value", (snapshot) => { // The whole object savedModels with all the saved models
+                    refDevComp.on('value', (snapshot) => { // The whole object savedModels with all the saved models
                         if (snapshot.val() != null) {
                             if (prefix in snapshot.val() && add === false) {
                                 if (type in snapshot.val()[prefix]) {
@@ -98,7 +98,6 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                                 }
                             }
                             else { //ok
-                                //console.log('CREATE PREFIX');
                                 auxInfo['0'] = model;// First model of the just created type
                                 auxType[type] = auxInfo;
                                 auxPrefix[prefix] = auxType;
@@ -132,12 +131,24 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                          * saved to the server. The promise resolves to the Firebase reference 
                          * for the newly added record, providing easy access to its key.
                          */
-                        swal({
-                            title: "It's been added with sucess!",
-                            timer: 1700,
-                            button: false,
-                            icon: 'success'
-                        });
+                        if (type === 'Device') {
+                            swal({
+                                title: 'The device has been added successfully!\n',
+                                icon: 'success'
+                            });
+                        }
+                        else if (type === 'SensingDevice') {
+                            swal({
+                                title: 'The sensor has been added successfully!\n',
+                                icon: 'success'
+                            }); 
+                        }
+                        else {
+                            swal({
+                                title: 'The actuator has been added successfully!\n',
+                                icon: 'success'
+                            });
+                        }
                         //console.log('im here');
                         modelList.$add(modelKeys).then((ref) => {
                         });
