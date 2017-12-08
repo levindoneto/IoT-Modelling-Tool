@@ -46,7 +46,8 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         swal({
             title: "The selected graph has been set as a default one",
             timer: 1700,
-            showConfirmButton: false
+            button: false,
+            icon: 'success'
         });
     };
 

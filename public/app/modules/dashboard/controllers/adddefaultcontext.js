@@ -11,7 +11,8 @@ dashboard.controller("adddefaultcontextController", ['$rootScope', '$scope', '$s
                     swal({
                         title: "The default context has been added with sucess!",
                         timer: 1700,
-                        showConfirmButton: false
+                        button: false,
+                        icon: 'success'
                     });
                     //console.log("The context: ", context);
                 });

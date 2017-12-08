@@ -204,7 +204,8 @@ export default class NavigationBar extends React.Component {
         swal({
             title: 'The model has been saved and bound successfully',
             timer: LEVEL.TWO,
-            showConfirmButton: false
+            button: false,
+            icon: 'success'
         });     
         setTimeout(() => {
             backend.syncLastSavedAsModel();
@@ -247,29 +248,42 @@ export default class NavigationBar extends React.Component {
         const file = new Blob(DeviceStore.getExport());
         const exportLink = document.getElementById('export-model');
         exportLink.href = URL.createObjectURL(file);
-        exportLink.download = `iot_model_${  tempDate.getTime()  }${this.state.exportType}`;
+        exportLink.download = `iot_model_${tempDate.getTime()}${this.state.exportType}`;
         exportLink.click();
     };
 
     handleOpenSaveModel = () => { 
-        const refInfoSaved = firebase.database().ref('infoSavedModels');
-        const refSavedModels = firebase.database().ref('savedModels/');
-        let auxSavedModels = {};
-        refInfoSaved.on('value', (snapshot) => {
-            auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel()); /* key:last_loaded_model, 
-                                                                                                      * value: current model on the digital twin */
-            refSavedModels.update(auxSavedModels); // Update the current model on the database
-            backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel()); /* The DevicesWithSubsystems.lastLoadedModel is overwritten
-                                                                                            *  with the current information on the digital twin */
-        });
-        swal({
-            title: 'The current model has been saved successfully',
-            timer: LEVEL.TWO,
-            showConfirmButton: false
-        });
-        setTimeout(() => {
-            backend.syncLastSavedAsModel();
-        }, LEVEL.THERE);
+        if (backend.isDigitalTwinEmpty()) {
+            swal({
+                title: 'The model in the digital environment is empty',
+                timer: LEVEL.TWO,
+                button: false,
+                icon: 'error'
+            });
+        }
+        else {
+            const refInfoSaved = firebase.database().ref('infoSavedModels');
+            const refSavedModels = firebase.database().ref('savedModels/');
+            let auxSavedModels = {};
+            refInfoSaved.on('value', (snapshot) => {
+                auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel()); /* key:last_loaded_model, 
+                                                                                                        * value: current model on the digital twin */
+                refSavedModels.update(auxSavedModels); // Update the current model on the database
+                backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel()); /* The DevicesWithSubsystems.lastLoadedModel is overwritten
+                                                                                                *  with the current information on the digital twin */
+            });
+            swal({
+                title: 'The current model has been saved successfully',
+                timer: LEVEL.TWO,
+                icon: 'success',
+                button: false
+            });
+            /*
+            setTimeout(() => {
+                backend.syncLastSavedAsModel();
+            }, LEVEL.THERE);
+            */
+        }
     };
 
     handleOpenSaveModelAs = () => { //It should be placed after getSavedModels

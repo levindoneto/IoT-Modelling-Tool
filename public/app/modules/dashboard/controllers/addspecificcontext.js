@@ -24,7 +24,8 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         swal({
             title: "The new property and its value have been added with success!",
             timer: 1700,
-            showConfirmButton: false
+            button: false,
+            icon: 'success'
         });
     };
     

@@ -229,7 +229,8 @@ export function fireAjaxSave(name, content, isBinding) {
         swal({
             title: 'The model has been saved successfully',
             timer: LEVEL.FIVE,
-            showConfirmButton: false
+            button: false,
+            icon: 'success'
         });
     }
 }
@@ -320,5 +321,16 @@ export function syncLastSavedAsModel() {
         else {
             localStorage.removeItem('firstLoad');
         }
+    }
+}
+
+export function isDigitalTwinEmpty() {
+    /* Every model contains an element @context (element with iot-lite information) and @graph (list of elements 
+        regarding the devices and components set on the environment) */
+    if (DeviceStore.getModel()['@graph'].length === 0) {
+        return true;
+    }
+    else {
+        return false;
     }
 }

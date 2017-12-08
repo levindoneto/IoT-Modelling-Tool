@@ -11,7 +11,8 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                 swal({
                     title: "The default graph has been added with sucess!",
                     timer: 1700,
-                    showConfirmButton: false
+                    button: false,
+                    icon: 'success'
                 });
             //console.log("The graph: ", graph)
             });

@@ -135,7 +135,8 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                         swal({
                             title: "It's been added with sucess!",
                             timer: 1700,
-                            showConfirmButton: false
+                            button: false,
+                            icon: 'success'
                         });
                         //console.log('im here');
                         modelList.$add(modelKeys).then((ref) => {
