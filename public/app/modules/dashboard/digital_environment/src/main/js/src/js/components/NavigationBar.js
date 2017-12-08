@@ -201,12 +201,14 @@ export default class NavigationBar extends React.Component {
                 });
             });
         }, LEVEL.TWO); // After getting the mapping and the subsystems
-
         swal({
             title: 'The model has been saved and bound successfully',
             timer: LEVEL.TWO,
             showConfirmButton: false
         });     
+        setTimeout(() => {
+            backend.syncLastSavedAsModel();
+        }, LEVEL.THERE);
     };
 
     handleOpenHelp = () => {
@@ -226,7 +228,7 @@ export default class NavigationBar extends React.Component {
         if (this.state.modelName !== '') {
             response = backend.fireAjaxSave(this.state.modelName, DeviceStore.getModel());   
             setTimeout(() => {
-                backend.syncLastSavedAsModel('glories', backend.loadLastSavedModel);
+                backend.syncLastSavedAsModel();
             }, LEVEL.THERE); // 0.5s after the alert
         }
         if (response === true) {
@@ -261,10 +263,13 @@ export default class NavigationBar extends React.Component {
                                                                                             *  with the current information on the digital twin */
         });
         swal({
-            title: 'The current model has been saved',
+            title: 'The current model has been saved successfully',
             timer: LEVEL.TWO,
             showConfirmButton: false
         });
+        setTimeout(() => {
+            backend.syncLastSavedAsModel();
+        }, LEVEL.THERE);
     };
 
     handleOpenSaveModelAs = () => { //It should be placed after getSavedModels
