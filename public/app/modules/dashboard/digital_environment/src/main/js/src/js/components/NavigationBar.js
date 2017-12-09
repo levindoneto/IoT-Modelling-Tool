@@ -166,49 +166,62 @@ export default class NavigationBar extends React.Component {
     };
 
     bind = () => {
-        const refSavedModels = firebase.database().ref('savedModels/');
-        const refDevsWithSubsystems = firebase.database().ref('devicesWithSubsystems');
-        const refMapTypeComponents = firebase.database().ref('mapTypeComponents');
-        const auxSavedModels = {};
-        let devicesWithSubsystems;
-        let mapTypeComp;
-        const isBinding = true; // Flag used in order to not alert that the user had the model saved and bound twice
-
-        /* Get devices with subsystems */
-        refInfoSaved.on('value', (snapshot) => {           
-            refDevsWithSubsystems.on('value', (devs) => {
-                devicesWithSubsystems = devs.val()[snapshot.val().lastLoadedModel];
+        if (backend.isDigitalTwinEmpty()) {
+            swal({
+                title: 'The model in the digital environment is empty',
+                timer: LEVEL.THERE,
+                button: false,
+                icon: 'error'
             });
-        });
+            setTimeout(() => {
+                backend.syncCurrentModel(false);
+            }, LEVEL.THERE + 500);
+        }
+        else {
+            const refSavedModels = firebase.database().ref('savedModels/');
+            const refDevsWithSubsystems = firebase.database().ref('devicesWithSubsystems');
+            const refMapTypeComponents = firebase.database().ref('mapTypeComponents');
+            const auxSavedModels = {};
+            let devicesWithSubsystems;
+            let mapTypeComp;
+            const isBinding = true; // Flag used in order to not alert that the user had the model saved and bound twice
 
-        refMapTypeComponents.once('value', (map) => {
-            mapTypeComp = map.val();
-        });
-        
-        /* Bind devices/components from the database */
-        setTimeout(() => {
-            refInfoSaved.once('value', (snapshot) => {
-                auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel());
-                refSavedModels.update(auxSavedModels);
-                backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel(), isBinding);
-                var i; // Devices' iteractions
-                refDevsWithSubsystems.once('value', (snapdev) => { // Listener on devices with sensors/actuators (whole element)
-                    for (i in snapdev.val()[snapshot.val().lastLoadedModel]) { // Access devices from the current loaded model
-                        //console.log('Register the device <', i, '>');
-                        //console.log('i: ', i);
-                        backend.bindDevice(i, '123456789067', '192.168.0.34', '12-34-56-78-90-67', RESTAPIADDRESS, devicesWithSubsystems[i], mapTypeComp, backend.bindDevice);
-                    }
+            /* Get devices with subsystems */
+            refInfoSaved.on('value', (snapshot) => {           
+                refDevsWithSubsystems.on('value', (devs) => {
+                    devicesWithSubsystems = devs.val()[snapshot.val().lastLoadedModel];
                 });
             });
-        }, LEVEL.TWO); // After getting the mapping and the subsystems
-        swal({
-            title: 'The model has been saved and bound successfully',
-            button: false,
-            icon: 'success'
-        });     
-        setTimeout(() => {
-            backend.syncCurrentModel();
-        }, LEVEL.THERE);
+
+            refMapTypeComponents.once('value', (map) => {
+                mapTypeComp = map.val();
+            });
+            
+            /* Bind devices/components from the database */
+            setTimeout(() => {
+                refInfoSaved.once('value', (snapshot) => {
+                    auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel());
+                    refSavedModels.update(auxSavedModels);
+                    backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel(), isBinding);
+                    var i; // Devices' iteractions
+                    refDevsWithSubsystems.once('value', (snapdev) => { // Listener on devices with sensors/actuators (whole element)
+                        for (i in snapdev.val()[snapshot.val().lastLoadedModel]) { // Access devices from the current loaded model
+                            //console.log('Register the device <', i, '>');
+                            //console.log('i: ', i);
+                            backend.bindDevice(i, '123456789067', '192.168.0.34', '12-34-56-78-90-67', RESTAPIADDRESS, devicesWithSubsystems[i], mapTypeComp, backend.bindDevice);
+                        }
+                    });
+                });
+            }, LEVEL.TWO); // After getting the mapping and the subsystems
+            swal({
+                title: 'The model has been saved and bound successfully',
+                button: false,
+                icon: 'success'
+            });     
+            setTimeout(() => {
+                backend.syncCurrentModel();
+            }, LEVEL.THERE);
+        }
     };
 
     handleOpenHelp = () => {
@@ -286,7 +299,20 @@ export default class NavigationBar extends React.Component {
     };
 
     handleOpenSaveModelAs = () => { //It should be placed after getSavedModels
-        this.setState({ openSaveModelAs: true });
+        if (backend.isDigitalTwinEmpty()) {
+            swal({
+                title: 'The model in the digital environment is empty',
+                timer: LEVEL.THERE,
+                button: false,
+                icon: 'error'
+            });
+            setTimeout(() => {
+                backend.syncCurrentModel(false);
+            }, LEVEL.THERE + 500);
+        }
+        else { // The input box is just opened if the digital twin is not empty
+            this.setState({ openSaveModelAs: true });
+        }
     };
 
     /* Method for checking whether the input field on 'Save' is empty.
