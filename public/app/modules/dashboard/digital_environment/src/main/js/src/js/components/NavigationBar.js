@@ -203,7 +203,6 @@ export default class NavigationBar extends React.Component {
         }, LEVEL.TWO); // After getting the mapping and the subsystems
         swal({
             title: 'The model has been saved and bound successfully',
-            timer: LEVEL.TWO,
             button: false,
             icon: 'success'
         });     
@@ -252,19 +251,21 @@ export default class NavigationBar extends React.Component {
         exportLink.click();
     };
 
-    handleOpenSaveModel = () => { 
+    handleOpenSaveModel = () => {
+        const refSavedModels = firebase.database().ref('savedModels/');
+        let auxSavedModels = {};
         if (backend.isDigitalTwinEmpty()) {
             swal({
                 title: 'The model in the digital environment is empty',
-                timer: LEVEL.TWO,
+                timer: LEVEL.THERE,
                 button: false,
                 icon: 'error'
             });
+            setTimeout(() => {
+                backend.syncCurrentModel(false);
+            }, LEVEL.THERE + 500);
         }
         else {
-            const refInfoSaved = firebase.database().ref('infoSavedModels');
-            const refSavedModels = firebase.database().ref('savedModels/');
-            let auxSavedModels = {};
             refInfoSaved.on('value', (snapshot) => {
                 auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel()); /* key:last_loaded_model, 
                                                                                                         * value: current model on the digital twin */
@@ -274,15 +275,13 @@ export default class NavigationBar extends React.Component {
             });
             swal({
                 title: 'The current model has been saved successfully',
-                timer: LEVEL.TWO,
-                icon: 'success',
-                button: false
+                timer: LEVEL.THERE,
+                button: false,
+                icon: 'success'
             });
-            
             setTimeout(() => {
                 backend.syncCurrentModel();
             }, LEVEL.THERE);
-            
         }
     };
 

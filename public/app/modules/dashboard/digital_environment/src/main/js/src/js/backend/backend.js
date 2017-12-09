@@ -228,7 +228,6 @@ export function fireAjaxSave(name, content, isBinding) {
     if (!thisIsBinding) {
         swal({
             title: 'The model has been saved successfully',
-            timer: LEVEL.FIVE,
             button: false,
             icon: 'success'
         });
@@ -311,11 +310,13 @@ export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddre
     });
 }
 
-export function syncCurrentModel() {
+export function syncCurrentModel(isempty) {
     if (window.localStorage) {
         if (!localStorage.getItem('firstLoad')) {
             localStorage.firstLoad = true;
-            localStorage.setItem('loadLastModel', 'true');
+            if (isempty !== false) { // Cases: non-empty save, save as and bind
+                localStorage.setItem('loadLastModel', 'true');
+            }
             window.location.reload();
         }
         else {
