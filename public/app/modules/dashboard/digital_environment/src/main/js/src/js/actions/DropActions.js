@@ -1,4 +1,5 @@
 import dispatcher from '../dispatcher';
+import * as backend from '../backend/backend';
 
 /* Creates a device */
 export function createDevice(device) {
@@ -92,6 +93,12 @@ export function addDeviceType(id) {
 
 /* Deletes all the devices from the view */
 export function clearDevices() {
+    if (backend.isDigitalTwinEmpty()) {
+        localStorage.setItem('digitalTwinWasEmpty', 'true');
+    }
+    else { // The model in the digital twin has been cleaned
+        localStorage.setItem('digitalTwinWasEmpty', 'false');
+    }
     dispatcher.dispatch({
         type: 'CLEAR_DEVICES'
     });
