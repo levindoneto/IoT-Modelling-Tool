@@ -36,7 +36,6 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
         }
 
         $scope.modal = function (model) {
-            //console.log("Model parameter: ", model);
             var ref = firebase.database().ref('images/' + model.imageFile);
             var imageObj = $firebaseObject(ref);
             imageObj.$loaded().then(() => {
@@ -46,11 +45,8 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
         };
 
         $scope.remove = function (accessKey, prefix, type, position) {
-            //console.log('prefix: ', prefix);
-            //console.log('type: ', type);
-            //console.log('position: ', position);
-            //console.log("Deleting...");
-            for (var keyM in modelObj) {
+            let keyM;
+            for (keyM in modelObj) {
                 if (keyM.startsWith('-') && accessKey === modelObj[keyM].imageFile) {
                     var refM = firebase.database().ref(`models/${keyM}`);
                     var refDefComp = firebase.database().ref(`devComp/${prefix}/${type}/${position}`);
@@ -58,19 +54,17 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
                     var dcObject = $firebaseObject(refDefComp);
                     //console.log('dcObject ', dcObject);
                     swal({
-                        title: "Are you sure you wanna delete this device/component?",
-                        text: "You can't change this once it's done!",
-                        icon: "warning",
-                        buttons: ["No", "Yes"],
+                        title: 'Are you sure you wanna delete this device/component?',
+                        text: 'You can not change this once it is done!',
+                        icon: 'warning',
+                        buttons: ['No', 'Yes'],
                         dangerMode: true,
                     }).then((value) => { // yes:true, no:null
-                            if (value == true) { // User has clicked the button <yes> for deleting the measurement
+                            if (value === true) { // User has clicked the button <yes> for deleting the measurement
                                 modelObject.$loaded().then(() => {
                                     modelObject.$remove().then(() => {
                                         swal({
-                                            title: 'The device has been deleted with success!',
-                                            timer: 1500,
-                                            button: false,
+                                            title: 'The device has been deleted successfully!',
                                             icon: 'success'
                                         });
                                     },
@@ -88,9 +82,7 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
                             }
                             else {
                                 swal({
-                                    title: "Your device hasn't been deleted!",
-                                    timer: 1500,
-                                    button: false
+                                    title: 'Your device has not been deleted!'
                                 });
                             }
                         });
@@ -103,9 +95,8 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
          * @return: Object element: information of the device or component
          */
         $scope.getInfo = function (keyI) {
-            //console.log('Key I: ', keyI);
-            //console.log('model Obj: ', modelObj);
-            for (var i in modelObj) {
+            let i;
+            for (i in modelObj) {
                 if (i.startsWith('-') && keyI === modelObj[i].imageFile) {
                     let ref = firebase.database().ref(`models/${i}`); // Accesing the object context selected by the user
                     let compDevObj = $firebaseObject(ref);
@@ -119,7 +110,6 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
                                 }
                             }
                         }
-                        //console.log('objAddPropsCompDev', objAddPropsCompDev);
                         $scope.objAddionalPropsCompDev = objAddPropsCompDev;
                     }, 0);
                 }
