@@ -99,7 +99,7 @@ The utilized database for synchronized data on this platform is [Firebase](https
 
 ### Alert animations
 
-* [Sweet Alert](http://t4t5.github.io/sweetalert/)
+* [Sweet Alert v2.0.8](https://sweetalert.js.org)
 
 ## Setup IoT Modeling Tool
 

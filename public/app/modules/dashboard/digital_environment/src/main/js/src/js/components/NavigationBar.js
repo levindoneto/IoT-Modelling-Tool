@@ -208,7 +208,7 @@ export default class NavigationBar extends React.Component {
             icon: 'success'
         });     
         setTimeout(() => {
-            backend.syncLastSavedAsModel();
+            backend.syncCurrentModel();
         }, LEVEL.THERE);
     };
 
@@ -229,7 +229,7 @@ export default class NavigationBar extends React.Component {
         if (this.state.modelName !== '') {
             response = backend.fireAjaxSave(this.state.modelName, DeviceStore.getModel());   
             setTimeout(() => {
-                backend.syncLastSavedAsModel();
+                backend.syncCurrentModel();
             }, LEVEL.THERE); // 0.5s after the alert
         }
         if (response === true) {
@@ -278,11 +278,11 @@ export default class NavigationBar extends React.Component {
                 icon: 'success',
                 button: false
             });
-            /*
+            
             setTimeout(() => {
-                backend.syncLastSavedAsModel();
+                backend.syncCurrentModel();
             }, LEVEL.THERE);
-            */
+            
         }
     };
 

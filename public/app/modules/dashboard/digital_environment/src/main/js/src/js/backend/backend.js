@@ -311,7 +311,7 @@ export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddre
     });
 }
 
-export function syncLastSavedAsModel() {
+export function syncCurrentModel() {
     if (window.localStorage) {
         if (!localStorage.getItem('firstLoad')) {
             localStorage.firstLoad = true;
