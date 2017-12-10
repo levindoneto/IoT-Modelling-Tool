@@ -322,20 +322,40 @@ export default class NavigationBar extends React.Component {
                     }, LEVEL.THERE + 500);
                 }
                 else {
-                    auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel()); /* key:last_loaded_model,
-                                                                                                                * value: current model on the digital twin */
-                    refSavedModels.update(auxSavedModels); // Update the current model on the database
-                    backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel()); /* The DevicesWithSubsystems.lastLoadedModel is overwritten
-                                                                                                        *  with the current information on the digital twin */
                     swal({
-                        title: 'The current model has been saved successfully',
-                        timer: LEVEL.THERE,
-                        button: false,
-                        icon: 'success'
+                        title: 'Are you sure you want save the new model over the current one?',
+                        text: ('The model '.concat(snapshot.val().lastLoadedModel)).concat(' will be overwritten if you confirm this action.'),
+                        icon: 'warning',
+                        buttons: ['No', 'Yes']
+                    }).then((value) => {
+                        if (value) {
+                            auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel()); /* key:last_loaded_model,
+                            * value: current model on the digital twin */
+                            refSavedModels.update(auxSavedModels); // Update the current model on the database
+                            backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel()); /* The DevicesWithSubsystems.lastLoadedModel is overwritten
+                                                                                                           *  with the current information on the digital twin */
+                            swal({
+                                title: 'The current model has been saved successfully',
+                                timer: LEVEL.THERE,
+                                button: false,
+                                icon: 'success'
+                            });
+                            setTimeout(() => {
+                                backend.syncCurrentModel();
+                            }, LEVEL.THERE + 500);
+                        }
+                        else {
+                            swal({
+                                title: 'The model '.concat(snapshot.val().lastLoadedModel).concat(' remains the same in the digital twin!'),
+                                timer: LEVEL.THERE,
+                                button: false,
+                                icon: 'success'
+                            });
+                            setTimeout(() => {
+                                backend.syncCurrentModel();
+                            }, LEVEL.THERE + 500);
+                        }
                     });
-                    setTimeout(() => {
-                        backend.syncCurrentModel();
-                    }, LEVEL.THERE + 500);
                 }
             }
         });
