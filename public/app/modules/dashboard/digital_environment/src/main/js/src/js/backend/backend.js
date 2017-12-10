@@ -302,7 +302,8 @@ export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddre
         data: JSON.stringify(jsonData)
     }).done((device) => {
         console.log('The device has been posted successfully\nId on the MBP Platform: : ', device.id);
-            for (var c in subsystems) { // Iterate in all the components in the device
+            let c;
+            for (c in subsystems) { // Iterate in all the components in the device
                 //console.log('c: ', c);
                 bindComponent(Object.keys(subsystems[c])[0], mapTypeComp[subsystems[c][Object.keys(subsystems[c])[0]]['@type'].split(':')[1]], TYPEADAPTER, device.id, RESTAPIADDRESS);
             }
