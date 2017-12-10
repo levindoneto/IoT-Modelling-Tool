@@ -76,6 +76,7 @@ function readSingleFile(e) {
 }
 
 function loadModel(key) {
+    localStorage.setItem('digitalTwinWasEmpty', 'true'); // The model is considered as empty always when a new one is loaded into the digital twin
     const refSavedModels = firebase.database().ref('savedModels');
     const auxInfoSaved = {};
     refSavedModels.on('value', (snapshot) => {
@@ -321,13 +322,11 @@ export default class NavigationBar extends React.Component {
                     }, LEVEL.THERE + 500);
                 }
                 else {
-                    refInfoSaved.on('value', (snapshot) => {
-                        auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel()); /* key:last_loaded_model,
+                    auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel()); /* key:last_loaded_model,
                                                                                                                 * value: current model on the digital twin */
-                        refSavedModels.update(auxSavedModels); // Update the current model on the database
-                        backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel()); /* The DevicesWithSubsystems.lastLoadedModel is overwritten
+                    refSavedModels.update(auxSavedModels); // Update the current model on the database
+                    backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel()); /* The DevicesWithSubsystems.lastLoadedModel is overwritten
                                                                                                         *  with the current information on the digital twin */
-                    });
                     swal({
                         title: 'The current model has been saved successfully',
                         timer: LEVEL.THERE,
@@ -336,7 +335,7 @@ export default class NavigationBar extends React.Component {
                     });
                     setTimeout(() => {
                         backend.syncCurrentModel();
-                    }, LEVEL.THERE);
+                    }, LEVEL.THERE + 500);
                 }
             }
         });
