@@ -269,7 +269,7 @@ export default class NavigationBar extends React.Component {
         const refSavedModels = firebase.database().ref('savedModels/');
         const refDevicesWithSubsystems = firebase.database().ref('devicesWithSubsystems/');
         let auxSavedModels = {};
-        refInfoSaved.on('value', (snapshot) => {
+        refInfoSaved.once('value', (snapshot) => {
             if (localStorage.getItem('digitalTwinWasEmpty') === 'false') { // The user has loaded a model already
                 swal({
                     title: ('Do you want to delete the model '.concat(snapshot.val().lastLoadedModel)).concat(' ?'),
@@ -288,15 +288,25 @@ export default class NavigationBar extends React.Component {
                             icon: 'success'
                         });
                         setTimeout(() => {
-                            backend.syncCurrentModel(false);
+                            backend.syncCurrentModel(false); // With false as parameter, nothing is loaded into the digital twin after the synchronization
                         }, LEVEL.THERE + 500);
-                        localStorage.setItem('digitalTwinWasEmpty', 'true');
                     }
                     else { // [No]
-                        console.log('Model remains stored in the database');
+                        //console.log('Model remains stored in the database');
+                        swal({
+                            title: ('Do you want to load the model '.concat(snapshot.val().lastLoadedModel)).concat(' in its last saved version?'),
+                            icon: 'warning',
+                            buttons: ['No', 'Yes']
+                        }).then((value) => {
+                            if (value) { // Load model into the digital twin
+                                backend.syncCurrentModel(); // Sync and load the last saved model
+                            }
+                            else { // Just sync the whole system
+                                backend.syncCurrentModel(false);
+                            }
+                        });
                     }
                 });
-                 // Create may set this flag to false again (user clicks yes)
             }
             else {
                 if (backend.isDigitalTwinEmpty()) {
