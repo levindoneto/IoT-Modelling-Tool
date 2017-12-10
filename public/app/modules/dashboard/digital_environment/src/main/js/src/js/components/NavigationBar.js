@@ -267,18 +267,29 @@ export default class NavigationBar extends React.Component {
 
     handleOpenSaveModel = () => {
         const refSavedModels = firebase.database().ref('savedModels/');
+        const refDevicesWithSubsystems = firebase.database().ref('devicesWithSubsystems/');
         let auxSavedModels = {};
         refInfoSaved.on('value', (snapshot) => {
             if (localStorage.getItem('digitalTwinWasEmpty') === 'false') { // The user has loaded a model already
                 swal({
-                    title: ('Are you sure you want to delete the model '.concat(snapshot.val().lastLoadedModel)).concat(' ?'),
+                    title: ('Do you want to delete the model '.concat(snapshot.val().lastLoadedModel)).concat(' ?'),
                     text: 'Once deleted, the model will not be available for modifications anymore!',
                     icon: 'warning',
                     buttons: ['No', 'Yes'],
                     dangerMode: true
                 }).then((value) => {
                     if (value) { // [Yes]
-                        console.log('Delete model ', snapshot.val().lastLoadedModel);
+                        refSavedModels.child(snapshot.val().lastLoadedModel).remove();
+                        refDevicesWithSubsystems.child(snapshot.val().lastLoadedModel).remove();
+                        swal({
+                            title: ('The model '.concat(snapshot.val().lastLoadedModel)).concat(' has been deleted successfully'),
+                            timer: LEVEL.THERE,
+                            button: false,
+                            icon: 'success'
+                        });
+                        setTimeout(() => {
+                            backend.syncCurrentModel(false);
+                        }, LEVEL.THERE + 500);
                         localStorage.setItem('digitalTwinWasEmpty', 'true');
                     }
                     else { // [No]
