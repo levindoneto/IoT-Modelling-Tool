@@ -33,13 +33,13 @@ __Advisors__
 * [SCSS Files](public/scss) (contains the files for the nested metalanguage scss, which is interpreted into CSS on this platform)
 * [Jade Files](public/views) (contains the files for the Jade high performance template engine)
 
-## Relationship among the packages in a high level approach
+## Relationship among the Packages in a High Level Approach
 
 The packages diagram can be viewed in the image bellow.
 
 ![packages](public/resources/packages.jpg)
 
-## System's submenus
+## System's Submenus
 
 Each submenu has its own controller and view. In total, there are 11 submenus on the developed IoT Modelling Tool:
 
@@ -71,7 +71,7 @@ The utilized database for synchronized data on this platform is [Firebase](https
 * Saved Models (By the Save and Save As buttons on the navigation bar)
 * Users (each one e-mail, password and username)
 
-## Utilized technologies
+## Used Technologies
 
 ### Front-End
 
@@ -88,7 +88,7 @@ The utilized database for synchronized data on this platform is [Firebase](https
 
 * [Firebase](https://firebase.google.com) on Google's cloud
 
-### Utilized frameworks
+### Utilized Frameworks
 
 * [AngularFire v2.3.0](https://github.com/firebase/angularfire)
 * [ReactFire v1.0.0](https://github.com/firebase/reactfire)
@@ -97,7 +97,7 @@ The utilized database for synchronized data on this platform is [Firebase](https
 
 * [ESLint v4.1.1](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
-### Alert animations
+### Alert Animations
 
 * [Sweet Alert v2.0.8](https://sweetalert.js.org)
 
@@ -106,32 +106,31 @@ The utilized database for synchronized data on this platform is [Firebase](https
 
 ## Setup IoT Modeling Tool (In order to get the platform running)
 
-### On windows
+### On windows (in the folder [scripts/])
 
 #### For python versions 2.x
 ```terminal
-bash [initIoT-MT_Windows-Python2.sh](scripts/initIoT-MT_Windows.sh)
+bash initIoT-MT_Windows-Python2.sh
 ```
 
 #### For python versions 3.x
 ```terminal
-bash [initIoT-MT_Windows-Python3.sh](scripts/initIoT-MT_Windows.sh)
+bash initIoT-MT_Windows-Python3.sh
 ```
 
-### On Linux
+### On Linux (in the folder [scripts/])
 #### For python versions 2.x
 ```terminal
-bash [initIoT-MT_Linux-Python2.sh](scripts/initIoT-MT_Windows.sh)
+bash initIoT-MT_Linux-Python2.sh
 ```
 
 #### For python versions 3.x
 ```terminal
-bash [initIoT-MT_Linux-Python2.sh](scripts/initIoT-MT_Windows.sh)
+bash initIoT-MT_Linux-Python2.sh
 ```
 
 
-###### In order to access the application it may be used  the following link
+## Access the Platform
 
+### Go the following link using any browser
 (http://localhost:8080/)[http://localhost:8080/]
-
-directly in any web browser.
