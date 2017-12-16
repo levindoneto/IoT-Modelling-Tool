@@ -271,7 +271,7 @@ export default class NavigationBar extends React.Component {
         const refDevicesWithSubsystems = firebase.database().ref('devicesWithSubsystems/');
         let auxSavedModels = {};
         refInfoSaved.once('value', (snapshot) => {
-            if (localStorage.getItem('digitalTwinWasEmpty') === 'false') { // The user has loaded a model already
+            if (localStorage.getItem('digitalTwinWasEmpty') === 'false' && snapshot.val().lastLoadedModel !== 'undefined') { // The user has loaded a model in the current section
                 swal({
                     title: ('Do you want to delete the model '.concat(snapshot.val().lastLoadedModel)).concat(' ?'),
                     text: 'Once deleted, the model will not be available for modifications anymore!',
