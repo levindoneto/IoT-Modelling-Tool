@@ -20,6 +20,13 @@ var at_context = {};
 var definitions = {};
 const DEFINITIONS_KEY = 'definitions';
 
+/* Clean the last model */
+const refInfo = firebase.database().ref('infoSavedModels');
+const auxInfoSaved = {};
+auxInfoSaved.lastLoadedModel = 'undefined';
+auxInfoSaved.lastSavedModel = 'undefined';
+refInfo.update(auxInfoSaved); // Updating the object on the database
+
 /*********************************************************/
 /************************ Objects ************************/
 /*********************************************************/

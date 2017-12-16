@@ -155,3 +155,7 @@ $ npm install -g firebase-tools
 $ firebase init
 $ firebase deploy
 ```
+
+### Access the Platform
+#### Go the following link using any browser
+[https://iot-mt.firebaseapp.com](https://iot-mt.firebaseapp.com)
