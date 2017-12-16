@@ -1,6 +1,6 @@
 # IoT - Modeling Tool
 
-Iot Modelling Tool is a platform, which allows users to have their own devices and components modeled in order to represent a physical environment.
+Iot Modelling Tool is a platform which allows users to have their own devices and components modeled in order to represent a physical environment.
 
 
 __Author__
@@ -44,8 +44,8 @@ The packages diagram can be viewed in the image bellow.
 Each submenu has its own controller and view. In total, there are 11 submenus on the developed IoT Modelling Tool:
 
 * My Account
-* Add Default @Context 
-* Add Specific @Context 
+* Add Default @Context
+* Add Specific @Context
 * Add Default @Graph
 * My @Context
 * My @Graph
@@ -101,122 +101,37 @@ The utilized database for synchronized data on this platform is [Firebase](https
 
 * [Sweet Alert v2.0.8](https://sweetalert.js.org)
 
-## Setup IoT Modeling Tool
+### Requirements
+* Python
+
+## Setup IoT Modeling Tool (In order to get the platform running)
 
 ### On windows
 
-#### Install NodeJS
-
-* [Download the installer](https://nodejs.org/en/download/)
-* Install NodeJS
-* Restart the machine
-
-##### Simple commands to test NodeJS
-
-###### Test Node
+#### For python versions 2.x
 ```terminal
-$ node -v
+bash [initIoT-MT_Windows-Python2.sh](scripts/initIoT-MT_Windows.sh)
 ```
 
-###### Test NPM
+#### For python versions 3.x
 ```terminal
-$ npm -v
+bash [initIoT-MT_Windows-Python3.sh](scripts/initIoT-MT_Windows.sh)
 ```
 
-###### Run a file (file.js)
+### On Linux
+#### For python versions 2.x
 ```terminal
-$ node file.js
+bash [initIoT-MT_Linux-Python2.sh](scripts/initIoT-MT_Windows.sh)
 ```
 
-##### Install Bower
+#### For python versions 3.x
 ```terminal
-$ npm install -g bower
+bash [initIoT-MT_Linux-Python2.sh](scripts/initIoT-MT_Windows.sh)
 ```
 
-###### Init Bower inside the project folder
-```terminal
-$ bower init
-```
 
-###### The configurations in a JSON format should be like this
-```json
-{
-  name: 'IoT-MT',
-  authors: [
-    'Levindo Neto <levindogtn@gmail.com>'
-  ],
-  description: 'Modeling Tool',
-  main: 'index.html',
-  keywords: [
-    'iot'
-  ],
-  license: 'MIT',
-  homepage: '',
-  ignore: [
-    '**/.*',
-    'node_modules',
-    'bower_components',
-    'test',
-    'tests'
-  ]
-}
-```
+###### In order to access the application it may be used  the following link
 
-###### Bind Bower and Angular JS
-```terminal
-bower install --save angular
-```
+(http://localhost:8080/)[http://localhost:8080/]
 
-##### Install the frameworks
-
-TODO
-
-###### AngularFire
-
-TODO
-
-##### ReactFire
-
-TODO
-
-##### Set-up the database
-
-TODO
-
-##### Server for tests
-
-For tests can be used the [http-server](https://www.npmjs.com/package/http-server)
-The installation can be done with NPM
-```terminal
-$ npm install -g http-server
-```
-
-or can be used Python Server (It's compatible with [font awesome](https://fontawesome.io))
-```terminal
-$ python -m http.server [<portNo>]  // Windows
-```
-
-```terminal
-$ python -m SimpleHTTPServer  // Linux
-```
-
-###### To access the application can be used link
-```terminal
-http://localhost:[<portNo>]/
-```
 directly in any web browser.
-
-##### Setup the directory for express
-```terminal
-$ npm install -g express-generator
-$ express Implementierung
-$ npm install -d
-$ npm start
-```
-
-Another way to start the application in the browser is with the Zervit.
-
-Also it should be added on [package.json](public/package.json) in "scripts":
-```json
-"start": "http-server ./Implementierung -a localhost -p 8080"
-```

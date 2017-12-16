@@ -1,0 +1,34 @@
+{
+  "name": "ngReact",
+  "author": "https://github.com/davidchang/ngReact/graphs/contributors",
+  "version": "0.4.0",
+  "main": "ngReact.js",
+  "description": "Use React Components in Angular",
+  "homepage": "http://davidchang.github.io/ngReact/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/davidchang/ngReact.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "angular": "<2.0.0",
+    "react": ">=0.15.0"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "angularjs",
+    "angular",
+    "react",
+    "ngReact"
+  ],
+  "_release": "0.4.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.4.0",
+    "commit": "ebc71a796a3bb6b6ca2044cc729f642db86031db"
+  },
+  "_source": "https://github.com/davidchang/ngReact.git",
+  "_target": "^0.4.0",
+  "_originalSource": "ngReact",
+  "_direct": true
+}
