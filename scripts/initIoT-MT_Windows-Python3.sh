@@ -4,9 +4,13 @@
 # Advisors: Prof. Dr.-Ing. habil. Bernhard Mitschang,
 #           M.Sc. Ana Cristina Franco da Silva
 #           Dipl.-Inf. Pascal Hirmer
+# Requirements:
+# Operating System: Windows
+# Python Version: 3.0 or superior
 
 sed -i 's/\r$//' init.sh # Remove trailing \r character
 clear;
-echo "Setting the IoT Modelling Tool up";
+echo "Setting Up and Initializing the IoT Modelling Tool";
+pushd ../public; # Go to the directory where the web app's files are in
 python ../public/iotmtServer-Python3.py
 echo "The server has stopped running";

@@ -4,15 +4,13 @@
 # Advisors: Prof. Dr.-Ing. habil. Bernhard Mitschang,
 #           M.Sc. Ana Cristina Franco da Silva
 #           Dipl.-Inf. Pascal Hirmer
+# Requirements:
+# Operating System: Linux
+# Python Version: 2.0 or superior
 
 sed -i 's/\r$//' init.sh # Remove trailing \r character
 clear;
-echo "Setting the IoT Modelling Tool up";
-
-if [ "python -V" == "Python 3.5.4 :: Anaconda custom (64-bit)" ]; then
-	echo "You have access!"
-else
-	echo "ACCESS DENIED!"
-
-python iotmtServer-Python2.py;
+echo "Setting Up and Initializing the IoT Modelling Tool";
+pushd ../public; # Go to the directory where the web app's files are in
+python ../public/iotmtServer-Python2.py
 echo "The server has stopped running";
