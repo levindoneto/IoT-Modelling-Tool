@@ -55,9 +55,24 @@ Each submenu has its own controller and view. In total, there are 11 submenus on
 * Add Additional Properties
 * Search
 
+## IoT Modelling Environment's Navigation Bar
+
+The navigation bar contains synchronized functionalities with the real-time database, as well as importing and exporting models using the file system.
+
+### Synchronized with Firebase
+* Save
+* Save As
+* Load
+
+### Independent from Firebase
+* Export
+* Import
+* Clear
+
 ## Database
 
-The utilized database for synchronized data on this platform is [Firebase](https://firebase.google.com/). The Firebase Real Time Database is a cloud-hosted NoSQL database that lets you store and sync data between your users in real time.
+The utilized database for synchronized data on this platform is [Firebase](https://firebase.google.com/).
+Firebase Real Time Database is a cloud-hosted NoSQL database that lets you store and sync data between your users in real time.
 
 ### Utilized Keys
 
@@ -104,33 +119,39 @@ The utilized database for synchronized data on this platform is [Firebase](https
 ### Requirements
 * Python
 
-## Setup IoT Modeling Tool (In order to get the platform running)
+## Setup the IoT Modeling Tool locally (In order to get it running)
 
 ### On windows (in the folder [scripts/])
 
 #### For python versions 2.x
 ```terminal
-bash initIoT-MT_Windows-Python2.sh
+$ bash initIoT-MT_Windows-Python2.sh
 ```
 
 #### For python versions 3.x
 ```terminal
-bash initIoT-MT_Windows-Python3.sh
+$ bash initIoT-MT_Windows-Python3.sh
 ```
 
 ### On Linux (in the folder [scripts/])
 #### For python versions 2.x
 ```terminal
-bash initIoT-MT_Linux-Python2.sh
+$ bash initIoT-MT_Linux-Python2.sh
 ```
 
 #### For python versions 3.x
 ```terminal
-bash initIoT-MT_Linux-Python2.sh
+$ bash initIoT-MT_Linux-Python2.sh
 ```
 
+### Access the Platform
+#### Go the following link using any browser
+[http://localhost:8080/](http://localhost:8080/)
 
-## Access the Platform
 
-### Go the following link using any browser
-(http://localhost:8080/)[http://localhost:8080/]
+## Deploy the IoT Modelling Tool using Firebase Hosting
+```terminal
+$ npm install -g firebase-tools
+$ firebase init
+$ firebase deploy
+```
