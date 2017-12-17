@@ -21,7 +21,8 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         }
         mapTypeComponents.update(compType);
         Upload.base64DataUrl(file).then((base64Url) => {
-            model.userUid = $rootScope.userDB.uid;
+            model.userUid = $rootScope.userDB.uid; // User who has added the model into the platform
+            model.ontology = type === 'ActuatingDevice' ? 'iot-lite' : 'ssn'; // Sensors and Devices have ssn as their ontologies
             var add = false;
             const refImages = firebase.database().ref('images/');
             const imageList = $firebaseArray(refImages);
@@ -42,8 +43,6 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                         if (snapshot.val() != null) {
                             if (prefix in snapshot.val() && add === false) {
                                 if (type in snapshot.val()[prefix]) {
-                                    //console.log('There is already a type');
-                                    //console.log('model: ', model.imageFile);
                                     auxInfo[(Object.keys(snapshot.val()[prefix][type]).length).toString()] = model;
                                     auxBind = Object.assign(snapshot.val()[prefix][type], auxInfo);
                                     auxPrefix[type] = auxBind;
@@ -76,7 +75,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                                     add = true;
                                     return;
                                 }
-                                else { //ok
+                                else { 
                                     //console.log('CREATE TYPE');
                                     auxInfo['0'] = model; // First model of the just created type
                                     auxType[type] = auxInfo;
@@ -97,7 +96,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                                     return;
                                 }
                             }
-                            else { //ok
+                            else { 
                                 auxInfo['0'] = model;// First model of the just created type
                                 auxType[type] = auxInfo;
                                 auxPrefix[prefix] = auxType;
