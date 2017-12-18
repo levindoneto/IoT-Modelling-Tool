@@ -196,7 +196,7 @@ export default class ComponentDetailList extends React.Component {
                                         selectedDevice[key].map((lowerDevice, currIndex) => {
                                             if (typeof lowerDevice === 'object') {
                                             /* List-element for each lower device in array (pin) */
-                                                return (<ListItem onClick={() => {if (this.isControlPressed && selectedDevice['@id'] != lowerDevice['@id']) DropActions.selectDevice(lowerDevice['@id']);}} key={selectedDevice[key].indexOf(lowerDevice)} primaryText={lowerDevice['@id'].replace(/(.)*:/, '')} initiallyOpen={false} primaryTogglesNestedList={true} nestedItems={
+                                                return (<ListItem onClick={() => {if (this.isControlPressed && selectedDevice['@id'] !== lowerDevice['@id']) DropActions.selectDevice(lowerDevice['@id']);}} key={selectedDevice[key].indexOf(lowerDevice)} primaryText={lowerDevice['@id'].replace(/(.)*:/, '')} initiallyOpen={false} primaryTogglesNestedList={true} nestedItems={
                                                 // Sub-list-elements: traverse keys of lower device (pin)
                                                     Object.keys(lowerDevice).map((lowerKey) => {
                                                         if (lowerDevice[lowerKey]['@id'] != null) {
@@ -211,7 +211,7 @@ export default class ComponentDetailList extends React.Component {
                                                         }
                                                         else {
                                                             return (<ListItem onDoubleClick={ () => {
-                                                                if (lowerKey != 'geo:location') {
+                                                                if (lowerKey !== 'geo:location') {
                                                                     const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                                                     this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: lowerKey });
                                                                     this.handleOpenSetProperty();

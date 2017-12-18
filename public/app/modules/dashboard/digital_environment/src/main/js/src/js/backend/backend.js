@@ -259,9 +259,21 @@ export function fireAjaxShow() {
     return response;
 }
 
-export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, apiAddress) {
+export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, apiAddress, pinConfig) {
+    let p;
+    let valuesPins = '';
+    for (p = 0; p < pinConfig.length-1; p++) { // -1 because the comma must not be concatenate to the last pin
+        valuesPins = (valuesPins.concat(pinConfig[p])).concat(',');
+    }
+    valuesPins = valuesPins.concat(pinConfig[pinConfig.length - 1]); // Add the last pin to the string of pins without a comma in the end
+    //console.log('Pin values: ', valuesPins);
+    
+    const pinSet = 'pinset='.concat(valuesPins); // Pins of the device which the component is attached to (values in the elements prefix:pinConfiguration)
+    const deployInfo = (('?component='.concat(componentType.toUpperCase())).concat('&')).concat(pinSet);
+
     const urlAddress = (((apiAddress.concat('/api')).concat('/')).concat(componentType)).concat('s/');
     const urlAddressDeploy = ((apiAddress.concat('/api/deploy/')).concat(componentType)).concat('/');
+
     const jsonData = {
         name: idComp,
         type: (apiAddress.concat('/api/types/')).concat(idTypeBind),
@@ -277,7 +289,7 @@ export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, a
         console.log('The ', componentType, ' has been posted successfully\nId on the MBP Platform: ', component.id); // /deploy/id...
         $.ajax({
             type: 'POST',
-            url: urlAddressDeploy.concat(component.id),
+            url: (urlAddressDeploy.concat(component.id)).concat(deployInfo),
             contentType: 'application/json'
         }).done((response) => {
             console.log('The ', componentType, ' has been successfully deployed!\n', response);
@@ -302,10 +314,13 @@ export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddre
         data: JSON.stringify(jsonData)
     }).done((device) => {
         console.log('The device has been posted successfully\nId on the MBP Platform: : ', device.id);
-            let c;
+            let c; 
             for (c in subsystems) { // Iterate in all the components in the device
                 //console.log('c: ', c);
-                bindComponent(Object.keys(subsystems[c])[0], mapTypeComp[subsystems[c][Object.keys(subsystems[c])[0]]['@type'].split(':')[1]], TYPEADAPTER, device.id, RESTAPIADDRESS);
+                let prefix = subsystems[c][Object.keys(subsystems[c])[0]]['@type'].split(':')[0];
+                let idWithoutPrefix = subsystems[c][Object.keys(subsystems[c])[0]]['@type'].split(':')[1];
+                let pinConf = subsystems[c][Object.keys(subsystems[c])[0]][(prefix.concat(':').concat('pinConfiguration'))];
+                bindComponent(Object.keys(subsystems[c])[0], mapTypeComp[idWithoutPrefix], TYPEADAPTER, device.id, RESTAPIADDRESS, pinConf);
             }
         return callback(); // Bind the next device, if there are more than one device on the digital twin
     });

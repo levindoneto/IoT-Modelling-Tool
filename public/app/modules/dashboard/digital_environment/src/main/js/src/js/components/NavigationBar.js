@@ -220,9 +220,11 @@ export default class NavigationBar extends React.Component {
                 button: false,
                 icon: 'success'
             });     
+            /*
             setTimeout(() => {
                 backend.syncCurrentModel();
             }, LEVEL.THERE);
+            */
         }
     };
 
