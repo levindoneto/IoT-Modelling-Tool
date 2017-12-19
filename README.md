@@ -2,7 +2,6 @@
 
 Iot Modelling Tool is a platform which allows users to have their own devices and components modeled in order to represent a physical environment.
 
-
 __Author__
 
 [Levindo Gabriel Taschetto Neto](http://levindoneto.github.io/)
@@ -33,11 +32,13 @@ __Advisors__
 * [SCSS Files](public/scss) (contains the files for the nested metalanguage scss, which is interpreted into CSS on this platform)
 * [Jade Files](public/views) (contains the files for the Jade high performance template engine)
 
+
 ## Relationship among the Packages in a High Level Approach
 
 The packages diagram can be viewed in the image bellow.
 
 ![packages](public/resources/packages.jpg)
+
 
 ## System's Submenus
 
@@ -55,6 +56,7 @@ Each submenu has its own controller and view. In total, there are 11 submenus on
 * Add Additional Properties
 * Search
 
+
 ## IoT Modelling Environment's Navigation Bar
 
 The navigation bar contains synchronized functionalities with the real-time database, as well as importing and exporting models using the file system.
@@ -68,6 +70,7 @@ The navigation bar contains synchronized functionalities with the real-time data
 * Export
 * Import
 * Clear
+
 
 ## Database
 
@@ -85,6 +88,7 @@ Firebase Real Time Database is a cloud-hosted NoSQL database that lets you store
 * Map between specific types and components' ids
 * Saved Models (By the Save and Save As buttons on the navigation bar)
 * Users (each one e-mail, password and username)
+
 
 ## Used Technologies
 
@@ -117,7 +121,26 @@ Firebase Real Time Database is a cloud-hosted NoSQL database that lets you store
 * [Sweet Alert v2.0.8](https://sweetalert.js.org)
 
 ### Requirements
-* Python
+* [Python](https://www.python.org)
+
+## Bundle the Scripts
+
+### Requirements
+* [npm](https://www.npmjs.com/get-npm) 
+
+### Install Webpack
+```terminal
+$ npm install --save-dev webpack
+```
+
+### Use Webpack in order to create the *client.min* for the IoT Modelling Environment
+```terminal
+$ cd public/app/modules/dashboard/digital_environment/src/main/js
+$ webpack -p
+```
+
+The parameter *-p* must be used in order to minify the bundled javascript file.
+
 
 ## Setup the IoT Modeling Tool locally (In order to get it running)
 
@@ -155,6 +178,7 @@ $ npm install -g firebase-tools
 $ firebase init
 $ firebase deploy
 ```
+
 
 ### Access the Platform
 #### Go the following link using any browser
