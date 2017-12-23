@@ -160,7 +160,21 @@ export default class NavigationBar extends React.Component {
     };
 
     handleOpenExport = () => {
-        this.setState({ openExport: true }); // Open the box with the options
+        if (backend.isDigitalTwinEmpty()) {
+            swal({
+                title: 'The model in the digital environment is empty',
+                text: 'Therefore, the model can not be exported',
+                timer: LEVEL.THERE,
+                button: false,
+                icon: 'error'
+            });
+            setTimeout(() => {
+                backend.syncCurrentModel(false);
+            }, LEVEL.THERE + 500);
+        }
+        else {
+            this.setState({ openExport: true }); // Open the box with the options
+        }
     };
 
     handleCloseExport = () => {
@@ -171,6 +185,7 @@ export default class NavigationBar extends React.Component {
         if (backend.isDigitalTwinEmpty()) {
             swal({
                 title: 'The model in the digital environment is empty',
+                text: 'Therefore, the model can not be bound',
                 timer: LEVEL.THERE,
                 button: false,
                 icon: 'error'
@@ -313,6 +328,7 @@ export default class NavigationBar extends React.Component {
                 if (backend.isDigitalTwinEmpty()) {
                     swal({
                         title: 'The model in the digital environment is empty',
+                        text: 'Therefore, the model can not be saved',
                         timer: LEVEL.THERE,
                         button: false,
                         icon: 'error'
@@ -365,6 +381,7 @@ export default class NavigationBar extends React.Component {
         if (backend.isDigitalTwinEmpty()) {
             swal({
                 title: 'The model in the digital environment is empty',
+                text: 'Therefore, the model can not be saved',
                 timer: LEVEL.THERE,
                 button: false,
                 icon: 'error'
