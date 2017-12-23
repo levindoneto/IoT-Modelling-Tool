@@ -1,5 +1,4 @@
 <!-- Content Header (Page header) -->
-<script>routeSync();</script>
 <section class="content-header">
     <h1 class="titleMYACC">
         Add Device/Component
@@ -43,7 +42,7 @@
                             pattern='.jpg', restoreExif: false}" >
                             Click here
                         </label>
-                        <i ng-show="myForm.file.$error.required"></br>*Needed</i><br>
+                        <i ng-show="myForm.file.$error.required"></br>Needed</i><br>
                         <i ng-show="myForm.file.$error.maxSize">
                             The file is too big!
                             {{errorFile.size / 1000000|number:1}}Mb and maximum allowed is 2 Mb

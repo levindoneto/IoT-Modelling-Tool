@@ -142,7 +142,7 @@ $ webpack -p
 The parameter *-p* must be used in order to minify the bundled javascript file.
 
 
-## Setup the IoT Modeling Tool locally (In order to get it running)
+## Set up the IoT Modeling Tool locally (In order to get it running)
 
 ### On windows (in the folder [scripts/])
 
