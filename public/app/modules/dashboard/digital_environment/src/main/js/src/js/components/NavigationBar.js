@@ -19,6 +19,8 @@ import { setTimeout } from 'timers';
 
 const refMapTypeComponents = firebase.database().ref('mapTypeComponents');
 const refInfoSaved = firebase.database().ref('infoSavedModels');
+const refSavedModels = firebase.database().ref('savedModels/');
+const refDevicesWithSubsystems = firebase.database().ref('devicesWithSubsystems/');
 const RESTAPIADDRESS = 'http://192.168.209.176:8080/MBP';
 
 const style = {
@@ -272,11 +274,24 @@ export default class NavigationBar extends React.Component {
 
     handleSaveModelAs = () => {
         let response = false;
+        console.log('This state model name: ', this.state.modelName);
+        refSavedModels.child('savedModels').orderByKey().equalTo(this.state.modelName).on('value', (snapshot) => {
+            swal({
+                title: 'There is already a model with the same name saved',
+                icon: 'warning',
+                button: false,
+                timer: LEVEL.THERE
+            });
+            // ToDo: Save the temporary model for reloading
+            setTimeout(() => {
+                backend.syncCurrentModel();
+            }, LEVEL.THERE);
+        });
         if (this.state.modelName !== '') {
             response = backend.fireAjaxSave(this.state.modelName, DeviceStore.getModel());   
             setTimeout(() => {
                 backend.syncCurrentModel();
-            }, LEVEL.THERE); // 0.5s after the alert
+            }, LEVEL.THERE);
         }
         if (response === true) {
             this.setState({ snackBarSaveOpen: true });
@@ -304,8 +319,6 @@ export default class NavigationBar extends React.Component {
         }
         else {
             localStorage.setItem('isTemporaryModel', 'false');
-            const refSavedModels = firebase.database().ref('savedModels/');
-            const refDevicesWithSubsystems = firebase.database().ref('devicesWithSubsystems/');
             let auxSavedModels = {};
             refInfoSaved.once('value', (snapshot) => {
                 if (localStorage.getItem('digitalTwinWasEmpty') === 'false') { // The user has loaded a model in the current section
