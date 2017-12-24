@@ -298,100 +298,106 @@ export default class NavigationBar extends React.Component {
         exportLink.click();
     };
 
-    handleOpenSaveModel = () => {localStorage.setItem('isTemporaryModel', 'false');
-        const refSavedModels = firebase.database().ref('savedModels/');
-        const refDevicesWithSubsystems = firebase.database().ref('devicesWithSubsystems/');
-        let auxSavedModels = {};
-        refInfoSaved.once('value', (snapshot) => {
-            if (localStorage.getItem('digitalTwinWasEmpty') === 'false' && snapshot.val().lastLoadedModel !== 'undefined') { // The user has loaded a model in the current section
-                swal({
-                    title: ('Do you want to delete the model '.concat(snapshot.val().lastLoadedModel)).concat(' ?'),
-                    text: 'Once deleted, the model will not be available for modifications anymore!',
-                    icon: 'warning',
-                    buttons: ['No', 'Yes'],
-                    dangerMode: true
-                }).then((value) => {
-                    if (value) { // [Yes]
-                        refSavedModels.child(snapshot.val().lastLoadedModel).remove();
-                        refDevicesWithSubsystems.child(snapshot.val().lastLoadedModel).remove();
+    handleOpenSaveModel = () => {
+        if (localStorage.getItem('isTemporaryModel') === 'true' && !backend.isDigitalTwinEmpty()) {
+            this.setState({ openSaveModelAs: true });
+        }
+        else {
+            localStorage.setItem('isTemporaryModel', 'false');
+            const refSavedModels = firebase.database().ref('savedModels/');
+            const refDevicesWithSubsystems = firebase.database().ref('devicesWithSubsystems/');
+            let auxSavedModels = {};
+            refInfoSaved.once('value', (snapshot) => {
+                if (localStorage.getItem('digitalTwinWasEmpty') === 'false') { // The user has loaded a model in the current section
+                    swal({
+                        title: ('Do you want to delete the model '.concat(snapshot.val().lastLoadedModel)).concat(' ?'),
+                        text: 'Once deleted, the model will not be available for modifications anymore!',
+                        icon: 'warning',
+                        buttons: ['No', 'Yes'],
+                        dangerMode: true
+                    }).then((value) => {
+                        if (value) { // [Yes]
+                            refSavedModels.child(snapshot.val().lastLoadedModel).remove();
+                            refDevicesWithSubsystems.child(snapshot.val().lastLoadedModel).remove();
+                            swal({
+                                title: ('The model '.concat(snapshot.val().lastLoadedModel)).concat(' has been deleted successfully'),
+                                timer: LEVEL.THERE,
+                                button: false,
+                                icon: 'success'
+                            });
+                            setTimeout(() => {
+                                backend.syncCurrentModel(false); // With false as parameter, nothing is loaded into the digital twin after the synchronization
+                            }, LEVEL.THERE);
+                        }
+                        else { // [No]
+                            //console.log('Model remains stored in the database');
+                            swal({
+                                title: ('Do you want to load the model '.concat(snapshot.val().lastLoadedModel)).concat(' in its last saved version?'),
+                                icon: 'warning',
+                                buttons: ['No', 'Yes']
+                            }).then((value) => {
+                                if (value) { // Load model into the digital twin
+                                    backend.syncCurrentModel(); // Sync and load the last saved model
+                                }
+                                else { // Just sync the whole system
+                                    backend.syncCurrentModel(false);
+                                }
+                            });
+                        }
+                    });
+                }
+                else {
+                    if (backend.isDigitalTwinEmpty()) {
                         swal({
-                            title: ('The model '.concat(snapshot.val().lastLoadedModel)).concat(' has been deleted successfully'),
+                            title: 'The model in the digital environment is empty',
+                            text: 'Therefore, the model can not be saved',
                             timer: LEVEL.THERE,
                             button: false,
-                            icon: 'success'
+                            icon: 'error'
                         });
                         setTimeout(() => {
-                            backend.syncCurrentModel(false); // With false as parameter, nothing is loaded into the digital twin after the synchronization
+                            backend.syncCurrentModel(false);
                         }, LEVEL.THERE);
                     }
-                    else { // [No]
-                        //console.log('Model remains stored in the database');
+                    else {
                         swal({
-                            title: ('Do you want to load the model '.concat(snapshot.val().lastLoadedModel)).concat(' in its last saved version?'),
+                            title: 'Are you sure you want save the new model over the current one?',
+                            text: ('The model '.concat(snapshot.val().lastLoadedModel)).concat(' will be overwritten if you confirm this action.'),
                             icon: 'warning',
                             buttons: ['No', 'Yes']
                         }).then((value) => {
-                            if (value) { // Load model into the digital twin
-                                backend.syncCurrentModel(); // Sync and load the last saved model
+                            if (value) {
+                                auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel()); /* key:last_loaded_model,
+                                * value: current model on the digital twin */
+                                refSavedModels.update(auxSavedModels); // Update the current model on the database
+                                backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel()); /* The DevicesWithSubsystems.lastLoadedModel is overwritten
+                                                                                                            *  with the current information on the digital twin */
+                                swal({
+                                    title: 'The current model has been saved successfully',
+                                    timer: LEVEL.THERE,
+                                    button: false,
+                                    icon: 'success'
+                                });
+                                setTimeout(() => {
+                                    backend.syncCurrentModel();
+                                }, LEVEL.THERE);
                             }
-                            else { // Just sync the whole system
-                                backend.syncCurrentModel(false);
+                            else {
+                                swal({
+                                    title: 'The model '.concat(snapshot.val().lastLoadedModel).concat(' remains the same in the digital twin!'),
+                                    timer: LEVEL.THERE,
+                                    button: false,
+                                    icon: 'success'
+                                });
+                                setTimeout(() => {
+                                    backend.syncCurrentModel();
+                                }, LEVEL.THERE);
                             }
                         });
                     }
-                });
-            }
-            else {
-                if (backend.isDigitalTwinEmpty()) {
-                    swal({
-                        title: 'The model in the digital environment is empty',
-                        text: 'Therefore, the model can not be saved',
-                        timer: LEVEL.THERE,
-                        button: false,
-                        icon: 'error'
-                    });
-                    setTimeout(() => {
-                        backend.syncCurrentModel(false);
-                    }, LEVEL.THERE);
                 }
-                else {
-                    swal({
-                        title: 'Are you sure you want save the new model over the current one?',
-                        text: ('The model '.concat(snapshot.val().lastLoadedModel)).concat(' will be overwritten if you confirm this action.'),
-                        icon: 'warning',
-                        buttons: ['No', 'Yes']
-                    }).then((value) => {
-                        if (value) {
-                            auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel()); /* key:last_loaded_model,
-                            * value: current model on the digital twin */
-                            refSavedModels.update(auxSavedModels); // Update the current model on the database
-                            backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel()); /* The DevicesWithSubsystems.lastLoadedModel is overwritten
-                                                                                                           *  with the current information on the digital twin */
-                            swal({
-                                title: 'The current model has been saved successfully',
-                                timer: LEVEL.THERE,
-                                button: false,
-                                icon: 'success'
-                            });
-                            setTimeout(() => {
-                                backend.syncCurrentModel();
-                            }, LEVEL.THERE);
-                        }
-                        else {
-                            swal({
-                                title: 'The model '.concat(snapshot.val().lastLoadedModel).concat(' remains the same in the digital twin!'),
-                                timer: LEVEL.THERE,
-                                button: false,
-                                icon: 'success'
-                            });
-                            setTimeout(() => {
-                                backend.syncCurrentModel();
-                            }, LEVEL.THERE);
-                        }
-                    });
-                }
-            }
-        });
+            });
+        }
     };
 
     handleOpenSaveModelAs = () => { //It should be placed after getSavedModels

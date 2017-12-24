@@ -344,10 +344,5 @@ export function syncCurrentModel(isempty) {
 export function isDigitalTwinEmpty() {
     /* Every model contains an element @context (element with iot-lite information) and @graph (list of elements 
         regarding the devices and components set on the environment) */
-    if (DeviceStore.getModel()['@graph'].length === 0) {
-        return true;
-    }
-    else {
-        return false;
-    }
+    return (DeviceStore.getModel()['@graph'].length === 0);
 }

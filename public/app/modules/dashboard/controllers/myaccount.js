@@ -20,12 +20,6 @@ var at_context = {};
 var definitions = {};
 const DEFINITIONS_KEY = 'definitions';
 
-/* Clean the last model */
-const refInfo = firebase.database().ref('infoSavedModels');
-const auxInfoSaved = {};
-auxInfoSaved.lastLoadedModel = 'undefined';
-auxInfoSaved.lastSavedModel = 'undefined';
-refInfo.update(auxInfoSaved); // Updating the object on the database
 
 /*********************************************************/
 /************************ Objects ************************/
@@ -35,17 +29,17 @@ refInfo.update(auxInfoSaved); // Updating the object on the database
  * The default information should have all properies defined
  */
 function objContext(elementDefaultContext) {
-    this.geo = elementContext.geo;
-    this['m3-lite'] = elementContext['m3-lite'];
-    this.owl = elementContext.owl;
-    this.qu = elementContext.qu;
-    this['qu-rec20'] = elementContext['qu-rec20'];
-    this.rdf = elementContext.rdf;
-    this.rdfs = elementContext.rdfs;
-    this.ssn = elementContext.ssn;
-    this.time = elementContext.time;
-    this.xsd = elementContext.xsd;
-    this['iot-lite'] = elementContext['iot-lite'];
+    this.geo = elementDefaultContext.geo;
+    this['m3-lite'] = elementDefaultContext['m3-lite'];
+    this.owl = elementDefaultContext.owl;
+    this.qu = elementDefaultContext.qu;
+    this['qu-rec20'] = elementDefaultContext['qu-rec20'];
+    this.rdf = elementDefaultContext.rdf;
+    this.rdfs = elementDefaultContext.rdfs;
+    this.ssn = elementDefaultContext.ssn;
+    this.time = elementDefaultContext.time;
+    this.xsd = elementDefaultContext.xsd;
+    this['iot-lite'] = elementDefaultContext['iot-lite'];
     // For non-default information, another method is called
 }
 
