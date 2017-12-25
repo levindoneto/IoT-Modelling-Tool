@@ -165,7 +165,8 @@ export function fireAjaxImport(type, content) {
     });
 }
 
-export function fireAjaxSave(name, content, isBinding) {
+export function fireAjaxSave(name, content, isBinding, alertSave) {
+    const notShowAlert = alertSave | false;
     const thisIsBinding = isBinding | false; // If the user hasn't clicked <Bind> isBinding is undefined
     const params = {
         name,
@@ -225,7 +226,7 @@ export function fireAjaxSave(name, content, isBinding) {
     auxInfoSaved.lastSavedModel = params.name; // Save the id of the last saved model
     refInfoSaved.update(auxInfoSaved); // Update the info of the last saved on the database
 
-    if (!thisIsBinding) {
+    if (!thisIsBinding && !notShowAlert) {
         swal({
             title: 'The model has been saved successfully',
             button: false,
