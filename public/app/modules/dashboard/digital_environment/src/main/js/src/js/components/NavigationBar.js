@@ -46,15 +46,13 @@ refSavedModels.once('value', (snapSM) => {
 localStorage.setItem('digitalTwinWasEmpty', TRUE); // When the user opens the digital environment, it shall be always empty
 
 /* Just load the current model if the user has saved it right before */
-if (localStorage.getItem('loadLastModel') === TRUE && localStorage.getItem('loadTempModel') === FALSE) {
+if (localStorage.getItem('loadLastModel') === TRUE) {
     localStorage.setItem('loadLastModel', FALSE);
     refInfoSaved.once('value', (snapshot) => {           
         loadModel(snapshot.val().lastSavedModel);
     });  
 }
-
-/* Load the temporary model if the user was not able to save it */
-if (localStorage.getItem('loadTempModel') === TRUE) {
+else if (localStorage.getItem('loadTempModel') === TRUE) { // Load the temporary model if the user was not able to save it
     localStorage.setItem('loadTempModel', FALSE); // Used in order to load the non-saved model after the synchronization      
     loadModel(TEMP_MODEL);
 }
@@ -339,7 +337,7 @@ export default class NavigationBar extends React.Component {
             localStorage.setItem('isTemporaryModel', FALSE);
             let auxSavedModels = {};
             refInfoSaved.once('value', (snapshot) => {
-                if (localStorage.getItem('digitalTwinWasEmpty') === FALSE) { // The user has loaded a model in the current section
+                if (localStorage.getItem('digitalTwinWasEmpty') === FALSE && backend.isDigitalTwinEmpty()) { // The user has loaded a model in the current section
                     swal({
                         title: ('Do you want to delete the model '.concat(snapshot.val().lastLoadedModel)).concat(' ?'),
                         text: 'Once deleted, the model will not be available for modifications anymore!',
