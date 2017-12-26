@@ -5,6 +5,11 @@ import reactfire from 'reactfire';
 
 const RESTAPIADDRESS = 'http://192.168.209.176:8080/MBP';
 const TYPEADAPTER = '5a0f2a8b4f0c7363179e58e5'; // For tests
+const TRUE = 'true';
+const FALSE = 'false';
+const LOAD_LAST_MODEL = 'loadLastModel';
+const IS_SYNC = 'isSync'; /* Flag for knowing when the platform is just being syncrhonized
+* in order to not set a model during this process */
 
 /* Times' levels for hierarchical execution (ms) */
 const LEVEL = {
@@ -15,13 +20,14 @@ const LEVEL = {
     FIVE: 5000
 };
 
-//console.log('Triggering ...');
+
 const auxSavedModels = {};
 let accessedModel = {};
 const refTrig = firebase.database().ref('devicesWithSubsystems/');
 const refSavedModels = firebase.database().ref('savedModels/');
 
 refTrig.on('child_changed', (snapshot) => {
+    console.log('Triggering ...');
     refSavedModels.on('value', (savedM) => {
         accessedModel = JSON.parse(savedM.val()[snapshot.key]);
         for (let i = 0; i < (Object.keys(accessedModel[['@graph']])).length; i++) {
@@ -37,7 +43,9 @@ refTrig.on('child_changed', (snapshot) => {
     const updatedModelStr = JSON.stringify(accessedModel);
     auxSavedModels[snapshot.key] = updatedModelStr;
     refSavedModels.update(auxSavedModels); // Update the database
-    DeviceStore.setModel(accessedModel); // Update the digital twin
+    if (localStorage.getItem(IS_SYNC) !== TRUE) {
+        DeviceStore.setModel(accessedModel); // Update the digital twin
+    }
 });
 
 const defaultContentProps = [ // properties that won't be parsed
@@ -166,6 +174,7 @@ export function fireAjaxImport(type, content) {
 }
 
 export function fireAjaxSave(name, content, isBinding, alertSave) {
+    localStorage.setItem(IS_SYNC, FALSE); // Do not set a model before the synchronization
     const notShowAlert = alertSave | false;
     const thisIsBinding = isBinding | false; // If the user hasn't clicked <Bind> isBinding is undefined
     const params = {
@@ -182,6 +191,7 @@ export function fireAjaxSave(name, content, isBinding, alertSave) {
     const url = '/modtool/saveModel' + '?' + $.param(params);
     ref[params.name] = savedModelStr;
     
+    localStorage.setItem(IS_SYNC, TRUE);
     /* Save the key_model (saved one) as secondary root on Devices With Subsystems */
     auxDevSubSecRoot[params.name] = 'noConnections'; // It'll get all devices with subsystems on this model
     refDevicesWithSubsystems.update(auxDevSubSecRoot); // Update just works out with objects
@@ -332,7 +342,7 @@ export function syncCurrentModel(isempty) {
         if (!localStorage.getItem('firstLoad')) {
             localStorage.firstLoad = true;
             if (isempty !== false) { // Cases: non-empty save, save as and bind
-                localStorage.setItem('loadLastModel', 'true');
+                localStorage.setItem(LOAD_LAST_MODEL, 'true');
             }
             window.location.reload();
         }

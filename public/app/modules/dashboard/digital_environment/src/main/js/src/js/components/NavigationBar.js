@@ -25,6 +25,11 @@ const RESTAPIADDRESS = 'http://192.168.209.176:8080/MBP';
 const TEMP_MODEL = '__tmp_mdl_db__'; // key for accessing the temporary model in the database
 const TRUE = 'true';
 const FALSE = 'false';
+const IS_SYNC = 'isSync';
+const DIGITAL_TWIN_WAS_EMPTY = 'digitalTwinWasEmpty';
+const LOAD_LAST_MODEL = 'loadLastModel';
+const LOAD_TEMP_MODEL = 'loadTempModel';
+const IS_TEMPORARY_MODEL = 'isTemporaryModel';
 let savedModels = {};
 
 const style = {
@@ -43,17 +48,18 @@ refSavedModels.once('value', (snapSM) => {
 });
 
 
-localStorage.setItem('digitalTwinWasEmpty', TRUE); // When the user opens the digital environment, it shall be always empty
+localStorage.setItem(DIGITAL_TWIN_WAS_EMPTY, TRUE); // When the user opens the digital environment, it shall be always empty
+localStorage.setItem(IS_SYNC, FALSE);
 
 /* Just load the current model if the user has saved it right before */
-if (localStorage.getItem('loadLastModel') === TRUE) {
-    localStorage.setItem('loadLastModel', FALSE);
+if (localStorage.getItem(LOAD_LAST_MODEL) === TRUE) {
+    localStorage.setItem(LOAD_LAST_MODEL, FALSE);
     refInfoSaved.once('value', (snapshot) => {           
         loadModel(snapshot.val().lastSavedModel);
     });  
 }
-else if (localStorage.getItem('loadTempModel') === TRUE) { // Load the temporary model if the user was not able to save it
-    localStorage.setItem('loadTempModel', FALSE); // Used in order to load the non-saved model after the synchronization      
+else if (localStorage.getItem(LOAD_TEMP_MODEL) === TRUE) { // Load the temporary model if the user was not able to save it
+    localStorage.setItem(LOAD_TEMP_MODEL, FALSE); // Used in order to load the non-saved model after the synchronization      
     loadModel(TEMP_MODEL);
 }
 
@@ -94,11 +100,11 @@ function readSingleFile(e) {
 }
 
 function loadModel(key) {
-    localStorage.setItem('digitalTwinWasEmpty', TRUE); // The model is considered as empty always when a new one is loaded into the digital twin
+    localStorage.setItem(DIGITAL_TWIN_WAS_EMPTY, TRUE); // The model is considered as empty always when a new one is loaded into the digital twin
     const auxInfoSaved = {};
     refSavedModels.on('value', (snapshot) => {
         DeviceStore.setModel(JSON.parse(snapshot.val()[key]));
-        localStorage.setItem('isTemporaryModel', FALSE);
+        localStorage.setItem(IS_TEMPORARY_MODEL, FALSE);
         /* Save the info of the last loaded model */
         auxInfoSaved.lastLoadedModel = key;
         refInfoSaved.update(auxInfoSaved);
@@ -152,7 +158,8 @@ export default class NavigationBar extends React.Component {
         let auxKeysSavedModels = [];
         const ref = firebase.database().ref('savedModels/');
         ref.on('value', (snapshot) => { // The whole object savedModels with all the saved models
-            for (let saved in snapshot.val()) {
+            let saved;
+            for (saved in snapshot.val()) {
                 auxKeysSavedModels.push(saved);
             }
             this.setState({ savedModels: auxKeysSavedModels });
@@ -200,7 +207,7 @@ export default class NavigationBar extends React.Component {
     };
 
     bind = () => {
-        if (localStorage.getItem('isTemporaryModel') === TRUE) {
+        if (localStorage.getItem(IS_TEMPORARY_MODEL) === TRUE) {
             swal({
                 title: 'The temporary model must be saved before being bound',
                 text: 'Or another model can be loaded for binding',
@@ -213,7 +220,7 @@ export default class NavigationBar extends React.Component {
             }, LEVEL.THERE);
         }
         else {
-            localStorage.setItem('isTemporaryModel', FALSE);
+            localStorage.setItem(IS_TEMPORARY_MODEL, FALSE);
             if (backend.isDigitalTwinEmpty()) {
                 swal({
                     title: 'The model in the digital environment is empty',
@@ -295,7 +302,7 @@ export default class NavigationBar extends React.Component {
                 button: false,
                 timer: LEVEL.THERE
             });
-            localStorage.setItem('loadTempModel', TRUE); // Used in order to load the non-saved model after the synchronization
+            localStorage.setItem(LOAD_TEMP_MODEL, TRUE); // Used in order to load the non-saved model after the synchronization
             backend.fireAjaxSave(TEMP_MODEL, DeviceStore.getModel(), true); // Save the temporary model for loading with alertSave = true
             setTimeout(() => {
                 backend.syncCurrentModel();
@@ -330,14 +337,14 @@ export default class NavigationBar extends React.Component {
     };
 
     handleOpenSaveModel = () => {
-        if (localStorage.getItem('isTemporaryModel') === TRUE && !backend.isDigitalTwinEmpty()) {
+        if (localStorage.getItem(IS_TEMPORARY_MODEL) === TRUE && !backend.isDigitalTwinEmpty()) {
             this.setState({ openSaveModelAs: true });
         }
         else {
-            localStorage.setItem('isTemporaryModel', FALSE);
+            localStorage.setItem(IS_TEMPORARY_MODEL, FALSE);
             let auxSavedModels = {};
             refInfoSaved.once('value', (snapshot) => {
-                if (localStorage.getItem('digitalTwinWasEmpty') === FALSE && backend.isDigitalTwinEmpty()) { // The user has loaded a model in the current section
+                if (localStorage.getItem(DIGITAL_TWIN_WAS_EMPTY) === FALSE && backend.isDigitalTwinEmpty()) { // The user has loaded a model in the current section
                     swal({
                         title: ('Do you want to delete the model '.concat(snapshot.val().lastLoadedModel)).concat(' ?'),
                         text: 'Once deleted, the model will not be available for modifications anymore!',
@@ -419,9 +426,6 @@ export default class NavigationBar extends React.Component {
                                         button: false,
                                         icon: 'success'
                                     });
-                                    setTimeout(() => {
-                                        backend.syncCurrentModel();
-                                    }, LEVEL.THERE);
                                 }
                             });
                         }
@@ -435,7 +439,7 @@ export default class NavigationBar extends React.Component {
     };
 
     handleOpenSaveModelAs = () => { //It should be placed after getSavedModels
-        localStorage.setItem('isTemporaryModel', FALSE);
+        localStorage.setItem(IS_TEMPORARY_MODEL, FALSE);
         if (backend.isDigitalTwinEmpty()) {
             swal({
                 title: 'The model in the digital environment is empty',
