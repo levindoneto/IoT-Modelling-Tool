@@ -240,8 +240,6 @@ export default class NavigationBar extends React.Component {
                 const auxSavedModels = {};
                 let devicesWithSubsystems;
                 let mapTypeComp;
-                const isBinding = true; // Flag used in order to not alert that the user had the model saved and bound twice
-
                 /* Get devices with subsystems */
                 refInfoSaved.on('value', (snapshot) => {           
                     refDevsWithSubsystems.on('value', (devs) => {
@@ -258,7 +256,7 @@ export default class NavigationBar extends React.Component {
                     refInfoSaved.once('value', (snapshot) => {
                         auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel());
                         refSavedModels.update(auxSavedModels);
-                        backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel(), isBinding);
+                        backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel(), true, false, false);
                         var i; // Devices' iteractions
                         refDevsWithSubsystems.once('value', (snapdev) => { // Listener on devices with sensors/actuators (whole element)
                             for (i in snapdev.val()[snapshot.val().lastLoadedModel]) { // Access devices from the current loaded model
@@ -303,14 +301,18 @@ export default class NavigationBar extends React.Component {
                 timer: LEVEL.THERE
             });
             localStorage.setItem(LOAD_TEMP_MODEL, TRUE); // Used in order to load the non-saved model after the synchronization
-            backend.fireAjaxSave(TEMP_MODEL, DeviceStore.getModel(), true); // Save the temporary model for loading with alertSave = true
+            backend.fireAjaxSave(TEMP_MODEL, DeviceStore.getModel(), false, true, true); // Save the temporary model for loading with alertSave = true
+            
+            /*
             setTimeout(() => {
                 backend.syncCurrentModel();
             }, LEVEL.THERE);
+            */
+        
         }
         else {
             if (this.state.modelName !== '') {
-                response = backend.fireAjaxSave(this.state.modelName, DeviceStore.getModel());   
+                response = backend.fireAjaxSave(this.state.modelName, DeviceStore.getModel(), false, false, false);   
                 setTimeout(() => {
                     backend.syncCurrentModel();
                 }, LEVEL.THERE);
@@ -407,8 +409,8 @@ export default class NavigationBar extends React.Component {
                                     auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel()); /* key:last_loaded_model,
                                     * value: current model on the digital twin */
                                     refSavedModels.update(auxSavedModels); // Update the current model on the database
-                                    backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel()); /* The DevicesWithSubsystems.lastLoadedModel is overwritten
-                                                                                                                *  with the current information on the digital twin */
+                                    backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel(), false, false, falase); /* The DevicesWithSubsystems.lastLoadedModel is overwritten
+                                                                                                                                         *  with the current information on the digital twin */
                                     swal({
                                         title: 'The current model has been saved successfully',
                                         timer: LEVEL.THERE,
@@ -557,7 +559,7 @@ export default class NavigationBar extends React.Component {
                         <List>
                             {this.state.savedModels.map(model => (
                                 <ListItem
-                                    onClick={(e) => { loadModel(model); this.handleCloseLoadModel(); }}
+                                    onClick={() => { loadModel(model); this.handleCloseLoadModel(); }}
                                     key={this.state.savedModels.indexOf(model)}
                                     primaryText={model}
                                 />

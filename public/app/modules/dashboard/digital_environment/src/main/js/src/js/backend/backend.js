@@ -7,7 +7,10 @@ const RESTAPIADDRESS = 'http://192.168.209.176:8080/MBP';
 const TYPEADAPTER = '5a0f2a8b4f0c7363179e58e5'; // For tests
 const TRUE = 'true';
 const FALSE = 'false';
+const DIGITAL_TWIN_WAS_EMPTY = 'digitalTwinWasEmpty';
 const LOAD_LAST_MODEL = 'loadLastModel';
+const LOAD_TEMP_MODEL = 'loadTempModel';
+const IS_TEMPORARY_MODEL = 'isTemporaryModel';
 const IS_SYNC = 'isSync'; /* Flag for knowing when the platform is just being syncrhonized
 * in order to not set a model during this process */
 
@@ -25,6 +28,7 @@ const auxSavedModels = {};
 let accessedModel = {};
 const refTrig = firebase.database().ref('devicesWithSubsystems/');
 const refSavedModels = firebase.database().ref('savedModels/');
+const refTmp = firebase.database().ref('tmp/');
 
 refTrig.on('child_changed', (snapshot) => {
     console.log('Triggering ...');
@@ -173,7 +177,9 @@ export function fireAjaxImport(type, content) {
     });
 }
 
-export function fireAjaxSave(name, content, isBinding, alertSave) {
+export function fireAjaxSave(name, content, isBinding, alertSave, tmpSaving) {
+    console.log('IM SAVING');
+    console.log('tmpSaving: ', tmpSaving);
     localStorage.setItem(IS_SYNC, FALSE); // Do not set a model before the synchronization
     const notShowAlert = alertSave | false;
     const thisIsBinding = isBinding | false; // If the user hasn't clicked <Bind> isBinding is undefined
@@ -189,59 +195,64 @@ export function fireAjaxSave(name, content, isBinding, alertSave) {
     const auxInfoSaved = {};
     const auxContPropsSubsystem = {};
     const url = '/modtool/saveModel' + '?' + $.param(params);
-    ref[params.name] = savedModelStr;
-    
     localStorage.setItem(IS_SYNC, TRUE);
     /* Save the key_model (saved one) as secondary root on Devices With Subsystems */
     auxDevSubSecRoot[params.name] = 'noConnections'; // It'll get all devices with subsystems on this model
     refDevicesWithSubsystems.update(auxDevSubSecRoot); // Update just works out with objects
     
-    for (let i = 1; i < Object.keys(content['@graph']).length; i += 2) { // Get the odd keys to because they have the subsystem information
-        if (content['@graph'][i]['iot-lite:isSubSystemOf']['@id'] !== '') { // The content->subsystem is connected to a device
-            refDevicesWithSubsystems.on('value', (snapshot) => {
-                const keysModelsDevicesWithSubsystems = Object.keys(snapshot.val());
-                const value = content['@graph'][i]['ipvs:value'];
-                const typeId = content['@graph'][i]['@type'];
-                /* Get the additional properties on the content->subsytem */
-                for (var infoContent in content['@graph'][i]) {
-                    if (content['@graph'][i].hasOwnProperty(infoContent)) {
-                        if (verifyAddProp(infoContent)) {
-                            auxContPropsSubsystem[infoContent] = content['@graph'][i][infoContent];
+    if (!tmpSaving) {
+        for (let i = 1; i < Object.keys(content['@graph']).length; i += 2) { // Get the odd keys to because they have the subsystem information
+            if (content['@graph'][i]['iot-lite:isSubSystemOf']['@id'] !== '') { // The content->subsystem is connected to a device
+                refDevicesWithSubsystems.on('value', (snapshot) => {
+                    const keysModelsDevicesWithSubsystems = Object.keys(snapshot.val());
+                    const value = content['@graph'][i]['ipvs:value'];
+                    const typeId = content['@graph'][i]['@type'];
+                    /* Get the additional properties on the content->subsytem */
+                    for (var infoContent in content['@graph'][i]) {
+                        if (content['@graph'][i].hasOwnProperty(infoContent)) {
+                            if (verifyAddProp(infoContent)) {
+                                auxContPropsSubsystem[infoContent] = content['@graph'][i][infoContent];
+                            }
                         }
                     }
-                }
 
-                for (let modelWithDevs in keysModelsDevicesWithSubsystems) { // Depends on the number of subsystems (running on the database)
-                    const locationX = content['@graph'][i - 1]['geo:lat']; // The even key on the content has the location object
-                    const locationY = content['@graph'][i - 1]['geo:long'];
-                    
-                    /* The device has already a subsystem */
-                    if (snapshot.val()[params.name].toString() === content['@graph'][i]['iot-lite:isSubSystemOf']['@id']) {
-                        updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], locationX, locationY, auxContPropsSubsystem, value, typeId, i); //(model_key, device, subsystem): device.update(component)
-                    }
-                    else { // The device does not have a subsystem
-                        const auxNewDev = {};
-                        auxNewDev[content['@graph'][i]['iot-lite:isSubSystemOf']['@id']] = '';
-                        refDevicesWithSubsystems.update(auxNewDev);
-                        updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], locationX, locationY, auxContPropsSubsystem, value, typeId, i); //(model_key, device, subsystem): device.update(component)
-                    }
-                }  
+                    for (let modelWithDevs in keysModelsDevicesWithSubsystems) { // Depends on the number of subsystems (running on the database)
+                        const locationX = content['@graph'][i - 1]['geo:lat']; // The even key on the content has the location object
+                        const locationY = content['@graph'][i - 1]['geo:long'];
+                        
+                        /* The device has already a subsystem */
+                        if (snapshot.val()[params.name].toString() === content['@graph'][i]['iot-lite:isSubSystemOf']['@id']) {
+                            updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], locationX, locationY, auxContPropsSubsystem, value, typeId, i); //(model_key, device, subsystem): device.update(component)
+                        }
+                        else { // The device does not have a subsystem
+                            const auxNewDev = {};
+                            auxNewDev[content['@graph'][i]['iot-lite:isSubSystemOf']['@id']] = '';
+                            refDevicesWithSubsystems.update(auxNewDev);
+                            updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], locationX, locationY, auxContPropsSubsystem, value, typeId, i); //(model_key, device, subsystem): device.update(component)
+                        }
+                    }  
+                });
+            }
+        }
+        
+        let savedModelStr = JSON.stringify(content);
+        auxSavedModels[params.name] = savedModelStr;
+        ref.update(auxSavedModels); // Updating the database
+        auxInfoSaved.lastSavedModel = params.name; // Save the id of the last saved model
+        refInfoSaved.update(auxInfoSaved); // Update the info of the last saved on the database
+
+        if (!thisIsBinding && !notShowAlert) {
+            swal({
+                title: 'The model has been saved successfully',
+                button: false,
+                icon: 'success'
             });
         }
     }
-    
-    let savedModelStr = JSON.stringify(content);
-    auxSavedModels[params.name] = savedModelStr;
-    ref.update(auxSavedModels); // Updating the database
-    auxInfoSaved.lastSavedModel = params.name; // Save the id of the last saved model
-    refInfoSaved.update(auxInfoSaved); // Update the info of the last saved on the database
-
-    if (!thisIsBinding && !notShowAlert) {
-        swal({
-            title: 'The model has been saved successfully',
-            button: false,
-            icon: 'success'
-        });
+    else { 
+        let savedModelStr = JSON.stringify(content);
+        auxSavedModels[params.name] = savedModelStr;
+        refTmp.update(auxSavedModels); // Updating the database
     }
 }
 
