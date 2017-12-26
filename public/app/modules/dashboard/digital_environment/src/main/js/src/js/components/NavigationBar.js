@@ -30,6 +30,8 @@ const DIGITAL_TWIN_WAS_EMPTY = 'digitalTwinWasEmpty';
 const LOAD_LAST_MODEL = 'loadLastModel';
 const LOAD_TEMP_MODEL = 'loadTempModel';
 const IS_TEMPORARY_MODEL = 'isTemporaryModel';
+const DELETED_MODEL = '__del_model__'; /* Flag put in the infoSavedModels.lastLoadedModels in order 
+                                        * to not try to loaded a non-existant model from the database */
 let savedModels = {};
 
 const style = {
@@ -339,6 +341,7 @@ export default class NavigationBar extends React.Component {
     };
 
     handleOpenSaveModel = () => {
+        const auxInfoSaved = {};
         if (localStorage.getItem(IS_TEMPORARY_MODEL) === TRUE && !backend.isDigitalTwinEmpty()) {
             this.setState({ openSaveModelAs: true });
         }
@@ -346,7 +349,7 @@ export default class NavigationBar extends React.Component {
             localStorage.setItem(IS_TEMPORARY_MODEL, FALSE);
             let auxSavedModels = {};
             refInfoSaved.once('value', (snapshot) => {
-                if (localStorage.getItem(DIGITAL_TWIN_WAS_EMPTY) === FALSE && backend.isDigitalTwinEmpty()) { // The user has loaded a model in the current section
+                if (localStorage.getItem(DIGITAL_TWIN_WAS_EMPTY) === FALSE && backend.isDigitalTwinEmpty() && snapshot.val().lastLoadedModel !== DELETED_MODEL && snapshot.val().lastLoadedModel !== DELETED_MODEL) { // The user has loaded a model in the current section
                     swal({
                         title: ('Do you want to delete the model '.concat(snapshot.val().lastLoadedModel)).concat(' ?'),
                         text: 'Once deleted, the model will not be available for modifications anymore!',
@@ -355,6 +358,9 @@ export default class NavigationBar extends React.Component {
                         dangerMode: true
                     }).then((value) => {
                         if (value) { // [Yes]
+                            auxInfoSaved.lastLoadedModel = DELETED_MODEL;
+                            auxInfoSaved.lastSavedModel = DELETED_MODEL;
+                            refInfoSaved.update(auxInfoSaved);
                             refSavedModels.child(snapshot.val().lastLoadedModel).remove();
                             refDevicesWithSubsystems.child(snapshot.val().lastLoadedModel).remove();
                             swal({
@@ -398,7 +404,7 @@ export default class NavigationBar extends React.Component {
                         }, LEVEL.THERE);
                     }
                     else {
-                        if (snapshot.val().lastLoadedModel !== TEMP_MODEL) { // The temp model is not supposed to be overwritten this way
+                        if (snapshot.val().lastLoadedModel !== TEMP_MODEL && snapshot.val().lastLoadedModel !== DELETED_MODEL && snapshot.val().lastLoadedModel !== DELETED_MODEL) { // The temp model is not supposed to be overwritten this way
                             swal({
                                 title: 'Are you sure you want save the new model over the current one?',
                                 text: ('The model '.concat(snapshot.val().lastLoadedModel)).concat(' will be overwritten if you confirm this action.'),
@@ -409,7 +415,7 @@ export default class NavigationBar extends React.Component {
                                     auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel()); /* key:last_loaded_model,
                                     * value: current model on the digital twin */
                                     refSavedModels.update(auxSavedModels); // Update the current model on the database
-                                    backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel(), false, false, falase); /* The DevicesWithSubsystems.lastLoadedModel is overwritten
+                                    backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel(), false, false, false); /* The DevicesWithSubsystems.lastLoadedModel is overwritten
                                                                                                                                          *  with the current information on the digital twin */
                                     swal({
                                         title: 'The current model has been saved successfully',

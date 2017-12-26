@@ -31,7 +31,7 @@ const refSavedModels = firebase.database().ref('savedModels/');
 const refTmp = firebase.database().ref('tmp/');
 
 refTrig.on('child_changed', (snapshot) => {
-    console.log('Triggering ...');
+    //console.log('Triggering ...');
     refSavedModels.on('value', (savedM) => {
         accessedModel = JSON.parse(savedM.val()[snapshot.key]);
         for (let i = 0; i < (Object.keys(accessedModel[['@graph']])).length; i++) {
@@ -178,8 +178,6 @@ export function fireAjaxImport(type, content) {
 }
 
 export function fireAjaxSave(name, content, isBinding, alertSave, tmpSaving) {
-    console.log('IM SAVING');
-    console.log('tmpSaving: ', tmpSaving);
     localStorage.setItem(IS_SYNC, FALSE); // Do not set a model before the synchronization
     const notShowAlert = alertSave | false;
     const thisIsBinding = isBinding | false; // If the user hasn't clicked <Bind> isBinding is undefined
