@@ -32,6 +32,7 @@ const LOAD_TEMP_MODEL = 'loadTempModel';
 const IS_TEMPORARY_MODEL = 'isTemporaryModel';
 const DELETED_MODEL = '__del_model__'; /* Flag put in the infoSavedModels.lastLoadedModels in order 
                                         * to not try to loaded a non-existant model from the database */
+const UNDEFINED = 'undefined';
 let savedModels = {};
 
 const style = {
@@ -209,76 +210,78 @@ export default class NavigationBar extends React.Component {
     };
 
     bind = () => {
-        if (localStorage.getItem(IS_TEMPORARY_MODEL) === TRUE) {
-            swal({
-                title: 'The temporary model must be saved before being bound',
-                text: 'Or another model can be loaded for binding',
-                icon: 'warning',
-                button: false,
-                time: LEVEL.THERE
-            });
-            setTimeout(() => {
-                backend.syncCurrentModel(false);
-            }, LEVEL.THERE);
-        }
-        else {
-            localStorage.setItem(IS_TEMPORARY_MODEL, FALSE);
-            if (backend.isDigitalTwinEmpty()) {
+        refInfoSaved.once('value', (snapshot) => {
+            if (localStorage.getItem(IS_TEMPORARY_MODEL) === TRUE || snapshot.val().lastLoadedModel === UNDEFINED) { // FIXME
                 swal({
-                    title: 'The model in the digital environment is empty',
-                    text: 'Therefore, the model can not be bound',
-                    timer: LEVEL.THERE,
+                    title: 'The temporary model must be saved before being bound',
+                    text: 'Or another model can be loaded for binding',
+                    icon: 'warning',
                     button: false,
-                    icon: 'error'
+                    time: LEVEL.THERE
                 });
                 setTimeout(() => {
                     backend.syncCurrentModel(false);
                 }, LEVEL.THERE);
             }
             else {
-                const refSavedModels = firebase.database().ref('savedModels/');
-                const refDevsWithSubsystems = firebase.database().ref('devicesWithSubsystems');
-                const refMapTypeComponents = firebase.database().ref('mapTypeComponents');
-                const auxSavedModels = {};
-                let devicesWithSubsystems;
-                let mapTypeComp;
-                /* Get devices with subsystems */
-                refInfoSaved.on('value', (snapshot) => {           
-                    refDevsWithSubsystems.on('value', (devs) => {
-                        devicesWithSubsystems = devs.val()[snapshot.val().lastLoadedModel];
+                localStorage.setItem(IS_TEMPORARY_MODEL, FALSE);
+                if (backend.isDigitalTwinEmpty()) {
+                    swal({
+                        title: 'The model in the digital environment is empty',
+                        text: 'Therefore, the model can not be bound',
+                        timer: LEVEL.THERE,
+                        button: false,
+                        icon: 'error'
                     });
-                });
-
-                refMapTypeComponents.once('value', (map) => {
-                    mapTypeComp = map.val();
-                });
-                
-                /* Bind devices/components from the database */
-                setTimeout(() => {
-                    refInfoSaved.once('value', (snapshot) => {
-                        auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel());
-                        refSavedModels.update(auxSavedModels);
-                        backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel(), true, false, false);
-                        var i; // Devices' iteractions
-                        refDevsWithSubsystems.once('value', (snapdev) => { // Listener on devices with sensors/actuators (whole element)
-                            for (i in snapdev.val()[snapshot.val().lastLoadedModel]) { // Access devices from the current loaded model
-                                //console.log('Register the device <', i, '>');
-                                //console.log('i: ', i);
-                                backend.bindDevice(i, '123456789067', '192.168.0.34', '12-34-56-78-90-67', RESTAPIADDRESS, devicesWithSubsystems[i], mapTypeComp, backend.bindDevice);
-                            }
+                    setTimeout(() => {
+                        backend.syncCurrentModel(false);
+                    }, LEVEL.THERE);
+                }
+                else {
+                    const refSavedModels = firebase.database().ref('savedModels/');
+                    const refDevsWithSubsystems = firebase.database().ref('devicesWithSubsystems');
+                    const refMapTypeComponents = firebase.database().ref('mapTypeComponents');
+                    const auxSavedModels = {};
+                    let devicesWithSubsystems;
+                    let mapTypeComp;
+                    /* Get devices with subsystems */
+                    refInfoSaved.on('value', (snapshot) => {           
+                        refDevsWithSubsystems.on('value', (devs) => {
+                            devicesWithSubsystems = devs.val()[snapshot.val().lastLoadedModel];
                         });
                     });
-                }, LEVEL.TWO); // After getting the mapping and the subsystems
-                swal({
-                    title: 'The model has been saved and bound successfully',
-                    button: false,
-                    icon: 'success'
-                });     
-                setTimeout(() => {
-                    backend.syncCurrentModel();
-                }, LEVEL.THERE);
+
+                    refMapTypeComponents.once('value', (map) => {
+                        mapTypeComp = map.val();
+                    });
+                    
+                    /* Bind devices/components from the database */
+                    setTimeout(() => {
+                        refInfoSaved.once('value', (snapshot) => {
+                            auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel());
+                            refSavedModels.update(auxSavedModels);
+                            backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel(), true, false, false);
+                            var i; // Devices' iteractions
+                            refDevsWithSubsystems.once('value', (snapdev) => { // Listener on devices with sensors/actuators (whole element)
+                                for (i in snapdev.val()[snapshot.val().lastLoadedModel]) { // Access devices from the current loaded model
+                                    //console.log('Register the device <', i, '>');
+                                    //console.log('i: ', i);
+                                    backend.bindDevice(i, '123456789067', '192.168.0.34', '12-34-56-78-90-67', RESTAPIADDRESS, devicesWithSubsystems[i], mapTypeComp, backend.bindDevice);
+                                }
+                            });
+                        });
+                    }, LEVEL.TWO); // After getting the mapping and the subsystems
+                    swal({
+                        title: 'The model has been saved and bound successfully',
+                        button: false,
+                        icon: 'success'
+                    });     
+                    setTimeout(() => {
+                        backend.syncCurrentModel();
+                    }, LEVEL.THERE);
+                }
             }
-        }
+        });
     };
 
     handleOpenHelp = () => {
@@ -342,13 +345,13 @@ export default class NavigationBar extends React.Component {
 
     handleOpenSaveModel = () => {
         const auxInfoSaved = {};
-        if (localStorage.getItem(IS_TEMPORARY_MODEL) === TRUE && !backend.isDigitalTwinEmpty()) {
-            this.setState({ openSaveModelAs: true });
-        }
-        else {
-            localStorage.setItem(IS_TEMPORARY_MODEL, FALSE);
-            let auxSavedModels = {};
-            refInfoSaved.once('value', (snapshot) => {
+        refInfoSaved.once('value', (snapshot) => {
+            if ((localStorage.getItem(IS_TEMPORARY_MODEL) === TRUE || snapshot.val().lastLoadedModel === UNDEFINED) && !backend.isDigitalTwinEmpty()) {
+                this.setState({ openSaveModelAs: true });
+            }
+            else {
+                localStorage.setItem(IS_TEMPORARY_MODEL, FALSE);
+                let auxSavedModels = {};
                 if (localStorage.getItem(DIGITAL_TWIN_WAS_EMPTY) === FALSE && backend.isDigitalTwinEmpty() && snapshot.val().lastLoadedModel !== DELETED_MODEL && snapshot.val().lastLoadedModel !== DELETED_MODEL) { // The user has loaded a model in the current section
                     swal({
                         title: ('Do you want to delete the model '.concat(snapshot.val().lastLoadedModel)).concat(' ?'),
@@ -413,10 +416,10 @@ export default class NavigationBar extends React.Component {
                             }).then((value) => {
                                 if (value) {
                                     auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel()); /* key:last_loaded_model,
-                                    * value: current model on the digital twin */
+                                                                                                                              * value: current model on the digital twin */
                                     refSavedModels.update(auxSavedModels); // Update the current model on the database
                                     backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel(), false, false, false); /* The DevicesWithSubsystems.lastLoadedModel is overwritten
-                                                                                                                                         *  with the current information on the digital twin */
+                                                                                                                                        *  with the current information on the digital twin */
                                     swal({
                                         title: 'The current model has been saved successfully',
                                         timer: LEVEL.THERE,
@@ -442,8 +445,8 @@ export default class NavigationBar extends React.Component {
                         }
                     }
                 }
-            });
-        }
+            }
+        });
     };
 
     handleOpenSaveModelAs = () => { //It should be placed after getSavedModels
