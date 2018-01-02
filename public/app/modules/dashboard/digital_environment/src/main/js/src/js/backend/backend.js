@@ -282,7 +282,7 @@ export function fireAjaxShow() {
 export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, apiAddress, pinConfig) {
     let p;
     let valuesPins = '';
-    for (p = 0; p < pinConfig.length-1; p++) { // -1 because the comma must not be concatenate to the last pin
+    for (p = 0; p < pinConfig.length - 1; p++) { // -1 because the comma must not be concatenate to the last pin
         valuesPins = (valuesPins.concat(pinConfig[p])).concat(',');
     }
     valuesPins = valuesPins.concat(pinConfig[pinConfig.length - 1]); // Add the last pin to the string of pins without a comma in the end
@@ -336,10 +336,16 @@ export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddre
         console.log('The device has been posted successfully\nId on the MBP Platform: : ', device.id);
             let c; 
             for (c in subsystems) { // Iterate in all the components in the device
-                //console.log('c: ', c);
+                let pinConf;
                 let prefix = subsystems[c][Object.keys(subsystems[c])[0]]['@type'].split(':')[0];
                 let idWithoutPrefix = subsystems[c][Object.keys(subsystems[c])[0]]['@type'].split(':')[1];
-                let pinConf = subsystems[c][Object.keys(subsystems[c])[0]][(prefix.concat(':').concat('pinConfiguration'))];
+                // If the element component has pin configuration already set up
+                if (prefix.concat(':').concat('pinConfiguration') in subsystems[c][Object.keys(subsystems[c])[0]]) {
+                    pinConf = subsystems[c][Object.keys(subsystems[c])[0]][(prefix.concat(':').concat('pinConfiguration'))];
+                } 
+                else {
+                    pinConf = {}; // pinset shall be equals to empty for the deployment in case of null pinConfiguration
+                }
                 bindComponent(Object.keys(subsystems[c])[0], mapTypeComp[idWithoutPrefix], TYPEADAPTER, device.id, RESTAPIADDRESS, pinConf);
             }
         return callback(); // Bind the next device, if there are more than one device on the digital twin

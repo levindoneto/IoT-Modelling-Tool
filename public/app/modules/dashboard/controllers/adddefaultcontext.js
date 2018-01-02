@@ -9,7 +9,7 @@ dashboard.controller("adddefaultcontextController", ['$rootScope', '$scope', '$s
             contextList.$loaded().then(function () {
                 contextList.$add(context).then(function (ref) {
                     swal({
-                        title: "The default context has been added with sucess!",
+                        title: 'The default context has been added with sucess!',
                         timer: 1700,
                         button: false,
                         icon: 'success'
