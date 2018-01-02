@@ -28,7 +28,7 @@
             <center>
                 <h3 class="Titlemyaccount">User as Admin</h3>
                 <label class="switch">
-                    <input type="checkbox" ng-model="user.isAdmin" ng-value="user.isAdmin">
+                    <input type="checkbox" ng-model="user.isAdmin" ng-value="user.isAdmin" ng-change="updateAdminInfoDB(user.$id, user.isAdmin)">
                     <span class="slider round"></span>
                 </label>
             </center>

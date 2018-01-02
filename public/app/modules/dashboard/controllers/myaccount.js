@@ -654,6 +654,13 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
             $scope.defaultGraphIsSet = true;
         }
     }
+    
+    $scope.updateAdminInfoDB = function (userId, isAdmin) {
+        var refUser = firebase.database().ref('users/' + userId); 
+        let auxUserAdmin = {}; // isAdmin: Boolean
+        auxUserAdmin.isAdmin = isAdmin;
+        refUser.update(auxUserAdmin);
+    }
 
     $scope.editFormSubmit = function () {
         var user = firebase.auth().currentUser;
