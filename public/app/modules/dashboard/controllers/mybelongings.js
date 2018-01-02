@@ -3,11 +3,8 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
     function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray) {
         var vm = this;
         const defaultCompDevProps = [
-            'id',
             'imageFile',
-            'ontology',
             'prefixCompany',
-            'rdfsComment',
             'type',
             'userUid'];
         var ref = firebase.database().ref('models/');
@@ -36,7 +33,7 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
         }
 
         $scope.modal = function (model) {
-            var ref = firebase.database().ref('images/' + model.imageFile);
+            var ref = firebase.database().ref(`images/${model.imageFile}`);
             var imageObj = $firebaseObject(ref);
             imageObj.$loaded().then(() => {
                 $scope.imagemodel = imageObj.$value;
@@ -68,9 +65,9 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
                                             icon: 'success'
                                         });
                                     },
-                                        (error) => {
-                                            console.log('Error:', error);
-                                        });
+                                    (error) => {
+                                        console.log('Error:', error);
+                                    });
                                 });
                                 dcObject.$loaded().then(() => {
                                     dcObject.$remove().then(() => {
