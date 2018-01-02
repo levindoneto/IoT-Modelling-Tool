@@ -139,7 +139,7 @@ $scope.readNotification = function(){
     ];
 
 
-    //Main menu items of the dashboard
+    // Admins' menu items
     vm.menuItems = [
         {
             title: 'My Account',
@@ -178,6 +178,40 @@ $scope.readNotification = function(){
         },
         {
             title: 'Add Device',  // Can be devices, actuators or sensors
+            icon: 'plus-circle',
+            state: 'addbelonging'
+        },
+        {
+            title: 'My Devices',
+            icon: 'thermometer-three-quarters',
+            state: 'mybelongings'
+        },
+        {
+            title: 'Add Additional Properties',
+            icon: 'puzzle-piece',
+            state: 'addadditionalproperties'
+        },
+        {
+            title: 'Search',
+            icon: 'search',
+            state: 'search'
+        },
+    ];
+
+    // Normal users' menu items
+    vm.menuItemsNormalUser = [
+        {
+            title: 'My Account',
+            icon: 'user',
+            state: 'myaccount'
+        },
+        {
+            title: 'IoT Modelling Environment',
+            icon: 'fa fa-home',
+            state: 'digitalenvironment'
+        },
+        {
+            title: 'Add Device', 
             icon: 'plus-circle',
             state: 'addbelonging'
         },
