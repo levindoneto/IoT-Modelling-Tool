@@ -13,7 +13,11 @@
     <select ng-model="filter" >
         <option class="BoxInput" value="name">Id
         </option>
-        <option class="BoxInput" value="NumberOfPins">Number of Pins
+        <option class="BoxInput" value="prefix">Prefix
+        </option>
+        <option class="BoxInput" value="rdfsComment">Ontology
+        </option>
+        <option class="BoxInput" value="rdfsComment">RDFS Comment
         </option>
         <option class="BoxInput" value="type">Type
         </option>
@@ -36,7 +40,10 @@
 
         <input type="text" name="q" class="form-control" placeholder="Search..." ng-model="searchBar">
         <span class="input-group-btn">
-            <button type="submit" name="search" id="search-btn" class="btn btn-flat" data-ng-click="search(searchBar);"><i class=" fa fa-search"></i></button>
+            <button 
+                type="submit" name="search" id="search-btn" class="btn btn-flat" data-ng-click="search(searchBar);">
+                <i class=" fa fa-search"></i>
+            </button>
         </span>
     </div>
 </form>
@@ -101,17 +108,27 @@
 <div class="box-content">
     <div class="panel panel-default">
         <ul style="list-style-type: none;">
-            <li ng-if="filter == 'name'" ng-repeat="model in models  | filter:{ id: searchItem ,  userUid: '!' + userDB.uid}:false  | orderBy:'name':(reverseOrder == 'true')" > <!-- models is a list  provided by the controller-->
+            <li ng-if="filter == 'name'" ng-repeat="model in models | filter:{ id: searchItem ,  userUid: '!' + userDB.uid}:false  | orderBy:['prefixCompany','id']:(reverseOrder == 'true')" > <!-- models is a list  provided by the controller-->
                 <h3>
                     <b>{{model.prefixCompany}}:</b> {{model.id}} <button  data-toggle="modal" data-target="#popUp" type="button" ng-click="modal(model)"  class=" fa fa-info-circle DetailsmodelSearch"></button> <button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"></button>
                 </h3>
             </li>
-            <li ng-if="filter == 'NumberOfPins'" ng-repeat="model in models | filter:{ NumberOfPins: searchItem ,  userUid: '!' + userDB.uid}:false  | orderBy:'NumberOfPins':(reverseOrder == 'true')" > <!-- models is a list  provided by the controller-->
+            <li ng-if="filter == 'ontology'" ng-repeat="model in models | filter:{ ontology: searchItem ,  userUid: '!' + userDB.uid}:false  | orderBy:['prefixCompany','id']:(reverseOrder == 'true')" > <!-- models is a list  provided by the controller-->
                 <h3>
-                    <b>{{model.prefixCompany}:}</b> {{model.id}} <button  data-toggle="modal" data-target="#popUp" type="button" ng-click="modal(model)" class="fa fa-info-circle DetailsmodelSearch"></button> <button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"></button>
+                    <b>{{model.prefixCompany}}:</b> {{model.id}} <button  data-toggle="modal" data-target="#popUp" type="button" ng-click="modal(model)" class="fa fa-info-circle DetailsmodelSearch"></button> <button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"></button>
                 </h3>
             </li>
-            <li ng-if="filter == 'type'" ng-repeat="model in models | filter:{ type: searchItem ,  userUid: '!' + userDB.uid}:false | orderBy:'device':(reverseOrder == 'true')" > <!-- models is a list  provided by the controller-->
+            <li ng-if="filter == 'prefix'" ng-repeat="model in models | filter:{ ontology: searchItem ,  userUid: '!' + userDB.uid}:false  | orderBy:['prefixCompany','id']:(reverseOrder == 'true')" > <!-- models is a list  provided by the controller-->
+                <h3>
+                    <b>{{model.prefixCompany}}:</b> {{model.id}} <button  data-toggle="modal" data-target="#popUp" type="button" ng-click="modal(model)" class="fa fa-info-circle DetailsmodelSearch"></button> <button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"></button>
+                </h3>
+            </li>
+            <li ng-if="filter == 'rdfsComment'" ng-repeat="model in models | filter:{ rdfsComment: searchItem ,  userUid: '!' + userDB.uid}:false | orderBy:['prefixCompany','id']:(reverseOrder == 'true')" > <!-- models is a list  provided by the controller-->
+                <h3>
+                    <b>{{model.prefixCompany}}:</b> {{model.id}} <button  data-toggle="modal" data-target="#popUp"  type="button" ng-click="modal(model)"  class="fa fa-info-circle DetailsmodelSearch"></button> <button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"></button>
+                </h3>
+            </li>
+            <li ng-if="filter == 'type'" ng-repeat="model in models | filter:{ type: searchItem ,  userUid: '!' + userDB.uid}:false | orderBy:['prefixCompany','id']:(reverseOrder == 'true')" > <!-- models is a list  provided by the controller-->
                 <h3>
                     <b>{{model.prefixCompany}}:</b> {{model.id}} <button  data-toggle="modal" data-target="#popUp"  type="button" ng-click="modal(model)"  class="fa fa-info-circle DetailsmodelSearch"></button> <button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"></button>
                 </h3>
