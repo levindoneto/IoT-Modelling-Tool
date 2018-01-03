@@ -17,6 +17,7 @@
         </option>
         <option class="BoxInput" value="type">Type
         </option>
+        
     </select>
 </div>
 <br>
@@ -50,11 +51,24 @@
             </div>
             <div class="modal-body">
                 <h3 align="center">
-                    <span class="MyInfo"> Icon: </span>
-                    <img class="ImgSearch" src="{{imagemodel}}" height=auto width=100% /><br>
+                    <span class="MyInfo"> Icon: </span></br>
+                    <img class="ImgSearch" src="{{imagemodel}}" height=100% width=auto /><br>
                     <span class="MyInfo"> Id: </span> <span class="MyInfoP"> {{modalmodel.id}} </span></br>
-                    <span class="MyInfo"> Type: </span> <span class="MyInfoP"> {{modalmodel.type}} </span></br>
-                    <span class="MyInfo"> Number of Pins: </span> <span class="MyInfoP"> {{modalmodel.NumberOfPins}} </span></br>
+                    <span class="MyInfo"> Ontology: </span> <span class="MyInfoP"> {{modalmodel.ontology}} </span></br>
+                    <span class="MyInfo"> RDFS Comment: </span> <span class="MyInfoP"> {{modalmodel.rdfsComment}} </span></br>
+                    <span class="MyInfo"> Type: </span>
+                    <span ng-if="modalmodel.type == 'Device'" class="MyInfoP">
+                        Device(s)
+                    </span>
+                    <span ng-if="modalmodel.type == 'SensingDevice'" class="MyInfoP">
+                        Sensor(s)
+                    </span>                            
+                    <span ng-if="modalmodel.type == 'ActuatingDevice'" class="MyInfoP">
+                        Actuator(s)
+                    </span>   
+                    <span ng-if="modalmodel.type != 'Device' && modalmodel.type != 'SensingDevice' && modalmodel.type != 'ActuatingDevice'" class="MyInfoP">
+                        {{modalmodel.type}}
+                    </span></br>
                 </h3>
             </div>
             <div class="modal-footer">
@@ -89,17 +103,17 @@
         <ul style="list-style-type: none;">
             <li ng-if="filter == 'name'" ng-repeat="model in models  | filter:{ id: searchItem ,  userUid: '!' + userDB.uid}:false  | orderBy:'name':(reverseOrder == 'true')" > <!-- models is a list  provided by the controller-->
                 <h3>
-                    {{model.id}} | {{model.type}} <button  data-toggle="modal" data-target="#popUp" type="button" ng-click="modal(model)"  class=" fa fa-info-circle DetailsmodelSearch"></button> <button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"></button>
+                    <b>{{model.prefixCompany}}:</b> {{model.id}} <button  data-toggle="modal" data-target="#popUp" type="button" ng-click="modal(model)"  class=" fa fa-info-circle DetailsmodelSearch"></button> <button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"></button>
                 </h3>
             </li>
             <li ng-if="filter == 'NumberOfPins'" ng-repeat="model in models | filter:{ NumberOfPins: searchItem ,  userUid: '!' + userDB.uid}:false  | orderBy:'NumberOfPins':(reverseOrder == 'true')" > <!-- models is a list  provided by the controller-->
                 <h3>
-                        {{model.id}} | {{model.type}} <button  data-toggle="modal" data-target="#popUp" type="button" ng-click="modal(model)" class="fa fa-info-circle DetailsmodelSearch"></button> <button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"></button>
+                    <b>{{model.prefixCompany}:}</b> {{model.id}} <button  data-toggle="modal" data-target="#popUp" type="button" ng-click="modal(model)" class="fa fa-info-circle DetailsmodelSearch"></button> <button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"></button>
                 </h3>
             </li>
             <li ng-if="filter == 'type'" ng-repeat="model in models | filter:{ type: searchItem ,  userUid: '!' + userDB.uid}:false | orderBy:'device':(reverseOrder == 'true')" > <!-- models is a list  provided by the controller-->
                 <h3>
-                    {{model.id}} | {{model.type}} <button  data-toggle="modal" data-target="#popUp"  type="button" ng-click="modal(model)"  class="fa fa-info-circle DetailsmodelSearch"></button> <button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"></button>
+                    <b>{{model.prefixCompany}}:</b> {{model.id}} <button  data-toggle="modal" data-target="#popUp"  type="button" ng-click="modal(model)"  class="fa fa-info-circle DetailsmodelSearch"></button> <button  data-toggle="modal" data-target="#popUpUser" type="button" ng-click="modalUserDetail(model)"  class="fa fa-user DetailsUserSearch"></button>
                 </h3>
             </li>
         </ul>
