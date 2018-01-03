@@ -188,11 +188,13 @@ export function fireAjaxSave(name, content, isBinding, alertSave, tmpSaving) {
     const ref = firebase.database().ref('savedModels/');
     const refInfoSaved = firebase.database().ref('infoSavedModels');
     const refDevicesWithSubsystems = firebase.database().ref('devicesWithSubsystems/');
-    const auxDevSubSecRoot = {}; // For the saved models as secondary roots
-    const auxSavedModels = {};
-    const auxInfoSaved = {};
-    const auxContPropsSubsystem = {};
     const url = '/modtool/saveModel' + '?' + $.param(params);
+    let auxDevSubSecRoot = {}; // For the saved models as secondary roots
+    let auxSavedModels = {}; // All the saved models
+    let auxNewModel = {}; // Elements: content and user who added the model
+    let auxInfoSaved = {};
+    let auxContPropsSubsystem = {};
+    
     localStorage.setItem(IS_SYNC, TRUE);
     /* Save the key_model (saved one) as secondary root on Devices With Subsystems */
     auxDevSubSecRoot[params.name] = 'noConnections'; // It'll get all devices with subsystems on this model
@@ -233,8 +235,9 @@ export function fireAjaxSave(name, content, isBinding, alertSave, tmpSaving) {
             }
         }
         
-        let savedModelStr = JSON.stringify(content);
-        auxSavedModels[params.name] = savedModelStr;
+        auxNewModel.user = localStorage.getItem('loggedUser');
+        auxNewModel.content = JSON.stringify(content);
+        auxSavedModels[params.name] = auxNewModel;
         ref.update(auxSavedModels); // Updating the database
         auxInfoSaved.lastSavedModel = params.name; // Save the id of the last saved model
         refInfoSaved.update(auxInfoSaved); // Update the info of the last saved on the database

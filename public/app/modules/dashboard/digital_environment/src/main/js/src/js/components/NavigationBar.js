@@ -34,6 +34,7 @@ const DELETED_MODEL = '__del_model__'; /* Flag put in the infoSavedModels.lastLo
                                         * to not try to loaded a non-existant model from the database */
 const UNDEFINED = 'undefined';
 let savedModels = {};
+let savedModelsLoggedUser = {}; // Models which have been added by the user who is logged in the platform
 
 const style = {
     display: 'inline-block',
@@ -47,7 +48,13 @@ const subHeaderStyle = {
 
 /* Get the saved models and put them in a element for consultation of existent keys */
 refSavedModels.once('value', (snapSM) => {
+    let i;
     savedModels = snapSM.val();
+    for (i in snapSM.val()) {
+        if (snapSM.val()[i].user === localStorage.getItem('loggedUser')) {
+            savedModelsLoggedUser[i] = snapSM.val()[i].content;
+        }   
+    }
 });
 
 
@@ -106,7 +113,7 @@ function loadModel(key) {
     localStorage.setItem(DIGITAL_TWIN_WAS_EMPTY, TRUE); // The model is considered as empty always when a new one is loaded into the digital twin
     const auxInfoSaved = {};
     refSavedModels.on('value', (snapshot) => {
-        DeviceStore.setModel(JSON.parse(snapshot.val()[key]));
+        DeviceStore.setModel(JSON.parse(snapshot.val()[key].content));
         localStorage.setItem(IS_TEMPORARY_MODEL, FALSE);
         /* Save the info of the last loaded model */
         auxInfoSaved.lastLoadedModel = key;
@@ -150,6 +157,7 @@ export default class NavigationBar extends React.Component {
             modelName: '',
             modeType: '',
             savedModels: [],
+            savedModelsLoggedUser: [],
             saveButtonDisabled: true,
             errorText: null,
             snackBarSaveOpen: false
@@ -159,13 +167,18 @@ export default class NavigationBar extends React.Component {
     /* Open UI when the user clicks on the Load button */
     getSavedModels = () => {
         let auxKeysSavedModels = [];
+        let auxKeysSavedModelsLoggedUser = [];
         const ref = firebase.database().ref('savedModels/');
         ref.on('value', (snapshot) => { // The whole object savedModels with all the saved models
             let saved;
             for (saved in snapshot.val()) {
+                if (snapshot.val()[saved].user === localStorage.getItem('loggedUser')) {
+                    auxKeysSavedModelsLoggedUser.push(saved);
+                }
                 auxKeysSavedModels.push(saved);
             }
-            this.setState({ savedModels: auxKeysSavedModels });
+            this.setState({ savedModels: auxKeysSavedModels }); // All the models
+            this.setState({ savedModelsLoggedUser: auxKeysSavedModelsLoggedUser }); // All the models which have been added by the logged
         });
     };
 
@@ -301,6 +314,7 @@ export default class NavigationBar extends React.Component {
         if (this.state.modelName in savedModels && this.state.modelName !== TEMP_MODEL) {
             swal({
                 title: 'There is already a model with the same name saved',
+                text: 'It might have been saved by another user',
                 icon: 'warning',
                 button: false,
                 timer: LEVEL.THERE
@@ -566,10 +580,10 @@ export default class NavigationBar extends React.Component {
                         onRequestClose={this.handleCloseLoadModel}
                     >
                         <List>
-                            {this.state.savedModels.map(model => (
+                            {this.state.savedModelsLoggedUser.map(model => (
                                 <ListItem
                                     onClick={() => { loadModel(model); this.handleCloseLoadModel(); }}
-                                    key={this.state.savedModels.indexOf(model)}
+                                    key={this.state.savedModelsLoggedUser.indexOf(model)}
                                     primaryText={model}
                                 />
                             ))}

@@ -5,34 +5,18 @@ function ($rootScope, $scope, $state, $location, Flash,appSettings,$firebaseAuth
 
     $rootScope.theme = appSettings.theme;
     $rootScope.layout = appSettings.layout;
-
     var vm = this;
     vm.auth = $firebaseAuth();
 
-$scope.readNotification = function(){
-
-  var ref = firebase.database().ref('users/'+$rootScope.userDB.uid)
-  var userDB = $firebaseObject(ref);
-  userDB.$loaded().then(function(){
-      userDB.$save().then(function(ref) {
-
-      }, function(error) {
-          console.log('Error:', error);
-      });
-
-  })
-}
-
-    vm.auth.$onAuthStateChanged(function(firebaseUser) {
+    vm.auth.$onAuthStateChanged((firebaseUser) => {
         if (firebaseUser) {
-
             vm.currentUser = vm.auth.$getAuth();
             $rootScope.userDB = vm.currentUser;
             //console.log(vm.currentUser.uid);
-            var refUser = firebase.database().ref('users/'+vm.currentUser.uid);
+            var refUser = firebase.database().ref(`users/${vm.currentUser.uid}`);
             var user = $firebaseObject(refUser);
-
-            user.$loaded().then(function(){
+            localStorage.setItem('loggedUser', vm.currentUser.uid);
+            user.$loaded().then(() => {
                 //console.log(user);
                 $rootScope.user = user;
                 //console.log($rootScope.user)
