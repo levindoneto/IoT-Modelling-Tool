@@ -163,12 +163,12 @@ $scope.readNotification = function(){
             state: 'adddefaultgraph'
         },
         {
-            title: 'My @Context',
+            title: '@Context',
             icon: 'fa fa-tablet',
             state: 'mycontext'
         },
         {
-            title: 'My @Graph',
+            title: '@Graph',
             icon: 'exchange',
             state: 'mygraph'
         },
@@ -178,12 +178,12 @@ $scope.readNotification = function(){
             state: 'digitalenvironment'
         },
         {
-            title: 'Add Device',  // Can be devices, actuators or sensors
+            title: 'Add Device or Component',  // Can be devices, actuators or sensors
             icon: 'plus-circle',
             state: 'addbelonging'
         },
         {
-            title: 'My Devices',
+            title: 'Devices and Components',
             icon: 'thermometer-three-quarters',
             state: 'mybelongings'
         },
@@ -210,27 +210,7 @@ $scope.readNotification = function(){
             title: 'IoT Modelling Environment',
             icon: 'fa fa-home',
             state: 'digitalenvironment'
-        },
-        {
-            title: 'Add Device', 
-            icon: 'plus-circle',
-            state: 'addbelonging'
-        },
-        {
-            title: 'My Devices',
-            icon: 'thermometer-three-quarters',
-            state: 'mybelongings'
-        },
-        {
-            title: 'Add Additional Properties',
-            icon: 'puzzle-piece',
-            state: 'addadditionalproperties'
-        },
-        {
-            title: 'Search',
-            icon: 'search',
-            state: 'search'
-        },
+        }
     ];
 
     //set the theme selected

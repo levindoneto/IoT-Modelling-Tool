@@ -65,13 +65,13 @@
                     <span class="MyInfo"> RDFS Comment: </span> <span class="MyInfoP"> {{modalmodel.rdfsComment}} </span></br>
                     <span class="MyInfo"> Type: </span>
                     <span ng-if="modalmodel.type == 'Device'" class="MyInfoP">
-                        Device(s)
+                        Device
                     </span>
                     <span ng-if="modalmodel.type == 'SensingDevice'" class="MyInfoP">
-                        Sensor(s)
+                        Sensing Device
                     </span>                            
                     <span ng-if="modalmodel.type == 'ActuatingDevice'" class="MyInfoP">
-                        Actuator(s)
+                        Actuating Device
                     </span>   
                     <span ng-if="modalmodel.type != 'Device' && modalmodel.type != 'SensingDevice' && modalmodel.type != 'ActuatingDevice'" class="MyInfoP">
                         {{modalmodel.type}}
