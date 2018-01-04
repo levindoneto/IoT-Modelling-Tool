@@ -43,43 +43,42 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
 
         $scope.remove = function (accessKey, prefix, type, position) {
             let keyM;
+            let typeLC; // actuator, device or sensor
+            var refDefComp = firebase.database().ref(`devComp/${prefix}/${type}/`);
+            
+            switch (type) {
+                case 'ActuatingDevice':
+                    typeLC = 'actuator';
+                    break;
+                case 'Device':
+                    typeLC = 'device';
+                    break;
+                case 'SensingDevice':
+                    typeLC = 'sensor';
+                    break;
+                default:
+                    typeLC = 'device';
+            }
             for (keyM in modelObj) {
                 if (keyM.startsWith('-') && accessKey === modelObj[keyM].imageFile) {
                     var refM = firebase.database().ref(`models/${keyM}`);
-                    var refDefComp = firebase.database().ref(`devComp/${prefix}/${type}/${position}`);
-                    var modelObject = $firebaseObject(refM);
-                    var dcObject = $firebaseObject(refDefComp);
-                    //console.log('dcObject ', dcObject);
+                    var refMapTypeComponents = firebase.database().ref(`mapTypeComponents/${modelObj[keyM].id}`);
                     swal({
-                        title: 'Are you sure you wanna delete this device/component?',
+                        title: ('Are you sure you wanna delete this '.concat(typeLC)).concat('?'),
                         text: 'You can not change this once it is done!',
                         icon: 'warning',
                         buttons: ['No', 'Yes'],
                         dangerMode: true,
                     }).then((value) => { // yes:true, no:null
-                            if (value === true) { // User has clicked the button <yes> for deleting the measurement
-                                modelObject.$loaded().then(() => {
-                                    modelObject.$remove().then(() => {
-                                        swal({
-                                            title: 'The device has been deleted successfully!',
-                                            icon: 'success'
-                                        });
-                                    },
-                                    (error) => {
-                                        console.log('Error:', error);
-                                    });
-                                });
-                                dcObject.$loaded().then(() => {
-                                    dcObject.$remove().then(() => {
-                                    },
-                                        (error) => {
-                                            console.log('Error:', error);
-                                        });
-                                });
+                            if (value) { // User has clicked the button <yes> for deleting the measurement
+                                refMapTypeComponents.remove();
+                                refM.remove();
+                                refDefComp.child(position.toString()).remove();
                             }
                             else {
                                 swal({
-                                    title: 'Your device has not been deleted!'
+                                    title: ('The '.concat(typeLC)).concat(' has not been deleted!'),
+                                    icon: 'success'
                                 });
                             }
                         });
