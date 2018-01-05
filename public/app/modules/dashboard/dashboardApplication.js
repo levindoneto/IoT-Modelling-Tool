@@ -10,11 +10,30 @@ function routeSync() {
     }
 }
 
+/* Function for concatenating strings, even when some of them are empty or undefined
+   @Parameters: Unlimited amount of strings
+   @Return: String with the concatenation in the following format: str_0+str_1+...str_n
+*/
+function concatenate(...theArgs) {
+    let concatenatedStr = '';
+    let s;
+    for (s = 0; s < theArgs.length; s++) {
+        try { // It just does not work with empty or undefined strings
+            concatenatedStr = concatenatedStr.concat((theArgs[s]).toString());
+        }
+        catch(err) {
+            console.log('At least of the used arguments is undefined or has not been processed yet, which is generating the following processing error:\n', err);
+            concatenatedStr = concatenatedStr.concat('');
+        }
+    }
+    return concatenatedStr;
+}
+//let a;
+// concatenate('ui.router', 'ngAnimate', 'ngMaterial', null, a); // simple test
+//a = 9;
 var dashboard = angular.module('dashboard', ['ui.router', 'ngAnimate','ngMaterial','firebase', 'react']);
 
-dashboard.factory('notification', function($firebaseArray, $firebaseObject) {
-
-    return {
+dashboard.factory('notification', ($firebaseArray, $firebaseObject) => ({
         send: function(message, user) {
             var ref = firebase.database().ref(`users/${user}`);
             var userDB = $firebaseObject(ref);
@@ -26,8 +45,7 @@ dashboard.factory('notification', function($firebaseArray, $firebaseObject) {
                   });
             });
         }
-    };
-});
+    }));
 
   dashboard.config(['$stateProvider', function ($stateProvider) {
       $stateProvider.state('app.myaccount', {
