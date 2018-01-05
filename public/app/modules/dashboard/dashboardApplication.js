@@ -24,14 +24,14 @@ function concatenate(...theArgs) {
         catch(err) {
             console.log('At least of the used arguments is undefined or has not been processed yet, which is generating the following processing error:\n', err);
             concatenatedStr = concatenatedStr.concat('');
+            console.log('The error has been handled successfully, though');
+            console.log('All the arguments from this call:\n', theArgs);
         }
     }
+    
     return concatenatedStr;
 }
-//let a;
-// concatenate('ui.router', 'ngAnimate', 'ngMaterial', null, a); // simple test
-//a = 9;
-var dashboard = angular.module('dashboard', ['ui.router', 'ngAnimate','ngMaterial','firebase', 'react']);
+var dashboard = angular.module('dashboard', ['ui.router', 'ngAnimate', 'ngMaterial', 'firebase', 'react']);
 
 dashboard.factory('notification', ($firebaseArray, $firebaseObject) => ({
         send: function(message, user) {

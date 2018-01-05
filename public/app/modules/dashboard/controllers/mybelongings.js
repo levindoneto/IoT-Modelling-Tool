@@ -64,7 +64,7 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
                     var refM = firebase.database().ref(`models/${keyM}`);
                     var refMapTypeComponents = firebase.database().ref(`mapTypeComponents/${modelObj[keyM].id}`);
                     swal({
-                        title: ('Are you sure you wanna delete this '.concat(typeLC)).concat('?'),
+                        title: concatenate('Are you sure you wanna delete this ', typeLC, '?'),
                         text: 'You can not change this once it is done!',
                         icon: 'warning',
                         buttons: ['No', 'Yes'],
@@ -77,7 +77,7 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
                             }
                             else {
                                 swal({
-                                    title: ('The '.concat(typeLC)).concat(' has not been deleted!'),
+                                    title: concatenate('The ', typeLC, ' has not been deleted!'),
                                     icon: 'success'
                                 });
                             }

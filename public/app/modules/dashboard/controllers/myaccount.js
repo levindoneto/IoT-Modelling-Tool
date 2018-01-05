@@ -131,8 +131,8 @@ function createRdfs(elementOntology, elementType) {
                             * Value: ontology:type
                             */
     let this_rdfsSubClassOf = [];
-
-    aux_obj_type['@id'] = (this_ontology.concat(':')).concat(this_type);
+    
+    aux_obj_type['@id'] = concatenate(this_ontology, ':', this_type);
     this_rdfsSubClassOf.push(aux_obj_type);
     return this_rdfsSubClassOf; /* This list will be the value for the key "rdfs:subClassOf" in
                                  *     the object identificationDevice
@@ -160,7 +160,7 @@ function updateRdfsProperties(elementRdfsSubClassOf, elementChildSnapshot, eleme
     let aux_obj_prop_id = {}; /* Key: "@id" for the additional property
                                * Value: prefixCompany:Id-id_property */
     
-    aux_obj_prop_id['@id'] = (((this_prefix_company.concat(':')).concat(this_id)).concat('-')).concat(this_id_property);
+    aux_obj_prop_id['@id'] = concatenate(this_prefix_company, ':', this_id, '-', this_id_property);
     this_rdfsSubClassOf.push(aux_obj_prop_id);
     return this_rdfsSubClassOf; // Updating the rdfs list with a additional property
 }
@@ -244,7 +244,20 @@ function manageGraphLocalStorage(keyAccess, keyStore, elementGraph) {
     let objCurrentDefinitions = JSON.parse(currentDefinitions); // string -> object
     /* The elements shall be pushed one by one into the @graph list */
     for (let i=0; i<elementGraph.length; i++) {
-        objCurrentDefinitions['@graph'].push(elementGraph[i]); // Updating the @graph list inner the object of definitions
+        try {
+            objCurrentDefinitions['@graph'].push(elementGraph[i]); // Updating the @graph list inner the object of definitions
+        }
+        catch (err) {
+            console.log('The IoT @graph was not formed yet, a new attempt of creation of this element is gonna be done in 2 seconds');
+            setTimeout(() => {
+                if ('@graph' in objCurrentDefinitions) {
+                    objCurrentDefinitions['@graph'].push(elementGraph[i]);
+                }
+                else {
+                    console.log('An error has been found in the creation of the IoT lite element @graph.\nDetails: ', err);
+                }
+            }, 2000);
+        }
     }
     localStorage.setItem(keyStore, JSON.stringify(objCurrentDefinitions)); // Updating the object definitions with the 
     //console.log(' Watching: THE WHOLE DEFINITIONS: ', objCurrentDefinitions);
@@ -302,8 +315,8 @@ firebase.database().ref('models').orderByKey().once('value')
             case 'Device':
                 //addDinamicException(childSnapshot.key, 'macAddress', 'xsd:nonNegativeInteger'); /* Add exception for the property 
                 id_element = {}; 
-                rdfsSubClassOf = [];
-                id_element['@id'] = ((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id); //prefix:id
+                rdfsSubClassOf = []; 
+                id_element['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', childSnapshot.val().id); //prefix:id
                 id_element['@type'] = 'owl:Class';
                 /* Example of identification object with one additional property:
                  * { // Element of identification  
@@ -374,11 +387,11 @@ firebase.database().ref('models').orderByKey().once('value')
                                 additionalChangeableProp = {}; // id, owl type, domain, range
                                 changeablePropRdfsDomain = {}; // ontology:type(device/component)
                                 changeablePropRdfsRange = {};
-
-                                additionalChangeableProp['@id'] = ((childSnapshot.val().prefixCompany).concat(':')).concat(property_i);
+                                
+                                additionalChangeableProp['@id'] =  concatenate(childSnapshot.val().prefixCompany, ':', property_i);
                                 additionalChangeableProp['@type'] = childSnapshot.val()[property_i].NewPropertyOwlType;
-
-                                changeablePropRdfsDomain['@id'] = ((childSnapshot.val().ontology).concat(':')).concat(childSnapshot.val().type);
+                                
+                                changeablePropRdfsDomain['@id'] = concatenate(childSnapshot.val().ontology, ':', childSnapshot.val().type);
                                 changeablePropRdfsRange['@id'] = childSnapshot.val()[property_i].NewPropertyType;
                                 additionalChangeableProp['rdfs:domain'] = changeablePropRdfsDomain;
                                 additionalChangeableProp['rdfs:range'] = changeablePropRdfsRange;
@@ -396,11 +409,12 @@ firebase.database().ref('models').orderByKey().once('value')
     
                                 // If the ownRestriction is empty is because the user has prefered the default option for this IoT Lite information
                                 childSnapshot.val().owlRestriction === '.' ? childSnapshotVal_owlRestriction='owl:Restriction' : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
-    
-                                auxObjAddProperty['@id'] = ((((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id)).concat('-')).concat(property_i); // "prefixCompany:id-additionalProperty"
+                                
+                                auxObjAddProperty['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', childSnapshot.val().id, '-', property_i); // "prefixCompany:id-additionalProperty"
                                 auxObjAddProperty['@type'] = "owl:Restriction";
                                 auxObjAddProperty['rdfs:comment'] = "childSnapshot.val().rdfsComment";
-                                auxObj_OwlOnProperty['@id'] = (childSnapshot.val().prefixCompany.concat(':')).concat(property_i);
+                                
+                                auxObj_OwlOnProperty['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', property_i);
                                 
                                 /* Getting the data for the key "owl:cardinality" on the element of the additional property */
                                 auxObj_owlCardinality['@value'] = childSnapshot.val()[property_i].NewPropertyValue;
@@ -428,8 +442,8 @@ firebase.database().ref('models').orderByKey().once('value')
 
             case 'SensingDevice':
                 id_element = {};
-                rdfsSubClassOf = [];
-                id_element['@id'] = ((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id);
+                rdfsSubClassOf = [];       
+                id_element['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', childSnapshot.val().id);
                 id_element['@type'] = 'owl:Class';
                 rdfsSubClassOf = createRdfs (childSnapshot.val().ontology, childSnapshot.val().type);
                 for (var property_i in childSnapshot.val()) {
@@ -448,10 +462,10 @@ firebase.database().ref('models').orderByKey().once('value')
                                 changeablePropRdfsDomain = {}; // ontology:type(device/component)
                                 changeablePropRdfsRange = {};
 
-                                additionalChangeableProp['@id'] = ((childSnapshot.val().prefixCompany).concat(':')).concat(property_i);
+                                additionalChangeableProp['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', property_i);
                                 additionalChangeableProp['@type'] = childSnapshot.val()[property_i].NewPropertyOwlType;
-
-                                changeablePropRdfsDomain['@id'] = ((childSnapshot.val().ontology).concat(':')).concat(childSnapshot.val().type);
+                                
+                                changeablePropRdfsDomain['@id'] = concatenate(childSnapshot.val().ontology, ':', childSnapshot.val().type);
                                 changeablePropRdfsRange['@id'] = childSnapshot.val()[property_i].NewPropertyType;
                                 additionalChangeableProp['rdfs:domain'] = changeablePropRdfsDomain;
                                 additionalChangeableProp['rdfs:range'] = changeablePropRdfsRange;
@@ -468,10 +482,10 @@ firebase.database().ref('models').orderByKey().once('value')
                                 auxObj_owlCardinality = {};
                                 // If the ownRestriction is empty is because the user has prefered the default option for this IoT Lite information
                                 childSnapshot.val().owlRestriction === '.' ? childSnapshotVal_owlRestriction='owl:Restriction' : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
-                                auxObjAddProperty['@id'] = ((((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id)).concat('-')).concat(property_i); // "prefixCompany:id-additionalProperty"
+                                auxObjAddProperty['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', childSnapshot.val().id, '-', property_i); // "prefixCompany:id-additionalProperty"
                                 auxObjAddProperty['@type'] = "owl:Restriction";
                                 auxObjAddProperty['rdfs:comment'] = childSnapshot.val().rdfsComment;
-                                auxObj_OwlOnProperty['@id'] = (childSnapshot.val().prefixCompany.concat(':')).concat(property_i);                              
+                                auxObj_OwlOnProperty['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', property_i);                              
                                 /* Getting the data for the key "owl:cardinality" on the element of the additional property */
                                 auxObj_owlCardinality['@value'] = childSnapshot.val()[property_i].NewPropertyValue;
                                 isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality['@type'] = 'xsd:nonNegativeInteger' : auxObj_owlCardinality['@type'] = 'xsd:string';
@@ -487,8 +501,8 @@ firebase.database().ref('models').orderByKey().once('value')
                 break;
             case 'ActuatingDevice':
                 id_element = {};
-                rdfsSubClassOf = [];
-                id_element['@id'] = ((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id);
+                rdfsSubClassOf = []; 
+                id_element['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', childSnapshot.val().id);
                 id_element['@type'] = 'owl:Class';
                 rdfsSubClassOf = createRdfs (childSnapshot.val().ontology, childSnapshot.val().type);
                 for (var property_i in childSnapshot.val()) {
@@ -504,11 +518,11 @@ firebase.database().ref('models').orderByKey().once('value')
                                 additionalChangeableProp = {}; // id, owl type, domain, range
                                 changeablePropRdfsDomain = {}; // ontology:type(device/component)
                                 changeablePropRdfsRange = {};
-
-                                additionalChangeableProp['@id'] = ((childSnapshot.val().prefixCompany).concat(':')).concat(property_i);
+                                
+                                additionalChangeableProp['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', property_i);
                                 additionalChangeableProp['@type'] = childSnapshot.val()[property_i].NewPropertyOwlType;
 
-                                changeablePropRdfsDomain['@id'] = ((childSnapshot.val().ontology).concat(':')).concat(childSnapshot.val().type);
+                                changeablePropRdfsDomain['@id'] = concatenate(childSnapshot.val().ontology, ':', childSnapshot.val().type);
                                 changeablePropRdfsRange['@id'] = childSnapshot.val()[property_i].NewPropertyType;
                                 additionalChangeableProp['rdfs:domain'] = changeablePropRdfsDomain;
                                 additionalChangeableProp['rdfs:range'] = changeablePropRdfsRange;
@@ -526,10 +540,12 @@ firebase.database().ref('models').orderByKey().once('value')
                                 auxObj_owlCardinality = {};
                                 // If the ownRestriction is empty is because the user has prefered the default option for this IoT Lite information
                                 childSnapshot.val().owlRestriction === '.' ? childSnapshotVal_owlRestriction='owl:Restriction' : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
-                                auxObjAddProperty['@id'] = ((((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id)).concat('-')).concat(property_i); // "prefixCompany:id-additionalProperty"
+
+                                auxObjAddProperty['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', childSnapshot.val().id, '-', property_i); // "prefixCompany:id-additionalProperty"
                                 auxObjAddProperty['@type'] = "owl:Restriction";
                                 auxObjAddProperty['rdfs:comment'] = childSnapshot.val().rdfsComment;
-                                auxObj_OwlOnProperty['@id'] = (childSnapshot.val().prefixCompany.concat(':')).concat(property_i);                              
+                                
+                                auxObj_OwlOnProperty['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', property_i);                              
                                 /* Getting the data for the key "owl:cardinality" on the element of the additional property */
                                 auxObj_owlCardinality['@value'] = childSnapshot.val()[property_i].NewPropertyValue;
                                 isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality['@type'] = 'xsd:nonNegativeInteger' : auxObj_owlCardinality['@type'] = 'xsd:string';
@@ -545,8 +561,8 @@ firebase.database().ref('models').orderByKey().once('value')
                 break;
             default:
             id_element = {};
-            rdfsSubClassOf = [];
-            id_element['@id'] = ((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id);
+            rdfsSubClassOf = []; 
+            id_element['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', childSnapshot.val().id);
             id_element['@type'] = 'owl:Class';
             rdfsSubClassOf = createRdfs (childSnapshot.val().ontology, childSnapshot.val().type);
             for (var property_i in childSnapshot.val()) {
@@ -563,10 +579,10 @@ firebase.database().ref('models').orderByKey().once('value')
                             changeablePropRdfsDomain = {}; // ontology:type(device/component)
                             changeablePropRdfsRange = {};
 
-                            additionalChangeableProp['@id'] = ((childSnapshot.val().prefixCompany).concat(':')).concat(property_i);
+                            additionalChangeableProp['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', property_i);
                             additionalChangeableProp['@type'] = childSnapshot.val()[property_i].NewPropertyOwlType;
-
-                            changeablePropRdfsDomain['@id'] = ((childSnapshot.val().ontology).concat(':')).concat(childSnapshot.val().type);
+                            
+                            changeablePropRdfsDomain['@id'] = concatenate(childSnapshot.val().ontology, ':', childSnapshot.val().type);
                             changeablePropRdfsRange['@id'] = childSnapshot.val()[property_i].NewPropertyType;
                             additionalChangeableProp['rdfs:domain'] = changeablePropRdfsDomain;
                             additionalChangeableProp['rdfs:range'] = changeablePropRdfsRange;
@@ -583,10 +599,10 @@ firebase.database().ref('models').orderByKey().once('value')
                             auxObj_owlCardinality = {};
                             // If the ownRestriction is empty is because the user has prefered the default option for this IoT Lite information
                             childSnapshot.val().owlRestriction === '.' ? childSnapshotVal_owlRestriction='owl:Restriction' : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
-                            auxObjAddProperty['@id'] = ((((childSnapshot.val().prefixCompany).concat(':')).concat(childSnapshot.val().id)).concat('-')).concat(property_i); // "prefixCompany:id-additionalProperty"
+                            auxObjAddProperty['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', childSnapshot.val().id, '-', property_i); // "prefixCompany:id-additionalProperty"
                             auxObjAddProperty['@type'] = "owl:Restriction";
-                            auxObjAddProperty['rdfs:comment'] = childSnapshot.val().rdfsComment;
-                            auxObj_OwlOnProperty['@id'] = (childSnapshot.val().prefixCompany.concat(':')).concat(property_i);                              
+                            auxObjAddProperty['rdfs:comment'] = childSnapshot.val().rdfsComment; 
+                            auxObj_OwlOnProperty['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', property_i);                              
                             /* Getting the data for the key "owl:cardinality" on the element of the additional property */
                             auxObj_owlCardinality['@value'] = childSnapshot.val()[property_i].NewPropertyValue;
                             isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality['@type'] = 'xsd:nonNegativeInteger' : auxObj_owlCardinality['@type'] = 'xsd:string';
