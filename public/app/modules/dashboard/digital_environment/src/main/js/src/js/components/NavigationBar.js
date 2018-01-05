@@ -368,7 +368,7 @@ export default class NavigationBar extends React.Component {
                 let auxSavedModels = {};
                 if (localStorage.getItem(DIGITAL_TWIN_WAS_EMPTY) === FALSE && backend.isDigitalTwinEmpty() && snapshot.val().lastLoadedModel !== DELETED_MODEL && snapshot.val().lastLoadedModel !== DELETED_MODEL) { // The user has loaded a model in the current section
                     swal({
-                        title: ('Do you want to delete the model '.concat(snapshot.val().lastLoadedModel)).concat(' ?'),
+                        title: backend.concatenate('Do you want to delete the model ', snapshot.val().lastLoadedModel, ' ?'),
                         text: 'Once deleted, the model will not be available for modifications anymore!',
                         icon: 'warning',
                         buttons: ['No', 'Yes'],
@@ -381,7 +381,7 @@ export default class NavigationBar extends React.Component {
                             refSavedModels.child(snapshot.val().lastLoadedModel).remove();
                             refDevicesWithSubsystems.child(snapshot.val().lastLoadedModel).remove();
                             swal({
-                                title: ('The model '.concat(snapshot.val().lastLoadedModel)).concat(' has been deleted successfully'),
+                                title: backend.concatenate('The model ', snapshot.val().lastLoadedModel, ' has been deleted successfully'),
                                 timer: LEVEL.THERE,
                                 button: false,
                                 icon: 'success'
@@ -392,8 +392,9 @@ export default class NavigationBar extends React.Component {
                         }
                         else { // [No]
                             //console.log('Model remains stored in the database');
+                            
                             swal({
-                                title: ('Do you want to load the model '.concat(snapshot.val().lastLoadedModel)).concat(' in its last saved version?'),
+                                title: backend.concatenate('Do you want to load the model ', snapshot.val().lastLoadedModel, ' in its last saved version?'),
                                 icon: 'warning',
                                 buttons: ['No', 'Yes']
                             }).then((value) => {
@@ -424,7 +425,7 @@ export default class NavigationBar extends React.Component {
                         if (snapshot.val().lastLoadedModel !== TEMP_MODEL && snapshot.val().lastLoadedModel !== DELETED_MODEL && snapshot.val().lastLoadedModel !== DELETED_MODEL) { // The temp model is not supposed to be overwritten this way
                             swal({
                                 title: 'Are you sure you want save the new model over the current one?',
-                                text: ('The model '.concat(snapshot.val().lastLoadedModel)).concat(' will be overwritten if you confirm this action.'),
+                                text: backend.concatenate('The model ', snapshot.val().lastLoadedModel, ' will be overwritten if you confirm this action.'),
                                 icon: 'warning',
                                 buttons: ['No', 'Yes']
                             }).then((value) => {
@@ -446,7 +447,7 @@ export default class NavigationBar extends React.Component {
                                 }
                                 else {
                                     swal({
-                                        title: 'The model '.concat(snapshot.val().lastLoadedModel).concat(' remains the same in the digital twin!'),
+                                        title: backend.concatenate('The model ', snapshot.val().lastLoadedModel, ' remains the same in the digital twin!'),
                                         timer: LEVEL.THERE,
                                         button: false,
                                         icon: 'success'

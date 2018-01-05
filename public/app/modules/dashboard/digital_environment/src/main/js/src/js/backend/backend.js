@@ -23,7 +23,6 @@ const LEVEL = {
     FIVE: 5000
 };
 
-
 const auxSavedModels = {};
 let accessedModel = {};
 const refTrig = firebase.database().ref('devicesWithSubsystems/');
@@ -286,21 +285,21 @@ export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, a
     let p;
     let valuesPins = '';
     for (p = 0; p < pinConfig.length - 1; p++) { // -1 because the comma must not be concatenate to the last pin
-        valuesPins = (valuesPins.concat(pinConfig[p])).concat(',');
+        valuesPins = concatenate(valuesPins, pinConfig[p], ',');
     }
-    valuesPins = valuesPins.concat(pinConfig[pinConfig.length - 1]); // Add the last pin to the string of pins without a comma in the end
+    valuesPins = concatenate(valuesPins, pinConfig[pinConfig.length - 1]); // Add the last pin to the string of pins without a comma in the end
     //console.log('Pin values: ', valuesPins);
     
-    const pinSet = 'pinset='.concat(valuesPins); // Pins of the device which the component is attached to (values in the elements prefix:pinConfiguration)
-    const deployInfo = (('?component='.concat(componentType.toUpperCase())).concat('&')).concat(pinSet);
-
-    const urlAddress = (((apiAddress.concat('/api')).concat('/')).concat(componentType)).concat('s/');
-    const urlAddressDeploy = ((apiAddress.concat('/api/deploy/')).concat(componentType)).concat('/');
-
+    const pinSet = concatenate('pinset=', valuesPins); // Pins of the device which the component is attached to (values in the elements prefix:pinConfiguration)
+    const deployInfo = concatenate('?component=', componentType.toUpperCase(), '&', pinSet);
+    const urlAddress = concatenate(apiAddress, '/api', '/', componentType, 's/');
+    
+    const urlAddressDeploy = concatenate(apiAddress, '/api/deploy/', componentType, '/');
+    
     const jsonData = {
         name: idComp,
-        type: (apiAddress.concat('/api/types/')).concat(idTypeBind),
-        device: (apiAddress.concat('/api/devices/')).concat(idDeviceBind),
+        type: concatenate(apiAddress, '/api/types/', idTypeBind),
+        device: concatenate(apiAddress, '/api/devices/', idDeviceBind),
       };
     $.ajax({
         type: 'POST',
@@ -312,7 +311,7 @@ export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, a
         console.log('The ', componentType, ' has been posted successfully\nId on the MBP Platform: ', component.id); // /deploy/id...
         $.ajax({
             type: 'POST',
-            url: (urlAddressDeploy.concat(component.id)).concat(deployInfo),
+            url: concatenate(urlAddressDeploy, component.id, deployInfo),
             contentType: 'application/json'
         }).done((response) => {
             console.log('The ', componentType, ' has been successfully deployed!\n', response);
@@ -322,7 +321,7 @@ export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, a
 
 export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddressDev, apiAddress, subsystems, mapTypeComp, callback) {
     /* Get the map between components and types */
-    const urlAddress = ((apiAddress.concat('/api')).concat('/')).concat('devices/');
+    const urlAddress = concatenate(apiAddress, '/api', '/', 'devices/');
     const jsonData = {
         name: idDev,
         macAddress: macAddressDev,
@@ -343,8 +342,9 @@ export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddre
                 let prefix = subsystems[c][Object.keys(subsystems[c])[0]]['@type'].split(':')[0];
                 let idWithoutPrefix = subsystems[c][Object.keys(subsystems[c])[0]]['@type'].split(':')[1];
                 // If the element component has pin configuration already set up
-                if (prefix.concat(':').concat('pinConfiguration') in subsystems[c][Object.keys(subsystems[c])[0]]) {
-                    pinConf = subsystems[c][Object.keys(subsystems[c])[0]][(prefix.concat(':').concat('pinConfiguration'))];
+                
+                if (concatenate(prefix, ':', 'pinConfiguration') in subsystems[c][Object.keys(subsystems[c])[0]]) {
+                    pinConf = subsystems[c][Object.keys(subsystems[c])[0]][concatenate(prefix, ':', 'pinConfiguration')];
                 } 
                 else {
                     pinConf = {}; // pinset shall be equals to empty for the deployment in case of null pinConfiguration
@@ -374,4 +374,22 @@ export function isDigitalTwinEmpty() {
     /* Every model contains an element @context (element with iot-lite information) and @graph (list of elements 
         regarding the devices and components set on the environment) */
     return (DeviceStore.getModel()['@graph'].length === 0);
+}
+
+export function concatenate (...theArgs) {
+    let concatenatedStr = '';
+    let s;
+    for (s = 0; s < theArgs.length; s++) {
+        try { // It just does not work with empty or undefined strings
+            concatenatedStr = concatenatedStr.concat((theArgs[s]).toString());
+        }
+        catch(err) {
+            console.log('At least of the used arguments is undefined or has not been processed yet, which is generating the following processing error:\n', err);
+            concatenatedStr = concatenatedStr.concat('');
+            console.log('The error has been handled successfully, though');
+            console.log('All the arguments from this call:\n', theArgs);
+        }
+    }
+    
+    return concatenatedStr;
 }

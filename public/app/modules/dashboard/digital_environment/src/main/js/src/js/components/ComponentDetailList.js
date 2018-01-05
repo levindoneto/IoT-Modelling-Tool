@@ -11,7 +11,7 @@ import Divider from 'material-ui/Divider';
 import DeviceStore from '../stores/DeviceStore';
 import * as DropActions from '../actions/DropActions';
 import * as utils from '../utils/utils';
-
+import * as backend from '../backend/backend';
 
 const subHeaderStyle = {
   fontSize: '20px',
@@ -112,7 +112,7 @@ export default class ComponentDetailList extends React.Component {
                 checked={selectValues && selectValues.includes(null)}
                 primaryText={''}
             />);
-            namesResult = namesResult.concat(names.map((name) => (
+            namesResult = backend.concatenate(namesResult, names.map((name) => (
                 <MenuItem
                     key={name}
                     insertChildren

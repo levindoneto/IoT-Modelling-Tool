@@ -210,7 +210,8 @@ class DeviceStore extends EventEmitter {
         if (tempType['rdfs:subClassOf']) {
             if (tempType['rdfs:subClassOf'].length) {
                 tempType['rdfs:subClassOf'].map((subclass) => {
-                    recursiveResponse = recursiveResponse.concat(this.getPossibleProperties(subclass['@id']));
+                    
+                    recursiveResponse = backend.concatenate(recursiveResponse, this.getPossibleProperties(subclass['@id']));
                 });
             } else {
                 recursiveResponse = this.getPossibleProperties(tempType['rdfs:subClassOf']['@id']);
@@ -230,7 +231,7 @@ class DeviceStore extends EventEmitter {
             }
         });
         tempAsdf = tempAsdf.map((item) => item['@id'].split(/:|#/).slice(-1)[0]);
-        tempResponse = recursiveResponse.concat(tempAsdf);
+        tempResponse = backend.concatenate(recursiveResponse, tempAsdf);
 
         return tempResponse;
     }

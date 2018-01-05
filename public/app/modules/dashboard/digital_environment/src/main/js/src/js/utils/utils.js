@@ -1,5 +1,6 @@
 import * as DropActions from '../actions/DropActions';
 import { definitions } from '../constants/definitions';
+import * as backend from '../backend/backend';
 
 const clone = (object) => {
     return JSON.parse(JSON.stringify(object));
@@ -23,11 +24,11 @@ export function getParentClasses(type) {
 
     if (tempObject['rdfs:subClassOf'] != null) {
         if (tempObject['rdfs:subClassOf'].length == null) {
-            parentClasses = parentClasses.concat(getParentClasses(tempObject['rdfs:subClassOf']['@id']));
+            parentClasses = backend.concatenate(parentClasses, getParentClasses(tempObject['rdfs:subClassOf']['@id']));
         }
         else {
             tempObject['rdfs:subClassOf'].map((iterObject) => {
-                parentClasses = parentClasses.concat(getParentClasses(iterObject['@id']));
+                parentClasses = backend.concatenate(parentClasses, getParentClasses(iterObject['@id']));
             });
         }
     }
