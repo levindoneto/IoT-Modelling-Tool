@@ -1,6 +1,5 @@
 import * as DropActions from '../actions/DropActions';
 import { definitions } from '../constants/definitions';
-import * as backend from '../backend/backend';
 
 const clone = (object) => {
     return JSON.parse(JSON.stringify(object));
@@ -24,11 +23,21 @@ export function getParentClasses(type) {
 
     if (tempObject['rdfs:subClassOf'] != null) {
         if (tempObject['rdfs:subClassOf'].length == null) {
-            parentClasses = backend.concatenate(parentClasses, getParentClasses(tempObject['rdfs:subClassOf']['@id']));
+            try {
+                parentClasses = parentClasses.concat(getParentClasses(tempObject['rdfs:subClassOf']['@id']));
+            }
+            catch (err) {
+                console.log('At least of the used arguments is undefined or has not been processed yet, which is generating the following processing error:\n', err);
+            }
         }
         else {
             tempObject['rdfs:subClassOf'].map((iterObject) => {
-                parentClasses = backend.concatenate(parentClasses, getParentClasses(iterObject['@id']));
+                try {
+                    parentClasses = parentClasses.concat(getParentClasses(iterObject['@id']));
+                }
+                catch (err) {
+                    console.log('At least of the used arguments is undefined or has not been processed yet, which is generating the following processing error:\n', err);
+                }
             });
         }
     }

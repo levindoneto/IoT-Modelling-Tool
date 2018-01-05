@@ -376,7 +376,7 @@ export function isDigitalTwinEmpty() {
     return (DeviceStore.getModel()['@graph'].length === 0);
 }
 
-export function concatenate (...theArgs) {
+export function concatenate(...theArgs) {
     let concatenatedStr = '';
     let s;
     for (s = 0; s < theArgs.length; s++) {
@@ -390,6 +390,5 @@ export function concatenate (...theArgs) {
             console.log('All the arguments from this call:\n', theArgs);
         }
     }
-    
     return concatenatedStr;
 }

@@ -1,3 +1,5 @@
+const UNDEFINED = 'undefined';
+
 function routeSync() {
     if (window.localStorage) {
         if (!localStorage.getItem('firstLoad')) {
@@ -9,7 +11,6 @@ function routeSync() {
         }
     }
 }
-
 /* Function for concatenating strings, even when some of them are empty or undefined
    @Parameters: Unlimited amount of strings
    @Return: String with the concatenation in the following format: str_0+str_1+...str_n
@@ -28,9 +29,18 @@ function concatenate(...theArgs) {
             console.log('All the arguments from this call:\n', theArgs);
         }
     }
-    
     return concatenatedStr;
 }
+
+/* Function that resets information from the saved models */
+function resetInfoSavedModels() {
+    const refInfo = firebase.database().ref('infoSavedModels');
+    const auxInfoSaved = {};
+    auxInfoSaved.lastLoadedModel = UNDEFINED;
+    auxInfoSaved.lastSavedModel = UNDEFINED;
+    refInfo.update(auxInfoSaved); // Updating the object on the database
+}
+
 var dashboard = angular.module('dashboard', ['ui.router', 'ngAnimate', 'ngMaterial', 'firebase', 'react']);
 
 dashboard.factory('notification', ($firebaseArray, $firebaseObject) => ({
