@@ -57,16 +57,19 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     
     /* Function to set a default @context for real time digital environment */
     $scope.setcontextdefault = function (keyContext) {
-        let ref = firebase.database().ref('defaults/');
+        const refDefaults = firebase.database().ref('defaults/');
         const auxObjContext = {}; 
         auxObjContext.defaultcontext = keyContext; 
-        ref.update(auxObjContext);
+        refDefaults.update(auxObjContext);
         swal({
             title: 'The selected context has been set as a default one',
-            timer: 1700,
+            timer: 3000,
             button: false,
             icon: 'success'
         });
+        setTimeout(() => {
+            routeSync();
+        }, 3000); 
     };
 
     /* Function to emulate the for i in range with AngularJS 
@@ -85,13 +88,11 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
 
     /* Function for getting nested elements on @context */
     $scope.getNestedElementsContext = function (elementAdditionalContext) {
-        console.log('objAddionalPropsContext: ', elementAdditionalContext);
         const additionalContextInfo = {}; // Initalize the object from the nested element
         for (var infoContextKey in elementAdditionalContext) {
             if (elementAdditionalContext.hasOwnProperty(infoContextKey)) {
                 //console.log('Key: ', infoContextKey.toString());
                 additionalContextInfo[infoContextKey] = elementAdditionalContext[infoContextKey];
-                console.log('The whole object: ', additionalContextInfo);
             }
         }
         return additionalContextInfo; // key:value, key:property_key, value:property_value

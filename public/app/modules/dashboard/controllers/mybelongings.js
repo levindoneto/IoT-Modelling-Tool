@@ -78,8 +78,13 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
                             else {
                                 swal({
                                     title: concatenate('The ', typeLC, ' has not been deleted!'),
-                                    icon: 'success'
+                                    icon: 'success',
+                                    button: false,
+                                    timer: 3000
                                 });
+                                setTimeout(() => {
+                                    routeSync();
+                                }, 3000); 
                             }
                         });
                 }

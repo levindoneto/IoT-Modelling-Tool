@@ -1,5 +1,5 @@
 
-dashboard.controller("addspecificcontextController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash','$firebaseObject','$firebaseArray','Upload','$timeout','notification',
+dashboard.controller('addspecificcontextController', ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash','$firebaseObject','$firebaseArray','Upload','$timeout','notification',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray, Upload, $timeout, notification) {
     var vm = this; //controllerAs
     var ref = firebase.database().ref('contexts/');
@@ -20,13 +20,16 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         let auxObjContext = {}; // Auxiliar to add a key:value on a specific object
         auxObjContext[new_property] = new_property_value; // In this way just a key with a value is added, not a new object
         ref.update(auxObjContext); // Updating the object on the database
-        console.log("add the value: ", new_property_value);
+        console.log('add the value: ', new_property_value);
         swal({
-            title: "The new property and its value have been added with success!",
-            timer: 1700,
+            title: 'The new property and its value have been added with success!',
+            timer: 3000,
             button: false,
             icon: 'success'
         });
+        setTimeout(() => {
+            routeSync();
+        }, 3000); 
     };
     
     /* Function to emulate the for i in range with AngularJS 

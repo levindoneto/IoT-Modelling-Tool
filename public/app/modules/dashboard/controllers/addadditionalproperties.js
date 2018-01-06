@@ -79,10 +79,13 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         //console.log("Value: ", NewPropertyValue);
         swal({
             title: 'The new property and its value have been added with success!',
-            timer: 1700,
+            timer: 3000,
             button: false,
             icon: 'success'
         });
+        setTimeout(() => {
+            routeSync();
+        }, 3000); 
     };
     
     /* Function to emulate the for i in range with AngularJS 

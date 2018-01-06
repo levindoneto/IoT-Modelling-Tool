@@ -133,27 +133,37 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                         if (type === 'Device') {
                             swal({
                                 title: 'The device has been added successfully!\n',
-                                icon: 'success'
+                                icon: 'success',
+                                button: false,
+                                timer: 3000
                             });
                         }
                         else if (type === 'SensingDevice') {
                             swal({
                                 title: 'The sensor has been added successfully!\n',
-                                icon: 'success'
+                                icon: 'success',
+                                button: false,
+                                timer: 3000
                             }); 
                         }
                         else {
                             swal({
                                 title: 'The actuator has been added successfully!\n',
-                                icon: 'success'
+                                icon: 'success',
+                                button: false,
+                                timer: 3000
                             });
                         }
-                        //console.log('im here');
                         modelList.$add(modelKeys).then((ref) => {
                         });
                     });
                 });
+                setTimeout(() => {
+                    console.log('sync...');
+                    routeSync();
+                }, 3000); 
             });
         });
+
     };
 }]);
