@@ -19,7 +19,7 @@ const lstComponenents = {
 var at_context = {};
 var definitions = {};
 const DEFINITIONS_KEY = 'definitions';
-
+const PIN_CONF_PROP = 'pinConfiguration';
 
 /*********************************************************/
 /************************ Objects ************************/
@@ -57,7 +57,7 @@ function identificationDevice(elementIdentDevice, elementRdfsSubClassOf) {
 /******* to create/update definitions' objects *******/
 /*****************************************************/
 
-/* Function to create the object context based on the one set by the user as default
+/* Function that creates the object context based on the one set by the user as default
  * @parameters: callback function: createGraph() for iot-lite purposes
  * @return: Creation of the object definitions with the the object definitions' updating  with an object
  */
@@ -65,9 +65,9 @@ function createContext(callback) {
     // Getting the default @context key (defaults->defaultcontext)
     firebase.database().ref('defaults/defaultcontext').orderByKey().once('value')
     .then((snapshot) => {
-        let key_default_context = snapshot.val(); // snapshot.val() contains the value (string) with the key of the default context
+        let keyDefaultContext = snapshot.val(); // snapshot.val() contains the value (string) with the key of the default context
         
-        firebase.database().ref('contexts/'+key_default_context).orderByKey().once('value') // Accessing the object of the default context
+        firebase.database().ref('contexts/'+keyDefaultContext).orderByKey().once('value') // Accessing the object of the default context
         .then((snapshot) => {
             window.definitions['@context'] = snapshot.val(); /* The whole context object is built based on the default @context 
                                                               * set by the user is being set on the global definitions object */
@@ -92,23 +92,19 @@ function createGraph() {
     // Getting the default @graph key (defaults->defaultgraph)
     firebase.database().ref('defaults/defaultgraph').orderByKey().once('value')
     .then((snapshot) => {
-        let key_default_graph = snapshot.val(); // snapshot.val() contains the value (string) with the key of the default graph
-        firebase.database().ref(`graphs/${key_default_graph}`).orderByKey().once('value') // Accessing the object of the default graph, `graphs/${key_default_graph}` = 'graphs'+key_default_graph on ES6
+        const keyDefaultGraph = snapshot.val(); // snapshot.val() contains the value (string) with the key of the default graph
+        firebase.database().ref(`graphs/${keyDefaultGraph}`).orderByKey().once('value') // Accessing the object of the default graph, `graphs/${keyDefaultGraph}` = 'graphs'+keyDefaultGraph on ES6
         .then((snapshot) => {
-            //console.log(snapshot.val().defaultobjectsgraph); // not formatted
-            //console.log("Type: ", snapshot.val().defaultobjectsgraph); // type: string
-            var list_default_elements = Object.values(JSON.parse(snapshot.val().defaultobjectsgraph)['@graph']); // List with the default elements (object->list)
+            const listDefaultElements = Object.values(JSON.parse(snapshot.val().defaultobjectsgraph)['@graph']); // List with the default elements (object->list)
             
             // Retrieving the current definitions (just with the element @context) from the local storage
-            var currentDefinitions = localStorage.getItem('definitions');
-            var objCurrentDefinitions = JSON.parse(currentDefinitions);
-            //console.log("CURRENT OBJECT: ", objCurrentDefinitions);
-            objCurrentDefinitions['@graph'] = list_default_elements; // Updating the object definitions with the @graph elements
-            //console.log("NEW definitions: ", objCurrentDefinitions);
-
+            const currentDefinitions = localStorage.getItem('definitions');
+            const objCurrentDefinitions = JSON.parse(currentDefinitions);
+            objCurrentDefinitions['@graph'] = listDefaultElements; // Updating the object definitions with the @graph elements
             localStorage.setItem('definitions', JSON.stringify(objCurrentDefinitions)); // Updating the local storage with the new definitions object 
         });
     });
+    logInit();
 }
 /* Function to create the list rdfs
  *     this list contains at least one object:
@@ -124,19 +120,13 @@ function createGraph() {
  * @return: List: The rdfs list with the identification information (only one object pushed)
  */
 function createRdfs(elementOntology, elementType) {
-    let this_ontology = elementOntology;
-    let this_type = elementType;
-
-    let aux_obj_type = {}; /* Key: "@id"
-                            * Value: ontology:type
-                            */
-    let this_rdfsSubClassOf = [];
-    
-    aux_obj_type['@id'] = concatenate(this_ontology, ':', this_type);
-    this_rdfsSubClassOf.push(aux_obj_type);
-    return this_rdfsSubClassOf; /* This list will be the value for the key "rdfs:subClassOf" in
-                                 *     the object identificationDevice
-                                 */
+    const auxObjType = {}; /* Key: "@id"
+                            * Value: ontology:type */
+    const thisRdfsSubClassOf = [];
+    auxObjType['@id'] = concatenate(elementOntology, ':', elementType);
+    thisRdfsSubClassOf.push(auxObjType);
+    return thisRdfsSubClassOf; /* This list will be the value for the key "rdfs:subClassOf" in
+                                * the object identificationDevice  */
 }
 
 /* Function used for updating the rdfs list with one additional property element
@@ -151,18 +141,11 @@ function createRdfs(elementOntology, elementType) {
  * @return: List: the rfds list with one object with a new property pushed into it
  */
 function updateRdfsProperties(elementRdfsSubClassOf, elementChildSnapshot, elementIdProperty) {
-    let this_rdfsSubClassOf = elementRdfsSubClassOf; /* Current rdfs list for a device/component on an iteration
-                                                      * inside the Firebase's parsing */
-    let this_prefix_company = elementChildSnapshot.prefixCompany;
-    let this_id = elementChildSnapshot.id; // Id of the device/company
-    let this_id_property = elementIdProperty; // Additional property
-
-    let aux_obj_prop_id = {}; /* Key: "@id" for the additional property
-                               * Value: prefixCompany:Id-id_property */
-    
-    aux_obj_prop_id['@id'] = concatenate(this_prefix_company, ':', this_id, '-', this_id_property);
-    this_rdfsSubClassOf.push(aux_obj_prop_id);
-    return this_rdfsSubClassOf; // Updating the rdfs list with a additional property
+    const auxObjPropId = {}; /* Key: "@id" for the additional property
+                              * Value: prefixCompany:Id-id_property */
+    auxObjPropId['@id'] = concatenate(elementChildSnapshot.prefixCompany, ':', elementChildSnapshot.id, '-', elementIdProperty);
+    elementRdfsSubClassOf.push(auxObjPropId);
+    return elementRdfsSubClassOf; // Updating the rdfs list with a additional property
 }
 
 /* Function to create the object of IoT Lite definitions
@@ -177,6 +160,28 @@ function createDefinitions(elementContext, elementGraph) {
                               *     local storage in each initialization of the
                               *     Platform
                               */
+}
+
+/* Function that gets the prefix from the place where the user is modelling the digital environenbt
+ * @parameters: callback function: createContext() for iot-lite purposes
+ * @return: void, the function stores the prefix in the local storage 
+ *          if the context has already been defined
+ */
+function getPrefix(callback) {
+firebase.database().ref('defaults/defaultcontext').orderByKey().once('value')
+    .then((snapshot) => {
+        const keyDefaultContext = snapshot.val(); // snapshot.val() contains the value (string) with the key of the default context
+        firebase.database().ref(`contexts/${keyDefaultContext}`).orderByKey().once('value') // Accessing the object of the default context
+        .then((snapshot) => { 
+            let c;
+            for (c in snapshot.val()) {
+                if (c.split(':')[1] === PIN_CONF_PROP) {
+                    localStorage.setItem('prefix', c.split(':')[0]);
+                }
+            }
+        });
+    });
+    return callback();
 }
 
 /*****************************************************/
@@ -208,20 +213,11 @@ function isNonNegativeInteger(elementValue) {
     return (typeof elementValue === 'number' && elementValue % 1 === 0 && elementValue > 0);
 }
 
-function addDinamicException(ContextKey, NewPropertyId, NewPropertyType) {
-    //console.log(Key: ",ContextKey);
-    const ref = firebase.database().ref(`models/${ContextKey}`); // Accessing context->ContextKey on the database
-    const auxObjContext = {}; // Auxiliar to add a key:value on a specific object
-    const auxValuesObjContext = {}; /* Auxiliar with the following information:
-                                   * property_type, owl_type and value if the owl_type is Restriction */    
-    auxValuesObjContext.NewPropertyType = NewPropertyType; 
-    auxValuesObjContext.NewPropertyOwlType = 'owl:DatatypeProperty';
-    auxValuesObjContext.NewPropertyValue = " "; // It can't be null if the owl_type is Restriction
-    
-    auxObjContext[NewPropertyId] = auxValuesObjContext; // In this way just a key with an object is added, not a new object    
-    ref.update(auxObjContext); // Updating the object on the database
-};
-
+function logInit() {
+    console.log('Log:\n1.The prefix has been set.');
+    console.log('2.The IoT Lite @Context has been created.');
+    console.log('3.The IoT Lite @Context has been created.');
+}
 
 /*****************************************************/
 /*********** Local Storage's manipulation ************/
@@ -240,27 +236,13 @@ function addDinamicException(ContextKey, NewPropertyId, NewPropertyType) {
  * @return: void, the function just updates the local storage
  */
 function manageGraphLocalStorage(keyAccess, keyStore, elementGraph) {
-    let currentDefinitions = localStorage.getItem(keyAccess); // type: string
-    let objCurrentDefinitions = JSON.parse(currentDefinitions); // string -> object
+    const currentDefinitions = localStorage.getItem(keyAccess); // type: string
+    const objCurrentDefinitions = JSON.parse(currentDefinitions); // string -> object
     /* The elements shall be pushed one by one into the @graph list */
     for (let i=0; i<elementGraph.length; i++) {
-        try {
-            objCurrentDefinitions['@graph'].push(elementGraph[i]); // Updating the @graph list inner the object of definitions
-        }
-        catch (err) {
-            console.log('The IoT @graph was not formed yet, a new attempt of creation of this element is gonna be done in 2 seconds');
-            setTimeout(() => {
-                if ('@graph' in objCurrentDefinitions) {
-                    objCurrentDefinitions['@graph'].push(elementGraph[i]);
-                }
-                else {
-                    console.log('An error has been found in the creation of the IoT lite element @graph.\nDetails: ', err);
-                }
-            }, 2000);
-        }
+        objCurrentDefinitions['@graph'].push(elementGraph[i]); // Updating the @graph list inner the object of definitions
     }
-    localStorage.setItem(keyStore, JSON.stringify(objCurrentDefinitions)); // Updating the object definitions with the 
-    //console.log(' Watching: THE WHOLE DEFINITIONS: ', objCurrentDefinitions);
+    localStorage.setItem(keyStore, JSON.stringify(objCurrentDefinitions)); // Updating the object definitions with the  
 }
 
 /*****************************************************/
@@ -305,15 +287,18 @@ firebase.database().ref('models').orderByKey().once('value')
                                * the whole object will be updated on the local storage */
     let additionalChangeableProp = {}; // id, owl type, domain, range
     let changeablePropRdfsDomain = {}; // ontology:type(device/component)
-    let changeablePropRdfsRange = {}; // xsd:type_value
-
-    createContext(createGraph);    
+    let changeablePropRdfsRange = {}; // xsd:type_value 
+    getPrefix(() => {
+        createContext(() => {
+            createGraph(() => {    
+          });
+        });
+      });
     
     snapshot.forEach((childSnapshot) => {  // Loop into database's information
     //var key = childSnapshot.key;
         switch (childSnapshot.val().type) {
             case 'Device':
-                //addDinamicException(childSnapshot.key, 'macAddress', 'xsd:nonNegativeInteger'); /* Add exception for the property 
                 id_element = {}; 
                 rdfsSubClassOf = []; 
                 id_element['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', childSnapshot.val().id); //prefix:id

@@ -4,6 +4,8 @@ import { definitions } from '../constants/definitions';
 import * as backend from '../backend/backend';
 import * as utils from '../utils/utils';
 
+const PREFIX = localStorage.getItem('prefix');
+
 function clone(object) {
     return JSON.parse(JSON.stringify(object));
 }
@@ -64,12 +66,12 @@ class DeviceStore extends EventEmitter {
         /* It shall be an array of one element always */
         const restrictionId = utils.intersection(restrictionNames, parentClasses)[0];
         if (!parentClasses.includes('iot-lite:ActuatingDevice') && !parentClasses.includes('ssn:SensingDevice')) {
-            createdDevice['ipvs:macAddress'] = '';
+            createdDevice[backend.concatenate(PREFIX, ':macAddress')] = '';
             if (restrictionId.length > 0) {
                 const restriction = restrictions.find((findRestriction) => (findRestriction['@id'] === restrictionId));
                 if (restriction != null) {
                     //console.log('Dropped device on the environment'); 
-                    createdDevice['ipvs:numberOfPins'] = parseInt(restriction['owl:cardinality']['@value']); 
+                    createdDevice[backend.concatenate(PREFIX, ':numberOfPins')] = parseInt(restriction['owl:cardinality']['@value']); 
                 }
             }
         }
@@ -79,25 +81,24 @@ class DeviceStore extends EventEmitter {
         else {
             //console.log('parentClasses[1]: ', parentClasses['1']);
             if (parentClasses['1'] === 'ssn:SensingDevice') { // Just sensors have values
-                createdDevice['ipvs:value'] = ' ';
+                createdDevice[backend.concatenate(PREFIX, ':value')] = ' ';
             }
-            createdDevice['ipvs:pinConfiguration'] = [];
+            createdDevice[backend.concatenate(PREFIX, ':pinConfiguration')] = [];
             if (restrictionId.length > 0) {
                 const restriction = restrictions.find((findRestriction) => (findRestriction['@id'] === restrictionId));
                 if (restriction != null) {
                     const index = parseInt(restriction['owl:cardinality']['@value']);
-                    //createdDevice['ipvs:value'] = '20'; // see wheater it's going to all sensors
                     /* Set pins with an identical number, so list's problems aren't gotten */
                     for (let i = 1; i <= index; i++) {
-                        createdDevice['ipvs:pinConfiguration'].push(i); //TODO: Modify company's prefix
+                        createdDevice[backend.concatenate(PREFIX, ':pinConfiguration')].push(i); //TODO: Modify company's prefix
                     }
                 }
                 //console.log('created device: ', createdDevice);
             }
         }
 
-        if (device.type === 'ipvs:RaspberryPi') {  //modify
-            createdDevice['ipvs:gpioMode'] = ''; 
+        if (device.type === backend.concatenate(PREFIX, ':RaspberryPi')) {
+            createdDevice[backend.concatenate(PREFIX, ':gpioMode')] = ''; 
         }
         createdDevice['iot-lite:isSubSystemOf'] = {
             '@id': ''
