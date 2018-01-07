@@ -219,11 +219,11 @@ function logInit() {
     console.log('3.The IoT Lite @Context has been created.');
 }
 
-/*****************************************************/
-/*********** Local Storage's manipulation ************/
-/*****************************************************/
+/********************************************************************/
+/*********** Local Storage's and Database's manipulation ************/
+/********************************************************************/
 
-/* Function to manipulate keyStored->@graph on the 
+/* Function which manipulates the keyStored->@graph on the 
  * local storage. This function is responsible for: 
  * - retrieving the object definitions in a string format
  * - conversion of the string into an object 
@@ -245,6 +245,33 @@ function manageGraphLocalStorage(keyAccess, keyStore, elementGraph) {
     localStorage.setItem(keyStore, JSON.stringify(objCurrentDefinitions)); // Updating the object definitions with the  
 }
 
+/* Function which updates the graph element with the additional objects
+ * regarding the new devices, components and properties that are added
+ * during the execution of the application. 
+ * @parameters: Object: extensionsGraph
+ *              String keys: definitionsElement, upDefinitions 
+ *              Function: manageGraphLocalStorage(...)
+ * @return: Callback function: manageGraphLocalStorage(...)
+ */
+function updateGraphElement(extensionsGraph, definitionsElement, upDefinitions, callback) {
+    const refDefaults = firebase.database().ref('defaults/');
+    const auxUpdatedGraph = {};
+    refDefaults.once('value', (snapDefaults) => {
+        const refAdditional = firebase.database().ref(`graphs/${snapDefaults.val().defaultgraph}`);
+        refAdditional.once('value', (snapAdd) => {
+            const graph =  JSON.parse(snapAdd.val().defaultobjectsgraph);
+            let i;
+            for (i = 0; i < Object.keys(extensionsGraph).length; i++) {
+                graph['@graph'].push(extensionsGraph[i]);
+            }
+            auxUpdatedGraph.defaultobjectsgraph = JSON.stringify(graph);
+            refAdditional.update(auxUpdatedGraph);
+        });
+    });
+    // get the graph
+    return callback(definitionsElement, upDefinitions, extensionsGraph);
+}
+
 /*****************************************************/
 /************** Database's manipulation **************/
 /*****************************************************/
@@ -252,12 +279,10 @@ function manageGraphLocalStorage(keyAccess, keyStore, elementGraph) {
 /* Read the data from the database (key: images) and update them on the local storage
  */
 const ref = firebase.database().ref('models');
-firebase.database().ref("images").orderByKey().once("value")
+firebase.database().ref('images').orderByKey().once('value')
 .then((snapshot) => { 
     snapshot.forEach((childSnapshot) => {
-        //console.log("Iicon Key: ", childSnapshot.key);
-        ref.on("value", (snapshot) => {
-            //console.log("The icon: ", snapshot.val());
+        ref.on('value', (snapshot) => {
             for (var keyDC in snapshot.val()) {
                 //console.log("DevComp: ", snapshot.val()[keyDC]);
                 if (snapshot.val()[keyDC].imageFile === childSnapshot.key) {
@@ -396,8 +421,8 @@ firebase.database().ref('models').orderByKey().once('value')
                                 childSnapshot.val().owlRestriction === '.' ? childSnapshotVal_owlRestriction='owl:Restriction' : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
                                 
                                 auxObjAddProperty['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', childSnapshot.val().id, '-', property_i); // "prefixCompany:id-additionalProperty"
-                                auxObjAddProperty['@type'] = "owl:Restriction";
-                                auxObjAddProperty['rdfs:comment'] = "childSnapshot.val().rdfsComment";
+                                auxObjAddProperty['@type'] = 'owl:Restriction';
+                                auxObjAddProperty['rdfs:comment'] = 'childSnapshot.val().rdfsComment';
                                 
                                 auxObj_OwlOnProperty['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', property_i);
                                 
@@ -468,7 +493,7 @@ firebase.database().ref('models').orderByKey().once('value')
                                 // If the ownRestriction is empty is because the user has prefered the default option for this IoT Lite information
                                 childSnapshot.val().owlRestriction === '.' ? childSnapshotVal_owlRestriction='owl:Restriction' : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
                                 auxObjAddProperty['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', childSnapshot.val().id, '-', property_i); // "prefixCompany:id-additionalProperty"
-                                auxObjAddProperty['@type'] = "owl:Restriction";
+                                auxObjAddProperty['@type'] = 'owl:Restriction';
                                 auxObjAddProperty['rdfs:comment'] = childSnapshot.val().rdfsComment;
                                 auxObj_OwlOnProperty['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', property_i);                              
                                 /* Getting the data for the key "owl:cardinality" on the element of the additional property */
@@ -527,7 +552,7 @@ firebase.database().ref('models').orderByKey().once('value')
                                 childSnapshot.val().owlRestriction === '.' ? childSnapshotVal_owlRestriction='owl:Restriction' : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
 
                                 auxObjAddProperty['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', childSnapshot.val().id, '-', property_i); // "prefixCompany:id-additionalProperty"
-                                auxObjAddProperty['@type'] = "owl:Restriction";
+                                auxObjAddProperty['@type'] = 'owl:Restriction';
                                 auxObjAddProperty['rdfs:comment'] = childSnapshot.val().rdfsComment;
                                 
                                 auxObj_OwlOnProperty['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', property_i);                              
@@ -545,64 +570,66 @@ firebase.database().ref('models').orderByKey().once('value')
                 extensionsGraph.push(id_element); // Updating the @graph with an additional property
                 break;
             default:
-            id_element = {};
-            rdfsSubClassOf = []; 
-            id_element['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', childSnapshot.val().id);
-            id_element['@type'] = 'owl:Class';
-            rdfsSubClassOf = createRdfs (childSnapshot.val().ontology, childSnapshot.val().type);
-            for (var property_i in childSnapshot.val()) {
-                if((childSnapshot.val()).hasOwnProperty(property_i)) {
-                    is_add_property = verifyAdditionalProperty(property_i);
-                    if (is_add_property == true) {
-                        if (childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:Restriction') { // Just uncheageable properties go onto the devices' definitions
-                            rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i) //rdfsSubClassOf: current list of elements
-                        }
-                        //console.log("Additional Property: ", property_i);
-                        if(childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:DatatypeProperty') { // Changeable property
-                            //console.log("It's changeable: ", property_i);
-                            additionalChangeableProp = {}; // id, owl type, domain, range
-                            changeablePropRdfsDomain = {}; // ontology:type(device/component)
-                            changeablePropRdfsRange = {};
+                id_element = {};
+                rdfsSubClassOf = []; 
+                id_element['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', childSnapshot.val().id);
+                id_element['@type'] = 'owl:Class';
+                rdfsSubClassOf = createRdfs (childSnapshot.val().ontology, childSnapshot.val().type);
+                for (var property_i in childSnapshot.val()) {
+                    if((childSnapshot.val()).hasOwnProperty(property_i)) {
+                        is_add_property = verifyAdditionalProperty(property_i);
+                        if (is_add_property == true) {
+                            if (childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:Restriction') { // Just uncheageable properties go onto the devices' definitions
+                                rdfsSubClassOf = updateRdfsProperties (rdfsSubClassOf, childSnapshot.val(), property_i) //rdfsSubClassOf: current list of elements
+                            }
+                            //console.log("Additional Property: ", property_i);
+                            if(childSnapshot.val()[property_i].NewPropertyOwlType === 'owl:DatatypeProperty') { // Changeable property
+                                //console.log("It's changeable: ", property_i);
+                                additionalChangeableProp = {}; // id, owl type, domain, range
+                                changeablePropRdfsDomain = {}; // ontology:type(device/component)
+                                changeablePropRdfsRange = {};
 
-                            additionalChangeableProp['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', property_i);
-                            additionalChangeableProp['@type'] = childSnapshot.val()[property_i].NewPropertyOwlType;
-                            
-                            changeablePropRdfsDomain['@id'] = concatenate(childSnapshot.val().ontology, ':', childSnapshot.val().type);
-                            changeablePropRdfsRange['@id'] = childSnapshot.val()[property_i].NewPropertyType;
-                            additionalChangeableProp['rdfs:domain'] = changeablePropRdfsDomain;
-                            additionalChangeableProp['rdfs:range'] = changeablePropRdfsRange;
-                            //console.log('Complet object additional changeable prop: ', additionalChangeableProp);
-                            extensionsGraph.push(additionalChangeableProp); // Updating the @graph with an additional property
-                        }                                                                                    
-                    
-                        else { // Unchangeable property: owl:Restriction
-                            //console.log("It's not changeable");
-                            id_element['rdfs:subClassOf'] = rdfsSubClassOf; // Updating the id element with the rdfs list
-                            auxObjAddProperty = {};
-                            childSnapshotVal_owlRestriction = '';
-                            auxObj_OwlOnProperty = {};
-                            auxObj_owlCardinality = {};
-                            // If the ownRestriction is empty is because the user has prefered the default option for this IoT Lite information
-                            childSnapshot.val().owlRestriction === '.' ? childSnapshotVal_owlRestriction='owl:Restriction' : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
-                            auxObjAddProperty['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', childSnapshot.val().id, '-', property_i); // "prefixCompany:id-additionalProperty"
-                            auxObjAddProperty['@type'] = "owl:Restriction";
-                            auxObjAddProperty['rdfs:comment'] = childSnapshot.val().rdfsComment; 
-                            auxObj_OwlOnProperty['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', property_i);                              
-                            /* Getting the data for the key "owl:cardinality" on the element of the additional property */
-                            auxObj_owlCardinality['@value'] = childSnapshot.val()[property_i].NewPropertyValue;
-                            isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality['@type'] = 'xsd:nonNegativeInteger' : auxObj_owlCardinality['@type'] = 'xsd:string';
-                            /* Updating the objects for the additional property's element */
-                            auxObjAddProperty['owl:onProperty'] = auxObj_OwlOnProperty; // Updating the element of the additional property
-                            auxObjAddProperty['owl:cardinality'] = auxObj_owlCardinality; // Updating the element of the additional property
-                            extensionsGraph.push(auxObjAddProperty); // Updating the @graph with an additional property  
+                                additionalChangeableProp['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', property_i);
+                                additionalChangeableProp['@type'] = childSnapshot.val()[property_i].NewPropertyOwlType;
+                                
+                                changeablePropRdfsDomain['@id'] = concatenate(childSnapshot.val().ontology, ':', childSnapshot.val().type);
+                                changeablePropRdfsRange['@id'] = childSnapshot.val()[property_i].NewPropertyType;
+                                additionalChangeableProp['rdfs:domain'] = changeablePropRdfsDomain;
+                                additionalChangeableProp['rdfs:range'] = changeablePropRdfsRange;
+                                //console.log('Complet object additional changeable prop: ', additionalChangeableProp);
+                                extensionsGraph.push(additionalChangeableProp); // Updating the @graph with an additional property
+                            }                                                                                    
+                        
+                            else { // Unchangeable property: owl:Restriction
+                                //console.log("It's not changeable");
+                                id_element['rdfs:subClassOf'] = rdfsSubClassOf; // Updating the id element with the rdfs list
+                                auxObjAddProperty = {};
+                                childSnapshotVal_owlRestriction = '';
+                                auxObj_OwlOnProperty = {};
+                                auxObj_owlCardinality = {};
+                                // If the ownRestriction is empty is because the user has prefered the default option for this IoT Lite information
+                                childSnapshot.val().owlRestriction === '.' ? childSnapshotVal_owlRestriction='owl:Restriction' : childSnapshotVal_owlRestriction=childSnapshot.val().owlRestriction;
+                                auxObjAddProperty['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', childSnapshot.val().id, '-', property_i); // "prefixCompany:id-additionalProperty"
+                                auxObjAddProperty['@type'] = 'owl:Restriction';
+                                auxObjAddProperty['rdfs:comment'] = childSnapshot.val().rdfsComment; 
+                                auxObj_OwlOnProperty['@id'] = concatenate(childSnapshot.val().prefixCompany, ':', property_i);                              
+                                /* Getting the data for the key "owl:cardinality" on the element of the additional property */
+                                auxObj_owlCardinality['@value'] = childSnapshot.val()[property_i].NewPropertyValue;
+                                isNonNegativeInteger(childSnapshot.val()[property_i.toString()])? auxObj_owlCardinality['@type'] = 'xsd:nonNegativeInteger' : auxObj_owlCardinality['@type'] = 'xsd:string';
+                                /* Updating the objects for the additional property's element */
+                                auxObjAddProperty['owl:onProperty'] = auxObj_OwlOnProperty; // Updating the element of the additional property
+                                auxObjAddProperty['owl:cardinality'] = auxObj_owlCardinality; // Updating the element of the additional property
+                                extensionsGraph.push(auxObjAddProperty); // Updating the @graph with an additional property  
+                            }
                         }
                     }
-                } 
-            } 
-            extensionsGraph.push(id_element); // Updating the @graph with an additional property
+                }
+                extensionsGraph.push(id_element); // Updating the @graph with an additional property
         }
     });
-    manageGraphLocalStorage('definitions', 'upDefinitions', extensionsGraph); // Extension graph is already done to be stored, with all components, devices and additional properties
+    // USE CALLBACK HERE
+    updateGraphElement(extensionsGraph, 'definitions', 'upDefinitions', manageGraphLocalStorage);
+    //manageGraphLocalStorage('definitions', 'upDefinitions', extensionsGraph); // Extension graph is already done to be stored, with all components, devices and additional properties
 });
 
 dashboard.controller('myaccountController', ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseArray','$firebaseAuth','$firebaseObject',
