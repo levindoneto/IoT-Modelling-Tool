@@ -44,7 +44,7 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
         $scope.remove = function (accessKey, prefix, type, position) {
             let keyM;
             let typeLC; // actuator, device or sensor
-            var refDefComp = firebase.database().ref(`devComp/${prefix}/${type}/`);
+            const refDefComp = firebase.database().ref(`devComp/${prefix}/${type}/`);
             
             switch (type) {
                 case 'ActuatingDevice':
@@ -61,8 +61,9 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
             }
             for (keyM in modelObj) {
                 if (keyM.startsWith('-') && accessKey === modelObj[keyM].imageFile) {
-                    var refM = firebase.database().ref(`models/${keyM}`);
-                    var refMapTypeComponents = firebase.database().ref(`mapTypeComponents/${modelObj[keyM].id}`);
+                    const refM = firebase.database().ref(`models/${keyM}`);
+                    const refMapTypeComponents = firebase.database().ref(`mapTypeComponents/${modelObj[keyM].id}`);
+                    const refIcons = firebase.database().ref(`images/${modelObj[keyM].imageFile}`);
                     swal({
                         title: concatenate('Are you sure you wanna delete this ', typeLC, '?'),
                         text: 'You can not change this once it is done!',
@@ -71,6 +72,8 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
                         dangerMode: true,
                     }).then((value) => { // yes:true, no:null
                             if (value) { // User has clicked the button <yes> for deleting the measurement
+                                console.log('modelObj[keyM].imageFile: ', modelObj[keyM].imageFile);
+                                refIcons.remove();
                                 refMapTypeComponents.remove();
                                 refM.remove();
                                 refDefComp.child(position.toString()).remove();
