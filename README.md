@@ -44,7 +44,7 @@ The packages diagram can be viewed in the image bellow.
 
 Each submenu has its own controller and view. 
 
-### Admin view
+### Admin View
 
 In total, there are eleven submenus on the developed IoT Modelling Tool in the admin view:
 
@@ -60,7 +60,7 @@ In total, there are eleven submenus on the developed IoT Modelling Tool in the a
 * Add Additional Properties
 * Search
 
-### Normal user view
+### Normal User View
 
 In total, there are two submenus on the developed IoT Modelling Tool in the admin view:
 

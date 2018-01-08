@@ -96,7 +96,6 @@ function createGraph() {
         firebase.database().ref(`graphs/${keyDefaultGraph}`).orderByKey().once('value') // Accessing the object of the default graph, `graphs/${keyDefaultGraph}` = 'graphs'+keyDefaultGraph on ES6
         .then((snapshot) => {
             const listDefaultElements = Object.values(JSON.parse(snapshot.val().defaultobjectsgraph)['@graph']); // List with the default elements (object->list)
-            
             // Retrieving the current definitions (just with the element @context) from the local storage
             const currentDefinitions = localStorage.getItem('definitions');
             const objCurrentDefinitions = JSON.parse(currentDefinitions);
@@ -238,8 +237,9 @@ function logInit() {
 function manageGraphLocalStorage(keyAccess, keyStore, elementGraph) {
     const currentDefinitions = localStorage.getItem(keyAccess); // type: string
     const objCurrentDefinitions = JSON.parse(currentDefinitions); // string -> object
+    let i;
     /* The elements shall be pushed one by one into the @graph list */
-    for (let i=0; i<elementGraph.length; i++) {
+    for (i = 0; i < elementGraph.length; i++) {
         objCurrentDefinitions['@graph'].push(elementGraph[i]); // Updating the @graph list inner the object of definitions
     }
     localStorage.setItem(keyStore, JSON.stringify(objCurrentDefinitions)); // Updating the object definitions with the  
@@ -256,15 +256,17 @@ function manageGraphLocalStorage(keyAccess, keyStore, elementGraph) {
 function updateGraphElement(extensionsGraph, definitionsElement, upDefinitions, callback) {
     const refDefaults = firebase.database().ref('defaults/');
     const auxUpdatedGraph = {};
+    let auxExtensionGraph = [];
     refDefaults.once('value', (snapDefaults) => {
         const refAdditional = firebase.database().ref(`graphs/${snapDefaults.val().defaultgraph}`);
         refAdditional.once('value', (snapAdd) => {
-            const graph =  JSON.parse(snapAdd.val().defaultobjectsgraph);
             let i;
             for (i = 0; i < Object.keys(extensionsGraph).length; i++) {
-                graph['@graph'].push(extensionsGraph[i]);
+                auxExtensionGraph.push(extensionsGraph[i]);
             }
-            auxUpdatedGraph.defaultobjectsgraph = JSON.stringify(graph);
+            console.log('default graph: ', JSON.parse(snapAdd.val().defaultobjectsgraph));
+            auxUpdatedGraph.defaultobjectsgraph = snapAdd.val().defaultobjectsgraph;
+            auxUpdatedGraph.extensionGraph = JSON.stringify(auxExtensionGraph);
             refAdditional.update(auxUpdatedGraph);
         });
     });
@@ -627,7 +629,6 @@ firebase.database().ref('models').orderByKey().once('value')
                 extensionsGraph.push(id_element); // Updating the @graph with an additional property
         }
     });
-    // USE CALLBACK HERE
     updateGraphElement(extensionsGraph, 'definitions', 'upDefinitions', manageGraphLocalStorage);
     //manageGraphLocalStorage('definitions', 'upDefinitions', extensionsGraph); // Extension graph is already done to be stored, with all components, devices and additional properties
 });

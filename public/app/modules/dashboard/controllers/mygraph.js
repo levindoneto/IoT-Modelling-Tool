@@ -18,9 +18,14 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         const graphObj = $firebaseObject(refSelGraph);
         graphObj.$loaded().then(() => { //Loading graphs from the database as an object
             const objDefaultGraph = JSON.parse(graphObj.defaultobjectsgraph);
+            const objExtensionGraph = JSON.parse(graphObj.extensionGraph);
             let i;
+            let j;
             for (i in objDefaultGraph['@graph']) {
                 graphDefaultElementsList.push(objDefaultGraph['@graph'][i]);
+            }
+            for (j in objExtensionGraph) {
+                graphDefaultElementsList.push(objExtensionGraph[j]);
             }
             $scope.modelgraph = graphObj;
             $scope.graphDefaultElements = graphDefaultElementsList;
@@ -28,10 +33,10 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     };
     
     /* Function to set a default @graph for the real time digital environment */
-    $scope.setgraphdefault = function (keyGraph) { // key is given by the user via a option box 
+    $scope.setgraphdefault = function (keyGraph) { // key is given by the user via a option box
         const refDefaults = firebase.database().ref('defaults/'); /* defaults->defaultgraph provide the key on
                                                                    * graphs for the default @graph */ 
-        let auxObjGraph; 
+        const auxObjGraph = {}; 
         auxObjGraph.defaultgraph = keyGraph; 
         refDefaults.update(auxObjGraph); // It's just a replacement of values, once the object defaults has unique keys
         swal({
