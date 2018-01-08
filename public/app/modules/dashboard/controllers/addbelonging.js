@@ -43,14 +43,14 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                         if (snapshot.val() != null) {
                             if (prefix in snapshot.val() && add === false) {
                                 if (type in snapshot.val()[prefix]) {
-                                    auxInfo[(Object.keys(snapshot.val()[prefix][type]).length).toString()] = model;
+                                    auxInfo[concatenate((Object.keys(snapshot.val()[prefix][type]).length).toString(), '-', model.id)] = model;                                   
                                     auxBind = Object.assign(snapshot.val()[prefix][type], auxInfo);
                                     auxPrefix[type] = auxBind;
                                     auxBindPrefix[prefix] = Object.assign(snapshot.val()[prefix], auxPrefix);
                                     auxBindDevComp = Object.assign(snapshot.val(), auxBindPrefix);
-                                    //console.log('auxBindDevComp: ', auxBindDevComp);
-                                    if (add === false && snapshot.val()[prefix][type][(Object.keys(snapshot.val()[prefix][type]).length - 1).toString()].id !== model.id) {
-                                        //console.log('Inside: auxBindDevComp: ', auxBindDevComp);
+                                    // Condition for avoiding multiple addings in the database with the same element
+                                    const keyPrevious = Object.keys(snapshot.val()[prefix][type])[(Object.keys(snapshot.val()[prefix][type]).length - 1).toString()];
+                                    if (add === false && snapshot.val()[prefix][type][keyPrevious].id !== model.id) {
                                         refDevComp.update(auxBindDevComp);
                                         add = true;
                                         return;
@@ -76,8 +76,8 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                                     return;
                                 }
                                 else { 
-                                    //console.log('CREATE TYPE');
-                                    auxInfo['0'] = model; // First model of the just created type
+                                    // Create type
+                                    auxInfo[concatenate('0', '-', model.id)] = model; // First model of the just created type
                                     auxType[type] = auxInfo;
                                     auxPrefix[prefix] = Object.assign(snapshot.val()[prefix], auxType);
                                     refDevComp.update(auxPrefix);
@@ -96,8 +96,9 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                                     return;
                                 }
                             }
-                            else { 
-                                auxInfo['0'] = model;// First model of the just created type
+                            else {
+                                // Create prefix
+                                auxInfo[concatenate('0', '-', model.id)] = model;// First model of the just created type
                                 auxType[type] = auxInfo;
                                 auxPrefix[prefix] = auxType;
                                 refDevComp.update(auxPrefix);
@@ -130,40 +131,20 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                          * saved to the server. The promise resolves to the Firebase reference 
                          * for the newly added record, providing easy access to its key.
                          */
-                        if (type === 'Device') {
-                            swal({
-                                title: 'The device has been added successfully!\n',
-                                icon: 'success',
-                                button: false,
-                                timer: 3000
-                            });
-                        }
-                        else if (type === 'SensingDevice') {
-                            swal({
-                                title: 'The sensor has been added successfully!\n',
-                                icon: 'success',
-                                button: false,
-                                timer: 3000
-                            }); 
-                        }
-                        else {
-                            swal({
-                                title: 'The actuator has been added successfully!\n',
-                                icon: 'success',
-                                button: false,
-                                timer: 3000
-                            });
-                        }
+                        swal({
+                            title: concatenate('Thse ', compType[model.id], ' has been added successfully!\n'),
+                            icon: 'success',
+                            button: false,
+                            timer: 3000
+                        });
                         modelList.$add(modelKeys).then((ref) => {
                         });
+                        setTimeout(() => {
+                            routeSync();
+                        }, 3000); 
                     });
                 });
-                setTimeout(() => {
-                    console.log('sync...');
-                    routeSync();
-                }, 3000); 
             });
         });
-
     };
 }]);

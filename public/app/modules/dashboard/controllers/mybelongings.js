@@ -72,11 +72,16 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
                         dangerMode: true,
                     }).then((value) => { // yes:true, no:null
                             if (value) { // User has clicked the button <yes> for deleting the measurement
-                                console.log('modelObj[keyM].imageFile: ', modelObj[keyM].imageFile);
                                 refIcons.remove();
                                 refMapTypeComponents.remove();
                                 refM.remove();
                                 refDefComp.child(position.toString()).remove();
+                                swal({
+                                    title: concatenate('The ', typeLC, ' has been deleted!'),
+                                    icon: 'success',
+                                    button: false,
+                                    timer: 3000
+                                });
                             }
                             else {
                                 swal({
@@ -85,11 +90,11 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
                                     button: false,
                                     timer: 3000
                                 });
-                                setTimeout(() => {
-                                    routeSync();
-                                }, 3000); 
                             }
                         });
+                        setTimeout(() => {
+                            routeSync();
+                        }, 3000); 
                 }
             }
         };
