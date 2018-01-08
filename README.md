@@ -42,20 +42,30 @@ The packages diagram can be viewed in the image bellow.
 
 ## System's Submenus
 
-Each submenu has its own controller and view. In total, there are 11 submenus on the developed IoT Modelling Tool:
+Each submenu has its own controller and view. 
+
+### Admin view
+
+In total, there are eleven submenus on the developed IoT Modelling Tool in the admin view:
 
 * My Account
 * Add Default @Context
 * Add Specific @Context
 * Add Default @Graph
-* My @Context
-* My @Graph
+* IoT Lite @Context
+* IoT Lite @Graph
 * IoT Modelling Environment
-* Add Device
-* My Modeled Hardware Devices and Components
+* Add Device or Component
+* Devices and Components
 * Add Additional Properties
 * Search
 
+### Normal user view
+
+In total, there are two submenus on the developed IoT Modelling Tool in the admin view:
+
+* My Account
+* IoT Modelling Environment
 
 ## IoT Modelling Environment's Navigation Bar
 

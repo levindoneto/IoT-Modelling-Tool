@@ -12,7 +12,8 @@ const LOAD_LAST_MODEL = 'loadLastModel';
 const LOAD_TEMP_MODEL = 'loadTempModel';
 const IS_TEMPORARY_MODEL = 'isTemporaryModel';
 const IS_SYNC = 'isSync'; /* Flag for knowing when the platform is just being syncrhonized
-* in order to not set a model during this process */
+                           * in order to not set a model during this process */
+const PREFIX = 'prefix';
 
 /* Times' levels for hierarchical execution (ms) */
 const LEVEL = {
@@ -25,26 +26,36 @@ const LEVEL = {
 
 const auxSavedModels = {};
 let accessedModel = {};
+let auxContent = {};
 const refTrig = firebase.database().ref('devicesWithSubsystems/');
 const refSavedModels = firebase.database().ref('savedModels/');
 const refTmp = firebase.database().ref('tmp/');
+let userModel;
 
 refTrig.on('child_changed', (snapshot) => {
     //console.log('Triggering ...');
     refSavedModels.on('value', (savedM) => {
-        accessedModel = JSON.parse(savedM.val()[snapshot.key]);
-        for (let i = 0; i < (Object.keys(accessedModel[['@graph']])).length; i++) {
-            for (let j in snapshot.val()) {
-                for (let k in snapshot.val()[j]) {
+        accessedModel = JSON.parse(savedM.val()[snapshot.key].content);
+        localStorage.setItem('userModel', savedM.val()[snapshot.key].user);
+        let i;
+        let j;
+        let k;
+        for (i = 0; i < (Object.keys(accessedModel[['@graph']])).length; i++) {
+            for (j in snapshot.val()) {
+                for (k in snapshot.val()[j]) {
                     if (i.toString() === k.toString()) {
-                        accessedModel['@graph'][i]['ipvs:value'] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].value; // j:device, k:the subsystem index, 0:just one subsystem per index
+                        accessedModel['@graph'][i][concatenate(localStorage.getItem(PREFIX), ':value')] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].value; // j:device, k:the subsystem index, 0:just one subsystem per index
+                        accessedModel['@graph'][i - 1]['geo:lat'] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationX;
+                        accessedModel['@graph'][i - 1]['geo:long'] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationY;   
                     }
                 }
             }
         }
     });
     const updatedModelStr = JSON.stringify(accessedModel);
-    auxSavedModels[snapshot.key] = updatedModelStr;
+    auxContent.content = updatedModelStr;
+    auxContent.user = localStorage.getItem('userModel') || localStorage.getItem('loggedUser');
+    auxSavedModels[snapshot.key] = auxContent;
     refSavedModels.update(auxSavedModels); // Update the database
     if (localStorage.getItem(IS_SYNC) !== TRUE) {
         DeviceStore.setModel(accessedModel); // Update the digital twin
@@ -55,7 +66,7 @@ const defaultContentProps = [ // properties that won't be parsed
     'geo:location',
     '@id',
     'iot-lite:isSubSystemOf',
-    'ipvs:value',
+    concatenate(localStorage.getItem(PREFIX), ':value'),
     '@type'];
 
 function verifyAddProp(propertyI) {
@@ -204,7 +215,7 @@ export function fireAjaxSave(name, content, isBinding, alertSave, tmpSaving) {
             if (content['@graph'][i]['iot-lite:isSubSystemOf']['@id'] !== '') { // The content->subsystem is connected to a device
                 refDevicesWithSubsystems.on('value', (snapshot) => {
                     const keysModelsDevicesWithSubsystems = Object.keys(snapshot.val());
-                    const value = content['@graph'][i]['ipvs:value'];
+                    const value = content['@graph'][i][concatenate(localStorage.getItem(PREFIX), ':value')];
                     const typeId = content['@graph'][i]['@type'];
                     /* Get the additional properties on the content->subsytem */
                     for (var infoContent in content['@graph'][i]) {

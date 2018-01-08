@@ -1,4 +1,10 @@
 const UNDEFINED = 'undefined';
+function routeSyncInit() {
+    if(localStorage.getItem('init') === 'false') {
+        localStorage.setItem('init', 'true');
+        window.location.reload();
+    }
+}
 
 function routeSync() {
     if (window.localStorage) {
@@ -104,7 +110,7 @@ dashboard.factory('notification', ($firebaseArray, $firebaseObject) => ({
           controller: 'mycontextController',
           controllerAs: 'vm',
           data: {
-              pageTitle: 'My @Context'
+              pageTitle: 'IoT Lite @Context'
           }
       });
 
@@ -114,7 +120,7 @@ dashboard.factory('notification', ($firebaseArray, $firebaseObject) => ({
           controller: 'mygraphController',
           controllerAs: 'vm',
           data: {
-              pageTitle: 'My @Graph'
+              pageTitle: 'IoT Lite @Graph'
           }
       });
 
@@ -124,7 +130,7 @@ dashboard.factory('notification', ($firebaseArray, $firebaseObject) => ({
           controller: 'addbelongingController',
           controllerAs: 'vm',
           data: {
-              pageTitle: 'Add Device'
+              pageTitle: 'Add Device or Component'
           }
       });
 
@@ -134,7 +140,7 @@ dashboard.factory('notification', ($firebaseArray, $firebaseObject) => ({
           controller: 'mybelongingsController',
           controllerAs: 'vm',
           data: {
-              pageTitle: 'My Devices'
+              pageTitle: 'Devices and Components'
           }
       });
 

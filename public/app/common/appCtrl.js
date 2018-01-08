@@ -147,12 +147,12 @@ function ($rootScope, $scope, $state, $location, Flash,appSettings,$firebaseAuth
             state: 'adddefaultgraph'
         },
         {
-            title: '@Context',
+            title: 'IoT Lite @Context',
             icon: 'fa fa-tablet',
             state: 'mycontext'
         },
         {
-            title: '@Graph',
+            title: 'IoT Lite @Graph',
             icon: 'exchange',
             state: 'mygraph'
         },
