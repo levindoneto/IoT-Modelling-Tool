@@ -21,8 +21,11 @@
             <button type="button" data-toggle="modal" ng-click="modal(selectedGraph)" data-target="#popUp" class="fa fa-info-circle BtnmyContexts">
                 See more information about the selected @Graph
             </button>
-            <button ng-click="setgraphdefault(selectedGraph)" type="button" class="fa fa-check-circle BtnmyContexts">
+            <button ng-click="setGraphDefault(selectedGraph)" type="button" class="fa fa-check-circle BtnmyContexts">
                 Set the selected @Graph as the default one
+            </button>
+            <button ng-click="downloadGraphElement(selectedGraph)" type="button" class="fa fa-download-circle BtnmyContexts">
+                Download the selected @Graph in a JSON format
             </button></br>
             
             <!-- Displaying the information about the selected @graph -->

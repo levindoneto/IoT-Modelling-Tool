@@ -264,7 +264,6 @@ function updateGraphElement(extensionsGraph, definitionsElement, upDefinitions, 
             for (i = 0; i < Object.keys(extensionsGraph).length; i++) {
                 auxExtensionGraph.push(extensionsGraph[i]);
             }
-            console.log('default graph: ', JSON.parse(snapAdd.val().defaultobjectsgraph));
             auxUpdatedGraph.defaultobjectsgraph = snapAdd.val().defaultobjectsgraph;
             auxUpdatedGraph.extensionGraph = JSON.stringify(auxExtensionGraph);
             refAdditional.update(auxUpdatedGraph);
