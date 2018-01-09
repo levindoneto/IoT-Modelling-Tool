@@ -1,4 +1,4 @@
-dashboard.controller('mygraphController', ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash','$firebaseObject','$firebaseArray',
+dashboard.controller('mygraphController', ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseObject', '$firebaseArray',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray) { 
     var vm = this; //controllerAs
     const ref = firebase.database().ref('graphs/'); // Loading all the graphs from the database
@@ -55,23 +55,23 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         const h = d.getHours() < 10 ? concatenate('0', d.getHours()) : d.getHours();
         const m = d.getMinutes() < 10 ? concatenate('0', d.getMinutes()) : d.getMinutes();
         const s = d.getSeconds() < 10 ? concatenate('0', d.getSeconds()) : d.getSeconds();
-        let graphList = [];
-        let graphObject = {}; // "@graph":graphList
+        let graphListAux = [];
+        let graphObject = {}; // "@graph":graphListAux
         const refGraphElement = firebase.database().ref(`graphs/${keySelGraph}`);
         refGraphElement.once('value', (snapGraph) => {
             const graphFile = concatenate(snapGraph.val().idgraph, '_', d.toISOString().substring(0, 10), '_', h, '-', m, '-', s);
             let i;
             let j;
             for (i in JSON.parse(snapGraph.val().defaultobjectsgraph)['@graph']) {
-               graphList.push(JSON.parse(snapGraph.val().defaultobjectsgraph)['@graph'][i]);
+                graphListAux.push(JSON.parse(snapGraph.val().defaultobjectsgraph)['@graph'][i]);
             }
             for (j in JSON.parse(snapGraph.val().extensionGraph)) {
-                graphList.push(JSON.parse(snapGraph.val().extensionGraph)[j]);
+                graphListAux.push(JSON.parse(snapGraph.val().extensionGraph)[j]);
             }
-            graphObject['@graph'] = graphList;
+            graphObject['@graph'] = graphListAux;
             const pom = document.createElement(hyperlinkTag);
             pom.setAttribute('href', `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(graphObject, null, 2))}`);
-            pom.setAttribute('download', graphFile.concat('.json')); // Open the file for dowloading with the given name               
+            pom.setAttribute('download', concatenate(graphFile, '.json')); // Open the file for dowloading with the given name               
             if (document.createEvent) {
               const downloadFile = document.createEvent('MouseEvents');
               downloadFile.initEvent('click', true, true); // Event may bubble up through the DOM: true,

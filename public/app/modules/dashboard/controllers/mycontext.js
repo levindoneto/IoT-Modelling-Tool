@@ -46,15 +46,40 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
 
     /* Function responsible for passing the selected context to the scope */
     $scope.modal = function (keySelContext) {
-        //console.log("Context key: ", keySelContext);
-        let ref = firebase.database().ref(`contexts/${keySelContext}`);
-        let contextObj = $firebaseObject(ref);
-        contextObj.$loaded().then(() => { //Loading contexts from the database as an object
+        const ref = firebase.database().ref(`contexts/${keySelContext}`);
+        const contextObj = $firebaseObject(ref);
+        contextObj.$loaded().then(() => { //Load contexts from the database as an object
             $scope.modelcontext = contextObj;
-            //console.log("Value:", contextObj);
         });
     };
-    
+        
+    /* Function for exporting the selected IoT Context in a JSON format */
+    $scope.downloadContextElement = function (keySelContext) {
+        const hyperlinkTag = 'a';
+        const d = new Date();
+        const h = d.getHours() < 10 ? concatenate('0', d.getHours()) : d.getHours();
+        const m = d.getMinutes() < 10 ? concatenate('0', d.getMinutes()) : d.getMinutes();
+        const s = d.getSeconds() < 10 ? concatenate('0', d.getSeconds()) : d.getSeconds();
+        let contextObject = {}; // "@context":contextList
+        const refContextElement = firebase.database().ref(`contexts/${keySelContext}`);
+        refContextElement.once('value', (snapContext) => {
+            const contextFile = concatenate(snapContext.val().idcontext, '_', d.toISOString().substring(0, 10), '_', h, '-', m, '-', s);
+            contextObject = snapContext.val();
+            delete contextObject.idcontext;
+            const pom = document.createElement(hyperlinkTag);
+            pom.setAttribute('href', `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(contextObject, null, 2))}`);
+            pom.setAttribute('download', concatenate(contextFile, '.json'));               
+            if (document.createEvent) {
+              const downloadFile = document.createEvent('MouseEvents');
+              downloadFile.initEvent('click', true, true);
+              pom.dispatchEvent(downloadFile);
+            }
+            else {
+              pom.click();
+            }
+        }); 
+    };
+
     /* Function to set a default @context for real time digital environment */
     $scope.setcontextdefault = function (keyContext) {
         const refDefaults = firebase.database().ref('defaults/');
