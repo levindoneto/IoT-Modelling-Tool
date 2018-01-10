@@ -55,29 +55,22 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         
     /* Function for exporting the selected IoT Context in a JSON format */
     $scope.downloadContextElement = function (keySelContext) {
-        const hyperlinkTag = 'a';
-        const d = new Date();
-        const h = d.getHours() < 10 ? concatenate('0', d.getHours()) : d.getHours();
-        const m = d.getMinutes() < 10 ? concatenate('0', d.getMinutes()) : d.getMinutes();
-        const s = d.getSeconds() < 10 ? concatenate('0', d.getSeconds()) : d.getSeconds();
-        let contextObject = {}; // "@context":contextList
-        const refContextElement = firebase.database().ref(`contexts/${keySelContext}`);
-        refContextElement.once('value', (snapContext) => {
-            const contextFile = concatenate(snapContext.val().idcontext, '_', d.toISOString().substring(0, 10), '_', h, '-', m, '-', s);
-            contextObject = snapContext.val();
-            delete contextObject.idcontext;
-            const pom = document.createElement(hyperlinkTag);
-            pom.setAttribute('href', `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(contextObject, null, 2))}`);
-            pom.setAttribute('download', concatenate(contextFile, '.json'));               
-            if (document.createEvent) {
-              const downloadFile = document.createEvent('MouseEvents');
-              downloadFile.initEvent('click', true, true);
-              pom.dispatchEvent(downloadFile);
-            }
-            else {
-              pom.click();
-            }
-        }); 
+        if (!keySelContext) {
+            swal({
+                title: 'An IoT Lite @Context must be selected for dowloading',
+                text: 'If no one has been defined yet, it can be added in the option IoT Lite @Context of the main menu',
+                icon: 'warning'
+            });
+        } else {
+            const TYPE_ELEMENT = 'IoT Lite @Context';
+            let contextObject = {}; // "@context":contextList
+            const refContextElement = firebase.database().ref(`contexts/${keySelContext}`);
+            refContextElement.once('value', (snapContext) => {
+                contextObject = snapContext.val();
+                delete contextObject.idcontext;
+                downloadFileJson(contextObject, snapContext.val().idcontext, TYPE_ELEMENT);
+            });
+        }
     };
 
     /* Function to set a default @context for real time digital environment */

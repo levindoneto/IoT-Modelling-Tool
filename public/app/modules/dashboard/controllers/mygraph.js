@@ -50,38 +50,30 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
 
    /* Function for exporting the selected IoT Graph in a JSON format */
     $scope.downloadGraphElement = function (keySelGraph) { // key is given by the user via a option box
-        const hyperlinkTag = 'a';
-        const d = new Date();
-        const h = d.getHours() < 10 ? concatenate('0', d.getHours()) : d.getHours();
-        const m = d.getMinutes() < 10 ? concatenate('0', d.getMinutes()) : d.getMinutes();
-        const s = d.getSeconds() < 10 ? concatenate('0', d.getSeconds()) : d.getSeconds();
-        let graphListAux = [];
-        let graphObject = {}; // "@graph":graphListAux
-        const refGraphElement = firebase.database().ref(`graphs/${keySelGraph}`);
-        refGraphElement.once('value', (snapGraph) => {
-            const graphFile = concatenate(snapGraph.val().idgraph, '_', d.toISOString().substring(0, 10), '_', h, '-', m, '-', s);
-            let i;
-            let j;
-            for (i in JSON.parse(snapGraph.val().defaultobjectsgraph)['@graph']) {
-                graphListAux.push(JSON.parse(snapGraph.val().defaultobjectsgraph)['@graph'][i]);
-            }
-            for (j in JSON.parse(snapGraph.val().extensionGraph)) {
-                graphListAux.push(JSON.parse(snapGraph.val().extensionGraph)[j]);
-            }
-            graphObject['@graph'] = graphListAux;
-            const pom = document.createElement(hyperlinkTag);
-            pom.setAttribute('href', `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(graphObject, null, 2))}`);
-            pom.setAttribute('download', concatenate(graphFile, '.json')); // Open the file for dowloading with the given name               
-            if (document.createEvent) {
-              const downloadFile = document.createEvent('MouseEvents');
-              downloadFile.initEvent('click', true, true); // Event may bubble up through the DOM: true,
-                                                           //  Event may be canceled: true 
-              pom.dispatchEvent(downloadFile);
-            }
-            else {
-              pom.click();
-            }
-        }); 
+        if (!keySelGraph) {
+            swal({
+                title: 'An IoT Lite @Graph must be selected for dowloading',
+                text: 'If no one has been defined yet, it can be added in the option IoT Lite @Graph of the main menu',
+                icon: 'warning'
+            });
+        } else {
+            const graphListAux = [];
+            const graphObject = {}; // "@graph":graphListAux
+            const refGraphElement = firebase.database().ref(`graphs/${keySelGraph}`);
+            const TYPE_ELEMENT = 'IoT Lite @Graph';
+            refGraphElement.once('value', (snapGraph) => {
+                let i;
+                let j;
+                for (i in JSON.parse(snapGraph.val().defaultobjectsgraph)['@graph']) {
+                    graphListAux.push(JSON.parse(snapGraph.val().defaultobjectsgraph)['@graph'][i]);
+                }
+                for (j in JSON.parse(snapGraph.val().extensionGraph)) {
+                    graphListAux.push(JSON.parse(snapGraph.val().extensionGraph)[j]);
+                }
+                graphObject['@graph'] = graphListAux;
+                downloadFileJson(graphObject, snapGraph.val().idgraph, TYPE_ELEMENT);
+            }); 
+        }
     };   
 
     /* Function to emulate the for i in range with AngularJS 

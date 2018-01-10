@@ -598,12 +598,12 @@ firebase.database().ref('models').orderByKey().once('value')
                                 additionalChangeableProp['rdfs:domain'] = changeablePropRdfsDomain;
                                 additionalChangeableProp['rdfs:range'] = changeablePropRdfsRange;
                                 //console.log('Complet object additional changeable prop: ', additionalChangeableProp);
-                                extensionsGraph.push(additionalChangeableProp); // Updating the @graph with an additional property
+                                extensionsGraph.push(additionalChangeableProp); // Update the @graph with an additional property
                             }                                                                                    
                         
                             else { // Unchangeable property: owl:Restriction
                                 //console.log("It's not changeable");
-                                id_element['rdfs:subClassOf'] = rdfsSubClassOf; // Updating the id element with the rdfs list
+                                id_element['rdfs:subClassOf'] = rdfsSubClassOf; // Update the id element with the rdfs list
                                 auxObjAddProperty = {};
                                 childSnapshotVal_owlRestriction = '';
                                 auxObj_OwlOnProperty = {};
@@ -625,7 +625,7 @@ firebase.database().ref('models').orderByKey().once('value')
                         }
                     }
                 }
-                extensionsGraph.push(id_element); // Updating the @graph with an additional property
+                extensionsGraph.push(id_element); // Update the @graph with an additional property
         }
     });
     updateGraphElement(extensionsGraph, 'definitions', 'upDefinitions', manageGraphLocalStorage);
@@ -635,14 +635,14 @@ firebase.database().ref('models').orderByKey().once('value')
 dashboard.controller('myaccountController', ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseArray','$firebaseAuth','$firebaseObject',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseArray, $firebaseAuth, $firebaseObject) {
     var vm = this;
-    var ref = firebase.database().ref('defaults/defaultcontext'); // Accesing the object context selected by the user
+    var ref = firebase.database().ref('defaults/defaultcontext'); // Acces the object context selected by the user
     var refg = firebase.database().ref('defaults/defaultgraph');
-    var contextDefaultObj = $firebaseObject(ref); // Accessing the default @context key
-    var refContexts = firebase.database().ref('contexts/'); // Accesing the object context selected by the user
+    var contextDefaultObj = $firebaseObject(ref); // Access the default @context key
+    var refContexts = firebase.database().ref('contexts/'); // Access the object context selected by the user
     var allContexts = $firebaseObject(refContexts);
-    var refGraphs = firebase.database().ref('graphs/'); // Accessing the object @graphs from Firebase
+    var refGraphs = firebase.database().ref('graphs/'); // Access the object @graphs from Firebase
     var allGraphs = $firebaseObject(refGraphs);
-    var graphDefaultObj = $firebaseObject(refg); // Acessing the default @graph key
+    var graphDefaultObj = $firebaseObject(refg); // Acess the default @graph key
 
 
     setTimeout(() => { // It works as a promise without using any function as parameter
@@ -666,7 +666,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
 
     /* Function to verify if a @Context has been set for the modelling environment */
     $scope.verifySettingDefaultContext = function () {
-        if (!contextDefaultObj.$value.toString()) { // Default @context isn't set
+        if (!contextDefaultObj.$value) { // Default @context isn't set
             $scope.defaultContextIsSet = false;
         }
         else {
@@ -675,7 +675,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     }
 
     $scope.verifySettingDefaultGraph = function () {
-        if (!graphDefaultObj.$value.toString()) { // Default @graph isn't set
+        if (!graphDefaultObj.$value) { // Default @graph isn't set
             $scope.defaultGraphIsSet = false;
         }
         else {
@@ -711,5 +711,4 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     $('#form_id').submit(() => {
         $('#editModal').modal('hide');
     });
-
 }]);

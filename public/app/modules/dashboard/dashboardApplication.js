@@ -1,6 +1,6 @@
 const UNDEFINED = 'undefined';
 function routeSyncInit() {
-    if(localStorage.getItem('init') === 'false') {
+    if (localStorage.getItem('init') === 'false') {
         localStorage.setItem('init', 'true');
         window.location.reload();
     }
@@ -11,8 +11,7 @@ function routeSync() {
         if (!localStorage.getItem('firstLoad')) {
             localStorage.firstLoad = true;
             window.location.reload();
-        }
-        else {
+        } else {
             localStorage.removeItem('firstLoad');
         }
     }
@@ -27,8 +26,7 @@ function concatenate(...theArgs) {
     for (s = 0; s < theArgs.length; s++) {
         try { // It just does not work with empty or undefined strings
             concatenatedStr = concatenatedStr.concat((theArgs[s]).toString());
-        }
-        catch(err) {
+        } catch (err) {
             console.log('At least of the used arguments is undefined or has not been processed yet, which is generating the following processing error:\n', err);
             concatenatedStr = concatenatedStr.concat('');
             console.log('The error has been handled successfully, though');
@@ -38,6 +36,40 @@ function concatenate(...theArgs) {
     return concatenatedStr;
 }
 
+/* Function that, given an object, creates a json file with it
+   @Parameters: object: Bbject for conversion, id: string with the name without the date/time info 
+   @Return: None, it opens a file for download in a JSON format
+*/
+function downloadFileJson(object, id, typeElement) {
+    try {
+        const hyperlinkTag = 'a';
+        const d = new Date();
+        const h = d.getHours() < 10 ? concatenate('0', d.getHours()) : d.getHours();
+        const m = d.getMinutes() < 10 ? concatenate('0', d.getMinutes()) : d.getMinutes();
+        const s = d.getSeconds() < 10 ? concatenate('0', d.getSeconds()) : d.getSeconds();
+        const fileName = concatenate(id, '_', d.toISOString().substring(0, 10), '_', h, '-', m, '-', s);
+        const pom = document.createElement(hyperlinkTag);
+        pom.setAttribute('href', `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(object, null, 2))}`);
+        pom.setAttribute('download', concatenate(fileName, '.json')); // Open the file for dowloading with the given name 
+        if (document.createEvent) {
+        const downloadFile = document.createEvent('MouseEvents');
+        downloadFile.initEvent('click', true, true); // Event may bubble up through the DOM: true,
+                                                    //  Event may be canceled: true 
+        pom.dispatchEvent(downloadFile);
+        } else {
+        pom.click();
+        }
+    } catch (err) {
+        console.log('An error has occurred in the process of creation of the file for the selected ', typeElement);
+        console.log('The detail of the error may be seen below\n', err.toString());
+        swal({
+            title: concatenate('An error has occurred in the process of creation of the file for the selected ', typeElement),
+            icon: 'warning',
+            button: false,
+            timer: 3000
+        });
+    }
+}
 /* Function that resets information from the saved models */
 function resetInfoSavedModels() {
     const refInfo = firebase.database().ref('infoSavedModels');
