@@ -11,9 +11,9 @@
     <div class="box-content">
         <div class="panel panel-default">
             <h4 class="Titlemyaccount">Choose a device/component</h4>
-            <select class="BoxInput" ng-model="selectedModel" required> <!--Editions will be made on contexts in the key with the idcontext chosen by the user -->
+            <select class="BoxInput" ng-model="selectedModel" required> <!-- Editions will be made on contexts in the key with the idcontext chosen by the user -->
                 <option ng-repeat="model in models" value={{model.$id}} > <!-- contexts is a list  provided by the controller-->
-                        {{model.id}} <!--$id provides the information about the context's key -->
+                        {{model.id}} <!-- $id provides the information about the context's key -->
                 </option>
             </select>
 

@@ -44,11 +44,19 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
 
     /* Function which is responsible for passing the selected context to the scope */
     $scope.modal = function (keySelContext) {
-        const refSelectedContext = firebase.database().ref(`contexts/${keySelContext}`);
-        const contextObj = $firebaseObject(refSelectedContext);
-        contextObj.$loaded().then(() => { //Load contexts from the database as an object
-            $scope.modelcontext = contextObj;
-        });
+        if (!keySelContext) {
+            swal({
+                title: 'An IoT Lite @Context must be selected to it be shown',
+                text: 'If no one has been defined yet, it can be added in the option IoT Lite @Context of the main menu',
+                icon: 'warning'
+            });
+        } else {
+            const refSelectedContext = firebase.database().ref(`contexts/${keySelContext}`);
+            const contextObj = $firebaseObject(refSelectedContext);
+            contextObj.$loaded().then(() => { //Load contexts from the database as an object
+                $scope.modelcontext = contextObj;
+            });
+        }
     };
         
     /* Function for exporting the selected IoT Context in a JSON format */
@@ -73,19 +81,27 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
 
     /* Function to set a default @context for real time digital environment */
     $scope.setcontextdefault = function (keyContext) {
-        const refDefaults = firebase.database().ref('defaults/');
-        const auxObjContext = {}; 
-        auxObjContext.defaultcontext = keyContext; 
-        refDefaults.update(auxObjContext);
-        swal({
-            title: 'The selected context has been set as a default one',
-            timer: 3000,
-            button: false,
-            icon: 'success'
-        });
-        setTimeout(() => {
-            routeSync();
-        }, 3000); 
+        if (!keyContext) {
+            swal({
+                title: 'An IoT Lite @Context must be selected before it been set as default',
+                text: 'If no one has been defined yet, it can be added in the option IoT Lite @Context of the main menu',
+                icon: 'warning'
+            });
+        } else {
+            const refDefaults = firebase.database().ref('defaults/');
+            const auxObjContext = {}; 
+            auxObjContext.defaultcontext = keyContext; 
+            refDefaults.update(auxObjContext);
+            swal({
+                title: 'The selected context has been set as a default one',
+                timer: 3000,
+                button: false,
+                icon: 'success'
+            });
+            setTimeout(() => {
+                routeSync();
+            }, 3000);
+        }
     };
 
     /* Function for getting nested elements on @context */

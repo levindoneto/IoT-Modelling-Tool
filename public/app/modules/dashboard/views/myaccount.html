@@ -64,12 +64,11 @@
         <div ng-init="verifySettingDefaultContext(); verifySettingDefaultGraph()" class="panel panel-default">
             <h3 class="Titlemyaccount">IoT Lite Warnings</h3>
             <!-- Conditions for default @context and @graph
-                    HAS DEFAULT:
+                    Has been defined:
 	                    button to see the default one
 	                    button go to change the default one
-                    HASN'T DEFAULT:
-	                    button to set a default one
-            -->
+                    Has not been defined:
+	                    button to set a default one -->
             <!-- Button clicked -> Load the data from the database and update the view -->
             <button class="fa fa-refresh Refresh" ng-click="verifySettingDefaultContext(); verifySettingDefaultGraph()"> &emsp;Refresh </button>
             <div class="WarningsDiv" ng-if="defaultContextIsSet===true">

@@ -11,41 +11,57 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
 
     /* Function which is responsible for passing the selected graph to the scope */
     $scope.modal = function (keySelGraph) {
-        const graphDefaultElementsList = [];
-        const refSelGraph = firebase.database().ref(`graphs/${keySelGraph}`);
-        const graphObj = $firebaseObject(refSelGraph);
-        graphObj.$loaded().then(() => { //Load the graphs from the database as an object
-            const objDefaultGraph = JSON.parse(graphObj.defaultobjectsgraph);
-            const objExtensionGraph = JSON.parse(graphObj.extensionGraph);
-            let i;
-            let j;
-            for (i in objDefaultGraph['@graph']) {
-                graphDefaultElementsList.push(objDefaultGraph['@graph'][i]);
-            }
-            for (j in objExtensionGraph) {
-                graphDefaultElementsList.push(objExtensionGraph[j]);
-            }
-            $scope.modelgraph = graphObj;
-            $scope.graphDefaultElements = graphDefaultElementsList;
-        });
+        if (!keySelGraph) {
+            swal({
+                title: 'An IoT Lite @Graph must be selected to it be shown',
+                text: 'If no one has been defined yet, it can be added in the option IoT Lite @Graph of the main menu',
+                icon: 'warning'
+            });
+        } else {
+            const graphDefaultElementsList = [];
+            const refSelGraph = firebase.database().ref(`graphs/${keySelGraph}`);
+            const graphObj = $firebaseObject(refSelGraph);
+            graphObj.$loaded().then(() => { //Load the graphs from the database as an object
+                const objDefaultGraph = JSON.parse(graphObj.defaultobjectsgraph);
+                const objExtensionGraph = JSON.parse(graphObj.extensionGraph);
+                let i;
+                let j;
+                for (i in objDefaultGraph['@graph']) {
+                    graphDefaultElementsList.push(objDefaultGraph['@graph'][i]);
+                }
+                for (j in objExtensionGraph) {
+                    graphDefaultElementsList.push(objExtensionGraph[j]);
+                }
+                $scope.modelgraph = graphObj;
+                $scope.graphDefaultElements = graphDefaultElementsList;
+            });
+        }
     };
     
     /* Function which sets a default @graph for the real time digital environment */
     $scope.setGraphDefault = function (keyGraph) { // The key is given by the user via a option box
-        const refDefaults = firebase.database().ref('defaults/'); /* defaults->defaultgraph provides the key for
-                                                                   * graphs for the default @graph */ 
-        const auxObjGraph = {}; 
-        auxObjGraph.defaultgraph = keyGraph; 
-        refDefaults.update(auxObjGraph); // It's just a replacement of values, once the object defaults has unique keys
-        swal({
-            title: 'The selected graph has been set as a default one',
-            timer: 3000,
-            button: false,
-            icon: 'success'
-        });
-        setTimeout(() => {
-            routeSync();
-        }, 3000); 
+        if (!keyGraph) {
+            swal({
+                title: 'An IoT Lite @Graph must be selected before it been set as default',
+                text: 'If no one has been defined yet, it can be added in the option IoT Lite @Graph of the main menu',
+                icon: 'warning'
+            });
+        } else {
+            const refDefaults = firebase.database().ref('defaults/'); /* defaults->defaultgraph provides the key for
+                                                                       * graphs for the default @graph */ 
+            const auxObjGraph = {}; 
+            auxObjGraph.defaultgraph = keyGraph; 
+            refDefaults.update(auxObjGraph); // It's just a replacement of values, once the object defaults has unique keys
+            swal({
+                title: 'The selected graph has been set as a default one',
+                timer: 3000,
+                button: false,
+                icon: 'success'
+            });
+            setTimeout(() => {
+                routeSync();
+            }, 3000);
+        } 
     };
 
    /* Function for exporting the selected IoT Graph in a JSON format */

@@ -486,13 +486,135 @@ firebase.database().ref('models').orderByKey().once('value')
                 extensionsGraph.push(idElement); // Updating the @graph with an additional property
                 break;
             default:
-                console.log('Type has not been defined');
+                console.log('The type has not been defined');
         }
     });
     updateGraphElement(extensionsGraph, DEFINITIONS_KEY, UPDATED_DEFINITIONS_KEY, manageGraphLocalStorage);
 });
 
-
 var dashboard = angular.module('dashboard', ['ui.router', 'ngAnimate', 'ngMaterial', 'firebase', 'react']);
-
 dashboard.factory('notification', ($firebaseArray, $firebaseObject) => ({
+        send: function(message, user) {
+            var ref = firebase.database().ref(`users/${user}`);
+            var userDB = $firebaseObject(ref);
+            userDB.$loaded().then(() => {
+                  userDB.haveNotification = true;
+                  userDB.$save().then((ref) => {
+                  }, (error) => {
+                      console.log('Error:', error);
+                  });
+            });
+        }
+    }));
+
+  dashboard.config(['$stateProvider', function ($stateProvider) {
+      $stateProvider.state('app.myaccount', {
+          url: '/myaccount',
+          templateUrl: 'app/modules/dashboard/views/myaccount.html',
+          controller: 'myaccountController',
+          controllerAs: 'vm',
+          data: {
+              pageTitle: 'My Account'
+          }
+      });
+
+      $stateProvider.state('app.adddefaultcontext', {
+          url: '/adddefaultcontext',
+          templateUrl: 'app/modules/dashboard/views/adddefaultcontext.html',
+          controller: 'adddefaultcontextController',
+          controllerAs: 'vm',
+          data: {
+              pageTitle: 'Add Default @Context'
+          }
+      });
+
+      $stateProvider.state('app.addspecificcontext', {
+          url: '/addspecificcontext',
+          templateUrl: 'app/modules/dashboard/views/addspecificcontext.html',
+          controller: 'addspecificcontextController',
+          controllerAs: 'vm',
+          data: {
+              pageTitle: 'Add Specific @Context'
+          }
+      });
+
+      $stateProvider.state('app.adddefaultgraph', {
+          url: '/adddefaultgraph',
+          templateUrl: 'app/modules/dashboard/views/adddefaultgraph.html',
+          controller: 'adddefaultgraphController',
+          controllerAs: 'vm',
+          data: {
+              pageTitle: 'Add Default @Graph'
+          }
+      });
+
+      $stateProvider.state('app.mycontext', {
+          url: '/mycontext',
+          templateUrl: 'app/modules/dashboard/views/mycontext.html',
+          controller: 'mycontextController',
+          controllerAs: 'vm',
+          data: {
+              pageTitle: 'IoT Lite @Context'
+          }
+      });
+
+      $stateProvider.state('app.mygraph', {
+          url: '/mygraph',
+          templateUrl: 'app/modules/dashboard/views/mygraph.html',
+          controller: 'mygraphController',
+          controllerAs: 'vm',
+          data: {
+              pageTitle: 'IoT Lite @Graph'
+          }
+      });
+
+      $stateProvider.state('app.addbelonging', {
+          url: '/addbelonging',
+          templateUrl: 'app/modules/dashboard/views/addbelonging.html',
+          controller: 'addbelongingController',
+          controllerAs: 'vm',
+          data: {
+              pageTitle: 'Add Device or Component'
+          }
+      });
+
+      $stateProvider.state('app.mybelongings', {
+          url: '/mydevices',
+          templateUrl: 'app/modules/dashboard/views/mybelongings.html',
+          controller: 'mybelongingsController',
+          controllerAs: 'vm',
+          data: {
+              pageTitle: 'Devices and Components'
+          }
+      });
+
+      $stateProvider.state('app.addadditionalproperties', {
+          url: '/addadditionalproperties',
+          templateUrl: 'app/modules/dashboard/views/addadditionalproperties.html',
+          controller: 'addadditionalpropertiesController',
+          controllerAs: 'vm',
+          data: {
+              pageTitle: 'Add Additional Properties on Devices/Components'
+          }
+      });
+
+      $stateProvider.state('app.search', {
+          url: '/search',
+          templateUrl: 'app/modules/dashboard/views/search.html',
+          controller: 'searchController',
+          controllerAs: 'vm',
+          data: {
+              pageTitle: 'Search'
+          }
+      });
+
+      $stateProvider.state('app.digitalenvironment', {
+          url: '/digitalenvironment',
+          templateUrl: 'app/modules/dashboard/digital_environment/src/main/resources/templates/index.html',
+          controller: 'searchController',
+          controllerAs: 'vm',
+          data: {
+              pageTitle: 'IoT Modelling Environment'
+          }
+      });
+ }]);

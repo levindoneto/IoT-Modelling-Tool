@@ -10,9 +10,9 @@
     <div class="box-content">
         <div class="panel panel-default">
             <h4 class="Titlemyaccount">Select a @Context</h4>
-            <select class="BoxInput" ng-click="getAdditionalProperties(selectedContext)" ng-model="selectedContext" required> <!--Editions will be made on contexts in the key with the idcontext chosen by the user -->
+            <select class="BoxInput" ng-click="getAdditionalProperties(selectedContext)" ng-model="selectedContext" required> <!-- Editions will be made on contexts in the key with the idcontext chosen by the user -->
                 <option ng-repeat="context in contexts" value={{context.$id}} > <!-- contexts is a list  provided by the controller-->
-                        {{context.idcontext}} <!--$id provides the information about the context's key -->
+                        {{context.idcontext}} <!-- $id provides the information about the context's key -->
                 </option>
             </select>
             <!-- <h4> Selected context: {{selectedContext}} </h4> -->

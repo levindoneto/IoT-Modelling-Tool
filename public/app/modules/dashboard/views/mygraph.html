@@ -11,9 +11,9 @@
     <div class="box-content">
         <div class="panel panel-default">
             <h4 class="Titlemyaccount">Select a @Graph</h4>
-            <select class="BoxInput" ng-click="getAdditionalProperties(selectedGraph)" ng-model="selectedGraph" required> <!--Editions will be made on contexts in the key with the idcontext chosen by the user -->
+            <select class="BoxInput" ng-click="getAdditionalProperties(selectedGraph)" ng-model="selectedGraph" required> <!-- Editions will be made on contexts in the key with the idcontext chosen by the user -->
                 <option ng-repeat="graph in graphs" value={{graph.$id}} > <!-- graphs is a list  provided by the controller-->
-                        {{graph.idgraph}} <!--$id provides the information about the graph's key -->
+                    {{graph.idgraph}} <!--$id provides the information about the graph's key -->
                 </option>
             </select>
             <button type="button" data-toggle="modal" ng-click="modal(selectedGraph)" data-target="#popUp" class="fa fa-info-circle BtnmyContexts">
