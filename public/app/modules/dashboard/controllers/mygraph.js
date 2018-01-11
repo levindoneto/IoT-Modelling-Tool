@@ -1,20 +1,20 @@
 dashboard.controller('mygraphController', ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseObject', '$firebaseArray',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray) { 
-    var vm = this; //controllerAs
-    const ref = firebase.database().ref('graphs/'); // Loading all the graphs from the database
+    const vm = this; //controllerAs
+    const ref = firebase.database().ref('graphs/'); // Load all the graphs from the database
     const graphList = $firebaseArray(ref);
 
-    /* Loading data from the database */
+    /* Load the data from the database */
     graphList.$loaded().then(() => {
           $scope.graphs = graphList; // scope.graph = database->graph 
     });
 
-    /* Function responsible for passing the selected graph to the scope */
+    /* Function which is responsible for passing the selected graph to the scope */
     $scope.modal = function (keySelGraph) {
         const graphDefaultElementsList = [];
         const refSelGraph = firebase.database().ref(`graphs/${keySelGraph}`);
         const graphObj = $firebaseObject(refSelGraph);
-        graphObj.$loaded().then(() => { //Loading graphs from the database as an object
+        graphObj.$loaded().then(() => { //Load the graphs from the database as an object
             const objDefaultGraph = JSON.parse(graphObj.defaultobjectsgraph);
             const objExtensionGraph = JSON.parse(graphObj.extensionGraph);
             let i;
@@ -30,9 +30,9 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         });
     };
     
-    /* Function to set a default @graph for the real time digital environment */
-    $scope.setGraphDefault = function (keyGraph) { // key is given by the user via a option box
-        const refDefaults = firebase.database().ref('defaults/'); /* defaults->defaultgraph provide the key on
+    /* Function which sets a default @graph for the real time digital environment */
+    $scope.setGraphDefault = function (keyGraph) { // The key is given by the user via a option box
+        const refDefaults = firebase.database().ref('defaults/'); /* defaults->defaultgraph provides the key for
                                                                    * graphs for the default @graph */ 
         const auxObjGraph = {}; 
         auxObjGraph.defaultgraph = keyGraph; 
@@ -76,19 +76,8 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         }
     };   
 
-    /* Function to emulate the for i in range with AngularJS 
-     * for (min, max, step) {
-     *     do something;
-     * }
-     */
     $scope.range = function (min, max, step) {
-        step = step || 1;
-        const input = [];
-        let i;
-        for (i = min; i <= max; i += step) {
-            input.push(i);
-        }
-        return input;
+        range(min, max, step);
     };
 
     $scope.graphDefaultFormatter = function (json) {

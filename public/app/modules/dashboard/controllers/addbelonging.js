@@ -1,5 +1,5 @@
 
-dashboard.controller('addbelongingController', ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseObject', '$firebaseArray', 'Upload', '$timeout', 'notification',
+dashboard.controller('addbelongingController', ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseObject', '$firebaseArray', 'Upload',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray, Upload) {
     const vm = this;
     function DatabaseException(message) {
@@ -7,9 +7,9 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         this.name = 'dbException';
      }
     vm.addbelonging = function (prefix, type, model, file) { // prefix->type->model
-        /* Update Map (component:specificType) */
+        // Update Map (component:specificType)
         const mapTypeComponents = firebase.database().ref('mapTypeComponents/');
-        let compType = {};
+        const compType = {};
         if (type === 'ActuatingDevice') {
             compType[model.id] = 'actuator';
         }
@@ -23,17 +23,17 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         Upload.base64DataUrl(file).then((base64Url) => {
             model.userUid = $rootScope.userDB.uid; // User who has added the model into the platform
             model.ontology = type === 'ActuatingDevice' ? 'iot-lite' : 'ssn'; // Sensors and Devices have ssn as their ontologies
-            var add = false;
             const refImages = firebase.database().ref('images/');
             const imageList = $firebaseArray(refImages);
             const auxType = {};
             const modelKeys = model;
             const auxInfo = {};
-            var auxBind = {}; // devComp->prefix->type
-            var auxBindPrefix = {}; // devComp->prefix
-            var auxBindDevComp = {}; // devComp
-            var auxPrefix = {};
-            imageList.$loaded().then(() => {
+            const auxPrefix = {};
+            const auxBindPrefix = {}; // devComp->prefix
+            let add = false;
+            let auxBind = {}; // devComp->prefix->type
+            let auxBindDevComp = {}; // devComp
+            imageList.$loaded().then(() => { // Add icon
                 imageList.$add(base64Url).then((imref) => {
                     model.imageFile = imref.key;
                     const ref = firebase.database().ref('models/');
@@ -74,8 +74,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                                     }
                                     add = true;
                                     return;
-                                }
-                                else { 
+                                } else { // If type has not been defined
                                     // Create type
                                     auxInfo[concatenate('0', '-', model.id)] = model; // First model of the just created type
                                     auxType[type] = auxInfo;
@@ -95,10 +94,10 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                                     add = true;
                                     return;
                                 }
-                            }
-                            else {
+                            } else { // If prefix has not been defined
                                 // Create prefix
-                                auxInfo[concatenate('0', '-', model.id)] = model;// First model of the just created type
+                                // First model of the just created type
+                                auxInfo[concatenate('0', '-', model.id)] = model;
                                 auxType[type] = auxInfo;
                                 auxPrefix[prefix] = auxType;
                                 refDevComp.update(auxPrefix);
@@ -111,8 +110,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                                 }
                                 return; 
                             } 
-                        }
-                        else {
+                        } else {
                             throw new DatabaseException('Null Snapshot');
                         }
                     });
@@ -120,16 +118,16 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                     modelKeys.type = type;
                     
                     /* $loaded function:
-                     * Returns a promise which is resolved when the initial object data has been 
-                     * downloaded from the database. The promise resolves to the $firebaseObject itself.
-                     */
+                     * It returns a promise, which is resolved when the initial object data  
+                     * has been downloaded from the database. The promise resolves to the 
+                     * $firebaseObject itself. */
                     modelList.$loaded().then(() => {
                         /* $add function:
-                         * Creates a new record in the database and adds the record to our 
+                         * It creates a new record in the database and it adds the record to a 
                          * local synchronized array.
-                         * This method returns a promise which is resolved after data has been 
+                         * This method returns a promise, which is resolved after the data has been 
                          * saved to the server. The promise resolves to the Firebase reference 
-                         * for the newly added record, providing easy access to its key.
+                         * for the newly added record, providing an easy access to its key.
                          */
                         swal({
                             title: concatenate('Thse ', compType[model.id], ' has been added successfully!\n'),
@@ -138,6 +136,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                             timer: 3000
                         });
                         modelList.$add(modelKeys).then((ref) => {
+                            console.log('Reference of the added ', type, ':\n', ref.toString());
                         });
                         setTimeout(() => {
                             routeSync();

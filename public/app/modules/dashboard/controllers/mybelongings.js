@@ -1,40 +1,37 @@
 
 dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseObject', '$firebaseArray',
     function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray) {
-        var vm = this;
+        const vm = this;
         const defaultCompDevProps = [
             'imageFile',
             'prefixCompany',
             'type',
             'userUid'];
-        var ref = firebase.database().ref('models/');
-        var refDC = firebase.database().ref('devComp/');
-        var modelList = $firebaseArray(ref);
-        var modelObj = $firebaseObject(ref);
-        var devCompList = $firebaseArray(refDC);
+        const ref = firebase.database().ref('models/');
+        const refDC = firebase.database().ref('devComp/');
+        const modelList = $firebaseArray(ref);
+        const modelObj = $firebaseObject(ref);
+        const devCompList = $firebaseArray(refDC);
         modelList.$loaded().then(() => {
             $scope.models = modelList; // Information of devices and components
         });
         devCompList.$loaded().then(() => {
-            $scope.devComps = devCompList; // Nested elements prefix->type->key_models
+            $scope.devComps = devCompList; // Nested elements prefix->type->key_models->details
         });
 
         function verifyAdditionalPropertyCompDev(elementPropertyI) {
-            let thisIsAdditionalProperty = true; // It'll be false just if the property has be found in the default properties' list
+            let thisIsAdditionalProperty = true; // It is false just if the property has been found in the default properties' list
             for (let prop = 0; prop < defaultCompDevProps.length; prop++) {
-                if (elementPropertyI.toUpperCase() === defaultCompDevProps[prop].toUpperCase()) { // the property is a default one
-                    thisIsAdditionalProperty = false; // This means property_i is in the list of default properties
-                }
-                else {
-                    continue; // Don't set the variable up to one because all the list of default properties ought to be checked
+                if (elementPropertyI.toUpperCase() === defaultCompDevProps[prop].toUpperCase()) { // The property is a default one
+                    thisIsAdditionalProperty = false; // This means propertyI is in the list of default properties
                 }
             }
             return thisIsAdditionalProperty;
         }
 
         $scope.modal = function (model) {
-            var ref = firebase.database().ref(`images/${model.imageFile}`);
-            var imageObj = $firebaseObject(ref);
+            const refIcons = firebase.database().ref(`images/${model.imageFile}`);
+            const imageObj = $firebaseObject(refIcons);
             imageObj.$loaded().then(() => {
                 $scope.imagemodel = imageObj.$value;
                 $scope.modalmodel = model;
@@ -42,10 +39,9 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
         };
 
         $scope.remove = function (accessKey, prefix, type, position) {
+            const refDefComp = firebase.database().ref(`devComp/${prefix}/${type}/`);
             let keyM;
             let typeLC; // actuator, device or sensor
-            const refDefComp = firebase.database().ref(`devComp/${prefix}/${type}/`);
-            
             switch (type) {
                 case 'ActuatingDevice':
                     typeLC = 'actuator';
@@ -91,12 +87,12 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
                                     timer: 3000
                                 });
                             }
-                        });
-                        setTimeout(() => {
-                            routeSync();
-                        }, 3000); 
+                        });     
                 }
             }
+            setTimeout(() => {
+                routeSync();
+            }, 3000); 
         };
 
         /* Function for getting all device/components' information with the access key from the element on devComp
@@ -105,10 +101,10 @@ dashboard.controller('mybelongingsController', ['$rootScope', '$scope', '$state'
          */
         $scope.getInfo = function (keyI) {
             let i;
-            for (i in modelObj) {
-                if (i.startsWith('-') && keyI === modelObj[i].imageFile) {
-                    let ref = firebase.database().ref(`models/${i}`); // Accesing the object context selected by the user
-                    let compDevObj = $firebaseObject(ref);
+            for (i = 0; i < Object.keys(modelObj).length; i++) {
+                if (Object.keys(modelObj)[i].startsWith('-') && keyI === modelObj[Object.keys(modelObj)[i]].imageFile) {
+                    const refKey = firebase.database().ref(`models/${Object.keys(modelObj)[i]}`); // Accesing the object context selected by the user
+                    const compDevObj = $firebaseObject(refKey);
                     const objAddPropsCompDev = {};
                     setTimeout(() => {
                         for (const compDevPropI in compDevObj) { // Ranging on the object @context->key

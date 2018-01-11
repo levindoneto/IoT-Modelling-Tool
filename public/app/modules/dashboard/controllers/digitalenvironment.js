@@ -1,16 +1,16 @@
 
-/* Function for updating the devices with its subsystems
+/* Function for updating devices with subsystems
  * @parameters: String: device, subsystem (both gotten from the current saved model),
  *                      location X, location Y
  *              Object: Properties of the subsystem 
  * @return: void, the function just updates the database
  */
-function updateDevicesWithSubsystems(savedModel, device, subsystem, latitude, longitude, propertiesSubSystem, sensorValue, typeId, elementIndex) { //add current one
+function updateDevicesWithSubsystems(savedModel, device, subsystem, latitude, longitude, propertiesSubSystem, sensorValue, typeId, elementIndex) {
     const auxDevSub = {};
     const auxLoc = {};
     const auxIndex = {};
     const refDevicesWithSubsystems = firebase.database().ref(`devicesWithSubsystems/${savedModel}/${device}`);
-    if (typeof sensorValue !== 'undefined') { // device or actuator
+    if (typeof sensorValue !== 'undefined') { // Device or Actuator
         auxLoc.value = sensorValue;
     }
     auxLoc['@type'] = typeId;
@@ -22,26 +22,20 @@ function updateDevicesWithSubsystems(savedModel, device, subsystem, latitude, lo
     refDevicesWithSubsystems.update(auxIndex);
 }
 
-dashboard.controller("digitalenvironmentController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash','$firebaseArray','$firebaseObject','notification',
-function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseArray, $firebaseObject, notification) {
-    var vm = this;
-
-    var ref = firebase.database().ref('models/');
-    var modelList = $firebaseArray(ref);
+dashboard.controller('digitalenvironmentController', ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseArray', '$firebaseObject',
+function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseArray, $firebaseObject) {
+    const vm = this;
+    const ref = firebase.database().ref('models/');
+    const modelList = $firebaseArray(ref);
     modelList.$loaded().then(() => {
-        //console.log(modelList)
         $scope.models = modelList;
     });
-
-      $scope.modal = function (model) {
-          var ref = firebase.database().ref(`images/${model.imageFile}`);
-          var imageObj = $firebaseObject(ref);
-          imageObj.$loaded().then(function(){
-              //console.log("image");
-              //console.log(imageObj)
-              $scope.imagemodel = imageObj.$value;
-              $scope.modalmodel = model;
-              //console.log($scope.modalmodel);
-          });
-      }
-    }]);
+    $scope.modal = function (model) {
+        const refIcons = firebase.database().ref(`images/${model.imageFile}`);
+        const imageObj = $firebaseObject(refIcons);
+        imageObj.$loaded().then(() => {
+            $scope.imagemodel = imageObj.$value;
+            $scope.modalmodel = model;
+        });
+    };
+}]);

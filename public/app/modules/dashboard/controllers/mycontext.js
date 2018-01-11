@@ -1,8 +1,8 @@
 
 dashboard.controller('mycontextController', ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseObject', '$firebaseArray',
 function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray) {
-    let vm = this; //controllerAs
-    const default_contextProps = [
+    const vm = this; //controllerAs
+    const defaultContextProps = [
         'geo',
         'idcontext',
         'iotlite',
@@ -19,35 +19,33 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         '$id',
         '$priority',
         '$resolved'];
-    let ref = firebase.database().ref('contexts/'); // Loading all the contexts from the database
-    let contextList = $firebaseArray(ref);
+    const ref = firebase.database().ref('contexts/'); // Loading all the contexts from the database
+    const contextList = $firebaseArray(ref);
 
-    /* Function used to verify if a property on @context is default (e.g.: Id) or additional (e.g.: geo)
+    /* Function used to verify if a property on @context is default (e.g.: Id) 
+     * or additional (e.g.: geo)
      * @parameters: String: property
      * @return: Boolean: true->the property isn't default, false->the property is a default one
      */
-    function verifyAdditionalPropertyContext(elementProperty_i) {
-        let this_is_additional_property = true; // It'll be false just if the property has be found in the default properties' list
-        for (let prop = 0; prop < default_contextProps.length; prop++) {
-            if (elementProperty_i.toUpperCase() === default_contextProps[prop].toUpperCase()) { // the property is a default one
-                this_is_additional_property = false; // This means property_i is in the list of default properties
-            }           
-            else {
-                continue; // Don't set the variable up to one because all the list of default properties ought to be checked
+    function verifyAdditionalPropertyContext(elementPropertyI) {
+        let thisIsAdditionalProperty = true; // It'll be false just if the property has be found in the default properties' list
+        for (let prop = 0; prop < defaultContextProps.length; prop++) {
+            if (elementPropertyI.toUpperCase() === defaultContextProps[prop].toUpperCase()) { // The property is a default one
+                thisIsAdditionalProperty = false; // This means elementPropertyI is in the list of default properties
             }
         }
-        return this_is_additional_property;
+        return thisIsAdditionalProperty;
     }
 
-    /* Loading data from the database */
+    /* Load data from the database */
     contextList.$loaded().then(() => {
           $scope.contexts = contextList; // scope.context = database->context 
     });
 
-    /* Function responsible for passing the selected context to the scope */
+    /* Function which is responsible for passing the selected context to the scope */
     $scope.modal = function (keySelContext) {
-        const ref = firebase.database().ref(`contexts/${keySelContext}`);
-        const contextObj = $firebaseObject(ref);
+        const refSelectedContext = firebase.database().ref(`contexts/${keySelContext}`);
+        const contextObj = $firebaseObject(refSelectedContext);
         contextObj.$loaded().then(() => { //Load contexts from the database as an object
             $scope.modelcontext = contextObj;
         });
@@ -90,26 +88,16 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         }, 3000); 
     };
 
-    /* Function to emulate the for i in range with AngularJS 
-     * for (min, max, step) {
-     *     do something;
-     * }
-     */
     $scope.range = function (min, max, step) {
-        step = step || 1;
-        const input = [];
-        for (let i = min; i <= max; i += step) {
-            input.push(i);
-        }
-        return input;
+        range(min, max, step);
     };
 
     /* Function for getting nested elements on @context */
     $scope.getNestedElementsContext = function (elementAdditionalContext) {
         const additionalContextInfo = {}; // Initalize the object from the nested element
-        for (var infoContextKey in elementAdditionalContext) {
+        let infoContextKey;
+        for (infoContextKey in elementAdditionalContext) {
             if (elementAdditionalContext.hasOwnProperty(infoContextKey)) {
-                //console.log('Key: ', infoContextKey.toString());
                 additionalContextInfo[infoContextKey] = elementAdditionalContext[infoContextKey];
             }
         }
@@ -118,18 +106,17 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
 
     /* Function for getting additional properties on contexts */
     $scope.getAdditionalProperties = function (keySelContext) {
-        let ref = firebase.database().ref(`contexts/${keySelContext}`); // Accesing the object context selected by the user
-        let contextObj = $firebaseObject(ref);
+        const refKeySelContext = firebase.database().ref(`contexts/${keySelContext}`); // Accesing the object context selected by the user
+        const contextObj = $firebaseObject(refKeySelContext);
         const objAddPropsContext = {}; /* Object with the key:value of the additional properties.
-                                      * It'll be accessed via scope variable on the view */
-
+                                        * It'll be accessed via scope variable on the view */
         /* This is needed because of the asynchronous way of processing data */
         setTimeout(() => {
-            for (const contextPropI in contextObj) { // Ranging on the object @context->key
-                if (contextObj.hasOwnProperty(contextPropI)) { // This will check all properties' names on database's key
+            for (const contextPropI in contextObj) { // Range on the object @context->key
+                if (contextObj.hasOwnProperty(contextPropI)) { // This checks all properties' names on database's key
                     const isAddContProperty = verifyAdditionalPropertyContext(contextPropI);
                     if (isAddContProperty === true) { // Additional info has been found
-                        objAddPropsContext[contextPropI] = contextObj[contextPropI]; // Updating the object with a new pair key:value
+                        objAddPropsContext[contextPropI] = contextObj[contextPropI]; // Update the object with a new pair key:value
                     }
                 }
             }

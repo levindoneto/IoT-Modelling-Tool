@@ -1,20 +1,19 @@
 
-dashboard.controller("adddefaultcontextController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseObject', '$firebaseArray', 'Upload', '$timeout', 'notification',
-    function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray, Upload, $timeout, notification) {
-        var vm = this; //controllerAs
+dashboard.controller("adddefaultcontextController", ['$rootScope', '$scope', '$state', '$location', 'dashboardService', 'Flash', '$firebaseObject', '$firebaseArray',
+    function ($rootScope, $scope, $state, $location, dashboardService, Flash, $firebaseObject, $firebaseArray) {
+        const vm = this; //controllerAs
         vm.adddefaultcontext = function (context) {
-            //context.userUid = $rootScope.userDB.uid;
-            var ref = firebase.database().ref('contexts/');
-            var contextList = $firebaseArray(ref);
-            contextList.$loaded().then(function () {
-                contextList.$add(context).then(function (ref) {
+            const ref = firebase.database().ref('contexts/');
+            const contextList = $firebaseArray(ref);
+            contextList.$loaded().then(() => {
+                contextList.$add(context).then((ref) => {
+                    console.log('Reference of the added context:\n', ref.toString());
                     swal({
                         title: 'The default context has been added with sucess!',
                         timer: 1700,
                         button: false,
                         icon: 'success'
                     });
-                    //console.log("The context: ", context);
                 });
             });
         };
