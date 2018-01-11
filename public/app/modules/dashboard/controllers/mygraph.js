@@ -76,10 +76,6 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         }
     };   
 
-    $scope.range = function (min, max, step) {
-        range(min, max, step);
-    };
-
     $scope.graphDefaultFormatter = function (json) {
         if (typeof json.defaultobjectsgraph !== 'undefined') {
             const jso = JSON.parse(json.defaultobjectsgraph);

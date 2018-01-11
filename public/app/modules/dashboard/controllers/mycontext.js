@@ -88,10 +88,6 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         }, 3000); 
     };
 
-    $scope.range = function (min, max, step) {
-        range(min, max, step);
-    };
-
     /* Function for getting nested elements on @context */
     $scope.getNestedElementsContext = function (elementAdditionalContext) {
         const additionalContextInfo = {}; // Initalize the object from the nested element

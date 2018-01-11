@@ -36,6 +36,21 @@ function concatenate(...theArgs) {
     return concatenatedStr;
 }
 
+/* Function to emulate the for i in range with AngularJS 
+ * for (min, max, step) {
+ *     do something;
+ * } 
+ */
+function range (min, max, step) {
+    step = step || 1;
+    const input = [];
+    let i;
+    for (i = min; i <= max; i += step) {
+        input.push(i);
+    }
+    return input;
+};
+
 /* Function that, given an object, creates a json file with it
    @Parameters: object: Bbject for conversion, id: string with the name without the date/time info 
    @Return: None, it opens a file for download in a JSON format

@@ -38,21 +38,6 @@ dashboard.service('dashboardService', ['$http', '$q', 'Flash', 'apiService', fun
         return deferred.promise;
     };
 
-    /* Function to emulate the for i in range with AngularJS 
-     * for (min, max, step) {
-     *     do something;
-     * }
-     */
-    var range = function (min, max, step) {
-        step = step || 1;
-        const input = [];
-        let i;
-        for (i = min; i <= max; i += step) {
-            input.push(i);
-        }
-        return input;
-    };
-
     dashboardService.accessLogin = accessLogin;
     dashboardService.registerUser = registerUser;
 

@@ -57,17 +57,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         }, 3000); 
     };
     
-    /* Function which emulates the (for i in range) with AngularJS 
-     * for (min, max, step) {
-     *     do something;
-     * }
-     */
     $scope.range = function (min, max, step) {
-        step = step || 1;
-        const input = [];
-        for (let i = min; i <= max; i += step) {
-            input.push(i);
-        }
-    return input;
+        return range(min, max, step);
     };
 }]);
