@@ -65,7 +65,6 @@ class PaletteContainer extends Component {
                                     }
                                 });
                             }
-
                             if (iterDevice['@id'].startsWith('ipvs:') && isDevice) { // TODO: Change the company's prefix
                                 tempCount += 1;
                                 DropActions.addDeviceType(iterDevice['@id']);

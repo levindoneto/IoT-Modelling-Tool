@@ -5,6 +5,7 @@ import * as backend from '../backend/backend';
 import * as utils from '../utils/utils';
 
 const PREFIX = localStorage.getItem('prefix');
+const RASPBERRY_PI = 'RaspberryPi'; // Device with GPIO Mode
 
 function clone(object) {
     return JSON.parse(JSON.stringify(object));
@@ -70,16 +71,12 @@ class DeviceStore extends EventEmitter {
             if (restrictionId.length > 0) {
                 const restriction = restrictions.find((findRestriction) => (findRestriction['@id'] === restrictionId));
                 if (restriction != null) {
-                    //console.log('Dropped device on the environment'); 
                     createdDevice[backend.concatenate(PREFIX, ':numberOfPins')] = parseInt(restriction['owl:cardinality']['@value']); 
                 }
             }
-        }
-
-        /* Device is a "primitive" (i.e. has no mac address) - a sensor or an actuator */
-        /* Sensors and Actuators might have the pinConfiguration property */
-        else {
-            //console.log('parentClasses[1]: ', parentClasses['1']);
+        } else {
+            /* Device is a "primitive" (i.e. has no mac address) - a sensor or an actuator
+             * Sensors and Actuators might have the pinConfiguration property */
             if (parentClasses['1'] === 'ssn:SensingDevice') { // Just sensors have values
                 createdDevice[backend.concatenate(PREFIX, ':value')] = ' ';
             }
@@ -88,16 +85,15 @@ class DeviceStore extends EventEmitter {
                 const restriction = restrictions.find((findRestriction) => (findRestriction['@id'] === restrictionId));
                 if (restriction != null) {
                     const index = parseInt(restriction['owl:cardinality']['@value']);
-                    /* Set pins with an identical number, so list's problems aren't gotten */
+                    // Set pins with an identical number, so list's problems aren't obtained
                     for (let i = 1; i <= index; i++) {
-                        createdDevice[backend.concatenate(PREFIX, ':pinConfiguration')].push(i); //TODO: Modify company's prefix
+                        createdDevice[backend.concatenate(PREFIX, ':pinConfiguration')].push(i);
                     }
                 }
-                //console.log('created device: ', createdDevice);
             }
         }
 
-        if (device.type === backend.concatenate(PREFIX, ':RaspberryPi')) {
+        if (device.type === backend.concatenate(PREFIX, ':', RASPBERRY_PI)) {
             createdDevice[backend.concatenate(PREFIX, ':gpioMode')] = ''; 
         }
         createdDevice['iot-lite:isSubSystemOf'] = {
@@ -107,6 +103,7 @@ class DeviceStore extends EventEmitter {
         /* Push a device into the model */
         this.model['@graph'].push(createdDevice);
         this.emit('change');
+
         return createdDevice['@id'];
     }
 
@@ -201,12 +198,11 @@ class DeviceStore extends EventEmitter {
     /* Return all property's ids of the definition that are one of the 
      * types specified in variable types. */
     getPossibleProperties(type) {
-        const types = ['owl:AnnotationProperty', 'owl:DatatypeProperty', 'owl:ObjectProperty', 'owl:Restriction']; // Just 'owl:Restriction' relies on values
+        // Just 'owl:Restriction' relies on values
+        const types = ['owl:AnnotationProperty', 'owl:DatatypeProperty', 'owl:ObjectProperty', 'owl:Restriction'];
+        const tempType = this.definitions['@graph'].find((iterType) => iterType['@id'] === type);
         let tempResponse = [];
         let recursiveResponse = [];
-
-        const tempType = this.definitions['@graph'].find((iterType) => iterType['@id'] === type);
-
 
         if (tempType['rdfs:subClassOf']) {
             if (tempType['rdfs:subClassOf'].length) {
@@ -223,8 +219,7 @@ class DeviceStore extends EventEmitter {
             if (types.includes(property['@type']) && (property['@id'].includes('iot-lite') || property['@id'].includes(type.split(/:/)[0]))) {
                 if (property['rdfs:domain']) {
                     return property['rdfs:domain']['@id'] === type;
-                }
-                else if (property['rdfs:range']) {
+                } else if (property['rdfs:range']) {
                     return property['rdfs:range']['@id'] === type;
                 }
 
@@ -249,9 +244,6 @@ class DeviceStore extends EventEmitter {
     }
 
     SaveModelAs(title) {
-        //backend.fireAjaxSave(title, this.model);
-        //console.log("title ", title);
-        //console.log("this model: ", this.model);
         this.emit('change');
     }
 

@@ -1,17 +1,13 @@
 import React, { Component, PropTypes } from 'react';
-import reactfire from 'reactfire';
 import { DragSource } from 'react-dnd';
 import MenuItem from 'material-ui/MenuItem';
 import { ListItem } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 import FlatButton from 'material-ui/FlatButton';
 import ItemTypes from '../dnd/ItemTypes';
-import fire from '../database/fire';
 import * as DropActions from '../actions/DropActions';
 import DeviceStore from '../stores/DeviceStore';
 import * as utils from '../utils/utils';
-
-const allIcons = {};
 
 const boxSource = {
     beginDrag(props) {
@@ -31,7 +27,7 @@ class Device extends Component {
         children: PropTypes.node
     };
 
-    constructor(props) { // it must be placed after propTypes
+    constructor(props) {
         super(props);
         this.state = {
             selectedDevice: false,
@@ -108,7 +104,6 @@ class Device extends Component {
 
     handleKeysDevice = (e) => {
         const key = e.keyCode || e.charCode || 0;
-
         if (key === 46) {
             this.deleteDevice();
             document.body.removeEventListener('keyup', this.handleKeysDevice);
@@ -138,7 +133,6 @@ class Device extends Component {
         this.setState({ selectValues });
     };
 
-
     menuItems(selectValues) {
         if (!this.props.isPaletteItem) {
             const devices = DeviceStore.getAllDevices();
@@ -157,14 +151,11 @@ class Device extends Component {
         }
     }
 
-
     render() {
         const { hideSourceOnDrag, left, top, type, connectDragSource, isDragging, children, id, isPaletteItem, key } = this.props;
-
         let sensingDeviceAvatar;
         let deviceAvatar;
         let actuatingDeviceAvatar;
-
         let isDevice = false;
         let isSensingDevice = false;
         let isActuatingDevice = false;
@@ -174,12 +165,10 @@ class Device extends Component {
         if (parentClasses.includes('ssn:SensingDevice')) {
             sensingDeviceAvatar = (<Avatar src={localStorage.getItem(this.props.type.substr(5, this.props.type.length))} style={{ backgroundColor: '#dcedc8', borderRadius: '0%', border: '1.5px dotted gray' }} />);
             isSensingDevice = true;
-        }         
-        else if (parentClasses.includes('ssn:Device') && !parentClasses.includes('iot-lite:ActuatingDevice')) {
+        } else if (parentClasses.includes('ssn:Device') && !parentClasses.includes('iot-lite:ActuatingDevice')) {
             deviceAvatar = (<Avatar src={localStorage.getItem(this.props.type.substr(5, this.props.type.length))} style={{ backgroundColor: '#dcedc8', borderRadius: '0%', border: '1.5px dotted gray' }} />);
             isDevice = true;
-        } 
-        else if (parentClasses.includes('iot-lite:ActuatingDevice')) {
+        } else if (parentClasses.includes('iot-lite:ActuatingDevice')) {
             actuatingDeviceAvatar = (<Avatar src={localStorage.getItem(this.props.type.substr(5, this.props.type.length))} style={{ backgroundColor: '#dcedc8', borderRadius: '0%', border: '1.5px dotted gray' }} />);
             isActuatingDevice = true;
         }
@@ -187,8 +176,7 @@ class Device extends Component {
         let backgroundColor;
         if (this.state.selectedDevice === id) {
             backgroundColor = 'lightgreen';
-        }        
-        else {
+        } else {
             backgroundColor = 'white';
         }
 
@@ -265,13 +253,11 @@ class Device extends Component {
 
         /* Render Devices (dropped Devices) into the DropContainer */
         return connectDragSource(
-            
             <img
                 id={id} onClick={this.handleClick}
                 src={localStorage.getItem(this.props.type.substr(5, this.props.type.length))}
                 style={{ ...style, left, top }}
-            />
-            
+            />    
         );
     }
 }

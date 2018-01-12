@@ -94,12 +94,12 @@ export default class ComponentDetailList extends React.Component {
         if (!this.props.isPaletteItem) {
             let names = this.state.devices;
 
-            // Filtering out non-systems
+            // Filter out non-systems
             names = names.filter((iterDevice) => (
                 utils.includesTypesInParentClasses('ssn:System', utils.getParentClasses(iterDevice['@type'])) && iterDevice['@id'] !== this.state.id
             ));
 
-            // filter out sensors and actors
+            // Filter out sensors and actors
             names = names.filter((iterDevice) => {
                 const parentClasses = utils.getParentClasses(iterDevice['@type']);
                 return !parentClasses.includes('iot-lite:ActuatingDevice') && !parentClasses.includes('ssn:SensingDevice');
@@ -128,14 +128,12 @@ export default class ComponentDetailList extends React.Component {
 
     render() {
         let selectedDevice;
-        if (this.state.selectedDevice != '') {
+        if (this.state.selectedDevice !== '') {
             selectedDevice = utils.getObjectFromGraphById(this.state.selectedDevice, this.state.devices);
         }
-
         if (selectedDevice != null) { 
             utils.cleanOutAttributes(['@type'], selectedDevice); 
         }
-
         const actionsSetProperty = [
             <FlatButton label="Cancel" onTouchTap={this.handleCloseSetProperty} />,
             <FlatButton
@@ -150,7 +148,6 @@ export default class ComponentDetailList extends React.Component {
             }}
             />
         ];
-
         const styles = {
             maxHeight: '100%',
             height: '100%',
@@ -158,7 +155,6 @@ export default class ComponentDetailList extends React.Component {
             overflow: 'auto',    // enable scrollable here
             backgroundColor: '#cfd8dc'
         };
-
         if (selectedDevice == null) {
             return (
                 <div>
@@ -187,47 +183,52 @@ export default class ComponentDetailList extends React.Component {
                             <Divider />
                             {Object.keys(selectedDevice).map(key => {
                                 /* Array of objects as property value:
-                                * 1. Iterate through the objects in array
-                                * 2. If there are property values of the current object
-                                * (also objects), just the id is shown */
+                                 * 1. Iterate through the objects in array
+                                 * 2. If there are property values of the current object
+                                 * (also objects), just the id is shown */
                                 if (Array.isArray(selectedDevice[key])) {
                                     /* List-element for device attribute */
-                                    return (<ListItem key={key} primaryText={key.replace(/(.)*:/, '')} initiallyOpen={false} primaryTogglesNestedList={true} nestedItems={
+                                    return (<ListItem 
+                                        key={key} primaryText={key.replace(/(.)*:/, '')} initiallyOpen={false} primaryTogglesNestedList={true} nestedItems={
                                         selectedDevice[key].map((lowerDevice, currIndex) => {
                                             if (typeof lowerDevice === 'object') {
                                             /* List-element for each lower device in array (pin) */
-                                                return (<ListItem onClick={() => {if (this.isControlPressed && selectedDevice['@id'] !== lowerDevice['@id']) DropActions.selectDevice(lowerDevice['@id']);}} key={selectedDevice[key].indexOf(lowerDevice)} primaryText={lowerDevice['@id'].replace(/(.)*:/, '')} initiallyOpen={false} primaryTogglesNestedList={true} nestedItems={
-                                                // Sub-list-elements: traverse keys of lower device (pin)
+                                                return (<ListItem 
+                                                    onClick={() => { if (this.isControlPressed && selectedDevice['@id'] !== lowerDevice['@id']) DropActions.selectDevice(lowerDevice['@id']); }} key={selectedDevice[key].indexOf(lowerDevice)} primaryText={lowerDevice['@id'].replace(/(.)*:/, '')} initiallyOpen={false} primaryTogglesNestedList={true} nestedItems={
+                                                    // Sub-list-elements: traverse keys of lower device (pin)
                                                     Object.keys(lowerDevice).map((lowerKey) => {
                                                         if (lowerDevice[lowerKey]['@id'] != null) {
-                                                            return (<ListItem onDoubleClick={ () => {
-                                                                if (lowerKey != 'geo:location') {
+                                                            return (<ListItem 
+                                                                onDoubleClick={() => {
+                                                                if (lowerKey !== 'geo:location') {
                                                                     const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                                                     this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: lowerKey });
                                                                     this.handleOpenSetProperty();
                                                                 }
-                                                            }} key={lowerKey} primaryText={`${lowerKey.replace(/(.)*:/, '')  }: ${  lowerDevice[lowerKey]['@id'].replace(/(.)*:/, '')}`}
+                                                            }} key={lowerKey} primaryText={`${lowerKey.replace(/(.)*:/, '')}: ${lowerDevice[lowerKey]['@id'].replace(/(.)*:/, '')}`}
                                                             />);
                                                         }
                                                         else {
-                                                            return (<ListItem onDoubleClick={ () => {
+                                                            return (<ListItem 
+                                                                onDoubleClick={() => {
                                                                 if (lowerKey !== 'geo:location') {
                                                                     const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                                                     this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: lowerKey });
                                                                     this.handleOpenSetProperty();
                                                                 }
                                                             }} 
-                                                            key={lowerKey} primaryText={`${lowerKey.replace(/(.)*:/, '')  }: ${  lowerDevice[lowerKey].replace(/(.)*:/, '')}`}
+                                                            key={lowerKey} primaryText={`${lowerKey.replace(/(.)*:/, '')}: ${lowerDevice[lowerKey].replace(/(.)*:/, '')}`}
                                                             />);
-                                                       }
+                                                        }
                                                     })
-                                                } 
+                                                }
                                                 />);
                                             }
                                             /* When there is an array of primitive values as the attribute */
                                             else {
-                                                return (<ListItem onDoubleClick={ () => {
-                                                    if (key != 'geo:location') {
+                                                return (<ListItem 
+                                                    onDoubleClick={ () => {
+                                                    if (key !== 'geo:location') {
                                                         const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                                         this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key, key: selectedDevice[key].indexOf(lowerDevice) });
                                                         this.handleOpenSetProperty();
@@ -240,11 +241,10 @@ export default class ComponentDetailList extends React.Component {
                                         })
                                     }
                                     />);
-                                }           
-                                /* Object as property value:
-                                 * if there are property values of this object
-                                 * that are object as well, just the id is shown */
-                                else if (!Array.isArray(selectedDevice[key]) && typeof selectedDevice[key] === 'object' && selectedDevice[key]['@id'] != null) {
+                                    /* Object as property value:
+                                     * if there are property values of this object
+                                     * that are object as well, just the id is shown */
+                                } else if (!Array.isArray(selectedDevice[key]) && typeof selectedDevice[key] === 'object' && selectedDevice[key]['@id'] != null) {
                                     if (key === 'geo:location') {
                                         const tempLocation = utils.getObjectFromGraphById(selectedDevice[key]['@id'], this.state.devices);
                                         return (
@@ -256,18 +256,19 @@ export default class ComponentDetailList extends React.Component {
                                     } 
                                     else {
                                         return (<ListItem
-                                            onDoubleClick={ () => {
+                                            onDoubleClick={() => {
                                                 const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                                 this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
                                                 this.handleOpenSetProperty();
                                             }} 
-                                            key={key} primaryText={`${key.replace(/(.)*:/, '')  }: ${  selectedDevice[key]['@id'].replace(/(.)*:/, '')}`} initiallyOpen={false} primaryTogglesNestedList={true}
+                                            key={key} primaryText={`${key.replace(/(.)*:/, '')}: ${selectedDevice[key]['@id'].replace(/(.)*:/, '')}`} initiallyOpen={false} primaryTogglesNestedList={true}
                                         />);
                                     }
                                 }
                                 // Primitive data as property value
                                 else if (typeof selectedDevice[key] === 'string') {
-                                    return (<ListItem onDoubleClick={ () => {
+                                    return (<ListItem 
+                                        onDoubleClick={ () => {
                                         if (key !== 'geo:location') {
                                             const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                             this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
@@ -277,7 +278,8 @@ export default class ComponentDetailList extends React.Component {
                                     key={key} primaryText={`${key.replace(/(.)*:/, '')}: ${selectedDevice[key].replace(/(.)*:/, '')}`}
                                     />);
                                 } 
-                                return (<ListItem onDoubleClick={ () => {
+                                return (<ListItem 
+                                    onDoubleClick={ () => {
                                     if (key !== 'geo:location') {
                                         const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                         this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
@@ -286,7 +288,6 @@ export default class ComponentDetailList extends React.Component {
                                 }}
                                 key={key} primaryText={`${key.replace(/(.)*:/, '')}: ${selectedDevice[key]}`}
                                 />);
-
                             })}
                         </List>
 
@@ -304,7 +305,8 @@ export default class ComponentDetailList extends React.Component {
                                             <TextField value={this.state.textValue} onChange={ (e) => {
                                                 this.setState({ textValue: e.target.value }); 
                                             }} 
-                                            hintText="New Value" />
+                                            hintText="New Value"
+                                            />
                                         );
                                     } 
                                     return (
@@ -316,7 +318,7 @@ export default class ComponentDetailList extends React.Component {
                                             {this.menuItems(this.state.selectValues)}
                                         </SelectField>
                                     );
-                                    }
+                                }
                             )}
                         </Dialog>
                         <h4>

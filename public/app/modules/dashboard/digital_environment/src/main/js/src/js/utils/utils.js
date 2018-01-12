@@ -25,17 +25,14 @@ export function getParentClasses(type) {
         if (tempObject['rdfs:subClassOf'].length == null) {
             try {
                 parentClasses = parentClasses.concat(getParentClasses(tempObject['rdfs:subClassOf']['@id']));
-            }
-            catch (err) {
+            } catch (err) {
                 console.log('At least of the used arguments is undefined or has not been processed yet, which is generating the following processing error:\n', err);
             }
-        }
-        else {
+        } else {
             tempObject['rdfs:subClassOf'].map((iterObject) => {
                 try {
                     parentClasses = parentClasses.concat(getParentClasses(iterObject['@id']));
-                }
-                catch (err) {
+                } catch (err) {
                     console.log('At least of the used arguments is undefined or has not been processed yet, which is generating the following processing error:\n', err);
                 }
             });
@@ -76,8 +73,7 @@ export function cleanOutAttributes(unwantedAttributes, object) {
             object[iterKey].map((iterObject) => {
                 cleanOutAttributes(unwantedAttributes, iterObject);
             });
-        }
-        else if (typeof object[iterKey] === 'object') {
+        } else if (typeof object[iterKey] === 'object') {
             cleanOutAttributes(unwantedAttributes, object[iterKey]);
         }
     });

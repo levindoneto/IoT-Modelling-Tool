@@ -1,7 +1,7 @@
 import dispatcher from '../dispatcher';
 import * as backend from '../backend/backend';
 
-/* Creates a device */
+/* Create a device */
 export function createDevice(device) {
     dispatcher.dispatch({
         type: 'CREATE_DEVICE',
@@ -9,7 +9,7 @@ export function createDevice(device) {
     });
 }
 
-/* Deletes a device */
+/* Delete a device */
 export function deleteDevice(id) {
     dispatcher.dispatch({
         type: 'DELETE_DEVICE',
@@ -17,7 +17,7 @@ export function deleteDevice(id) {
     });
 }
 
-/* Sets a property into a device */
+/* Set a property into a device */
 export function setProperty(id, property, value, key) {
     dispatcher.dispatch({
         type: 'SET_PROPERTY',
@@ -28,7 +28,7 @@ export function setProperty(id, property, value, key) {
     });
 }
 
-/* Deletes a property into a device */
+/* Delete a property into a device */
 export function deleteProperty(id, property) {
     dispatcher.dispatch({
         type: 'DELETE_PROPERTY',
@@ -37,13 +37,7 @@ export function deleteProperty(id, property) {
     });
 }
 
-/* Saves and Loads models. It allows an user to see the model's
- * names that are available on the server */
-export function getListOfModels() {
-    // Call local backend API
-}
-
-/* Loads the selected model from the server into the frontend */
+/* Load the selected model from the server into the frontend */
 export function loadModel(id) {
     dispatcher.dispatch({
         type: 'LOAD_MODEL',
@@ -51,7 +45,7 @@ export function loadModel(id) {
     });
 }
 
-/* Saves the current frontend model to the server */
+/* Save the current frontend model to the server */
 export function SaveModelAs(title) {
     dispatcher.dispatch({
         type: 'SAVE_MODEL_AS',
@@ -59,7 +53,7 @@ export function SaveModelAs(title) {
     });
 }
 
-/* Loads the given model into the frontend model */
+/* Load the given model into the frontend model */
 export function importModel(model) {
     dispatcher.dispatch({
         type: 'IMPORT_MODEL',
@@ -67,7 +61,7 @@ export function importModel(model) {
     });
 }
 
-/* Exports the frontend model as file in a given format */
+/* Export the frontend model as file in a given format */
 export function exportModel(format) {
     dispatcher.dispatch({
         type: 'EXPORT_MODEL',
@@ -75,7 +69,7 @@ export function exportModel(format) {
     });
 }
 
-/* Selects a device by the id */
+/* Select a device by the id */
 export function selectDevice(id) {
     dispatcher.dispatch({
         type: 'SELECT_DEVICE',
@@ -83,7 +77,7 @@ export function selectDevice(id) {
     });
 }
 
-/* Adds a type of device with a given id */
+/* Add a type of device with a given id */
 export function addDeviceType(id) {
     dispatcher.dispatch({
         type: 'ADD_DEVICE_TYPE',
@@ -91,12 +85,11 @@ export function addDeviceType(id) {
     });
 }
 
-/* Deletes all the devices from the view */
+/* Delete all the devices from the view */
 export function clearDevices() {
     if (backend.isDigitalTwinEmpty()) {
         localStorage.setItem('digitalTwinWasEmpty', 'true');
-    }
-    else { // The model in the digital twin has been cleaned
+    } else { // The model in the digital twin has already been cleaned
         localStorage.setItem('digitalTwinWasEmpty', 'false');
     }
     dispatcher.dispatch({
@@ -104,14 +97,14 @@ export function clearDevices() {
     });
 }
 
-/* Shows the selected/set property to the user */
+/* Show the selected/set property to the user */
 export function openSetProperty() {
     dispatcher.dispatch({
         type: 'OPEN_SET_PROPERTY'
     });
 }
 
-/* Closes the selected/set property to the user */
+/* Close the selected/set property to the user */
 export function closeSetProperty() {
     dispatcher.dispatch({
         type: 'CLOSE_SET_PROPERTY'

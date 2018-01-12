@@ -14,7 +14,6 @@ const boxTarget = {
         const isPaletteItem = item.isPaletteItem;
 
         /* First drop (drag from Palette) */
-  
         if (isPaletteItem === true) {
             const listElement = document.getElementById(item.id);
             const listElementLeft = listElement.offsetLeft;
@@ -28,24 +27,19 @@ const boxTarget = {
             if (Math.round(listElementLeft + delta.x - paletteContainerWidth) < 0 && Math.round(item.top + delta.y) > (dropContainerElement.offsetHeight - 50)) {
                 left = 0;
                 top = dropContainerElement.offsetHeight - 50;
-            } // Prevent Devices leaving top right bound
-            else if (Math.round(listElementTop + delta.y) < 0 && Math.round(listElementLeft + delta.x - paletteContainerWidth) > (dropContainerElement.offsetWidth - 50)) {
+            } else if (Math.round(listElementTop + delta.y) < 0 && Math.round(listElementLeft + delta.x - paletteContainerWidth) > (dropContainerElement.offsetWidth - 50)) {
                 left = dropContainerElement.offsetWidth - 50;
                 top = 0;
-            } // revent Devices leaving top left, top or left bounds
-            else if (Math.round(listElementLeft + delta.x - paletteContainerWidth) < 0 || Math.round(listElementTop + delta.y) < 0) {
+            } else if (Math.round(listElementLeft + delta.x - paletteContainerWidth) < 0 || Math.round(listElementTop + delta.y) < 0) {
                 left = Math.max(0, Math.round(listElementLeft + delta.x - paletteContainerWidth));
                 top = Math.max(0, Math.round(listElementTop + delta.y));
-            } // Prevent Devices leaving bottom right, bottom or right bounds
-            else {
+            } else {
                 left = Math.min(Math.round(listElementLeft + delta.x - paletteContainerWidth), dropContainerElement.offsetWidth - 50);
                 top = Math.min(Math.round(listElementTop + delta.y), dropContainerElement.offsetHeight - 50);
             }
             const newItem = { top, left, type }; // type: 'prefix:id'
             DropActions.createDevice(newItem); 
-        }
-        /* Drag and drop inside the DropContainer */
-        else {
+        } else {
             const dropContainerElement = document.getElementById('drop-container');
             const left = Math.min(Math.round(item.left + delta.x), dropContainerElement.offsetWidth - 50);    // LEFT is geo:long
             const top = Math.min(Math.round(item.top + delta.y), dropContainerElement.offsetHeight - 50);     // TOP is geo:lat
@@ -53,19 +47,15 @@ const boxTarget = {
             let isCloseToOtherDevice = false;
             let tempDevice = null;
             let isTargetDevice = false;
-
             devices.map((iterDevice) => {
                 const tempLocation = devices.find((iterObject) => {
                     if (iterDevice['geo:location']) {
-                        //console.log('Location', iterDevice['geo:location']['@id']);
                         return iterDevice['geo:location']['@id'] === iterObject['@id'];
                     }
                 });
-
                 if (tempLocation != null && item.id !== iterDevice['@id']) {
                     const diffX = Math.abs(tempLocation['geo:lat'] - top);
                     const diffY = Math.abs(tempLocation['geo:long'] - left);
-
                     if (diffX <= 50 && diffY <= 50) {
                         isCloseToOtherDevice = true;
                         tempDevice = iterDevice;
@@ -76,9 +66,7 @@ const boxTarget = {
 
             if (isCloseToOtherDevice && isTargetDevice) {
                 DropActions.setProperty(item.id, 'iot-lite:isSubSystemOf', tempDevice['@id']);
-                //console.log(item.id, ' --linked to-- ', tempDevice);
-            } 
-            else if (!isCloseToOtherDevice) {
+            } else if (!isCloseToOtherDevice) {
                 component.moveDevice(item.id, left, top);
             }
         }
@@ -136,7 +124,7 @@ class DropContainer extends Component {
         }
     }
 
-    // handle unselecting a Device (with 'ESC' key)
+    // Handle unselecting a Device (with 'ESC' key)
     handleKeysSelectedDevice = (e) => {
         const key = e.keyCode || e.charCode || 0;
         if (key === 27) {
@@ -145,7 +133,7 @@ class DropContainer extends Component {
         }
     };
 
-    // show Device's id (above Device's icon) when user pressing 'Alt' key (press and hold)
+    // Show Device's id (above Device's icon) when user pressing 'Alt' key (press and hold)
     activateHover = (e) => {
         const key = e.keyCode || e.charCode || 0;
         if (key === 18) {
@@ -154,7 +142,7 @@ class DropContainer extends Component {
         }
     };
 
-    // remove showed Device's when user release 'Alt' key
+    // Remove showed Device's when user release 'Alt' key
     deactivateHover = () => {
         this.setState({ hover: false });
     };
@@ -162,14 +150,12 @@ class DropContainer extends Component {
     render() {
         const { hideSourceOnDrag, connectDropTarget } = this.props;
         const { devices, deviceTypes } = this.state;
-
         const deviceTypeStyle = {
             position: 'absolute',
             border: '1px ridge gray',
             padding: '0.5rem 1rem',
             cursor: 'move'
         };
-
         const styles = {
             position: 'relative',
             height: '100%',
@@ -181,8 +167,7 @@ class DropContainer extends Component {
         if (typeof devices !== 'undefined') {
             document.body.addEventListener('keydown', this.activateHover);
             document.body.addEventListener('keyup', this.deactivateHover);
-        } 
-        else {
+        } else {
             document.body.removeEventListener('keydown', this.activateHover);
             document.body.removeEventListener('keyup', this.deactivateHover);
         }
@@ -201,22 +186,21 @@ class DropContainer extends Component {
                 <line key={3} x1={dropContainerElement.offsetWidth - 50} y1={dropContainerElement.offsetHeight - 50} x2={dropContainerElement.offsetWidth - 50} y2={dropContainerElement.offsetHeight - 55} style={{ stroke: '#000000', strokeWidth: 2 }} />
             );
         }
-
-
+        
         return connectDropTarget(
             <div id="drop-container" onClick={() => { DropActions.selectDevice(''); }} style={styles}>
                 {devices.map(storedDevice => {
                     let tempLeft = 0;
                     let tempTop = 0;
 
-                    // get location and draw arrow
+                    // Get the location and draw arrow
                     if (storedDevice['geo:location']) {
                         const storedDeviceLocation = utils.getObjectFromGraphById(storedDevice['geo:location']['@id'], devices);
                         tempLeft = parseInt(storedDeviceLocation['geo:long']);
                         tempTop = parseInt(storedDeviceLocation['geo:lat']);
 
                         /* Draw arrow */
-                        if (storedDevice['iot-lite:isSubSystemOf'] != null && storedDevice['iot-lite:isSubSystemOf']['@id'] != '') {
+                        if (storedDevice['iot-lite:isSubSystemOf'] != null && storedDevice['iot-lite:isSubSystemOf']['@id'] !== '') {
                             const targetDeviceId = storedDevice['iot-lite:isSubSystemOf']['@id'];
                             const targetDevice = utils.getObjectFromGraphById(targetDeviceId, devices);
                             const targetDeviceLocation = utils.getObjectFromGraphById(targetDevice['geo:location']['@id'], devices);
@@ -298,7 +282,6 @@ class DropContainer extends Component {
                         ); 
                     }
                 })}
-
                 <svg height="100%" width="100%">
                     <defs>
                         <marker id={'myAwesomeMarker'} markerWidth={'13'} markerHeight={'13'} refX={'2'} refY={'6'} orient={'auto'} >
@@ -307,7 +290,6 @@ class DropContainer extends Component {
                     </defs>
                     {lines}
                 </svg>
-
                 <div
                     style={{
                         position: 'absolute',
@@ -319,7 +301,6 @@ class DropContainer extends Component {
                         borderRadius: '50px'
                     }}
                 />
-
                 <div
                     style={{
                         position: 'absolute',
@@ -329,7 +310,6 @@ class DropContainer extends Component {
                 >
                     (0,0)
                 </div>
-
                 <div
                     style={{
                         position: 'absolute',
@@ -340,7 +320,6 @@ class DropContainer extends Component {
                 >
                     25 cm
                 </div>
-
             </div>
         );
     }

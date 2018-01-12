@@ -17,34 +17,33 @@ import RaisedButton from 'material-ui/RaisedButton';
 import * as backend from '../backend/backend';
 import { setTimeout } from 'timers';
 
-const refMapTypeComponents = firebase.database().ref('mapTypeComponents');
-const refInfoSaved = firebase.database().ref('infoSavedModels');
-const refSavedModels = firebase.database().ref('savedModels/');
-const refDevicesWithSubsystems = firebase.database().ref('devicesWithSubsystems/');
-const RESTAPIADDRESS = 'http://192.168.209.176:8080/MBP';
-const TEMP_MODEL = '__tmp_mdl_db__'; // key for accessing the temporary model in the database
 const TRUE = 'true';
 const FALSE = 'false';
 const IS_SYNC = 'isSync';
-const DIGITAL_TWIN_WAS_EMPTY = 'digitalTwinWasEmpty';
+const TEMP_MODEL = '__tmp_mdl_db__';
 const LOAD_LAST_MODEL = 'loadLastModel';
 const LOAD_TEMP_MODEL = 'loadTempModel';
 const IS_TEMPORARY_MODEL = 'isTemporaryModel';
+const DIGITAL_TWIN_WAS_EMPTY = 'digitalTwinWasEmpty';
+const RESTAPIADDRESS = 'http://192.168.209.176:8080/MBP';
+const refSavedModels = firebase.database().ref('savedModels/');
+const refInfoSaved = firebase.database().ref('infoSavedModels');
+const refMapTypeComponents = firebase.database().ref('mapTypeComponents');
+const refDevicesWithSubsystems = firebase.database().ref('devicesWithSubsystems/');
 const DELETED_MODEL = '__del_model__'; /* Flag put in the infoSavedModels.lastLoadedModels in order 
                                         * to not try to loaded a non-existant model from the database */
 const UNDEFINED = 'undefined';
-let savedModels = {};
-let savedModelsLoggedUser = {}; // Models which have been added by the user who is logged in the platform
-
+// Models which have been added by the user who is logged in the platform
+const savedModelsLoggedUser = {};
 const style = {
     display: 'inline-block',
     float: 'left',
 };
-
 const subHeaderStyle = {
     fontSize: '20px',
     color: 'black'
 };
+let savedModels = {};
 
 /* Get the saved models and put them in a element for consultation of existent keys */
 refSavedModels.once('value', (snapSM) => {
@@ -57,8 +56,8 @@ refSavedModels.once('value', (snapSM) => {
     }
 });
 
-
-localStorage.setItem(DIGITAL_TWIN_WAS_EMPTY, TRUE); // When the user opens the digital environment, it shall be always empty
+// When the user opens the digital environment, it shall be always empty
+localStorage.setItem(DIGITAL_TWIN_WAS_EMPTY, TRUE);
 localStorage.setItem(IS_SYNC, FALSE);
 
 /* Just load the current model if the user has saved it right before */
@@ -67,9 +66,8 @@ if (localStorage.getItem(LOAD_LAST_MODEL) === TRUE) {
     refInfoSaved.once('value', (snapshot) => {           
         loadModel(snapshot.val().lastSavedModel);
     });  
-}
-else if (localStorage.getItem(LOAD_TEMP_MODEL) === TRUE) { // Load the temporary model if the user was not able to save it
-    localStorage.setItem(LOAD_TEMP_MODEL, FALSE); // Used in order to load the non-saved model after the synchronization      
+} else if (localStorage.getItem(LOAD_TEMP_MODEL) === TRUE) {
+    localStorage.setItem(LOAD_TEMP_MODEL, FALSE);      
     loadModel(TEMP_MODEL);
 }
 
@@ -166,8 +164,8 @@ export default class NavigationBar extends React.Component {
 
     /* Open UI when the user clicks on the Load button */
     getSavedModels = () => {
-        let auxKeysSavedModels = [];
-        let auxKeysSavedModelsLoggedUser = [];
+        const auxKeysSavedModels = [];
+        const auxKeysSavedModelsLoggedUser = [];
         const ref = firebase.database().ref('savedModels/');
         ref.on('value', (snapshot) => { // The whole object savedModels with all the saved models
             let saved;
@@ -178,7 +176,8 @@ export default class NavigationBar extends React.Component {
                 auxKeysSavedModels.push(saved);
             }
             this.setState({ savedModels: auxKeysSavedModels }); // All the models
-            this.setState({ savedModelsLoggedUser: auxKeysSavedModelsLoggedUser }); // All the models which have been added by the logged
+            // All the models which have been added by the logged user
+            this.setState({ savedModelsLoggedUser: auxKeysSavedModelsLoggedUser });
         });
     };
 
@@ -224,7 +223,7 @@ export default class NavigationBar extends React.Component {
 
     bind = () => {
         refInfoSaved.once('value', (snapshot) => {
-            if (localStorage.getItem(IS_TEMPORARY_MODEL) === TRUE || snapshot.val().lastLoadedModel === UNDEFINED) { // FIXME
+            if (localStorage.getItem(IS_TEMPORARY_MODEL) === TRUE || snapshot.val().lastLoadedModel === UNDEFINED) {
                 swal({
                     title: 'The temporary model must be saved before being bound',
                     text: 'Or another model can be loaded for binding',
@@ -235,8 +234,7 @@ export default class NavigationBar extends React.Component {
                 setTimeout(() => {
                     backend.syncCurrentModel(false);
                 }, LEVEL.THERE);
-            }
-            else {
+            } else {
                 localStorage.setItem(IS_TEMPORARY_MODEL, FALSE);
                 if (backend.isDigitalTwinEmpty()) {
                     swal({
@@ -253,7 +251,6 @@ export default class NavigationBar extends React.Component {
                 else {
                     const refSavedModels = firebase.database().ref('savedModels/');
                     const refDevsWithSubsystems = firebase.database().ref('devicesWithSubsystems');
-                    const refMapTypeComponents = firebase.database().ref('mapTypeComponents');
                     const auxSavedModels = {};
                     let devicesWithSubsystems;
                     let mapTypeComp;
@@ -274,12 +271,20 @@ export default class NavigationBar extends React.Component {
                             auxSavedModels[snapshot.val().lastLoadedModel] = JSON.stringify(DeviceStore.getModel());
                             refSavedModels.update(auxSavedModels);
                             backend.fireAjaxSave(snapshot.val().lastLoadedModel, DeviceStore.getModel(), true, false, false);
-                            var i; // Devices' iteractions
-                            refDevsWithSubsystems.once('value', (snapdev) => { // Listener on devices with sensors/actuators (whole element)
-                                for (i in snapdev.val()[snapshot.val().lastLoadedModel]) { // Access devices from the current loaded model
-                                    //console.log('Register the device <', i, '>');
-                                    //console.log('i: ', i);
-                                    backend.bindDevice(i, '123456789067', '192.168.0.34', '12-34-56-78-90-67', RESTAPIADDRESS, devicesWithSubsystems[i], mapTypeComp, backend.bindDevice);
+                            let i; // Devices' iteractions
+                            // Listener on devices with sensors/actuators (whole element)
+                            refDevsWithSubsystems.once('value', (snapdev) => {
+                                // Access devices from the current loaded model
+                                for (i in snapdev.val()[snapshot.val().lastLoadedModel]) {
+                                    backend.bindDevice(i,
+                                        '123456789067',
+                                        '192.168.0.34',
+                                        '12-34-56-78-90-67',
+                                        RESTAPIADDRESS,
+                                        devicesWithSubsystems[i],
+                                        mapTypeComp,
+                                        backend.bindDevice
+                                    );
                                 }
                             });
                         });
@@ -319,17 +324,11 @@ export default class NavigationBar extends React.Component {
                 button: false,
                 timer: LEVEL.THERE
             });
-            localStorage.setItem(LOAD_TEMP_MODEL, TRUE); // Used in order to load the non-saved model after the synchronization
-            backend.fireAjaxSave(TEMP_MODEL, DeviceStore.getModel(), false, true, true); // Save the temporary model for loading with alertSave = true
-            
-            /*
-            setTimeout(() => {
-                backend.syncCurrentModel();
-            }, LEVEL.THERE);
-            */
-        
-        }
-        else {
+            // Used in order to load the non-saved model after the synchronization
+            localStorage.setItem(LOAD_TEMP_MODEL, TRUE);
+            // Save the temporary model for loading with alertSave = true
+            backend.fireAjaxSave(TEMP_MODEL, DeviceStore.getModel(), false, true, true);        
+        } else {
             if (this.state.modelName !== '') {
                 response = backend.fireAjaxSave(this.state.modelName, DeviceStore.getModel(), false, false, false);   
                 setTimeout(() => {
@@ -338,8 +337,7 @@ export default class NavigationBar extends React.Component {
             }
             if (response === true) {
                 this.setState({ snackBarSaveOpen: true });
-            }         
-            else {
+            } else {
                 this.setState({ snackBarSaveOpen: false });
             }
         }
@@ -362,8 +360,7 @@ export default class NavigationBar extends React.Component {
         refInfoSaved.once('value', (snapshot) => {
             if ((localStorage.getItem(IS_TEMPORARY_MODEL) === TRUE || snapshot.val().lastLoadedModel === UNDEFINED) && !backend.isDigitalTwinEmpty()) {
                 this.setState({ openSaveModelAs: true });
-            }
-            else {
+            } else {
                 localStorage.setItem(IS_TEMPORARY_MODEL, FALSE);
                 let auxSavedModels = {};
                 if (localStorage.getItem(DIGITAL_TWIN_WAS_EMPTY) === FALSE && backend.isDigitalTwinEmpty() && snapshot.val().lastLoadedModel !== DELETED_MODEL && snapshot.val().lastLoadedModel !== DELETED_MODEL) { // The user has loaded a model in the current section
@@ -389,10 +386,7 @@ export default class NavigationBar extends React.Component {
                             setTimeout(() => {
                                 backend.syncCurrentModel(false); // With false as parameter, nothing is loaded into the digital twin after the synchronization
                             }, LEVEL.THERE);
-                        }
-                        else { // [No]
-                            //console.log('Model remains stored in the database');
-                            
+                        } else { // [No]
                             swal({
                                 title: backend.concatenate('Do you want to load the model ', snapshot.val().lastLoadedModel, ' in its last saved version?'),
                                 icon: 'warning',
@@ -400,8 +394,7 @@ export default class NavigationBar extends React.Component {
                             }).then((value) => {
                                 if (value) { // Load model into the digital twin
                                     backend.syncCurrentModel(); // Sync and load the last saved model
-                                }
-                                else { // Just sync the whole system
+                                } else { // Just sync the whole system
                                     backend.syncCurrentModel(false);
                                 }
                             });
@@ -420,8 +413,7 @@ export default class NavigationBar extends React.Component {
                         setTimeout(() => {
                             backend.syncCurrentModel(false);
                         }, LEVEL.THERE);
-                    }
-                    else {
+                    } else {
                         if (snapshot.val().lastLoadedModel !== TEMP_MODEL && snapshot.val().lastLoadedModel !== DELETED_MODEL && snapshot.val().lastLoadedModel !== DELETED_MODEL) { // The temp model is not supposed to be overwritten this way
                             swal({
                                 title: 'Are you sure you want save the new model over the current one?',
@@ -444,8 +436,7 @@ export default class NavigationBar extends React.Component {
                                     setTimeout(() => {
                                         backend.syncCurrentModel();
                                     }, LEVEL.THERE);
-                                }
-                                else {
+                                } else {
                                     swal({
                                         title: backend.concatenate('The model ', snapshot.val().lastLoadedModel, ' remains the same in the digital twin!'),
                                         timer: LEVEL.THERE,
@@ -454,8 +445,7 @@ export default class NavigationBar extends React.Component {
                                     });
                                 }
                             });
-                        }
-                        else {
+                        } else {
                             this.setState({ openSaveModelAs: true }); // Open the box for saving the temporary model as a new model
                         }
                     }
@@ -477,8 +467,7 @@ export default class NavigationBar extends React.Component {
             setTimeout(() => {
                 backend.syncCurrentModel(false);
             }, LEVEL.THERE);
-        }
-        else { // The input box is just opened if the digital twin is not empty
+        } else { // The input box is just opened if the digital twin is not empty
             this.setState({ openSaveModelAs: true });
         }
     };
@@ -489,8 +478,7 @@ export default class NavigationBar extends React.Component {
         if (this.state.modelName === '') {
             this.setState({ saveButtonDisabled: true });
             this.setState({ errorText: "Model's name can not be empty!" });
-        }         
-        else {
+        } else {
             this.setState({ saveButtonDisabled: false });
             this.setState({ errorText: null });
         }
@@ -500,7 +488,7 @@ export default class NavigationBar extends React.Component {
         const actionsSaveModelAs = [
             <FlatButton label="Cancel" onTouchTap={this.handleCloseSaveModelAs} />,
             <FlatButton
-                label="Save As" primary disabled={this.state.saveButtonDisabled}  // disable the button
+                label="Save As" primary disabled={this.state.saveButtonDisabled}
                 onTouchTap={() => { this.handleSaveModelAs(); this.handleCloseSaveModelAs(); }}
             />
         ];
@@ -519,8 +507,7 @@ export default class NavigationBar extends React.Component {
 
         if (this.state.openSaveModelAs) {
             document.body.addEventListener('keyup', this.handleKeysSaveModelAs);
-        }         
-        else {
+        } else {
             document.body.removeEventListener('keyup', this.handleKeysSaveModelAs);
         }
 
