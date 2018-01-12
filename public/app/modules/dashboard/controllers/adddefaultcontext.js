@@ -9,7 +9,7 @@ dashboard.controller("adddefaultcontextController", ['$rootScope', '$scope', '$s
                 for (c in snapContext.val()) {
                     if (context.idcontext === snapContext.val()[c].idcontext) {
                         swal({
-                            title: 'There is already a IoT Lite Context saved with the same Id!',
+                            title: 'There is already a IoT Lite @Context saved with the same Id!',
                             text: 'Please, change the the field Id (@Context) and try to add the element again',
                             icon: 'error'
                         });
@@ -28,10 +28,10 @@ dashboard.controller("adddefaultcontextController", ['$rootScope', '$scope', '$s
                             icon: 'success'
                         });
                     });
-                    setTimeout(() => {
-                        routeSync();
-                    }, 3000);
                 });
+                setTimeout(() => {
+                    routeSync();
+                }, 3000);
             });
         };
     }]);
