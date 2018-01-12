@@ -162,7 +162,7 @@ function ($rootScope, $scope, $state, $location, Flash,appSettings,$firebaseAuth
             state: 'digitalenvironment'
         },
         {
-            title: 'Add Device or Component',  // Can be devices, actuators or sensors
+            title: 'Add Device or Component',  // They can be devices, actuators or sensors
             icon: 'plus-circle',
             state: 'addbelonging'
         },

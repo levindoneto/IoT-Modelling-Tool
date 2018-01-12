@@ -12,13 +12,21 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
 
 
     setTimeout(() => { // It works as a promise without using any function as parameter
-            let current_key = contextDefaultObj.$value.toString();
-            $scope.currentDefaultContext = allContexts[current_key.toString()].idcontext.toString();
+            try {
+                const currentKey = contextDefaultObj.$value.toString();
+            } catch (err) {
+                console.log('The default context has not been obtained yet.\n', err);
+            }
+            $scope.currentDefaultContext = allContexts[currentKey.toString()].idcontext.toString();
         }, 2000);
 
     setTimeout(() => { // setTimeout(function() { 
-            let current_key_graph = graphDefaultObj.$value.toString();
-            $scope.currentDefaultGraph = allGraphs[current_key_graph.toString()].idgraph.toString();
+        try {
+            const currentKeyGraph = graphDefaultObj.$value.toString();
+        } catch (err) {
+            console.log('The default graph has not been obtained yet.\n', err);
+        }
+            $scope.currentDefaultGraph = allGraphs[currentKeyGraph.toString()].idgraph.toString();
         }, 2000);
     
 
