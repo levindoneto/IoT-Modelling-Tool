@@ -12,7 +12,6 @@
         <div class="panel panel-default">
             <h3 class="Titlemyaccount">Username</h3>
             <span class="InfoAccount">&emsp;{{user.Username}} </span>
-
             <h3 class="Titlemyaccount">E-mail</h3>
             <span class="InfoAccount">&emsp;{{user.Email}}</br></br> </span>
         </div>
@@ -20,8 +19,7 @@
             <button class="DataEdit" data-toggle="modal" ng-click="showAccountinfo(user)" data-target="#editModal">
                 Edit
             </button>
-            </br>
-        </div></br></br>
+        </div>
         <div class="panel panel-default">
             <center>
                 <h3 class="Titlemyaccount">User as Admin</h3>
@@ -40,10 +38,10 @@
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="DataEdit">Edit User's Information</h4>
+                <h4>Edit User's Information</h4>
             </div>
             <div class="modal-body">
-                <form id="form_id" role="form" ng-submit="editFormSubmit(user)" ng-show="show">
+                <form id="form_id" role="form" ng-submit="editFormSubmit(user.$id, Username)" ng-show="show">
                     <div class="form-group">
                         <label for="name" class="EditInfoField control-label">Username</label>
                         <input type="text" class="form-control" id="name" ng-model="Username">

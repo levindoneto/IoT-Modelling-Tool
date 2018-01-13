@@ -282,8 +282,8 @@
     padding-left: 6px;
     padding-right: 6px;
     border-radius: 8px;
-    margin-top: -12px;
-    margin-bottom: -40px;
+    margin-top: -15px;
+    margin-bottom: 5px;
     /* Horizontal centralizing */
     margin-left: auto;
     margin-right: auto;
@@ -358,7 +358,7 @@
 }
 
 .WarningsDiv {
-    margin-bottom: -15px;
+    margin-bottom: -25px;
 }
 
 .AddSpecificPropButton {
@@ -708,5 +708,5 @@ h5.H5Trades, h5.ReportedTrades, .Adm {
   }
 
   .WarningsSec {
-      margin-top: -20px;
+      margin-top: -40px;
   }

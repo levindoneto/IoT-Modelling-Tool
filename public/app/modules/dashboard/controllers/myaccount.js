@@ -8,7 +8,8 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     const allContexts = $firebaseObject(refContexts);
     const refGraphs = firebase.database().ref('graphs/'); // Access the object @graphs from Firebase
     const allGraphs = $firebaseObject(refGraphs);
-    const graphDefaultObj = $firebaseObject(refg); // Acess the default @graph key
+    const graphDefaultObj = $firebaseObject(refg); // Access the default @graph key
+    const LOGGED_USER = 'loggedUser';
 
     setTimeout(() => { // It works as a promise without using any function as parameter
         let current_key = contextDefaultObj.$value.toString();
@@ -27,53 +28,45 @@ setTimeout(() => { // setTimeout(function() {
         $scope.Email = user.Email;
         $scope.addr = user.addr;
         $scope.id = user.$id;
-    }
+    };
 
     /* Function to verify if a @Context has been set for the modelling environment */
     $scope.verifySettingDefaultContext = function () {
         if (!contextDefaultObj.$value) { // Default @context isn't set
             $scope.defaultContextIsSet = false;
-        }
-        else {
+        } else {
             $scope.defaultContextIsSet = true;
         }
-    }
+    };
 
     $scope.verifySettingDefaultGraph = function () {
         if (!graphDefaultObj.$value) { // Default @graph isn't set
             $scope.defaultGraphIsSet = false;
-        }
-        else {
+        } else {
             $scope.defaultGraphIsSet = true;
         }
-    }
+    };
     
     $scope.updateAdminInfoDB = function (userId, isAdmin) {
-        var refUser = firebase.database().ref('users/' + userId); 
-        let auxUserAdmin = {}; // isAdmin: Boolean
+        const refUser = firebase.database().ref(`users/${userId}`); 
+        const auxUserAdmin = {}; // isAdmin: Boolean
         auxUserAdmin.isAdmin = isAdmin;
         refUser.update(auxUserAdmin);
-    }
+    };
 
-    $scope.editFormSubmit = function () {
-        var user = firebase.auth().currentUser;
-        var ref = firebase.database().ref('users/'+$scope.id);
-        var userDB = $firebaseObject(ref);
-
-        userDB.$loaded().then(() => {
-            userDB.Username = $scope.Username;
-            userDB.addr = $scope.addr;
-            userDB.Email = $scope.Email;
-            userDB.$save().then((ref) => {
-            },
-            (error) => {
-                console.log('Error:', error);
-            });
+    $scope.editFormSubmit = function (userId, username) {
+        const refUser = firebase.database().ref(`users/${userId}`); 
+        const auxUserUsername = {}; // isAdmin: Boolean
+        auxUserUsername.Username = username;
+        refUser.update(auxUserUsername);
+        swal({
+            title: 'Your username has been modified successfully',
+            icon: 'success',
+            timer: 3000,
+            button: false
         });
-        user.updateEmail($scope.Email);
-    }
-
-    $('#form_id').submit(() => {
-        $('#editModal').modal('hide');
-    });
+        setTimeout(() => {
+            routeSync();
+        }, 3000);
+    };
 }]);
