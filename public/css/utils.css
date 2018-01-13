@@ -1,11 +1,9 @@
 .DigitalEnvironment {
     height: 400px;
     width: 100%;
-
 }
 
 /*Pre Loader*/
-
 .cssload-loader {
     position: relative;
     left: calc(50% - 188px);
@@ -297,19 +295,6 @@
 
 .DataEdit:hover{
     background-color: #557fac;
-    padding-top: 4px;
-    padding-bottom: 4px;
-    padding-left: 7px;
-    padding-right: 7px;
-    border-radius: 8px;
-    margin-top: -12px;
-    margin-bottom: -42px;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 20px;
-    color: white;
-    display: block;
-    align: center;
     transition: all 0.5s;
 }
 
@@ -332,18 +317,6 @@
 
 .AddElementBtn:hover {
     background-color: #557fac;
-    padding-top: 4px;
-    padding-bottom: 4px;
-    padding-left: 7px;
-    padding-right: 7px;
-    border-radius: 8px;
-    margin-top: 6px;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 20px;
-    color: white;
-    display: block;
-    align: center;
     transition: all 0.5s;
 }
 
@@ -362,15 +335,6 @@
 
 .Refresh:hover{
     background-color: #557fac;
-    padding: 8px;
-    border-radius: 4px;
-    margin-bottom: auto;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 19px;
-    color: white;
-    display: block;
-    align: center;
     transition: all 0.5s;
 }
 
@@ -390,13 +354,6 @@
 
 .Warnings:hover {
     background-color: #557fac;
-    padding: 6px;
-    padding-left: 8px;
-    padding-right: 8px;
-    border-radius: 4px;
-    margin-top: -8px;
-    font-size: 15px;
-    color: white;
     transition: all 0.5s;
 }
 
@@ -417,27 +374,11 @@
 
 .AddSpecificPropButton:hover{
     background-color: #557fac;
-    padding: 5px;
-    border-radius: 4px;
-    margin-top: 20px;
-    font-size: 15px;
-    color: white;
-    display: block;
-    margin: auto;
-    align: center;
     transition: all 0.5s;
 }
 
 .AddProperty:hover{
     background-color: #557fac;
-    padding: 4px;
-    border-radius: 8px;
-    margin-top: 10px;
-    font-size: 18px;
-    color: white;
-    display: inline;
-    margin: auto;
-    align: left;
     transition: all 0.5s;
 }
 
@@ -455,13 +396,6 @@
 
 .RmvButtonaddbelonging:hover {
     background-color: #3c536b;
-    padding: 5px;
-    border-radius: 8px;
-    margin-top: 10px;
-    font-size: 15px;
-    color: white;
-    display: block;
-    margin: auto;
     align: center;
 }
 
@@ -493,14 +427,7 @@ input[type="file"] {
 }
 
 .custom-file-upload:hover {
-    border: 1px;
     background-color: #3c536b;
-    font-size: 15px;
-    color: white;
-    padding: 5px;
-    border-radius: 8px;
-    margin-top: 10px;
-    margin: auto;
     transition: all 0.5s;
     cursor: pointer;
 }
@@ -540,12 +467,7 @@ input[type="file"] {
 }
 
 .BtnCloseSearch:hover {
-    border: 1px;
     background-color: #3c536b;
-    font-size: 15px;
-    color: white;
-    border-radius: 8px;
-    margin: auto;
     transition: all 0.5s;
     cursor: pointer;
 }
@@ -560,14 +482,9 @@ input[type="file"] {
 }
 
 .DetailsmodelSearch:hover {
-    border: 2px;
     background-color: #3c536b;
-    font-size: 20px;
-    color: white;
-    border-radius: 8px;
     transition: all 0.5s;
     cursor: pointer;
-    padding: 5px;
 }
 
 .DetailsUserSearch {
@@ -581,14 +498,10 @@ input[type="file"] {
 }
 
 .DetailsUserSearch:hover {
-    border: 2px;
     background-color: #004C70;
     color: white;
-    font-size: 20px;
-    border-radius: 8px;
-    margin-left: 4px;
     cursor: pointer;
-    padding: 5px;
+    
 }
 
 .ImgSearch {
@@ -616,18 +529,6 @@ input[type="file"] {
 
 .BtnmyContexts:hover{
     background-color: #879bb1;
-    padding: 5px;
-    border-radius: 8px;
-    margin-top: 3px;
-    margin-bottom: 4px;
-    /* To centralize the button */
-    margin-left: auto;
-    margin-right: auto;
-    /****************************/
-    font-size: 18px;
-    color: black;
-    display: block;
-    align: center;
     transition: all 0.5s;
 }
 
@@ -641,12 +542,8 @@ input[type="file"] {
 }
 
 .Btnmybelongings:hover {
-    border: 1px;
     background-color: #3c536b;
     transition: all 0.5s;
-    margin-left: 1px;
-    padding: 6px 8px;
-    border-radius: 8px;
 }
 
 .BtnClosemybelongings {
@@ -658,13 +555,7 @@ input[type="file"] {
 }
 
 .BtnClosemybelongings:hover {
-    border: 1px;
     background-color: #0093D1;
-    font-size: 15px;
-    color: white;
-    border-radius: 8px;
-    margin: auto;
-    transition: all 0.5s;
     cursor: pointer;
 }
 
@@ -688,13 +579,12 @@ h6.TitleWithlist {
 
 p.Withlist {
     color: #262f28;
-    font-size: 14px/
+    font-size: 14px;
 }
 
 /* General Style */
 h, button {
     margin: 2px 2px 2px 2px;
-
 }
 
 button {
@@ -815,4 +705,8 @@ h5.H5Trades, h5.ReportedTrades, .Adm {
   
   .slider.round:before {
     border-radius: 50%;
+  }
+
+  .WarningsSec {
+      margin-top: -20px;
   }
