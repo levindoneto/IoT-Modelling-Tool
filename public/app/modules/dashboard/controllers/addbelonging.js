@@ -10,7 +10,10 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         // Update Map (component:specificType)
         const mapTypeComponents = firebase.database().ref('mapTypeComponents/');
         const compType = {};
-        const pinsObj = {}; // Devices: numberOfPins, Components: pinConfigurationxsd:nonNegativeIntegerxsd:nonNegativeInteger
+        const pinsObj = {}; // Devices: numberOfPins, Components: pinConfiguration
+        const valueObj = {};
+        const gpioModeObj = {};
+        const modelNumberObj = {};
         pinsObj.NewPropertyOwlType = 'owl:Restriction';
         pinsObj.NewPropertyType = 'xsd:nonNegativeInteger';
         pinsObj.NewPropertyValue = pins;
@@ -19,8 +22,17 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
             compType[model.id] = 'actuator';
         } else if (type === 'SensingDevice') {
             compType[model.id] = 'sensor';
+            valueObj.NewPropertyOwlType = 'owl:Restriction';
+            valueObj.NewPropertyType = 'xsd:string';
+            valueObj.NewPropertyValue = '-';
         } else {
             compType[model.id] = 'device';
+            gpioModeObj.NewPropertyOwlType = 'owl:DatatypeProperty';
+            gpioModeObj.NewPropertyType = 'xsd:string';
+            gpioModeObj.NewPropertyValue = '';
+            modelNumberObj.NewPropertyOwlType = 'owl:DatatypeProperty';
+            modelNumberObj.NewPropertyType = 'xsd:string';
+            modelNumberObj.NewPropertyValue = '';
         }
         mapTypeComponents.update(compType);
         Upload.base64DataUrl(file).then((base64Url) => {
@@ -121,6 +133,11 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                     modelKeys.type = type;
                     if (type === 'Device') {
                         model.numberOfPins = pinsObj;
+                        model.gpioMode = gpioModeObj;
+                        model.modelNumber = modelNumberObj;
+                    } else if (type === 'SensingDevice') {
+                        model.pinConfiguration = pinsObj;
+                        model.value = valueObj;
                     } else {
                         model.pinConfiguration = pinsObj;
                     }
@@ -134,8 +151,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                          * local synchronized array.
                          * This method returns a promise, which is resolved after the data has been 
                          * saved to the server. The promise resolves to the Firebase reference 
-                         * for the newly added record, providing an easy access to its key.
-                         */
+                         * for the newly added record, providing an easy access to its key. */
                         swal({
                             title: concatenate('Thse ', compType[model.id], ' has been added successfully!\n'),
                             icon: 'success',

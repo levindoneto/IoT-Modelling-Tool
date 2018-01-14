@@ -64,19 +64,23 @@ export function intersection(array1, array2) {
 }
 
 export function cleanOutAttributes(unwantedAttributes, object) {
-    Object.keys(object).map((iterKey) => {
-        if (unwantedAttributes.includes(iterKey)) {
-            delete object[iterKey];
-        }
-        /* Tue attribute is an array of objects */
-        if (Array.isArray(object[iterKey])) {
-            object[iterKey].map((iterObject) => {
-                cleanOutAttributes(unwantedAttributes, iterObject);
-            });
-        } else if (typeof object[iterKey] === 'object') {
-            cleanOutAttributes(unwantedAttributes, object[iterKey]);
-        }
-    });
+    try {
+        Object.keys(object).map((iterKey) => {
+            if (unwantedAttributes.includes(iterKey)) {
+                delete object[iterKey];
+            }
+            /* Tue attribute is an array of objects */
+            if (Array.isArray(object[iterKey])) {
+                object[iterKey].map((iterObject) => {
+                    cleanOutAttributes(unwantedAttributes, iterObject);
+                });
+            } else if (typeof object[iterKey] === 'object') {
+                cleanOutAttributes(unwantedAttributes, object[iterKey]);
+            }
+        });
+    } catch (err) {
+        console.log('The device or component has not been fully defined\nDetailed error:\n', err);
+    }
 }
 
 export function isPrimitiveProperty(property) {
