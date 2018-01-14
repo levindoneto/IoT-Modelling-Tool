@@ -489,14 +489,17 @@ firebase.database().ref('models').orderByKey().once('value')
                 console.log('The type has not been defined');
         }
     });
-    updateGraphElement(extensionsGraph, DEFINITIONS_KEY, UPDATED_DEFINITIONS_KEY, manageGraphLocalStorage);
+    updateGraphElement(extensionsGraph, 
+        DEFINITIONS_KEY, 
+        UPDATED_DEFINITIONS_KEY, 
+        manageGraphLocalStorage);
 });
 
 var dashboard = angular.module('dashboard', ['ui.router', 'ngAnimate', 'ngMaterial', 'firebase', 'react']);
 dashboard.factory('notification', ($firebaseArray, $firebaseObject) => ({
         send: function(message, user) {
-            var ref = firebase.database().ref(`users/${user}`);
-            var userDB = $firebaseObject(ref);
+            const ref = firebase.database().ref(`users/${user}`);
+            const userDB = $firebaseObject(ref);
             userDB.$loaded().then(() => {
                   userDB.haveNotification = true;
                   userDB.$save().then((ref) => {

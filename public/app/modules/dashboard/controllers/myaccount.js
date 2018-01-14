@@ -9,18 +9,24 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
     const refGraphs = firebase.database().ref('graphs/'); // Access the object @graphs from Firebase
     const allGraphs = $firebaseObject(refGraphs);
     const graphDefaultObj = $firebaseObject(refg); // Access the default @graph key
-    const LOGGED_USER = 'loggedUser';
+    const DEFAULT_CONTEXT_ID = 'defContextId';
+    const DEFAULT_GRAPH_ID = 'defGraphId';
 
-    setTimeout(() => { // It works as a promise without using any function as parameter
-        let current_key = contextDefaultObj.$value.toString();
-        $scope.currentDefaultContext = allContexts[current_key.toString()].idcontext.toString();
+    setTimeout(() => {
+        try {
+            $scope.currentDefaultContext = localStorage.getItem(DEFAULT_CONTEXT_ID) || allContexts[contextDefaultObj.$value].idcontext;
+        } catch (err) {
+            console.log(err);
+        }
     }, 2000);
 
-setTimeout(() => { // setTimeout(function() { 
-        let current_key_graph = graphDefaultObj.$value.toString();
-        $scope.currentDefaultGraph = allGraphs[current_key_graph.toString()].idgraph.toString();
+    setTimeout(() => {
+        try {
+            $scope.currentDefaultGraph = localStorage.getItem(DEFAULT_GRAPH_ID) || allGraphs[graphDefaultObj.$value].idgraph;
+        } catch (err) {
+            console.log(err);
+        }
     }, 2000);
-    
 
     $scope.showAccountinfo = function (user) {
         $scope.show = true;

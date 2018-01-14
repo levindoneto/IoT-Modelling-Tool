@@ -1,116 +1,125 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <link rel="shortcut icon" href="img/IoT-MT-favicon.png" type="img/x-icon">
-      <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-      <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta name="description" content="IoT - Modelling Tool">
-      <meta name="author" content="Levindo Gabriel Taschetto Neto">
-      <link rel="stylesheet" href="css/utils.css" type="text/css">
-      <title>IoT - Modelling Tool</title>
-      <!-- Bootstrap Core CSS -->
-      <link href="css/bootstrap.min.css" rel="stylesheet">
-      <!-- Custom Fo\nts -->
-      <link href="fonts/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-      <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-      <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-      <!-- Theme CSS -->
-      <link href="css/grayscale.css" rel="stylesheet">
-      <body style="background-color:#1976D2;" id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
-      <!--Scripts-->
-      <script src="/plugins/vendor/jquery/jquery.min.js"></script>
-      <script src="js/bootstrap.min.js"></script>
-      
-      <!-- Ajax -->
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-      <script src="plugins/bootstrap-slider/bootstrap-slider.js"></script>
 
-      <!--Common-->
-      <!-- Pre-loader, usado porque a pagina carregada toda junta pode pesar em algumas internet's mais lentas -->
-      <style type="text/css">
-         #preload
-         {
-             /* Centralizando pre-loader*/
-             margin-top: 200px;
-             margin-bottom: 250px;
-             background: #01579B; /*Cinza escuro */
-             display: block;
-         }
-         #posload
-         {
-             display: none;
-         }
-      </style>
-      <script type="text/javascript">
-         function changes_to_load() {
-             document.getElementById("posload").style.display = "block";
-             document.getElementById("preload").style.display = "none";
-         }
-      </script>
-      </head>
-      <body style="background-color:#1976D2;" onload="changes_to_load()">
-         <div id="preload" class="cssload-loader">
-            <!-- Pre-loader fica aqui -->
-            <div class="cssload-inner cssload-one"></div>
-            <div class="cssload-inner cssload-two"></div>
-            <div class="cssload-inner cssload-three"></div>
-         </div>
-         <!-- Navigation -->
-         <nav style="background-color:#01579B;" class="navbar navbar-custom navbar-fixed-top" role="navigation">
-            <div  id="posload" class="container-fluid">
-               <div  class="container">
-                  <div style="text-align:center;">
-                     <a href="#page-top">
-                     <i> <img src="img/IoT-MT-title.png"  height="30px" width="30px"> </i> <span style="font-size: 20pt;"> <br>IoT - Modelling Tool</span>
-                     </a>
-                  </div>
-               </div>
-               <!-- /.navbar-collapse -->
+<head>
+    <link rel="shortcut icon" href="img/IoT-MT-favicon.png" type="img/x-icon">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="IoT - Modelling Tool">
+    <meta name="author" content="Levindo Gabriel Taschetto Neto">
+    <link rel="stylesheet" href="css/utils.css" type="text/css">
+    <title>IoT - Modelling Tool</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom Fo\nts -->
+    <link href="fonts/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <!-- Theme CSS -->
+    <link href="css/grayscale.css" rel="stylesheet">
+
+    <body style="background-color:#1976D2;" id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+        <!--Scripts-->
+        <script src="/plugins/vendor/jquery/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+
+        <!-- Ajax -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="plugins/bootstrap-slider/bootstrap-slider.js"></script>
+
+        <!--Common-->
+        <!-- Pre-loader, usado porque a pagina carregada toda junta pode pesar em algumas internet's mais lentas -->
+        <style type="text/css">
+            #preload {
+                /* Centralizando pre-loader*/
+                margin-top: 200px;
+                margin-bottom: 250px;
+                background: #01579B;
+                /*Cinza escuro */
+                display: block;
+            }
+
+            #posload {
+                display: none;
+            }
+        </style>
+        <script type="text/javascript">
+            function changes_to_load() {
+                document.getElementById("posload").style.display = "block";
+                document.getElementById("preload").style.display = "none";
+            }
+        </script>
+</head>
+
+<body style="background-color:#1976D2;" onload="changes_to_load()">
+    <div id="preload" class="cssload-loader">
+        <!-- Pre-loader fica aqui -->
+        <div class="cssload-inner cssload-one"></div>
+        <div class="cssload-inner cssload-two"></div>
+        <div class="cssload-inner cssload-three"></div>
+    </div>
+    <!-- Navigation -->
+    <nav style="background-color:#01579B;" class="navbar navbar-custom navbar-fixed-top" role="navigation">
+        <div id="posload" class="container-fluid">
+            <div class="container">
+                <div style="text-align:center;">
+                    <a href="#page-top">
+                        <i>
+                            <img src="img/IoT-MT-title.png" height="30px" width="30px"> </i>
+                        <span style="font-size: 20pt;">
+                            <br>IoT - Modelling Tool</span>
+                    </a>
+                </div>
             </div>
-            <!-- /.container -->
-         </nav>
-         <section style="background-color:#1976D2;" id="login" class="content-section text-center">
-            <div class="login-section">
-               <div class="container">
-                  <div class="col-lg-8 col-lg-offset-2">
-                     <div class="overlay"></div>
-                     <a type="button" class="button" style="vertical-align:middle; color: white; background-color: #01579B;" href="dashboard.html"> <span>Login/Register</span> </a>
-                  </div>
-               </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+    <section style="background-color:#1976D2;" id="login" class="content-section text-center">
+        <div class="login-section">
+            <div class="container">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="overlay"></div>
+                    <a type="button" class="button" style="vertical-align:middle; color: white; background-color: #01579B;" href="dashboard.html">
+                        <span>Login/Register</span>
+                    </a>
+                </div>
             </div>
-         </section>
-         <!-- Footer -->
-         <footer style="background-color:#1976D2;">
-            <div class="container text-center">
-               <p>Copyright &copy; IoT - Modelling Tool | 2017</p>
-            </div>
-         </footer>
-         <!--Header Files-->
-         <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
-         <link rel="stylesheet" type='text/css' href="css/normalize.css">
-         <link rel="stylesheet" type='text/css' href="css/style.css">
-         <script src="https://www.gstatic.com/firebasejs/4.1.1/firebase.js"></script>
-         <script>
-            // Initialize Firebase
-            var config = {
-              apiKey: "AIzaSyDiFz4H5G6RkPhZMC5PJecNUeCAFUa0Rzs",
-              authDomain: "iot-mt.firebaseapp.com",
-              databaseURL: "https://iot-mt.firebaseio.com",
-              projectId: "iot-mt",
-              storageBucket: "iot-mt.appspot.com",
-              messagingSenderId: "838147143079"
-            };
-            firebase.initializeApp(config);
-         </script>
-         <!-- Bootstrap Core JavaScript -->
-         <script src="plugins/vendor/bootstrap/js/bootstrap.min.js"></script>
-         <!-- Plugin JavaScript -->
-         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
-         <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
-         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
-         <!-- Theme JavaScript -->
-         <script src="js/grayscale.min.js"></script>
-   </body>
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer style="background-color:#1976D2;">
+        <div class="container text-center">
+            <p>Copyright &copy; IoT - Modelling Tool | 2017</p>
+        </div>
+    </footer>
+    <!--Header Files-->
+    <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type='text/css' href="css/normalize.css">
+    <link rel="stylesheet" type='text/css' href="css/style.css">
+    <script src="https://www.gstatic.com/firebasejs/4.1.1/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyDiFz4H5G6RkPhZMC5PJecNUeCAFUa0Rzs",
+            authDomain: "iot-mt.firebaseapp.com",
+            databaseURL: "https://iot-mt.firebaseio.com",
+            projectId: "iot-mt",
+            storageBucket: "iot-mt.appspot.com",
+            messagingSenderId: "838147143079"
+        };
+        firebase.initializeApp(config);
+    </script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="plugins/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Plugin JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
+    <!-- Theme JavaScript -->
+    <script src="js/grayscale.min.js"></script>
+</body>
+
 </html>

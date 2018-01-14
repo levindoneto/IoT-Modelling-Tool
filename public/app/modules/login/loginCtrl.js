@@ -6,7 +6,35 @@ function ($rootScope, $scope, $state, $location, loginService, Flash, apiService
     vm.getUser = {};
     vm.setUser = {};
     vm.signIn = true;
-    //access login
+    const ref = firebase.database().ref('defaults/defaultcontext');
+    const refg = firebase.database().ref('defaults/defaultgraph');
+    const contextDefaultObj = $firebaseObject(ref);
+    const refContexts = firebase.database().ref('contexts/');
+    const allContexts = $firebaseObject(refContexts);
+    const refGraphs = firebase.database().ref('graphs/');
+    const allGraphs = $firebaseObject(refGraphs);
+    const graphDefaultObj = $firebaseObject(refg);
+    const DEFAULT_CONTEXT_ID = 'defContextId';
+    const DEFAULT_GRAPH_ID = 'defGraphId';
+
+    setTimeout(() => {
+        try {
+            localStorage.setItem(DEFAULT_CONTEXT_ID, allContexts[contextDefaultObj.$value].idcontext);
+        } catch (err) {
+            console.log(err);
+        }
+    }, 2000);
+
+    setTimeout(() => {
+        try {
+            localStorage.setItem(DEFAULT_GRAPH_ID, allGraphs[graphDefaultObj.$value].idgraph);
+        } catch (err) {
+            console.log(err);
+        }
+        
+    }, 2000);
+
+
     vm.login = function (data) {
         auth.$signInWithEmailAndPassword(data.Email, data.Password).then((firebaseUser) => {
         }).catch((error) => {
