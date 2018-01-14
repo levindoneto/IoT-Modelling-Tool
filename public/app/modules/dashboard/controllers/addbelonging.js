@@ -153,7 +153,7 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                          * saved to the server. The promise resolves to the Firebase reference 
                          * for the newly added record, providing an easy access to its key. */
                         swal({
-                            title: concatenate('Thse ', compType[model.id], ' has been added successfully!\n'),
+                            title: concatenate('The ', compType[model.id], ' has been added successfully!\n'),
                             icon: 'success',
                             button: false,
                             timer: 3000

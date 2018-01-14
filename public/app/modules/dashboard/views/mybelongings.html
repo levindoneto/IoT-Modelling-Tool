@@ -55,7 +55,7 @@
                                             <div class="modal-body">
                                                 <h3 align="center">
                                                     <span class="MyInfo">Icon</span><br>
-                                                    <img class="Imgmybelongings" src="{{imagemodel}}" height=100% width=auto /></br>
+                                                    <img class="Imgmybelongings" src="{{imagemodel}}" height="50px" width=auto /></br>
                                                     <div ng-repeat="(key, value) in objAddionalPropsCompDev">
                                                         <span ng-if="value.NewPropertyOwlType.toString() == 'owl:DatatypeProperty' && key.toString() != 'value'" class="MyInfo">{{key.toString()}}</span>
                                                         <span ng-if="key.toString() == 'numberOfPins' || key.toString() == 'pinConfiguration'" class="MyInfo">Number of Pins:</span>

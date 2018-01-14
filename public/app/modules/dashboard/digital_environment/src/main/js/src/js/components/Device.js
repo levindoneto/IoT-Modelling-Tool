@@ -42,20 +42,16 @@ class Device extends Component {
      * This is what will be showed when Device is dragged from Palette */
     componentDidMount() {
         const { connectDragPreview } = this.props;
-        //console.log("Props: ", this.props);
         const parentClasses = utils.getParentClasses(this.props.type);
-        if (this.props.isPaletteItem && parentClasses.includes('ssn:SensingDevice')) { // TODO: ssn -> other ontologies can be used
-            //console.log("PARAMETER: ", this.props.type.substr(5, this.props.type.length));
+        if (this.props.isPaletteItem && parentClasses.includes('ssn:SensingDevice')) {
             const sensorImage = new Image();
             sensorImage.src = localStorage.getItem(this.props.type.substr(5, this.props.type.length));
             sensorImage.onload = () => connectDragPreview(sensorImage);
-        } 
-        else if (this.props.isPaletteItem && parentClasses.includes('ssn:Device') && !parentClasses.includes('iot-lite:ActuatingDevice')) {
+        } else if (this.props.isPaletteItem && parentClasses.includes('ssn:Device') && !parentClasses.includes('iot-lite:ActuatingDevice')) {
             const deviceImage = new Image();
             deviceImage.src = localStorage.getItem(this.props.type.substr(5, this.props.type.length));
             deviceImage.onload = () => connectDragPreview(deviceImage);
-        }
-        else if (this.props.isPaletteItem && parentClasses.includes('iot-lite:ActuatingDevice')) {
+        } else if (this.props.isPaletteItem && parentClasses.includes('iot-lite:ActuatingDevice')) {
             const actuatorImage = new Image();
             actuatorImage.src = localStorage.getItem(this.props.type.substr(5, this.props.type.length));
             actuatorImage.onload = () => connectDragPreview(actuatorImage);
