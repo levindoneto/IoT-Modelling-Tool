@@ -399,7 +399,7 @@
 }
 
 .MyInfo {
-    color: #1976D2;
+    color: #0D47A1;
     font-size: 18px;
     font-weight: bold;
 }
@@ -545,21 +545,21 @@ input[type="file"] {
 }
 
 .BtnmyContexts:hover{
-    background-color: #879bb1;
+    background-color: #00BCD4;
     transition: all 0.5s;
 }
 
 /*My models*/
 .Btnmybelongings {
     border: 1px;
-    background-color: #879bb1;
+    background-color: #1976D2;
     padding: 4px 6px;
     margin-left: 1px;
     border-radius: 8px;
 }
 
 .Btnmybelongings:hover {
-    background-color: #1976D2;
+    background-color: #00BCD4;
     transition: all 0.5s;
 }
 
@@ -572,7 +572,7 @@ input[type="file"] {
 }
 
 .BtnClosemybelongings:hover {
-    background-color: #0093D1;
+    background-color: #00BCD4;
     cursor: pointer;
 }
 
@@ -582,8 +582,6 @@ input[type="file"] {
     box-shadow: 1px 1px 1px 1px grey;
 }
 
-
-.
 h6.TitleWithlist {
     font-size: 16px;
     color: black;
