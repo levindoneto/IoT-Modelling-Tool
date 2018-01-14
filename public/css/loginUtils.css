@@ -4,7 +4,7 @@ div.enter {
     border: 1px solid blue;
     box-sizing: border-box;
     font-size: 36px;
-    background-color: #1b232e;
+    background-color: #1976D2;
     border-radius: 4px;
     display: inline-block;
     border: 1px solid #ccc;
@@ -20,7 +20,7 @@ div.enter {
     }
 
 .container {
-    background-color: rgba(31, 43, 58, 0.6);
+    background-color:#01579B;
     padding: 15px;
     border-radius: 4px;
 }
@@ -28,7 +28,7 @@ div.enter {
 /* General Style */
 h, button {
     margin: 2px 2px 2px 2px;
-    color: #004C70;
+    color: white;
 }
 
 button {
