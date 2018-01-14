@@ -6,17 +6,20 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
         this.message = message;
         this.name = 'dbException';
      }
-    vm.addbelonging = function (prefix, type, model, file) { // prefix->type->model
+    vm.addbelonging = function (prefix, type, model, file, pins) { // prefix->type->model
         // Update Map (component:specificType)
         const mapTypeComponents = firebase.database().ref('mapTypeComponents/');
         const compType = {};
+        const pinsObj = {}; // Devices: numberOfPins, Components: pinConfigurationxsd:nonNegativeIntegerxsd:nonNegativeInteger
+        pinsObj.NewPropertyOwlType = 'owl:Restriction';
+        pinsObj.NewPropertyType = 'xsd:nonNegativeInteger';
+        pinsObj.NewPropertyValue = pins;
+
         if (type === 'ActuatingDevice') {
             compType[model.id] = 'actuator';
-        }
-        else if (type === 'SensingDevice') {
+        } else if (type === 'SensingDevice') {
             compType[model.id] = 'sensor';
-        }
-        else {
+        } else {
             compType[model.id] = 'device';
         }
         mapTypeComponents.update(compType);
@@ -116,7 +119,11 @@ function ($rootScope, $scope, $state, $location, dashboardService, Flash, $fireb
                     });
                     modelKeys.prefixCompany = prefix;
                     modelKeys.type = type;
-                    
+                    if (type === 'Device') {
+                        model.numberOfPins = pinsObj;
+                    } else {
+                        model.pinConfiguration = pinsObj;
+                    }
                     /* $loaded function:
                      * It returns a promise, which is resolved when the initial object data  
                      * has been downloaded from the database. The promise resolves to the 
