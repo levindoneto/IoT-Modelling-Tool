@@ -1,32 +1,24 @@
 
 
-app.controller('appCtrl', ['$rootScope', '$scope', '$state', '$location', 'Flash','appSettings','$firebaseAuth','$firebaseObject','$firebaseArray',
-function ($rootScope, $scope, $state, $location, Flash,appSettings,$firebaseAuth,  $firebaseObject, $firebaseArray) {
-
+app.controller('appCtrl', ['$rootScope', '$scope', '$state', '$location', 'Flash', 'appSettings', '$firebaseAuth', '$firebaseObject',
+function ($rootScope, $scope, $state, $location, Flash, appSettings, $firebaseAuth, $firebaseObject) {
+    const vm = this;
     $rootScope.theme = appSettings.theme;
     $rootScope.layout = appSettings.layout;
-    var vm = this;
     vm.auth = $firebaseAuth();
 
     vm.auth.$onAuthStateChanged((firebaseUser) => {
         if (firebaseUser) {
             vm.currentUser = vm.auth.$getAuth();
             $rootScope.userDB = vm.currentUser;
-            //console.log(vm.currentUser.uid);
-            var refUser = firebase.database().ref(`users/${vm.currentUser.uid}`);
-            var user = $firebaseObject(refUser);
+            const refUser = firebase.database().ref(`users/${vm.currentUser.uid}`);
+            const user = $firebaseObject(refUser);
             localStorage.setItem('loggedUser', vm.currentUser.uid);
             user.$loaded().then(() => {
-                //console.log(user);
                 $rootScope.user = user;
-                //console.log($rootScope.user)
-                //Check if it is banned CPF
                 var alreadyExist = false;
             });
-            //console.log(vm.currentUser);
-
         } else {
-            //console.log("Signed out");
             $state.go('login');
         }
     });
@@ -107,7 +99,7 @@ function ($rootScope, $scope, $state, $location, Flash,appSettings,$firebaseAuth
         }
     ];
 
-    //available layouts
+    // Available layouts
     vm.layouts = [
         {
             name: 'Boxed',
@@ -138,7 +130,7 @@ function ($rootScope, $scope, $state, $location, Flash,appSettings,$firebaseAuth
         },
         {
             title: 'Add Specific @Context',
-            icon: 'linode',
+            icon: 'database',
             state: 'addspecificcontext'
         },
         {
@@ -148,7 +140,7 @@ function ($rootScope, $scope, $state, $location, Flash,appSettings,$firebaseAuth
         },
         {
             title: 'IoT Lite @Context',
-            icon: 'fa fa-tablet',
+            icon: 'bullseye',
             state: 'mycontext'
         },
         {
@@ -158,7 +150,7 @@ function ($rootScope, $scope, $state, $location, Flash,appSettings,$firebaseAuth
         },
         {
             title: 'IoT Modelling Environment',
-            icon: 'fa fa-home',
+            icon: 'home',
             state: 'digitalenvironment'
         },
         {
@@ -168,7 +160,7 @@ function ($rootScope, $scope, $state, $location, Flash,appSettings,$firebaseAuth
         },
         {
             title: 'Devices and Components',
-            icon: 'thermometer-three-quarters',
+            icon: 'tablet',
             state: 'mybelongings'
         },
         {
@@ -192,46 +184,42 @@ function ($rootScope, $scope, $state, $location, Flash,appSettings,$firebaseAuth
         },
         {
             title: 'IoT Modelling Environment',
-            icon: 'fa fa-home',
+            icon: 'home',
             state: 'digitalenvironment'
         }
     ];
 
-    //set the theme selected
+    // Set the theme selected
     vm.setTheme = function (value) {
         $rootScope.theme = value;
     };
 
 
-    //set the Layout in normal view
+    // Set the Layout in normal view
     vm.setLayout = function (value) {
         $rootScope.layout = value;
     };
 
 
-    //controll sidebar open & close in mobile and normal view
+    // Controll sidebar open & close in mobile and normal view
     vm.sideBar = function (value) {
         if($(window).width()<=767){
             if ($('body').hasClass('sidebar-open'))
-            $('body').removeClass('sidebar-open');
+                $('body').removeClass('sidebar-open');
             else
-            $('body').addClass('sidebar-open');
-        }
-        else {
+                $('body').addClass('sidebar-open');
+        } else {
             if(value==1){
                 if ($('body').hasClass('sidebar-collapse'))
-                $('body').removeClass('sidebar-collapse');
+                    $('body').removeClass('sidebar-collapse');
                 else
-                $('body').addClass('sidebar-collapse');
+                    $('body').addClass('sidebar-collapse');
             }
         }
     };
 
-    //navigate to search page
+    // Navigate to search page
     vm.search = function () {
         $state.go('app.search');
     };
-
-    //console.log('getting into the app controller');
-
 }]);
