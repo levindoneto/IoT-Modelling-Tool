@@ -229,7 +229,7 @@ class DropContainer extends Component {
                     /*  Search for uses in isSubSystemOf, then add star */
                     let isSuperDevice = false;
                     devices.map((iterDevice) => {
-                        if (iterDevice['iot-lite:isSubSystemOf'] && iterDevice['iot-lite:isSubSystemOf']['@id'] != iterDevice['@id'] && iterDevice['iot-lite:isSubSystemOf']['@id'] === storedDevice['@id']) { 
+                        if (iterDevice['iot-lite:isSubSystemOf'] && iterDevice['iot-lite:isSubSystemOf']['@id'] !== iterDevice['@id'] && iterDevice['iot-lite:isSubSystemOf']['@id'] === storedDevice['@id']) { 
                             isSuperDevice = true; 
                         }
                     });

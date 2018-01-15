@@ -92,6 +92,8 @@ export function isPrimitiveProperty(property) {
     const tempObject = getObjectFromGraphById(property, definitions['@graph']);
     if (typeof tempObject === 'undefined') {
         console.log("Unchangeable properties can't be modified");
+        // Save the temp model
+        // Sync
     }
     return tempObject['@type'] !== 'owl:ObjectProperty';
 }

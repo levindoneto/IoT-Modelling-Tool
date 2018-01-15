@@ -207,8 +207,7 @@ export default class ComponentDetailList extends React.Component {
                                                                 }
                                                             }} key={lowerKey} primaryText={`${lowerKey.replace(/(.)*:/, '')}: ${lowerDevice[lowerKey]['@id'].replace(/(.)*:/, '')}`}
                                                             />);
-                                                        }
-                                                        else {
+                                                        }  else {
                                                             return (<ListItem 
                                                                 onDoubleClick={() => {
                                                                 if (lowerKey !== 'geo:location') {

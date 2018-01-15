@@ -18,7 +18,7 @@ __Advisors__
 ## Repository's Wiki
 
 Access the wiki of the repository for obtaining some information about the platform, such as how to deploy it and how to use it.
-The wiki can be access [here](https://github.com/levindoneto/IoT-Modelling-Tool/wiki)
+The wiki can be accessed [here](https://github.com/levindoneto/IoT-Modelling-Tool/wiki).
 
 ## Repository Structure
 
