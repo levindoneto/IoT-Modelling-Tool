@@ -15,6 +15,11 @@ __Advisors__
 [Dipl.-Inf. Pascal Hirmer](https://www.ipvs.uni-stuttgart.de/abteilungen/as/abteilung/mitarbeiter/Pascal.Hirmer)
 
 
+## Repository's Wiki
+
+Access the wiki of the repository for obtaining some information about the platform, such as how to deploy it and how to use it.
+The wiki can be access [here](https://github.com/levindoneto/IoT-Modelling-Tool/wiki)
+
 ## Repository Structure
 
 * [App](public/app) (contains the files assigned to organize the high-level architecture of the project)
@@ -130,66 +135,3 @@ Firebase Real Time Database is a cloud-hosted NoSQL database that lets you store
 
 * [Sweet Alert v2.0.8](https://sweetalert.js.org)
 
-### Requirements
-* [Python](https://www.python.org)
-
-## Bundle the Scripts
-
-### Requirements
-* [npm](https://www.npmjs.com/get-npm) 
-
-### Install Webpack
-```terminal
-$ npm install --save-dev webpack
-```
-
-### Use Webpack in order to create the *client.min* for the IoT Modelling Environment
-```terminal
-$ cd public/app/modules/dashboard/digital_environment/src/main/js
-$ webpack -p
-```
-
-The parameter *-p* must be used in order to minify the bundled javascript file.
-
-
-## Set up the IoT Modeling Tool locally (In order to get it running)
-
-### On windows (in the folder [scripts/])
-
-#### For python versions 2.x
-```terminal
-$ bash initIoT-MT_Windows-Python2.sh
-```
-
-#### For python versions 3.x
-```terminal
-$ bash initIoT-MT_Windows-Python3.sh
-```
-
-### On Linux (in the folder [scripts/])
-#### For python versions 2.x
-```terminal
-$ bash initIoT-MT_Linux-Python2.sh
-```
-
-#### For python versions 3.x
-```terminal
-$ bash initIoT-MT_Linux-Python2.sh
-```
-
-### Access the Platform
-#### Go the following link using any browser
-[http://localhost:8080/](http://localhost:8080/)
-
-
-## Deploy the IoT Modelling Tool using Firebase Hosting
-```terminal
-$ npm install -g firebase-tools
-$ firebase init
-$ firebase deploy
-```
-
-
-### Access the Platform
-#### Go the following link using any browser
-[https://iot-mt.firebaseapp.com](https://iot-mt.firebaseapp.com)
