@@ -28,6 +28,7 @@ const DIGITAL_TWIN_WAS_EMPTY = 'digitalTwinWasEmpty';
 const RESTAPIADDRESS = 'http://192.168.209.176:8080/MBP';
 const refSavedModels = firebase.database().ref('savedModels/');
 const refInfoSaved = firebase.database().ref('infoSavedModels');
+const refTmp = firebase.database().ref('tmp/');
 const refMapTypeComponents = firebase.database().ref('mapTypeComponents');
 const refDevicesWithSubsystems = firebase.database().ref('devicesWithSubsystems/');
 const DELETED_MODEL = '__del_model__'; /* Flag put in the infoSavedModels.lastLoadedModels in order 
@@ -108,15 +109,29 @@ function readSingleFile(e) {
 }
 
 function loadModel(key) {
-    localStorage.setItem(DIGITAL_TWIN_WAS_EMPTY, TRUE); // The model is considered as empty always when a new one is loaded into the digital twin
-    const auxInfoSaved = {};
-    refSavedModels.on('value', (snapshot) => {
-        DeviceStore.setModel(JSON.parse(snapshot.val()[key].content));
-        localStorage.setItem(IS_TEMPORARY_MODEL, FALSE);
-        /* Save the info of the last loaded model */
-        auxInfoSaved.lastLoadedModel = key;
-        refInfoSaved.update(auxInfoSaved);
-    });
+    if (key === TEMP_MODEL) {
+        refTmp.once('value', (refTmp) => { 
+            localStorage.setItem(DIGITAL_TWIN_WAS_EMPTY, TRUE);
+            const auxInfoSaved = {};
+            refSavedModels.on('value', (snapshot) => {
+                DeviceStore.setModel(JSON.parse(refTmp.val()[key]));
+                localStorage.setItem(IS_TEMPORARY_MODEL, FALSE);
+                auxInfoSaved.lastLoadedModel = UNDEFINED;
+                refInfoSaved.update(auxInfoSaved);
+            });
+        });
+    } else {
+        // The model is considered as empty always when a new one is loaded into the digital twin
+        localStorage.setItem(DIGITAL_TWIN_WAS_EMPTY, TRUE);
+        const auxInfoSaved = {};
+        refSavedModels.on('value', (snapshot) => {
+            DeviceStore.setModel(JSON.parse(snapshot.val()[key].content));
+            localStorage.setItem(IS_TEMPORARY_MODEL, FALSE);
+            /* Save the info of the last loaded model */
+            auxInfoSaved.lastLoadedModel = key;
+            refInfoSaved.update(auxInfoSaved);
+        });
+    }
 }
 
 function importModel() {

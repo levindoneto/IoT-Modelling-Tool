@@ -1,6 +1,10 @@
-import * as DropActions from '../actions/DropActions';
+import DeviceStore from '../stores/DeviceStore';
+import * as backend from '../backend/backend';
 import { definitions } from '../constants/definitions';
 
+const TRUE = 'true';
+const LOAD_TEMP_MODEL = 'loadTempModel';
+const TEMP_MODEL = '__tmp_mdl_db__';
 const clone = (object) => {
     return JSON.parse(JSON.stringify(object));
 };
@@ -91,9 +95,19 @@ export function isPrimitiveProperty(property) {
 
     const tempObject = getObjectFromGraphById(property, definitions['@graph']);
     if (typeof tempObject === 'undefined') {
-        console.log("Unchangeable properties can't be modified");
-        // Save the temp model
-        // Sync
+        swal({
+            title: 'Unchangeable properties cannot be modified',
+            icon: 'warning',
+            button: false,
+            timer: 2000
+        });
+        localStorage.setItem(LOAD_TEMP_MODEL, TRUE);
+        backend.fireAjaxSave(TEMP_MODEL, DeviceStore.getModel(), false, true, true);
+        setTimeout(() => {
+            backend.syncCurrentModel(false);
+        }, 2000);
     }
-    return tempObject['@type'] !== 'owl:ObjectProperty';
+    if (tempObject) {
+        return tempObject['@type'] !== 'owl:ObjectProperty';
+    }
 }

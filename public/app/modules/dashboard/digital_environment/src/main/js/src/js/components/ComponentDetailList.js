@@ -12,7 +12,9 @@ import DeviceStore from '../stores/DeviceStore';
 import * as DropActions from '../actions/DropActions';
 import * as utils from '../utils/utils';
 import * as backend from '../backend/backend';
+import { concatenate } from '../backend/backend';
 
+const PREFIX = 'prefix';
 const subHeaderStyle = {
   fontSize: '20px',
   color: 'black'
@@ -252,13 +254,15 @@ export default class ComponentDetailList extends React.Component {
                                             <ListItem key={'lat'} primaryText={`y: ${tempLocation['geo:lat']}`} />
                                             </div>
                                         );
-                                    } 
-                                    else {
+                                    } else {
                                         return (<ListItem
                                             onDoubleClick={() => {
                                                 const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                                 this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
-                                                this.handleOpenSetProperty();
+                                                swal({
+                                                    title: 'Drag the subystem component onto the device for creating a connection',
+                                                    icon: 'warning'
+                                                });
                                             }} 
                                             key={key} primaryText={`${key.replace(/(.)*:/, '')}: ${selectedDevice[key]['@id'].replace(/(.)*:/, '')}`} initiallyOpen={false} primaryTogglesNestedList={true}
                                         />);
@@ -267,22 +271,32 @@ export default class ComponentDetailList extends React.Component {
                                 // Primitive data as property value
                                 else if (typeof selectedDevice[key] === 'string') {
                                     return (<ListItem 
-                                        onDoubleClick={ () => {
+                                        onDoubleClick={() => {
                                         if (key !== 'geo:location') {
-                                            const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
-                                            this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
-                                            this.handleOpenSetProperty();
+                                            if (key === concatenate(localStorage.getItem(PREFIX), ':value')) {
+                                                const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
+                                                this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
+                                                this.handleOpenSetProperty();
+                                            } else {
+                                                swal({
+                                                    title: 'This property is not available for edition',
+                                                    icon: 'warning'
+                                                });
+                                            }
                                         }
                                     }}
                                     key={key} primaryText={`${key.replace(/(.)*:/, '')}: ${selectedDevice[key].replace(/(.)*:/, '')}`}
                                     />);
                                 } 
                                 return (<ListItem 
-                                    onDoubleClick={ () => {
+                                    onDoubleClick={() => {
                                     if (key !== 'geo:location') {
                                         const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                         this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
-                                        this.handleOpenSetProperty();
+                                        swal({
+                                            title: 'This property is not available for edition',
+                                            icon: 'warning'
+                                        });
                                     }
                                 }}
                                 key={key} primaryText={`${key.replace(/(.)*:/, '')}: ${selectedDevice[key]}`}
