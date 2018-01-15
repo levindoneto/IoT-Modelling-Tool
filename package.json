@@ -1,0 +1,20 @@
+{
+  "name": "iot-mt",
+  "version": "1.0.0",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server ./Implementierung -a localhost -p 8080",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://netolo@gitlab-as.informatik.uni-stuttgart.de/hirmerpl/IoT_modeling_tool.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "webpack": "^3.10.0"
+  },
+  "description": ""
+}
