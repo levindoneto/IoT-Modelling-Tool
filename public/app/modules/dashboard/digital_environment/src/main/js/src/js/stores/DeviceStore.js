@@ -67,7 +67,8 @@ class DeviceStore extends EventEmitter {
         /* It shall be an array of one element always */
         const restrictionId = utils.intersection(restrictionNames, parentClasses)[0];
         if (!parentClasses.includes('iot-lite:ActuatingDevice') && !parentClasses.includes('ssn:SensingDevice')) {
-            createdDevice[backend.concatenate(PREFIX, ':macAddress')] = '';
+            createdDevice[backend.concatenate(PREFIX, ':macAddress')] = ' ';
+            createdDevice[backend.concatenate(PREFIX, ':ipAddress')] = ' ';
             if (restrictionId.length > 0) {
                 const restriction = restrictions.find((findRestriction) => (findRestriction['@id'] === restrictionId));
                 if (restriction != null) {

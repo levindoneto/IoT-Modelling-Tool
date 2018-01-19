@@ -203,6 +203,7 @@ export default class ComponentDetailList extends React.Component {
                                                             return (<ListItem 
                                                                 onDoubleClick={() => {
                                                                 if (lowerKey !== 'geo:location') {
+                                                                    console.log('2');
                                                                     const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                                                     this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: lowerKey });
                                                                     this.handleOpenSetProperty();
@@ -213,6 +214,7 @@ export default class ComponentDetailList extends React.Component {
                                                             return (<ListItem 
                                                                 onDoubleClick={() => {
                                                                 if (lowerKey !== 'geo:location') {
+                                                                    console.log('3');
                                                                     const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                                                     this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: lowerKey });
                                                                     this.handleOpenSetProperty();
@@ -230,6 +232,7 @@ export default class ComponentDetailList extends React.Component {
                                                 return (<ListItem 
                                                     onDoubleClick={ () => {
                                                     if (key !== 'geo:location') {
+                                                        console.log('4');
                                                         const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                                         this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key, key: selectedDevice[key].indexOf(lowerDevice) });
                                                         this.handleOpenSetProperty();
@@ -247,6 +250,7 @@ export default class ComponentDetailList extends React.Component {
                                      * that are object as well, just the id is shown */
                                 } else if (!Array.isArray(selectedDevice[key]) && typeof selectedDevice[key] === 'object' && selectedDevice[key]['@id'] != null) {
                                     if (key === 'geo:location') {
+                                        console.log('5');
                                         const tempLocation = utils.getObjectFromGraphById(selectedDevice[key]['@id'], this.state.devices);
                                         return (
                                             <div>
@@ -255,6 +259,7 @@ export default class ComponentDetailList extends React.Component {
                                             </div>
                                         );
                                     } else {
+                                        console.log('6');
                                         return (<ListItem
                                             onDoubleClick={() => {
                                                 const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
@@ -273,10 +278,13 @@ export default class ComponentDetailList extends React.Component {
                                     return (<ListItem 
                                         onDoubleClick={() => {
                                         if (key !== 'geo:location') {
-                                            if (key === concatenate(localStorage.getItem(PREFIX), ':value')) {
-                                                const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
-                                                this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
-                                                this.handleOpenSetProperty();
+                                            console.log('7');
+                                            if (key === concatenate(localStorage.getItem(PREFIX), ':value') 
+                                                || key === concatenate(localStorage.getItem(PREFIX), ':macAddress')
+                                                || key === concatenate(localStorage.getItem(PREFIX), ':ipAddress')) {
+                                                    const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
+                                                    this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
+                                                    this.handleOpenSetProperty();
                                             } else {
                                                 swal({
                                                     title: 'This property is not available for edition',
@@ -291,6 +299,7 @@ export default class ComponentDetailList extends React.Component {
                                 return (<ListItem 
                                     onDoubleClick={() => {
                                     if (key !== 'geo:location') {
+                                        console.log('1');
                                         const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                         this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
                                         swal({

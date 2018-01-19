@@ -5,6 +5,7 @@ import { definitions } from '../constants/definitions';
 const TRUE = 'true';
 const LOAD_TEMP_MODEL = 'loadTempModel';
 const TEMP_MODEL = '__tmp_mdl_db__';
+const PREFIX = 'prefix';
 const clone = (object) => {
     return JSON.parse(JSON.stringify(object));
 };
@@ -88,8 +89,13 @@ export function cleanOutAttributes(unwantedAttributes, object) {
 }
 
 export function isPrimitiveProperty(property) {
-    //console.log('property in utils: ', property);
-    if (property == null || property === '@id' || property === '' || property === 'ipvs:value') {
+    console.log('Prop: ', property);
+    if (property == null 
+        || property === '@id' 
+        || property === '' 
+        || property === backend.concatenate(localStorage.getItem(PREFIX), ':value') 
+        || property === backend.concatenate(localStorage.getItem(PREFIX), ':macAddress')
+        || property === backend.concatenate(localStorage.getItem(PREFIX), ':ipAddress')) {
         return true;
     }
 
