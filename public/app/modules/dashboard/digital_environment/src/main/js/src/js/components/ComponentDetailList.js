@@ -203,7 +203,6 @@ export default class ComponentDetailList extends React.Component {
                                                             return (<ListItem 
                                                                 onDoubleClick={() => {
                                                                 if (lowerKey !== 'geo:location') {
-                                                                    console.log('2');
                                                                     const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                                                     this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: lowerKey });
                                                                     this.handleOpenSetProperty();
@@ -214,7 +213,6 @@ export default class ComponentDetailList extends React.Component {
                                                             return (<ListItem 
                                                                 onDoubleClick={() => {
                                                                 if (lowerKey !== 'geo:location') {
-                                                                    console.log('3');
                                                                     const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                                                     this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: lowerKey });
                                                                     this.handleOpenSetProperty();
@@ -232,7 +230,6 @@ export default class ComponentDetailList extends React.Component {
                                                 return (<ListItem 
                                                     onDoubleClick={ () => {
                                                     if (key !== 'geo:location') {
-                                                        console.log('4');
                                                         const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                                         this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key, key: selectedDevice[key].indexOf(lowerDevice) });
                                                         this.handleOpenSetProperty();
@@ -250,7 +247,6 @@ export default class ComponentDetailList extends React.Component {
                                      * that are object as well, just the id is shown */
                                 } else if (!Array.isArray(selectedDevice[key]) && typeof selectedDevice[key] === 'object' && selectedDevice[key]['@id'] != null) {
                                     if (key === 'geo:location') {
-                                        console.log('5');
                                         const tempLocation = utils.getObjectFromGraphById(selectedDevice[key]['@id'], this.state.devices);
                                         return (
                                             <div>
@@ -259,7 +255,6 @@ export default class ComponentDetailList extends React.Component {
                                             </div>
                                         );
                                     } else {
-                                        console.log('6');
                                         return (<ListItem
                                             onDoubleClick={() => {
                                                 const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
@@ -299,7 +294,6 @@ export default class ComponentDetailList extends React.Component {
                                 return (<ListItem 
                                     onDoubleClick={() => {
                                     if (key !== 'geo:location') {
-                                        console.log('1');
                                         const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                         this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
                                         swal({
@@ -314,7 +308,7 @@ export default class ComponentDetailList extends React.Component {
                         </List>
 
                         <Dialog
-                            title="Set Property"
+                            title="Set the value"
                             actions={actionsSetProperty}
                             modal={false}
                             open={this.state.openSetProperty}

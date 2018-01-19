@@ -5,17 +5,20 @@
  *              Object: Properties of the subsystem 
  * @return: void, the function just updates the database
  */
-function updateDevicesWithSubsystems(savedModel, device, subsystem, latitude, longitude, propertiesSubSystem, sensorValue, typeId, elementIndex) {
+function updateDevicesWithSubsystems(savedModel, device, subsystem, latitude, longitude, propertiesSubSystem, sensorValue, typeId, elementIndex, mac, ip) {
     const auxDevSub = {};
     const auxLoc = {};
     const auxIndex = {};
     const refDevicesWithSubsystems = firebase.database().ref(`devicesWithSubsystems/${savedModel}/${device}`);
-    if (typeof sensorValue !== 'undefined') { // Device or Actuator
+    if (typeof sensorValue !== 'undefined') { // !(Device or Actuator)
         auxLoc.value = sensorValue;
     }
     auxLoc['@type'] = typeId;
     auxLoc.locationX = latitude;
     auxLoc.locationY = longitude;
+    console.log('Mac: ', mac, ' and ip: ', ip);
+    auxLoc.macAddress = mac;
+    auxLoc.ipAddress = ip;
     auxDevSub[subsystem] = auxLoc;
     Object.assign(auxDevSub[subsystem], propertiesSubSystem);
     auxIndex[elementIndex] = auxDevSub;
