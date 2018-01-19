@@ -1,13 +1,16 @@
 import DeviceStore from '../stores/DeviceStore';
-import { definitions } from '../constants/definitions';
+import {
+    definitions
+} from '../constants/definitions';
 
 const RESTAPIADDRESS = 'http://192.168.209.176:8080/MBP';
 const TYPEADAPTER = '5a0f2a8b4f0c7363179e58e5'; // For tests
 const TRUE = 'true';
 const FALSE = 'false';
 const LOAD_LAST_MODEL = 'loadLastModel';
-const IS_SYNC = 'isSync'; /* Flag for knowing when the platform is just being syncrhonized
-                           * in order to not set a model during this process */
+const IS_SYNC = 'isSync';
+/* Flag for knowing when the platform is just being syncrhonized
+ * in order to not set a model during this process */
 const PREFIX = 'prefix';
 const auxSavedModels = {};
 const auxContent = {};
@@ -15,12 +18,13 @@ const refTrig = firebase.database().ref('devicesWithSubsystems/');
 const refSavedModels = firebase.database().ref('savedModels/');
 const refTmp = firebase.database().ref('tmp/');
 const USER_MODEL = 'userModel';
-const defaultContentProps = [ // properties that won't be parsed
+const defaultContentProps = [ // properties that will not be parsed
     'geo:location',
     '@id',
     'iot-lite:isSubSystemOf',
     concatenate(localStorage.getItem(PREFIX), ':value'),
-    '@type'];
+    '@type'
+];
 let accessedModel = {};
 
 // Trigger for modifications in the devices with subsystems
@@ -37,7 +41,7 @@ refTrig.on('child_changed', (snapshot) => {
                     if (i.toString() === k.toString()) {
                         accessedModel['@graph'][i][concatenate(localStorage.getItem(PREFIX), ':value')] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].value; // j:device, k:the subsystem index, 0:just one subsystem per index
                         accessedModel['@graph'][i - 1]['geo:lat'] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationX;
-                        accessedModel['@graph'][i - 1]['geo:long'] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationY;   
+                        accessedModel['@graph'][i - 1]['geo:long'] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationY;
                     }
                 }
             }
@@ -58,7 +62,7 @@ function verifyAddProp(propertyI) {
     for (let p = 0; p < defaultContentProps.length; p++) {
         if (propertyI.toUpperCase() === defaultContentProps[p].toUpperCase()) {
             thisIsAdditionalProperty = false;
-        }           
+        }
     }
     return thisIsAdditionalProperty;
 }
@@ -69,8 +73,7 @@ export function concatenate(...theArgs) {
     for (s = 0; s < theArgs.length; s++) {
         try { // It just does not work with empty or undefined strings
             concatenatedStr = concatenatedStr.concat((theArgs[s]).toString());
-        }
-        catch(err) {
+        } catch (err) {
             console.log('At least of the used arguments is undefined or has not been processed yet, which is generating the following processing error:\n', err);
             concatenatedStr = concatenatedStr.concat('');
             console.log('The error has been handled successfully, though');
@@ -89,7 +92,7 @@ export function fireAjaxExport(type, content) {
     const params = {
         type
     };
-    const url = concatenate('/modtool/export', '?',  $.param(params));
+    const url = concatenate('/modtool/export', '?', $.param(params));
     let response = '';
 
     $.ajax({
@@ -111,47 +114,50 @@ export function fireAjaxImport(type, content) {
     };
     let contenttype = '';
     switch (type) {
-		case 'rdfxml':
-			contenttype = 'application/rdf+xml';
+        case 'rdfxml':
+            contenttype = 'application/rdf+xml';
             break;
         case 'turtle':
             contenttype = 'text/turtle';
             break;
         default:
             contenttype = 'application/json';
-        }
-		
-        const url = concatenate('/modtool/import', '?', $.param(params));
+    }
 
-        $.ajax({
-            type: 'POST',
-            contentType: contenttype,
-            url,
-            data: content,
-            async: false
-        }).done((response) => {
-            const tempObject = {'@context': {}, '@graph': response};
-            const context = clone(definitions['@context']);
-            const oldResponse = JSON.stringify(response);
-            response = response.map((iterDevice) => {
-                Object.keys(iterDevice).map((iterAttribute) => {
-                    if (iterDevice[iterAttribute].length === 1) {
-                        iterDevice[iterAttribute] = iterDevice[iterAttribute][0];
-                    }
-                    let tempStoreValue = '';
-                    if (iterDevice[iterAttribute]['@value'] != null) {
-                        tempStoreValue = iterDevice[iterAttribute]['@value'].toString();
-                        delete iterDevice[iterAttribute];
-                        iterDevice[iterAttribute] = tempStoreValue;
-                    }
-                });
-                return iterDevice;
+    const url = concatenate('/modtool/import', '?', $.param(params));
+
+    $.ajax({
+        type: 'POST',
+        contentType: contenttype,
+        url,
+        data: content,
+        async: false
+    }).done((response) => {
+        const tempObject = {
+            '@context': {},
+            '@graph': response
+        };
+        const context = clone(definitions['@context']);
+        const oldResponse = JSON.stringify(response);
+        response = response.map((iterDevice) => {
+            Object.keys(iterDevice).map((iterAttribute) => {
+                if (iterDevice[iterAttribute].length === 1) {
+                    iterDevice[iterAttribute] = iterDevice[iterAttribute][0];
+                }
+                let tempStoreValue = '';
+                if (iterDevice[iterAttribute]['@value'] != null) {
+                    tempStoreValue = iterDevice[iterAttribute]['@value'].toString();
+                    delete iterDevice[iterAttribute];
+                    iterDevice[iterAttribute] = tempStoreValue;
+                }
             });
+            return iterDevice;
+        });
 
-            /* Replacing links */
-            response.map((iterDevice) => {
-                Object.keys(context).map((contextKey) => {
-                    Object.keys(iterDevice).map((oldKey) => {
+        /* Replacing links */
+        response.map((iterDevice) => {
+            Object.keys(context).map((contextKey) => {
+                Object.keys(iterDevice).map((oldKey) => {
                     /* If the entry is a link */
                     if (typeof iterDevice[oldKey] === 'string' && iterDevice[oldKey].includes(context[contextKey])) {
                         const tempString = iterDevice[oldKey].match(/#.+/)[0]; // Getting the match
@@ -162,7 +168,7 @@ export function fireAjaxImport(type, content) {
                         iterDevice[oldKey] = iterDevice[oldKey]['@list'].map((iterEntry) => (iterEntry['@value']));
                     }
 
-                    if (typeof iterDevice[oldKey] == 'object' && !Array.isArray(iterDevice[oldKey])  && iterDevice[oldKey]['@id'].includes(context[contextKey])) { 
+                    if (typeof iterDevice[oldKey] == 'object' && !Array.isArray(iterDevice[oldKey]) && iterDevice[oldKey]['@id'].includes(context[contextKey])) {
                         const tempString = iterDevice[oldKey]['@id'].match(/#.+/)[0]; // Getting the match
                         iterDevice[oldKey]['@id'] = contextKey + ':' + tempString.slice(1); // Replacing the entry
                     }
@@ -202,17 +208,17 @@ export function fireAjaxSave(name, content, isBinding, alertSave, tmpSaving) {
     const auxNewModel = {}; // Elements: content and user who added the model
     const auxInfoSaved = {};
     const auxContPropsSubsystem = {};
-    
+
     localStorage.setItem(IS_SYNC, TRUE);
     /* Save the key_model (saved one) as secondary root on Devices With Subsystems */
     auxDevSubSecRoot[params.name] = 'noConnections'; // It'll get all devices with subsystems on this model
     refDevicesWithSubsystems.update(auxDevSubSecRoot); // Update just works out with objects
-    
+
     if (!tmpSaving) {
         // Get the odd keys to because they have the subsystem information
         for (let i = 1; i < Object.keys(content['@graph']).length; i += 2) {
             // The content->subsystem is connected to a device
-            
+
             if (content['@graph'][i]['iot-lite:isSubSystemOf']['@id'] !== '') {
                 refDevicesWithSubsystems.on('value', (snapshot) => {
                     for (let j = 1; j < Object.keys(content['@graph']).length; j += 2) {
@@ -243,19 +249,25 @@ export function fireAjaxSave(name, content, isBinding, alertSave, tmpSaving) {
 
                         /* The device has already a subsystem */
                         if (snapshot.val()[params.name].toString() === content['@graph'][i]['iot-lite:isSubSystemOf']['@id']) {
-                            updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], locationX, locationY, auxContPropsSubsystem, value, typeId, i, macAddress, ipAddress); //(model_key, device, subsystem): device.update(component)
-                        }
-                        else { // The device does not have a subsystem
+                            updateDevicesWithSubsystems(params.name,
+                                content['@graph'][i]['iot-lite:isSubSystemOf']['@id'],
+                                content['@graph'][i]['@id'], locationX, locationY,
+                                auxContPropsSubsystem, value, typeId, i, macAddress, ipAddress);
+                        } else { // The device does not have a subsystem
                             const auxNewDev = {};
                             auxNewDev[content['@graph'][i]['iot-lite:isSubSystemOf']['@id']] = '';
                             refDevicesWithSubsystems.update(auxNewDev);
-                            updateDevicesWithSubsystems(params.name, content['@graph'][i]['iot-lite:isSubSystemOf']['@id'], content['@graph'][i]['@id'], locationX, locationY, auxContPropsSubsystem, value, typeId, i, macAddress, ipAddress); //(model_key, device, subsystem): device.update(component)
+                            updateDevicesWithSubsystems(params.name,
+                                content['@graph'][i]['iot-lite:isSubSystemOf']['@id'],
+                                content['@graph'][i]['@id'], locationX, locationY,
+                                auxContPropsSubsystem, value, typeId,
+                                i, macAddress, ipAddress);
                         }
-                    }  
+                    }
                 });
             }
         }
-        
+
         auxNewModel.user = localStorage.getItem('loggedUser');
         auxNewModel.content = JSON.stringify(content);
         auxSavedModelsSave[params.name] = auxNewModel;
@@ -270,7 +282,7 @@ export function fireAjaxSave(name, content, isBinding, alertSave, tmpSaving) {
                 icon: 'success'
             });
         }
-    } else { 
+    } else {
         const savedModelStr = JSON.stringify(content);
         auxSavedModelsSave[params.name] = savedModelStr;
         refTmp.update(auxSavedModelsSave); // Update the database
@@ -302,7 +314,8 @@ export function fireAjaxShow() {
     return response;
 }
 
-export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, apiAddress, pinConfig) {
+export function bindComponent(idComp, componentType, idTypeBind,
+    idDeviceBind, apiAddress, pinConfig) {
     let p;
     let valuesPins = '';
     // -1 because the comma must not be concatenate to the last pin
@@ -311,7 +324,9 @@ export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, a
     }
     // Add the last pin to the string of pins without a comma in the end
     valuesPins = concatenate(valuesPins, pinConfig[pinConfig.length - 1]);
-    const pinSet = concatenate('pinset=', valuesPins); // Pins of the device which the component is attached to (values in the elements prefix:pinConfiguration)
+    // Pins of the device which the component is attached to
+    // (values in the elements prefix:pinConfiguration)
+    const pinSet = concatenate('pinset=', valuesPins);
     const deployInfo = concatenate('?component=', componentType.toUpperCase(), '&', pinSet);
     const urlAddress = concatenate(apiAddress, '/api', '/', componentType, 's/');
     const urlAddressDeploy = concatenate(apiAddress, '/api/deploy/', componentType, '/');
@@ -319,7 +334,7 @@ export function bindComponent(idComp, componentType, idTypeBind, idDeviceBind, a
         name: idComp,
         type: concatenate(apiAddress, '/api/types/', idTypeBind),
         device: concatenate(apiAddress, '/api/devices/', idDeviceBind),
-      };
+    };
     $.ajax({
         type: 'POST',
         url: urlAddress,
@@ -355,19 +370,26 @@ export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddre
         data: JSON.stringify(jsonData)
     }).done((device) => {
         console.log('The device has been posted successfully\nId on the MBP Platform: : ', device.id);
-            let c; 
-            for (c in subsystems) { // Iterate in all the components in the device
-                const prefix = subsystems[c][Object.keys(subsystems[c])[0]]['@type'].split(':')[0];
-                const idWithoutPrefix = subsystems[c][Object.keys(subsystems[c])[0]]['@type'].split(':')[1];
-                let pinConf;
-                // If the element component has pin configuration already set up
-                if (concatenate(prefix, ':', 'pinConfiguration') in subsystems[c][Object.keys(subsystems[c])[0]]) {
-                    pinConf = subsystems[c][Object.keys(subsystems[c])[0]][concatenate(prefix, ':', 'pinConfiguration')];
-                } else {
-                    pinConf = {}; // pinset shall be equals to empty for the deployment in case of null pinConfiguration
-                }
-                bindComponent(Object.keys(subsystems[c])[0], mapTypeComp[idWithoutPrefix], TYPEADAPTER, device.id, RESTAPIADDRESS, pinConf);
+        let c;
+        for (c in subsystems) { // Iterate in all the components in the device
+            const prefix = subsystems[c][Object.keys(subsystems[c])[0]]['@type'].split(':')[0];
+            const idWithoutPrefix = subsystems[c][Object.keys(subsystems[c])[0]]['@type'].split(':')[1];
+            let pinConf;
+            // If the element component has pin configuration already set up
+            if (concatenate(prefix, ':', 'pinConfiguration') in subsystems[c][Object.keys(subsystems[c])[0]]) {
+                pinConf = subsystems[c][Object.keys(subsystems[c])[0]][concatenate(prefix, ':', 'pinConfiguration')];
+            } else {
+                pinConf = {}; // pinset shall be equals to empty for the deployment in case of null pinConfiguration
             }
+            bindComponent(
+                Object.keys(subsystems[c])[0],
+                mapTypeComp[idWithoutPrefix],
+                TYPEADAPTER,
+                device.id,
+                RESTAPIADDRESS,
+                pinConf
+            );
+        }
         return callback(); // Bind the next device, if there are more than one device on the digital twin
     });
 }

@@ -12,7 +12,6 @@ import DeviceStore from '../stores/DeviceStore';
 import * as DropActions from '../actions/DropActions';
 import * as utils from '../utils/utils';
 import * as backend from '../backend/backend';
-import { concatenate } from '../backend/backend';
 
 const PREFIX = 'prefix';
 const subHeaderStyle = {
@@ -224,11 +223,9 @@ export default class ComponentDetailList extends React.Component {
                                                     })
                                                 }
                                                 />);
-                                            }
-                                            /* When there is an array of primitive values as the attribute */
-                                            else {
+                                            } else { // When there is an array of primitive values as the attribute
                                                 return (<ListItem 
-                                                    onDoubleClick={ () => {
+                                                    onDoubleClick={() => {
                                                     if (key !== 'geo:location') {
                                                         const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                                         this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key, key: selectedDevice[key].indexOf(lowerDevice) });
@@ -267,19 +264,17 @@ export default class ComponentDetailList extends React.Component {
                                             key={key} primaryText={`${key.replace(/(.)*:/, '')}: ${selectedDevice[key]['@id'].replace(/(.)*:/, '')}`} initiallyOpen={false} primaryTogglesNestedList={true}
                                         />);
                                     }
-                                }
-                                // Primitive data as property value
-                                else if (typeof selectedDevice[key] === 'string') {
+                                } else if (typeof selectedDevice[key] === 'string') { // Primitive data as property value
                                     return (<ListItem 
                                         onDoubleClick={() => {
                                         if (key !== 'geo:location') {
                                             console.log('7');
-                                            if (key === concatenate(localStorage.getItem(PREFIX), ':value') 
-                                                || key === concatenate(localStorage.getItem(PREFIX), ':macAddress')
-                                                || key === concatenate(localStorage.getItem(PREFIX), ':ipAddress')) {
-                                                    const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
-                                                    this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
-                                                    this.handleOpenSetProperty();
+                                            if (key === backend.concatenate(localStorage.getItem(PREFIX), ':value') 
+                                                    || key === backend.concatenate(localStorage.getItem(PREFIX), ':macAddress')
+                                                    || key === backend.concatenate(localStorage.getItem(PREFIX), ':ipAddress')) {
+                                                const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
+                                                this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
+                                                this.handleOpenSetProperty();
                                             } else {
                                                 swal({
                                                     title: 'This property is not available for edition',
@@ -318,7 +313,8 @@ export default class ComponentDetailList extends React.Component {
                                 () => {
                                     if (utils.isPrimitiveProperty(this.state.selectAttribute)) {
                                         return (
-                                            <TextField value={this.state.textValue} onChange={ (e) => {
+                                            <TextField 
+                                                value={this.state.textValue} onChange={(e) => {
                                                 this.setState({ textValue: e.target.value }); 
                                             }} 
                                             hintText="New Value"

@@ -291,10 +291,11 @@ export default class NavigationBar extends React.Component {
                             refDevsWithSubsystems.once('value', (snapdev) => {
                                 // Access devices from the current loaded model
                                 for (i in snapdev.val()[snapshot.val().lastLoadedModel]) {
-                                    backend.bindDevice(i,
+                                    backend.bindDevice(
+                                        i,
                                         '123456789067',
-                                        '192.168.0.34',
-                                        '12-34-56-78-90-67',
+                                        IP,
+                                        MAC,
                                         RESTAPIADDRESS,
                                         devicesWithSubsystems[i],
                                         mapTypeComp,
