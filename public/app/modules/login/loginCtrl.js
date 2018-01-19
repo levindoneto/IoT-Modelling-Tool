@@ -16,23 +16,41 @@ function ($rootScope, $scope, $state, $location, loginService, Flash, apiService
     const graphDefaultObj = $firebaseObject(refg);
     const DEFAULT_CONTEXT_ID = 'defContextId';
     const DEFAULT_GRAPH_ID = 'defGraphId';
-
+    const DEFAULT_CONTEXT = 'IoT Lite @Context (IPVS)';
+    const DEFAULT_GRAPH = 'IoT Lite @Graph (IPVS)';
     setTimeout(() => {
         try {
             localStorage.setItem(DEFAULT_CONTEXT_ID, allContexts[contextDefaultObj.$value].idcontext);
         } catch (err) {
-            console.log(err);
+            console.log('A problem for getting the IoT Lite @Context has been found.');
+            console.log('Cause: Slow internet connection.\nDetails:\n', err);
+            console.log('A new attempt is being done right now.');
+            setTimeout(() => {
+                if (allContexts[contextDefaultObj.$value]) {
+                    localStorage.setItem(DEFAULT_CONTEXT_ID, allContexts[contextDefaultObj.$value].idcontexth);
+                } else {
+                    localStorage.setItem(DEFAULT_GRAPH_ID, DEFAULT_CONTEXT);
+                }
+            }, 2000);
         }
-    }, 2000);
+    }, 1500);
 
     setTimeout(() => {
         try {
             localStorage.setItem(DEFAULT_GRAPH_ID, allGraphs[graphDefaultObj.$value].idgraph);
         } catch (err) {
-            console.log(err);
-        }
-        
-    }, 2000);
+            console.log('A problem for getting the IoT Lite @Graph has been found.');
+            console.log('Cause: Slow internet connection.\nDetails:\n', err);
+            console.log('A new attempt is being done right now.');
+            setTimeout(() => {
+                if (allGraphs[graphDefaultObj.$value]) {
+                    localStorage.setItem(DEFAULT_GRAPH_ID, allGraphs[graphDefaultObj.$value].idgraph);
+                } else {
+                    localStorage.setItem(DEFAULT_GRAPH_ID, DEFAULT_GRAPH);
+                }
+            }, 2000);
+        }        
+    }, 1500);
 
 
     vm.login = function (data) {

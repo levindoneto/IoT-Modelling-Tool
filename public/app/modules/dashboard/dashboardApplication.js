@@ -260,19 +260,38 @@ function logInit() {
  * - storing the updated object in a string format on
  *   the local storage with the same key passed as parameter
  * @parameters: String: key where the current object is stored, 
- *              Object: element of identification or additional property
- * @return: void, the function just updates the local storage
+ *              Object: element of identification or additional property.
+ * @return: void, the function just updates the local storage.
  */
 function manageGraphLocalStorage(keyAccess, keyStore, elementGraph) {
+    let hasManaged;
     const currentDefinitions = localStorage.getItem(keyAccess);
     const objCurrentDefinitions = JSON.parse(currentDefinitions); // String -> Object
     let i;
     // The elements shall be pushed one by one into the @graph list
-    for (i = 0; i < elementGraph.length; i++) {
-        // Update the @graph list inner the object of definitions
-        objCurrentDefinitions['@graph'].push(elementGraph[i]);
+    if (objCurrentDefinitions) {
+        for (i = 0; i < elementGraph.length; i++) {
+            // Update the @graph list inner the object of definitions
+            objCurrentDefinitions['@graph'].push(elementGraph[i]);
+        }
+        hasManaged = true;
     }
-    localStorage.setItem(keyStore, JSON.stringify(objCurrentDefinitions)); 
+    if (!hasManaged) {
+        console.log('A problem for generating the IoT Lite elements has been found.');
+        console.log('Cause: Slow internet connection.');
+        console.log('A new attempt is being done right now.');
+        setTimeout(() => {
+            for (i = 0; i < elementGraph.length; i++) {
+                objCurrentDefinitions['@graph'].push(elementGraph[i]);
+            }
+            localStorage.setItem(keyStore, JSON.stringify(objCurrentDefinitions));
+            hasManaged = true;
+        }, 1000);
+        setTimeout(() => {
+            routeSync();
+        }, 1250);
+    }
+    localStorage.setItem(keyStore, JSON.stringify(objCurrentDefinitions));
 }
 
 /* Function which updates the graph element with the additional objects
