@@ -23,11 +23,11 @@
                 <form name="vm.loginForm" class="form-horizontal" data-ng-submit="vm.login(vm.getUser);">
                     <div class="col-xs-12 input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                        <input id="login-username" type="text" class="form-control" name="username" value="admin" placeholder="E-mail" data-ng-model="vm.getUser.Email" required>
+                        <input id="login-username" autocomplete="username" type="text" class="form-control" name="username" value="admin" placeholder="E-mail" data-ng-model="vm.getUser.Email" required>
                     </div>
                     <div class="col-xs-12 input-group margin-top-20">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                        <input id="login-password" type="password" class="form-control" name="password" placeholder="Password" data-ng-model="vm.getUser.Password" required>
+                        <input id="login-password" autocomplete="current-password" type="password" class="form-control" name="password" placeholder="Password" data-ng-model="vm.getUser.Password" required>
                     </div>
 
                     <button onclick="window.location.href=/dashboard.html" type="submit" class="btn btn-block LoginDesign">
@@ -56,13 +56,13 @@
                     <div class="form-group">
                         <label for="lastname" class="col-md-12 control-label margin-top-10">User</label>
                         <div class="col-md-12">
-                            <input type="text" class="form-control" name="lastname" placeholder="User" required data-ng-model="vm.setUser.Username">
+                            <input autocomplete="off" type="text" class="form-control" name="lastname" placeholder="User" required data-ng-model="vm.setUser.Username">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="password" class="col-md-12 control-label margin-top-10">Password</label>
                         <div class="col-md-12">
-                            <input type="password" class="form-control" name="password" placeholder="Password" required data-ng-model="vm.setUser.Password">
+                            <input autocomplete="off" type="password" class="form-control" name="password" placeholder="Password" required data-ng-model="vm.setUser.Password">
                         </div>
                     </div>
                     <div>
