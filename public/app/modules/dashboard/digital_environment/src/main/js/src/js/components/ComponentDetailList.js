@@ -268,10 +268,11 @@ export default class ComponentDetailList extends React.Component {
                                     return (<ListItem 
                                         onDoubleClick={() => {
                                         if (key !== 'geo:location') {
-                                            console.log('7');
-                                            if (key === backend.concatenate(localStorage.getItem(PREFIX), ':value') 
-                                                    || key === backend.concatenate(localStorage.getItem(PREFIX), ':macAddress')
-                                                    || key === backend.concatenate(localStorage.getItem(PREFIX), ':ipAddress')) {
+                                            if (
+                                                key === backend.concatenate(localStorage.getItem(PREFIX), ':value') ||
+                                                key === backend.concatenate(localStorage.getItem(PREFIX), ':macAddress') ||
+                                                key === backend.concatenate(localStorage.getItem(PREFIX), ':ipAddress')
+                                            ) {
                                                 const tempDevice = utils.getObjectFromGraphById(selectedDevice['@id'], this.state.devices);
                                                 this.setState({ id: tempDevice['@id'], type: tempDevice['@type'], selectAttribute: key });
                                                 this.handleOpenSetProperty();

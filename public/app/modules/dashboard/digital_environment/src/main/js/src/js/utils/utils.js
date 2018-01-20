@@ -89,13 +89,14 @@ export function cleanOutAttributes(unwantedAttributes, object) {
 }
 
 export function isPrimitiveProperty(property) {
-    console.log('Prop: ', property);
-    if (property == null 
+    if (
+        property == null 
         || property === '@id' 
         || property === '' 
         || property === backend.concatenate(localStorage.getItem(PREFIX), ':value') 
         || property === backend.concatenate(localStorage.getItem(PREFIX), ':macAddress')
-        || property === backend.concatenate(localStorage.getItem(PREFIX), ':ipAddress')) {
+        || property === backend.concatenate(localStorage.getItem(PREFIX), ':ipAddress')
+    ) {
         return true;
     }
 

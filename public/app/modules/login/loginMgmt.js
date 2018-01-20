@@ -1,10 +1,6 @@
-﻿
-
-var login = angular.module('login', ['ui.router', 'ngResource', 'ngAnimate','firebase']);
-
+﻿const login = angular.module('login', ['ui.router', 'ngResource', 'ngAnimate', 'firebase']);
 
 login.config(["$stateProvider", function ($stateProvider) {
-
     //login page state
     $stateProvider.state('login', {
         url: '/login',
@@ -15,5 +11,4 @@ login.config(["$stateProvider", function ($stateProvider) {
             pageTitle: 'Login'
         }
     });
-
 }]);

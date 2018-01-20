@@ -161,7 +161,7 @@ export function fireAjaxImport(type, content) {
                     /* If the entry is a link */
                     if (typeof iterDevice[oldKey] === 'string' && iterDevice[oldKey].includes(context[contextKey])) {
                         const tempString = iterDevice[oldKey].match(/#.+/)[0]; // Getting the match
-                        iterDevice[oldKey] = contextKey + ':' + tempString.slice(1); // Replacing the entry
+                        iterDevice[oldKey] = concatenate(contextKey, ':', tempString.slice(1)); // Replacing the entry
                     }
 
                     if (iterDevice[oldKey]['@list'] && Array.isArray(iterDevice[oldKey]['@list'])) {
@@ -170,13 +170,13 @@ export function fireAjaxImport(type, content) {
 
                     if (typeof iterDevice[oldKey] == 'object' && !Array.isArray(iterDevice[oldKey]) && iterDevice[oldKey]['@id'].includes(context[contextKey])) {
                         const tempString = iterDevice[oldKey]['@id'].match(/#.+/)[0]; // Getting the match
-                        iterDevice[oldKey]['@id'] = contextKey + ':' + tempString.slice(1); // Replacing the entry
+                        iterDevice[oldKey]['@id'] = concatenate(contextKey, ':', tempString.slice(1)); // Replacing the entry
                     }
 
                     /* If the link is included in a oldkey */
                     if (oldKey.includes(context[contextKey])) {
                         const tempString = oldKey.match(/#.+/)[0]; // Getting the match
-                        iterDevice[contextKey + ':' + tempString.slice(1)] = iterDevice[oldKey]; // Replacing the entry
+                        iterDevice[concatenate(contextKey, ':', tempString.slice(1))] = iterDevice[oldKey]; // Replacing the entry
                         delete iterDevice[oldKey];
                     }
                 });
