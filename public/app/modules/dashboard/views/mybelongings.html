@@ -59,8 +59,8 @@
                                                     <div ng-repeat="(key, value) in objAddionalPropsCompDev">
                                                         <span ng-if="value.NewPropertyOwlType.toString() == 'owl:DatatypeProperty' && key.toString() != 'value'" class="MyInfo">{{key.toString()}}</span>
                                                         <span ng-if="key.toString() == 'numberOfPins' || key.toString() == 'pinConfiguration'" class="MyInfo">Number of Pins:</span>
-                                                        <span ng-if="key.toString() == 'value'" class="MyInfo">Value</span>
-                                                        <span class="MyInfo" ng-if="value.NewPropertyOwlType.toString() != 'owl:DatatypeProperty' && key.toString() != 'numberOfPins' && key.toString() != 'pinConfiguration'"> {{key}}: </span>
+                                                        <span ng-if="key.toString() == 'value'" class="MyInfo">Value:</span>
+                                                        <span class="MyInfo" ng-if="value.NewPropertyOwlType.toString() != 'owl:DatatypeProperty' && key.toString() != 'numberOfPins' && key.toString() != 'pinConfiguration' && key.toString() != 'value'"> {{key}}: </span>
                                                         <span ng-if="value.length === undefined" class="MyInfoP"> {{value.NewPropertyValue}} </span>
                                                         <span ng-if="value.length > 0" class="MyInfoP"> {{value}} </span>
                                                     </br>

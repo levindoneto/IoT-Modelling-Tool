@@ -259,24 +259,40 @@ export function fireAjaxSave(name, content, isBinding, alertSave, tmpSaving) {
                     let modelWithDevs;
                     for (modelWithDevs in keysModelsDevicesWithSubsystems) {
                         // The even key on the content has the location object
-                        const locationX = content['@graph'][i - 1]['geo:lat'];
-                        const locationY = content['@graph'][i - 1]['geo:long'];
+                        let location;
+                        location.latitude = content['@graph'][i - 1]['geo:lat'];
+                        location.longitude = content['@graph'][i - 1]['geo:long'];
 
                         /* The device has already a subsystem */
                         if (snapshot.val()[params.name].toString() === content['@graph'][i]['iot-lite:isSubSystemOf']['@id']) {
-                            updateDevicesWithSubsystems(params.name,
+                            updateDevicesWithSubsystems(
+                                params.name,
                                 content['@graph'][i]['iot-lite:isSubSystemOf']['@id'],
-                                content['@graph'][i]['@id'], locationX, locationY,
-                                auxContPropsSubsystem, value, typeId, i, macAddress, ipAddress);
+                                content['@graph'][i]['@id'],
+                                location,
+                                auxContPropsSubsystem,
+                                value,
+                                typeId,
+                                i,
+                                macAddress,
+                                ipAddress
+                            );
                         } else { // The device does not have a subsystem
                             const auxNewDev = {};
                             auxNewDev[content['@graph'][i]['iot-lite:isSubSystemOf']['@id']] = '';
                             refDevicesWithSubsystems.update(auxNewDev);
-                            updateDevicesWithSubsystems(params.name,
+                            updateDevicesWithSubsystems(
+                                params.name,
                                 content['@graph'][i]['iot-lite:isSubSystemOf']['@id'],
-                                content['@graph'][i]['@id'], locationX, locationY,
-                                auxContPropsSubsystem, value, typeId,
-                                i, macAddress, ipAddress);
+                                content['@graph'][i]['@id'],
+                                location,
+                                auxContPropsSubsystem,
+                                value,
+                                typeId,
+                                i,
+                                macAddress,
+                                ipAddress
+                            );
                         }
                     }
                 });

@@ -8,8 +8,7 @@ function updateDevicesWithSubsystems(
     savedModel,
     device,
     subsystem,
-    latitude,
-    longitude,
+    location,
     propertiesSubSystem,
     sensorValue,
     typeId,
@@ -28,8 +27,8 @@ function updateDevicesWithSubsystems(
         auxLoc.value = sensorValue;
     }
     auxLoc['@type'] = typeId;
-    auxLoc.locationX = latitude;
-    auxLoc.locationY = longitude;
+    auxLoc.locationX = location.latitude;
+    auxLoc.locationY = location.longitude;
     auxLoc.macAddress = mac;
     auxLoc.ipAddress = ip;
     auxDevSub[subsystem] = auxLoc;
