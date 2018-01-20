@@ -291,11 +291,13 @@ export default class NavigationBar extends React.Component {
                             refDevsWithSubsystems.once('value', (snapdev) => {
                                 // Access devices from the current loaded model
                                 for (i in snapdev.val()[snapshot.val().lastLoadedModel]) {
+                                    // First element' key : Object.keys(devicesWithSubsystems[i])[0]
+                                    // First component' key : Object.keysdevicesWithSubsystems[i][Object.keys(devicesWithSubsystems[i])[0]])[0]
                                     backend.bindDevice(
                                         i,
-                                        '123456789067',
-                                        IP,
-                                        MAC,
+                                        devicesWithSubsystems[i][Object.keys(devicesWithSubsystems[i])[0]][Object.keys(devicesWithSubsystems[i][Object.keys(devicesWithSubsystems[i])[0]])[0]].macAddress,
+                                        devicesWithSubsystems[i][Object.keys(devicesWithSubsystems[i])[0]][Object.keys(devicesWithSubsystems[i][Object.keys(devicesWithSubsystems[i])[0]])[0]].ipAddress,
+                                        backend.formatMacAddress(devicesWithSubsystems[i][Object.keys(devicesWithSubsystems[i])[0]][Object.keys(devicesWithSubsystems[i][Object.keys(devicesWithSubsystems[i])[0]])[0]].macAddress),
                                         RESTAPIADDRESS,
                                         devicesWithSubsystems[i],
                                         mapTypeComp,
@@ -309,10 +311,12 @@ export default class NavigationBar extends React.Component {
                         title: 'The model has been saved and bound successfully',
                         button: false,
                         icon: 'success'
-                    });     
+                    });
+                    /*
                     setTimeout(() => {
                         backend.syncCurrentModel();
                     }, LEVEL.THERE);
+                    */
                 }
             }
         });

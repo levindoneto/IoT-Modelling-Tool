@@ -30,7 +30,6 @@ function updateDevicesWithSubsystems(
     auxLoc['@type'] = typeId;
     auxLoc.locationX = latitude;
     auxLoc.locationY = longitude;
-    console.log('Mac: ', mac, ' and ip: ', ip);
     auxLoc.macAddress = mac;
     auxLoc.ipAddress = ip;
     auxDevSub[subsystem] = auxLoc;

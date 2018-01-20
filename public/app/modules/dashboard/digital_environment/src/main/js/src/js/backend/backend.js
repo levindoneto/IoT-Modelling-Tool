@@ -83,7 +83,7 @@ export function concatenate(...theArgs) {
     return concatenatedStr;
 }
 
-/* Function for formatting a MAC Address and let it available for use in the binding option. 
+/* Function for formatting a MAC Address and letting it available for use in the binding option. 
  * @Parameter: String: MAC Address (not formatted, e.g.: 123456789067)
  * @Return: String: Formatted MAC Address ( e.g.: 12-34-56-78-90-67) */
 export function formatMacAddress(macAdd) {
@@ -329,8 +329,14 @@ export function fireAjaxShow() {
     return response;
 }
 
-export function bindComponent(idComp, componentType, idTypeBind,
-    idDeviceBind, apiAddress, pinConfig) {
+export function bindComponent(
+    idComp,
+    componentType,
+    idTypeBind,
+    idDeviceBind,
+    apiAddress,
+    pinConfig
+) {
     let p;
     let valuesPins = '';
     // -1 because the comma must not be concatenate to the last pin
@@ -368,7 +374,16 @@ export function bindComponent(idComp, componentType, idTypeBind,
     });
 }
 
-export function bindDevice(idDev, macAddressDev, ipAddressDev, formattedMacAddressDev, apiAddress, subsystems, mapTypeComp, callback) {
+export function bindDevice(
+    idDev,
+    macAddressDev,
+    ipAddressDev,
+    formattedMacAddressDev,
+    apiAddress,
+    subsystems,
+    mapTypeComp,
+    callback
+) {
     // Get the map between components and types
     const urlAddress = concatenate(apiAddress, '/api', '/', 'devices/');
     const jsonData = {
