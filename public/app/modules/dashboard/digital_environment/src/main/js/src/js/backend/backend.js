@@ -39,9 +39,18 @@ refTrig.on('child_changed', (snapshot) => {
             for (j in snapshot.val()) {
                 for (k in snapshot.val()[j]) {
                     if (i.toString() === k.toString()) {
-                        accessedModel['@graph'][i][concatenate(localStorage.getItem(PREFIX), ':value')] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].value; // j:device, k:the subsystem index, 0:just one subsystem per index
-                        accessedModel['@graph'][i - 1]['geo:lat'] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationX;
-                        accessedModel['@graph'][i - 1]['geo:long'] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationY;
+                        if (isNaN(parseInt(snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationY, 10)) ||
+                            isNaN(parseInt(snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationX, 10))
+                        ) {
+                            // Reload the previous value into the database's element, which has a correct type
+                            fireAjaxSave(snapshot.key, JSON.parse(savedM.val()[snapshot.key].content), false, true, false);
+                            console.log('Problem of type:\nLocations shall be in a format of a number');
+                            return;
+                        } else {
+                            accessedModel['@graph'][i][concatenate(localStorage.getItem(PREFIX), ':value')] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].value; // j:device, k:the subsystem index, 0:just one subsystem per index
+                            accessedModel['@graph'][i - 1]['geo:lat'] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationX;
+                            accessedModel['@graph'][i - 1]['geo:long'] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationY;
+                        }
                     }
                 }
             }
@@ -206,9 +215,9 @@ export function fireAjaxImport(type, content) {
     });
 }
 
-export function fireAjaxSave(name, content, isBinding, alertSave, tmpSaving) {
+export function fireAjaxSave(name, content, isBinding, notAlertSave, tmpSaving) {
     localStorage.setItem(IS_SYNC, FALSE); // Do not set a model before the synchronization
-    const notShowAlert = alertSave | false;
+    const notShowAlert = notAlertSave | false;
     const thisIsBinding = isBinding | false; // If the user hasn't clicked <Bind>: undefined
     const params = {
         name,
@@ -259,7 +268,7 @@ export function fireAjaxSave(name, content, isBinding, alertSave, tmpSaving) {
                     let modelWithDevs;
                     for (modelWithDevs in keysModelsDevicesWithSubsystems) {
                         // The even key on the content has the location object
-                        let location;
+                        let location = {};
                         location.latitude = content['@graph'][i - 1]['geo:lat'];
                         location.longitude = content['@graph'][i - 1]['geo:long'];
 
