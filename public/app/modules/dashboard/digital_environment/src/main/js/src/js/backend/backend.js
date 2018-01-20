@@ -83,6 +83,21 @@ export function concatenate(...theArgs) {
     return concatenatedStr;
 }
 
+/* Function for formatting a MAC Address and let it available for use in the binding option. 
+ * @Parameter: String: MAC Address (not formatted, e.g.: 123456789067)
+ * @Return: String: Formatted MAC Address ( e.g.: 12-34-56-78-90-67) */
+export function formatMacAddress(macAdd) {
+    let FormattedMacAddress;
+    let m;
+	for (m = 0; m < macAdd.match(/.{1,2}/g).length - 1; m++) {
+		FormattedMacAddress = concatenate(FormattedMacAddress, macAdd.match(/.{1,2}/g)[m], '-');
+	}
+    return concatenate(
+        FormattedMacAddress,
+        macAdd.match(/.{1,2}/g)[macAdd.match(/.{1,2}/g).length - 1]
+    );
+}
+
 /* Transforms the object of definitions in a string */
 function clone(object) {
     return JSON.parse(JSON.stringify(object));
