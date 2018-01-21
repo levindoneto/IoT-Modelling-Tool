@@ -17,6 +17,7 @@ const auxContent = {};
 const refTrig = firebase.database().ref('devicesWithSubsystems/');
 const refSavedModels = firebase.database().ref('savedModels/');
 const refTmp = firebase.database().ref('tmp/');
+const refInfoSaved = firebase.database().ref('infoSavedModels');
 const USER_MODEL = 'userModel';
 const defaultContentProps = [ // properties that will not be parsed
     'geo:location',
@@ -29,41 +30,49 @@ let accessedModel = {};
 
 // Trigger for modifications in the devices with subsystems
 refTrig.on('child_changed', (snapshot) => {
-    refSavedModels.on('value', (savedM) => {
-        accessedModel = JSON.parse(savedM.val()[snapshot.key].content);
-        localStorage.setItem(USER_MODEL, savedM.val()[snapshot.key].user);
-        let i;
-        let j;
-        let k;
-        for (i = 0; i < (Object.keys(accessedModel[['@graph']])).length; i++) {
-            for (j in snapshot.val()) {
-                for (k in snapshot.val()[j]) {
-                    if (i.toString() === k.toString()) {
-                        if (isNaN(parseInt(snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationY, 10)) ||
-                            isNaN(parseInt(snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationX, 10))
-                        ) {
-                            // Reload the previous value into the database's element, which has a correct type
-                            fireAjaxSave(snapshot.key, JSON.parse(savedM.val()[snapshot.key].content), false, true, false);
-                            console.log('Problem of type:\nLocations shall be in a format of a number');
-                            return;
-                        } else {
-                            accessedModel['@graph'][i][concatenate(localStorage.getItem(PREFIX), ':value')] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].value; // j:device, k:the subsystem index, 0:just one subsystem per index
-                            accessedModel['@graph'][i - 1]['geo:lat'] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationX;
-                            accessedModel['@graph'][i - 1]['geo:long'] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationY;
+    refInfoSaved.on('value', (info) => {
+        // Update de database just if the edited model is loaded in the digital twin
+        if (snapshot.key === info.val().lastLoadedModel) {
+            refSavedModels.on('value', (savedM) => {
+                accessedModel = JSON.parse(savedM.val()[snapshot.key].content);
+                localStorage.setItem(USER_MODEL, savedM.val()[snapshot.key].user);
+                let i;
+                let j;
+                let k;
+                for (i = 0; i < (Object.keys(accessedModel[['@graph']])).length; i++) {
+                    for (j in snapshot.val()) {
+                        for (k in snapshot.val()[j]) {
+                            if (i.toString() === k.toString()) {
+                                if (isNaN(parseInt(snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationY, 10)) ||
+                                    isNaN(parseInt(snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationX, 10))
+                                ) {
+                                    // Reload the previous value into the database's element, which has a correct type
+                                    fireAjaxSave(snapshot.key, JSON.parse(savedM.val()[snapshot.key].content), false, true, false);
+                                    console.log('Problem of type:\nLocations shall be in a format of a number');
+                                    return;
+                                } else {
+                                    accessedModel['@graph'][i][concatenate(localStorage.getItem(PREFIX), ':value')] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].value; // j:device, k:the subsystem index, 0:just one subsystem per index
+                                    accessedModel['@graph'][i - 1]['geo:lat'] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationX;
+                                    accessedModel['@graph'][i - 1]['geo:long'] = snapshot.val()[j][k][Object.keys(snapshot.val()[j][k])[0]].locationY;
+                                }
+                            }
                         }
                     }
                 }
+            });
+            const updatedModelStr = JSON.stringify(accessedModel);
+            auxContent.content = updatedModelStr;
+            auxContent.user = localStorage.getItem(
+                USER_MODEL) ||
+                localStorage.getItem('loggedUser'
+            );
+            auxSavedModels[snapshot.key] = auxContent;
+            refSavedModels.update(auxSavedModels); // Update the database
+            if (localStorage.getItem(IS_SYNC) !== TRUE) {
+                DeviceStore.setModel(accessedModel); // Update the digital twin
             }
         }
     });
-    const updatedModelStr = JSON.stringify(accessedModel);
-    auxContent.content = updatedModelStr;
-    auxContent.user = localStorage.getItem(USER_MODEL) || localStorage.getItem('loggedUser');
-    auxSavedModels[snapshot.key] = auxContent;
-    refSavedModels.update(auxSavedModels); // Update the database
-    if (localStorage.getItem(IS_SYNC) !== TRUE) {
-        DeviceStore.setModel(accessedModel); // Update the digital twin
-    }
 });
 
 function verifyAddProp(propertyI) {
@@ -224,7 +233,6 @@ export function fireAjaxSave(name, content, isBinding, notAlertSave, tmpSaving) 
         type: 'json-ld',
     };
     const ref = firebase.database().ref('savedModels/');
-    const refInfoSaved = firebase.database().ref('infoSavedModels');
     const refDevicesWithSubsystems = firebase.database().ref('devicesWithSubsystems/');
     const url = concatenate('/modtool/saveModel', '?', $.param(params));
     const auxDevSubSecRoot = {}; // For the saved models as secondary roots
