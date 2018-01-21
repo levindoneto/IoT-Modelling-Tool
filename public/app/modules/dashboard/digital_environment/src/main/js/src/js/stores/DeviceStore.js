@@ -25,15 +25,16 @@ class DeviceStore extends EventEmitter {
     /* Creates an id which hasn't been used yet */
     createId(type) {
         let id = 1;
+        if (this.model['@graph']) {
+            if (this.model['@graph'].length > 0) {
+                const devicesFamily = this.model['@graph'].filter((device) => device['@id'].match(new RegExp(`${type}-` + '\\d+')) != null);
 
-        if (this.model['@graph'].length > 0) {
-            const devicesFamily = this.model['@graph'].filter((device) => device['@id'].match(new RegExp(`${type}-` + '\\d+')) != null);
-
-            if (devicesFamily.length > 0) {
-                const tempEntry = devicesFamily.slice(-1);
-                const tempString = tempEntry[0]['@id'];
-                const tempCount = tempString.match(new RegExp('-' + '\\d+'))[0].slice(1);
-                id = parseInt(tempCount) + 1;
+                if (devicesFamily.length > 0) {
+                    const tempEntry = devicesFamily.slice(-1);
+                    const tempString = tempEntry[0]['@id'];
+                    const tempCount = tempString.match(new RegExp('-' + '\\d+'))[0].slice(1);
+                    id = parseInt(tempCount) + 1;
+                }
             }
         }
         return id;
