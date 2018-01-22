@@ -9,7 +9,7 @@
 # Requirements:
 # # - Node JS (npm) installed
 
-sed -i 's/\r$//' init.sh # Remove trailing \r character
+sed -i 's/\r$//' init.sh; # Remove trailing \r character
 clear;
 echo "_________________________________________________________________________";
 echo "Deploying hosting with the use of Firebase (this might take some minutes)";
@@ -18,6 +18,6 @@ echo "_________________________________________________________________________"
 echo "Press [CTRL]+[C] to finish the execution";
 echo "_________________________________________________________________________";
 pushd ../;
-npm install -g firebase-tools
-firebase init
-firebase deploy
+npm install -g firebase-tools;
+firebase init;
+firebase deploy;
