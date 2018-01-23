@@ -19,5 +19,4 @@ echo "Press [CTRL]+[C] to finish the execution";
 echo "_________________________________________________________________________";
 pushd ../;
 npm install -g firebase-tools;
-firebase init;
-firebase deploy;
+firebase deploy --only hosting;

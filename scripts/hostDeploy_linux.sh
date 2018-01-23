@@ -12,7 +12,7 @@ clear;
 echo "_________________________________________________________________________";
 echo "Setting Node JS (npm) up";
 sudo apt-get update;
-curl -sL https://deb.nodesource.com/setup | sudo -E bash -;
+curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -;
 sudo apt-get install -y nodejs;
 echo "_________________________________________________________________________";
 echo "Deploying hosting with the use of Firebase (this might take some minutes)";
@@ -23,5 +23,4 @@ echo "_________________________________________________________________________"
 pushd ../;
 sudo npm install -g firebase-tools;
 sudo firebase login;
-sudo firebase init; # Click [Enter] to select the first option
-sudo firebase deploy;
+sudo firebase deploy --only hosting;
