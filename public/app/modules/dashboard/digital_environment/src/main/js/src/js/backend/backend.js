@@ -3,7 +3,7 @@ import {
     definitions
 } from '../constants/definitions';
 
-const RESTAPIADDRESS = 'http://192.168.209.176:8080/MBP';
+const RESTAPIADDRESS = 'http://192.168.209.189:8080/MBP';
 const TYPEADAPTER = '5a0f2a8b4f0c7363179e58e5'; // For tests
 const TRUE = 'true';
 const FALSE = 'false';
@@ -19,6 +19,7 @@ const refSavedModels = firebase.database().ref('savedModels/');
 const refTmp = firebase.database().ref('tmp/');
 const refInfoSaved = firebase.database().ref('infoSavedModels');
 const USER_MODEL = 'userModel';
+const PIN_CONF = 'pinConfiguration';
 const defaultContentProps = [ // properties that will not be parsed
     'geo:location',
     '@id',
@@ -26,8 +27,8 @@ const defaultContentProps = [ // properties that will not be parsed
     concatenate(localStorage.getItem(PREFIX), ':value'),
     '@type'
 ];
+var adapters = {};
 let accessedModel = {};
-
 // Trigger for modifications in the devices with subsystems
 refTrig.on('child_changed', (snapshot) => {
     refInfoSaved.on('value', (info) => {
@@ -73,6 +74,20 @@ refTrig.on('child_changed', (snapshot) => {
             }
         }
     });
+});
+
+/* Get all the adapter types and put them in a object, with keys being their names,
+ * and the object's values being their ids */
+$.ajax({
+    type: 'GET',
+    url: concatenate(RESTAPIADDRESS, '/api', '/', 'types/'),
+    async: true
+}).done((allTypes) => {
+    const typeAdapters = allTypes._embedded.types;
+    let a;
+    for (a = 0; a < typeAdapters.length; a++) {
+        adapters[typeAdapters[a].name] = typeAdapters[a].id;
+    }
 });
 
 function verifyAddProp(propertyI) {
@@ -418,6 +433,7 @@ export function bindDevice(
     callback
 ) {
     // Get the map between components and types
+    console.log('apiAddress: ', apiAddress);
     const urlAddress = concatenate(apiAddress, '/api', '/', 'devices/');
     const jsonData = {
         name: idDev,
@@ -432,28 +448,29 @@ export function bindDevice(
         accept: 'application/json', // In order to get the registered id of the device back from the MBP platform
         data: JSON.stringify(jsonData)
     }).done((device) => {
-        console.log('The device has been posted successfully\nId on the MBP Platform: : ', device.id);
+        console.log('The device has been posted successfully\nId on the MBP Platform: ', device.id);
         let c;
         for (c in subsystems) { // Iterate in all the components in the device
             const prefix = subsystems[c][Object.keys(subsystems[c])[0]]['@type'].split(':')[0];
             const idWithoutPrefix = subsystems[c][Object.keys(subsystems[c])[0]]['@type'].split(':')[1];
             let pinConf;
             // If the element component has pin configuration already set up
-            if (concatenate(prefix, ':', 'pinConfiguration') in subsystems[c][Object.keys(subsystems[c])[0]]) {
-                pinConf = subsystems[c][Object.keys(subsystems[c])[0]][concatenate(prefix, ':', 'pinConfiguration')];
+            if (concatenate(prefix, ':', PIN_CONF) in subsystems[c][Object.keys(subsystems[c])[0]]) {
+                pinConf = subsystems[c][Object.keys(subsystems[c])[0]][concatenate(prefix, ':', PIN_CONF)];
             } else {
-                pinConf = {}; // pinset shall be equals to empty for the deployment in case of null pinConfiguration
+                pinConf = {}; // pinset shall be equal to empty for the deployment in case of null pinConfiguration
             }
             bindComponent(
                 Object.keys(subsystems[c])[0],
                 mapTypeComp[idWithoutPrefix],
-                TYPEADAPTER,
+                adapters[idWithoutPrefix],
                 device.id,
                 RESTAPIADDRESS,
                 pinConf
             );
         }
-        return callback(); // Bind the next device, if there are more than one device on the digital twin
+        // Bind the next device, if there are more than one device on the digital twin
+        return callback();
     });
 }
 
