@@ -3,7 +3,8 @@ import {
     definitions
 } from '../constants/definitions';
 
-const RESTAPIADDRESS = 'http://192.168.209.189:8080/MBP';
+const config = require('../../../../../../../../../../config.json');
+
 const TRUE = 'true';
 const FALSE = 'false';
 const LOAD_LAST_MODEL = 'loadLastModel';
@@ -28,6 +29,26 @@ const defaultContentProps = [ // properties that will not be parsed
 ];
 var adapters = {};
 let accessedModel = {};
+
+export function concatenate(...theArgs) {
+    let concatenatedStr = '';
+    let s;
+    for (s = 0; s < theArgs.length; s++) {
+        try { // It just does not work with empty or undefined strings
+            concatenatedStr = concatenatedStr.concat((theArgs[s]).toString());
+        } catch (err) {
+            console.log('At least of the used arguments is undefined or has not been processed yet, which is generating the following processing error:\n', err);
+            concatenatedStr = concatenatedStr.concat('');
+            console.log('The error has been handled successfully, though');
+            console.log('All the arguments from this call:\n', theArgs);
+        }
+    }
+    return concatenatedStr;
+}
+
+const RESTAPIADDRESS = concatenate('http://', config.restAPI.ip, ':', config.restAPI.port, '/MBP');
+console.log();
+
 // Trigger for modifications in the devices with subsystems
 refTrig.on('child_changed', (snapshot) => {
     refInfoSaved.on('value', (info) => {
@@ -97,22 +118,6 @@ function verifyAddProp(propertyI) {
         }
     }
     return thisIsAdditionalProperty;
-}
-
-export function concatenate(...theArgs) {
-    let concatenatedStr = '';
-    let s;
-    for (s = 0; s < theArgs.length; s++) {
-        try { // It just does not work with empty or undefined strings
-            concatenatedStr = concatenatedStr.concat((theArgs[s]).toString());
-        } catch (err) {
-            console.log('At least of the used arguments is undefined or has not been processed yet, which is generating the following processing error:\n', err);
-            concatenatedStr = concatenatedStr.concat('');
-            console.log('The error has been handled successfully, though');
-            console.log('All the arguments from this call:\n', theArgs);
-        }
-    }
-    return concatenatedStr;
 }
 
 /* Function for formatting a MAC Address and letting it available for use in the binding option. 

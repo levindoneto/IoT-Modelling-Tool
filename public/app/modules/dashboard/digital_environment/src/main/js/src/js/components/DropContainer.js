@@ -6,6 +6,9 @@ import * as DropActions from '../actions/DropActions';
 import ItemTypes from '../dnd/ItemTypes';
 import * as utils from '../utils/utils';
 
+const ESC = 27;
+const DEL = 46;
+const ALT = 18;
 const SELECTED_DEV = 'selectedDevice';
 const boxTarget = {
     drop(props, monitor, component) {
@@ -125,13 +128,13 @@ class DropContainer extends Component {
         }
     }
 
-    // Handle unselecting a Device (with 'ESC' key)
+    // Handle the selection of a component or device
     handleKeysSelectedDevice = (e) => {
         const key = e.keyCode || e.charCode || 0;
-        if (key === 27) {
+        if (key === ESC) {
             DropActions.selectDevice('');
             document.body.removeEventListener('keyup', this.handleKeysSelectedDevice);
-        } else if (key === 46) {
+        } else if (key === DEL) {
             DropActions.deleteDevice(localStorage.getItem(SELECTED_DEV));
         }
     };
@@ -139,7 +142,7 @@ class DropContainer extends Component {
     // Show Device's id (above Device's icon) when user pressing 'Alt' key (press and hold)
     activateHover = (e) => {
         const key = e.keyCode || e.charCode || 0;
-        if (key === 18) {
+        if (key === ALT) {
             e.preventDefault();
             this.setState({ hover: true });
         }

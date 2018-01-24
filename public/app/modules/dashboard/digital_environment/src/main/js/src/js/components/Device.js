@@ -9,6 +9,7 @@ import * as DropActions from '../actions/DropActions';
 import DeviceStore from '../stores/DeviceStore';
 import * as utils from '../utils/utils';
 
+const DEL = 46;
 const SELECTED_DEV = 'selectedDevice';
 const boxSource = {
     beginDrag(props) {
@@ -101,7 +102,7 @@ class Device extends Component {
 
     handleKeysDevice = (e) => {
         const key = e.keyCode || e.charCode || 0;
-        if (key === 46) {
+        if (key === DEL) {
             this.deleteDevice();
             document.body.removeEventListener('keyup', this.handleKeysDevice);
         }

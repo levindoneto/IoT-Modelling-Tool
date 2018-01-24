@@ -17,6 +17,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import * as backend from '../backend/backend';
 import { setTimeout } from 'timers';
 
+const config = require('../../../../../../../../../../config.json');
+
 const TRUE = 'true';
 const FALSE = 'false';
 const IS_SYNC = 'isSync';
@@ -25,7 +27,6 @@ const LOAD_LAST_MODEL = 'loadLastModel';
 const LOAD_TEMP_MODEL = 'loadTempModel';
 const IS_TEMPORARY_MODEL = 'isTemporaryModel';
 const DIGITAL_TWIN_WAS_EMPTY = 'digitalTwinWasEmpty';
-const RESTAPIADDRESS = 'http://192.168.209.189:8080/MBP';
 const refSavedModels = firebase.database().ref('savedModels/');
 const refInfoSaved = firebase.database().ref('infoSavedModels');
 const refTmp = firebase.database().ref('tmp/');
@@ -34,6 +35,7 @@ const refDevicesWithSubsystems = firebase.database().ref('devicesWithSubsystems/
 const DELETED_MODEL = '__del_model__'; /* Flag put in the infoSavedModels.lastLoadedModels in order 
                                         * to not try to loaded a non-existant model from the database */
 const UNDEFINED = 'undefined';
+const RESTAPIADDRESS = backend.concatenate('http://', config.restAPI.ip, ':', config.restAPI.port, '/MBP');
 // Models which have been added by the user who is logged in the platform
 const savedModelsLoggedUser = {};
 const style = {

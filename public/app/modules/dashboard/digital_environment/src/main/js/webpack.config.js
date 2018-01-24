@@ -3,6 +3,9 @@ const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
+    node: {
+        fs: 'empty'
+    },
     context: path.join(__dirname, 'src'),
     devtool: debug ? 'inline-sourcemap' : null,
     entry: './js/client.js',
