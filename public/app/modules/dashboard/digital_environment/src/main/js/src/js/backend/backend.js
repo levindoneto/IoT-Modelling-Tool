@@ -4,7 +4,6 @@ import {
 } from '../constants/definitions';
 
 const RESTAPIADDRESS = 'http://192.168.209.189:8080/MBP';
-const TYPEADAPTER = '5a0f2a8b4f0c7363179e58e5'; // For tests
 const TRUE = 'true';
 const FALSE = 'false';
 const LOAD_LAST_MODEL = 'loadLastModel';
@@ -433,7 +432,6 @@ export function bindDevice(
     callback
 ) {
     // Get the map between components and types
-    console.log('apiAddress: ', apiAddress);
     const urlAddress = concatenate(apiAddress, '/api', '/', 'devices/');
     const jsonData = {
         name: idDev,

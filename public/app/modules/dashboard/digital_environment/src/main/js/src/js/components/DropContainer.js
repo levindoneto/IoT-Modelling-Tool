@@ -6,6 +6,7 @@ import * as DropActions from '../actions/DropActions';
 import ItemTypes from '../dnd/ItemTypes';
 import * as utils from '../utils/utils';
 
+const SELECTED_DEV = 'selectedDevice';
 const boxTarget = {
     drop(props, monitor, component) {
         const item = monitor.getItem();
@@ -130,6 +131,8 @@ class DropContainer extends Component {
         if (key === 27) {
             DropActions.selectDevice('');
             document.body.removeEventListener('keyup', this.handleKeysSelectedDevice);
+        } else if (key === 46) {
+            DropActions.deleteDevice(localStorage.getItem(SELECTED_DEV));
         }
     };
 

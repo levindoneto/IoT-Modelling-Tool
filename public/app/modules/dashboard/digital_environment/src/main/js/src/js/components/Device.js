@@ -9,6 +9,7 @@ import * as DropActions from '../actions/DropActions';
 import DeviceStore from '../stores/DeviceStore';
 import * as utils from '../utils/utils';
 
+const SELECTED_DEV = 'selectedDevice';
 const boxSource = {
     beginDrag(props) {
         const { id, left, top, type, isPaletteItem } = props;
@@ -116,6 +117,7 @@ class Device extends Component {
     };
 
     handleClick = (e) => {
+        localStorage.setItem(SELECTED_DEV, this.props.id);
         e.stopPropagation();
         if (DeviceStore.getSelectedDevice() === this.props.id) { 
             DropActions.selectDevice('');

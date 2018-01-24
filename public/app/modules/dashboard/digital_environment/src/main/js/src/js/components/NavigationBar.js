@@ -418,8 +418,7 @@ export default class NavigationBar extends React.Component {
                             });
                         }
                     });
-                }
-                else {
+                } else {
                     if (backend.isDigitalTwinEmpty()) {
                         swal({
                             title: 'The model in the digital environment is empty',
@@ -632,15 +631,16 @@ export default class NavigationBar extends React.Component {
                                     <MenuItem primaryText="Clear" secondaryText="Clear Drop Zone" />
                                     <Subheader style={subHeaderStyle}>Mouse Commands</Subheader>
                                 <Divider />
-                                    <MenuItem primaryText="Create Device" secondaryText="Drag Device From The 'Palette' To Grid Zone" />
+                                    <MenuItem primaryText="Create Component/Device" secondaryText="Drag a Componente or Device From The 'Palette' To Grid Zone" />
                                     <MenuItem primaryText="Create Subdevice" secondaryText="Drag Subdevice Onto Other Device" />
-                                    <MenuItem primaryText="Select Device" secondaryText="Click On Device" />
+                                    <MenuItem primaryText="Select Component/Device" secondaryText="Click On Device" />
                                     <MenuItem primaryText="Unselect Device" secondaryText="Click Outside Of Device" />
                                 <Divider />
                                     <Subheader style={subHeaderStyle}>Key Commands</Subheader>
                                 <Divider />
-                                <MenuItem primaryText="Unselect Device" secondaryText="ESC" />
-                                <MenuItem primaryText="Delete Device" secondaryText="DEL" />
+                                <MenuItem primaryText="Unselect Component/Device" secondaryText="ESC" />
+                                <MenuItem primaryText="Delete Component/Device" secondaryText="DEL" />
+                                <MenuItem primaryText="Show Ids" secondaryText="ALT" />
                                 <MenuItem primaryText="Commit Dialog" secondaryText="Enter" />
                                 <MenuItem primaryText="Close Dialog" secondaryText="ESC" />
                             </Menu>
