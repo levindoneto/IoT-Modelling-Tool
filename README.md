@@ -117,8 +117,8 @@ Firebase Real Time Database is a cloud-hosted NoSQL database that lets you store
 
 ### Back-End
 
-[Java 8](https://www.oracle.com/technetwork/java/javase/overview/java8-2100321.html).
-[Node JS](https://nodejs.org/en/).
+* [Java 8](https://www.oracle.com/technetwork/java/javase/overview/java8-2100321.html).
+* [Node JS](https://nodejs.org/en/).
 
 
 ### Database
