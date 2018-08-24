@@ -104,7 +104,6 @@ Firebase Real Time Database is a cloud-hosted NoSQL database that lets you store
 * Saved Models (By the Save and Save As buttons on the navigation bar).
 * Users (each one e-mail, password and username).
 
-
 ## Used Technologies
 
 ### Front-End
@@ -114,17 +113,19 @@ Firebase Real Time Database is a cloud-hosted NoSQL database that lets you store
 * [Bootstrap v3.3.7](http://getbootstrap.com/).
 * [React JS v15.5.4](https://facebook.github.io/react/).
 * [Font Awesome toolkit](http://fontawesome.io).
+* [Angular JS](https://angularjs.org/).
 
 ### Back-End
 
-* [Angular JS](https://angularjs.org/).
-* [jQuery](https://jquery.com).
+[Java 8](https://www.oracle.com/technetwork/java/javase/overview/java8-2100321.html).
+[Node JS](https://nodejs.org/en/).
+
 
 ### Database
 
 * [Firebase](https://firebase.google.com) on Google's cloud.
 
-### Utilized Frameworks
+### Utilized Frameworks for Communication with the Database
 
 * [AngularFire v2.3.0](https://github.com/firebase/angularfire).
 * [ReactFire v1.0.0](https://github.com/firebase/reactfire).
