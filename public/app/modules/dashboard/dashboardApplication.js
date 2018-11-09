@@ -325,9 +325,6 @@ function getPrefix(callback) {
 }
 
 function logInit() {
-    console.log('Log:\n1.The prefix has been set.');
-    console.log('2.The IoT Lite @Context has been created.');
-    console.log('3.The IoT Lite @Context has been created.');
 }
 
 /* Function which manipulates the keyStored->@graph on the 
@@ -807,7 +804,7 @@ dashboard.config([
             controller: 'myaccountController',
             controllerAs: 'vm',
             data: {
-                pageTitle: 'My Account'
+                pageTitle: 'Minha Conta'
             }
         });
 
@@ -862,22 +859,22 @@ dashboard.config([
         });
 
         $stateProvider.state('app.addbelonging', {
-            url: '/addbelonging',
+            url: '/addevaluation',
             templateUrl: 'app/modules/dashboard/views/addbelonging.html',
             controller: 'addbelongingController',
             controllerAs: 'vm',
             data: {
-                pageTitle: 'Add Device or Component'
+                pageTitle: 'Adicionar Avaliação'
             }
         });
 
         $stateProvider.state('app.mybelongings', {
-            url: '/mydevices',
+            url: '/evaluations',
             templateUrl: 'app/modules/dashboard/views/mybelongings.html',
             controller: 'mybelongingsController',
             controllerAs: 'vm',
             data: {
-                pageTitle: 'Devices and Components'
+                pageTitle: 'Avaliações'
             }
         });
 

@@ -119,74 +119,34 @@ function ($rootScope, $scope, $state, $location, Flash, appSettings, $firebaseAu
     // Admins' menu items
     vm.menuItems = [
         {
-            title: 'My Account',
+            title: 'Minha Conta',
             icon: 'user',
             state: 'myaccount'
         },
         {
-            title: 'Add Default @Context',
-            icon: 'cubes',
-            state: 'adddefaultcontext'
-        },
-        {
-            title: 'Add Specific @Context',
-            icon: 'database',
-            state: 'addspecificcontext'
-        },
-        {
-            title: 'Add Default @Graph',
-            icon: 'compass',
-            state: 'adddefaultgraph'
-        },
-        {
-            title: 'IoT Lite @Context',
-            icon: 'bullseye',
-            state: 'mycontext'
-        },
-        {
-            title: 'IoT Lite @Graph',
-            icon: 'exchange',
-            state: 'mygraph'
-        },
-        {
-            title: 'IoT Modelling Environment',
-            icon: 'home',
-            state: 'digitalenvironment'
-        },
-        {
-            title: 'Add Device or Component',  // They can be devices, actuators or sensors
+            title: 'Adicionar Avaliação',  // They can be devices, actuators or sensors
             icon: 'plus-circle',
             state: 'addbelonging'
         },
         {
-            title: 'Devices and Components',
+            title: 'Avaliações',
             icon: 'tablet',
             state: 'mybelongings'
-        },
-        {
-            title: 'Add Additional Properties',
-            icon: 'puzzle-piece',
-            state: 'addadditionalproperties'
-        },
-        {
-            title: 'Search',
-            icon: 'search',
-            state: 'search'
         },
     ];
 
     // Normal users' menu items
     vm.menuItemsNormalUser = [
         {
-            title: 'My Account',
+            title: 'Minha Conta',
             icon: 'user',
             state: 'myaccount'
         },
         {
-            title: 'IoT Modelling Environment',
-            icon: 'home',
-            state: 'digitalenvironment'
-        }
+            title: 'Adicionar Avaliação',  // They can be devices, actuators or sensors
+            icon: 'plus-circle',
+            state: 'addbelonging'
+        },
     ];
 
     // Set the theme selected

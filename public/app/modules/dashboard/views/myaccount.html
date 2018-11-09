@@ -2,7 +2,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1 class="titleMYACC">
-        My Account
+        Minha conta
     </h1>
 </section>
 
@@ -10,7 +10,7 @@
 <section class="content">
     <br class="box-content">
         <div class="panel panel-default">
-            <h3 class="Titlemyaccount">Username</h3>
+            <h3 class="Titlemyaccount">Usuário</h3>
             <span class="InfoAccount">&emsp;{{user.Username}} </span>
             <h3 class="Titlemyaccount">E-mail</h3>
             <span class="InfoAccount">&emsp;{{user.Email}}</br></br> </span>
@@ -20,6 +20,7 @@
                 Edit
             </button>
         </div>
+        <!--
         <div class="panel panel-default">
             <center>
                 <h3 class="Titlemyaccount">User as Admin</h3>
@@ -29,6 +30,7 @@
                 </label>
             </center>
         </div>
+        -->
 </section>
 
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
@@ -36,9 +38,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">
-                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Fechar</span>
                 </button>
-                <h4>Edit User's Information</h4>
+                <h4>Editar suas informações</h4>
             </div>
             <div class="modal-body">
                 <form id="form_id" role="form" ng-submit="editFormSubmit(user.$id, Username)" ng-show="show">
@@ -47,8 +49,8 @@
                         <input type="text" class="form-control" id="name" ng-model="Username">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="editDataPopUpCancel" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="editDataPopUpUpdate">Update</button>
+                        <button type="button" class="editDataPopUpCancel" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="editDataPopUpUpdate">Atualizar</button>
                     </div>
                 </form>
             </div>
@@ -56,73 +58,4 @@
     </div>
 </div>
 
-<!-- Flags warning the users if they can proceed to the digital environment -->
-<section class="content">
-    <div class="box-content WarningsSec">
-        <div "verifySettingDefaultContext()" class="panel panel-default">
-            <h3 class="Titlemyaccount">IoT Lite Warnings</h3>
-            <!-- Conditions for default @context and @graph
-                    HAS DEFAULT:
-	                    button to see the default one
-	                    button go to change the default one
-                    HASN'T DEFAULT:
-	                    button to set a default one
-            -->
-            <!-- Button clicked -> Load the data from the database and update the view -->
-            <button class="fa fa-refresh Refresh" ng-click="verifySettingDefaultContext(); verifySettingDefaultGraph()"> &emsp;Refresh </button></br>
-            <div class="WarningsDiv" ng-if="defaultContextIsSet===true">
-                <span class="InfoAccount">&emsp;The user has defined a default @Context </span> <button type="button" data-toggle="modal" ng-click="modal()" data-target="#popUp" class="Warnings"> See the default one </button>  <a href="/dashboard.html#/app/mycontext"><button class="Warnings"> Change the default one </button></a></br>
-            </div></br>
-            <div class="WarningsDiv" ng-if="defaultContextIsSet===false">
-                <span class="InfoAccount">&emsp;The user hasn't defined a default @Context </span> <a href="/dashboard.html#/app/mycontext"><button class="Warnings"> Set a default one </button></a> </br>
-            </div></br>
-
-            <div class="WarningsDiv" ng-if="defaultGraphIsSet===true">
-                <span class="InfoAccount">&emsp;The user has defined a default @Graph </span> <button type="button" data-toggle="modal" ng-click="modal()" data-target="#popUpG" class="Warnings"> See the default one </button>  <a href="/dashboard.html#/app/mygraph"><button class="Warnings"> Change the default one </button></a></br>
-            </div></br>
-            <div class="WarningsDiv" ng-if="defaultGraphIsSet===false">
-                <span class="InfoAccount">&emsp;The user hasn't defined a default @Graph </span> <a href="/dashboard.html#/app/mygraph"><button class="Warnings"> Set a default one </button></a> </br>
-            </div></br>
-
-            <!-- Displaying the information about the selected @context -->
-            <div id="popUp" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="BtnClosemybelongings close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Information</h4>
-                        </div>
-                        <div class="modal-body" align="center">
-                            <span class="MyInfo"> Current Default Context: </span> <span class="MyInfoP"> {{currentDefaultContext}} </span> </br>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="BtnClosemybelongings" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div> 
-
-            <!-- Displaying the information about the selected @context -->
-            <div id="popUpG" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="BtnClosemybelongings close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Information</h4>
-                        </div>
-                        <div class="modal-body" align="center">
-                            <span class="MyInfo"> Current Default Graph: </span> <span class="MyInfoP"> {{currentDefaultGraph}} </span> </br>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="BtnClosemybelongings" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
 </section><!-- /.content -->

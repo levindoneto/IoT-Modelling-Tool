@@ -20,6 +20,9 @@ dashboard.controller(
             $firebaseArray,
             Upload
         ) {
+            setTimeout(() => {
+            routeSync();
+        }, 1000);
             const vm = this;
 
             function DatabaseException(message) {
@@ -35,10 +38,10 @@ dashboard.controller(
                 const valueObj = {};
                 const gpioModeObj = {};
                 const modelNumberObj = {};
-                pinsObj.NewPropertyOwlType = 'owl:Restriction';
-                pinsObj.NewPropertyType = 'xsd:nonNegativeInteger';
-                pinsObj.NewPropertyValue = pins;
-
+                //pinsObj.NewPropertyOwlType = 'owl:Restriction';
+                //pinsObj.NewPropertyType = 'xsd:nonNegativeInteger';
+                //pinsObj.NewPropertyValue = pins;
+/*
                 if (type === 'ActuatingDevice') {
                     compType[model.id] = 'actuator';
                 } else if (type === 'SensingDevice') {
@@ -55,6 +58,7 @@ dashboard.controller(
                     modelNumberObj.NewPropertyType = 'xsd:string';
                     modelNumberObj.NewPropertyValue = '';
                 }
+                */
                 mapTypeComponents.update(compType);
                 Upload.base64DataUrl(file).then(base64Url => {
                     model.userUid = $rootScope.userDB.uid; // User who has added the model into the platform
@@ -165,7 +169,7 @@ dashboard.controller(
                                     throw new DatabaseException('Null Snapshot');
                                 }
                             });
-                            modelKeys.prefixCompany = prefix;
+                            modelKeys.prefixCompany = "Sprint 17";
                             modelKeys.type = type;
                             if (type === 'Device') {
                                 model.numberOfPins = pinsObj;
@@ -189,17 +193,17 @@ dashboard.controller(
                                  * saved to the server. The promise resolves to the Firebase reference 
                                  * for the newly added record, providing an easy access to its key. */
                                 swal({
-                                    title: concatenate('The ', compType[model.id], ' has been added successfully!\n'),
+                                    title: concatenate('Avaliação adicionada!'),
                                     icon: 'success',
                                     button: false,
-                                    timer: 3000
+                                    timer: 1000
                                 });
                                 modelList.$add(modelKeys).then(ref => {
                                     console.log('Reference of the added ', type, ':\n', ref.toString());
                                 });
                                 setTimeout(() => {
                                     routeSync();
-                                }, 3000);
+                                }, 1000);
                             });
                         });
                     });
